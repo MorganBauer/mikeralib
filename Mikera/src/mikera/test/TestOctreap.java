@@ -3,6 +3,7 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.engine.*;
+import mikera.engine.Octreap.ZNode;
 import mikera.util.Rand;
 import java.util.*;
 
@@ -157,6 +158,14 @@ public class TestOctreap {
 		}
 		
 		assertTrue(m.check());
+		
+		int i=0;
+		Iterator<ZNode> it=m.getNodeIterator();
+		while (it.hasNext()) {
+			assertNotNull(it.next());
+			i++;
+		}
+		assertEquals(m.countNodes(),i);
 	}
 	
 	@Test public void testSpeed() {
@@ -188,6 +197,20 @@ public class TestOctreap {
 			m.get(x1,y1,z1);
 		}		
 		
+	}
+	
+	@Test public void testIterator() {
+		Octreap<Integer> m=new Octreap<Integer>();
+		
+		assertEquals(false,m.getNodeIterator().hasNext());
+		assertEquals(null,m.nextNode(0));
+		
+		m.set(1, 1, 1, 1);
+		
+		assertNotNull(m.nextNode(0));
+		assertEquals(true,m.getNodeIterator().hasNext());
+		assertEquals(m.nextNode(0),m.getNodeIterator().next());
+
 	}
 	
 	@Test public void testSeries() {
@@ -297,6 +320,14 @@ public class TestOctreap {
 		assertEquals(3,m.get(0,-1,0));
 		assertEquals(null,m.get(2,2,2));
 		assertEquals(3,m.get(0,0,0));
+		
+		int i=0;
+		Iterator<ZNode> it=m.getNodeIterator();
+		while (it.hasNext()) {
+			assertNotNull(it.next());
+			i++;
+		}
+		assertEquals(m.countNodes(),i);
 	}
 	
 	@Test public void testBlock2z() {

@@ -84,21 +84,38 @@ public class Octreap<T> implements Cloneable {
 	}
 	
 	private class NodeIterator implements Iterator<ZNode> {
-
+		private ZNode current=firstNode();
+		
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
+			return (current!=null);
 		}
 
 		public ZNode next() {
-			// TODO Auto-generated method stub
-			return null;
+			ZNode result=current;
+			if (result!=null) {
+				ZNode next=nextNode(result.z1);
+				current=next;
+			}
+			return result;
 		}
 
 		public void remove() {
-			// TODO Auto-generated method stub
-			
+			throw new Error("Not supported");
 		}
+	}
+	
+	public ZNode nextNode(long zz) {
+		ZNode next=null;
+		ZNode ze=head;
+		while (ze!=null) {
+			if (ze.z1>zz) {
+				if ((next==null)||(ze.z1<next.z1)) next=ze;
+				ze=ze.left;
+			} else {
+				ze=ze.right;
+			}
+		}
+		return next;
 	}
 	
 	public Iterator<ZNode> getNodeIterator() {
@@ -302,9 +319,38 @@ public class Octreap<T> implements Cloneable {
 		return null;		
 	}
 	
+	private final ZNode getFirstNode() {
+		ZNode ze=head;
+		while (ze!=null) {
+			if (ze.left==null) return ze;
+			ze=ze.left;
+		}
+		return null;			
+	}
+	
 	public final T get(int x, int y, int z) {
 		long zz=calculateZ(x,y,z);
 		return get(zz);
+	}
+	
+	private ZNode getParentNode(ZNode node) {
+		long zz=node.z1;
+		ZNode ze=head;
+		if (ze==node) return null;
+		while (ze!=null) {
+			if (zz<ze.z1) {
+				if (ze.left==node) return ze;
+				ze=ze.left;
+				continue;
+			}
+			if (zz>ze.z2) {
+				if (ze.right==node) return ze;
+				ze=ze.right;
+				continue;
+			}
+			throw new Error("Node not found!");	
+		}
+		throw new Error("Node not found!");	
 	}
 	
 	/**
