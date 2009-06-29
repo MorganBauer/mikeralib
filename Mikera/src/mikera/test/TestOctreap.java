@@ -106,6 +106,8 @@ public class TestOctreap {
 		assertEquals(m.countNodes(),c.countNodes());
 		assertEquals(m.countArea(),c.countArea());
 		
+		assertTrue(m.equals(c));
+		
 		m.delete(c);
 		assertEquals(0,m.countNodes());
 	}
@@ -209,7 +211,8 @@ public class TestOctreap {
 		
 		assertNotNull(m.nextNode(0));
 		assertEquals(true,m.getNodeIterator().hasNext());
-		assertEquals(m.nextNode(0),m.getNodeIterator().next());
+		assertEquals(m.nextNode(0),m.getNodeIterator().next());	
+		assertEquals(null,m.nextNode(100));
 
 	}
 	
@@ -278,8 +281,6 @@ public class TestOctreap {
 		assertEquals(0,m.countNodes());
 		
 		assertEquals(73,Octreap.fillBits3(64));
-		
-		
 	}
 	
 	private class BCounter implements BlockVisitor<Integer>  {

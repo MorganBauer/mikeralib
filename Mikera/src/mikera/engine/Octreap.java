@@ -68,23 +68,22 @@ public class Octreap<T> implements Cloneable {
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object b) {
 		if (!(b instanceof Octreap)) return false;
+		if (this==b) return true;
 		Octreap<T> o=(Octreap<T>) b;
-		
-		return false;
-	}
-	
-	public ZNode firstNode() {
-		ZNode node=head;
-		while(node!=null) {
-			ZNode temp=node.left;
-			if (temp==null) return node;
-			node=temp;
+		ZNode an=this.getFirstNode();
+		ZNode bn=o.getFirstNode();
+		while((an!=null)||(bn!=null)) {
+			if ((an==null)^(bn==null)) return false;
+			if (!an.equals(bn)) return false;
+			an=this.nextNode(an.z1);
+			bn=o.nextNode(bn.z1);
 		}
-		return null;
+		return true;
 	}
 	
+
 	private class NodeIterator implements Iterator<ZNode> {
-		private ZNode current=firstNode();
+		private ZNode current=getFirstNode();
 		
 		public boolean hasNext() {
 			return (current!=null);
@@ -147,7 +146,7 @@ public class Octreap<T> implements Cloneable {
 	/*
 	 * Gets the largest power of two sided block fitting in node and starting at pos
 	 */
-	private static final long blockSize(long pos, ZNode node) {
+	protected static final long blockSize(long pos, ZNode node) {
 		long size=1;
 		while (((pos&(size-1))==0)&&((pos+size-1)<=node.z2)) {
 			size=size<<1;
@@ -155,7 +154,7 @@ public class Octreap<T> implements Cloneable {
 		return size;
 	}
 	
-	private static final long blockRoot(long pos, ZNode node) {
+	protected static final long blockRoot(long pos, ZNode node) {
 		long size=1;
 		while (size<FULL_MASK) {
 			if ((pos&size)>0) {
@@ -333,7 +332,7 @@ public class Octreap<T> implements Cloneable {
 		return get(zz);
 	}
 	
-	private ZNode getParentNode(ZNode node) {
+	protected ZNode getParentNode(ZNode node) {
 		long zz=node.z1;
 		ZNode ze=head;
 		if (ze==node) return null;
