@@ -201,7 +201,7 @@ public class Octreap<T> implements Cloneable {
 	}
 	
 	public void floodFill(int x, int y, int z, T value, T fromValue) {
-		
+		throw new Error("Not yet supported");
 	}
 	
 	public void mergeFrom(Octreap<T> t) {

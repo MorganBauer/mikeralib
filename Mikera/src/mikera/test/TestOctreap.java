@@ -172,7 +172,6 @@ public class TestOctreap {
 	
 	@Test public void testSpeed() {
 		Octreap<Integer> m=new Octreap<Integer>();
-		HashMap<Integer,Integer> h=new HashMap<Integer,Integer>();
 		
 		for (int i=0; i<1000; i++) {
 			int x1=Rand.d(110);
