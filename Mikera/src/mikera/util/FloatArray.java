@@ -1,6 +1,8 @@
 package mikera.util;
 
 public class FloatArray {
+	public static final float[] NULL_FLOATS=new float[0];
+	
 	public static float squareDistance(float[] a, float[] b) {
 		float eSquared=0;
 		for (int i=0; (i<a.length); i++) {

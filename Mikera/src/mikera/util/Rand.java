@@ -25,6 +25,10 @@ public class Rand {
 	}
 
 	
+	public static final int nextInt() {
+		return rand.nextInt();
+	}
+	
 	/**
 	 * Random number from zero to s-1
 	 * 
@@ -50,7 +54,7 @@ public class Rand {
 	}
 
     /**
-     *  Returns random number uniformly distributed in [n1, n2] range.
+     *  Returns random number uniformly distributed in inclusive [n1, n2] range.
      *  It is allowed to have to n1 > n2, or n1 < n2, or n1 == n2.
      */
      public static final int range(int n1, int n2) {
