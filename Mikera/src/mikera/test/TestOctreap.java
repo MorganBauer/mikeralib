@@ -34,7 +34,7 @@ public class TestOctreap {
 		
 		m.set(10, 10, 10, 1);
 		assertEquals(1,m.countNodes());
-		assertEquals(1,m.get(10,10,10));
+		assertEquals(1,(int)m.get(10,10,10));
 		
 		m.set(10, 10, 10, null);
 		assertEquals(0,m.countNodes());
@@ -45,7 +45,7 @@ public class TestOctreap {
 		assertEquals(2,m.countNodes());
 		assertEquals(null,m.get(11,11,11));
 		assertEquals(null,m.get(9,9,9));
-		assertEquals(2,m.get(-10,-10,-10));
+		assertEquals(2,(int)m.get(-10,-10,-10));
 		assertEquals(null,m.get(-11,-11,-11));
 		assertEquals(null,m.get(-9,-9,-9));
 		
@@ -55,7 +55,7 @@ public class TestOctreap {
 	@Test public void testCut() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		m.setRange(1, 10, 1);
-		assertEquals(1,m.get(5));
+		assertEquals(1,(int)m.get(5));
 		
 		m.setRange(4,6,null);
 		assertEquals(null,m.get(5));
@@ -81,7 +81,7 @@ public class TestOctreap {
 		assertTrue(m.check());		
 		
 		for (int i=1; i<5; i++) {
-			assertEquals(i,m.get(i));
+			assertEquals(i,(int)m.get(i));
 		}
 		
 		for (int i=1; i<10; i++) {
@@ -115,7 +115,7 @@ public class TestOctreap {
 	@Test public void testSlice() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		m.setRange(1, 10, 1);
-		assertEquals(1,m.get(5));
+		assertEquals(1,(int)m.get(5));
 		
 		m.setRange(1,2,null);
 		assertEquals(1,m.countNodes());
@@ -225,7 +225,7 @@ public class TestOctreap {
 		assertEquals(20,m.countNodes());
 		
 		for (int i=-10; i<10; i++) {
-			assertEquals(i,m.get(i, 10-i, 2*i));
+			assertEquals(i,(int)m.get(i, 10-i, 2*i));
 		}
 		
 		assertTrue(m.check());
@@ -260,14 +260,14 @@ public class TestOctreap {
 		m.setBlock(0,0,0,1,1,1,2);
 		assertEquals(null,m.get(-1,-1,-1));
 		assertEquals(null,m.get(2,2,2));
-		assertEquals(2,m.get(0,0,0));
-		assertEquals(2,m.get(0,0,1));
-		assertEquals(2,m.get(0,1,0));
-		assertEquals(2,m.get(0,1,1));
-		assertEquals(2,m.get(1,0,0));
-		assertEquals(2,m.get(1,0,1));
-		assertEquals(2,m.get(1,1,0));
-		assertEquals(2,m.get(1,1,1));
+		assertEquals(2,(int)m.get(0,0,0));
+		assertEquals(2,(int)m.get(0,0,1));
+		assertEquals(2,(int)m.get(0,1,0));
+		assertEquals(2,(int)m.get(0,1,1));
+		assertEquals(2,(int)m.get(1,0,0));
+		assertEquals(2,(int)m.get(1,0,1));
+		assertEquals(2,(int)m.get(1,1,0));
+		assertEquals(2,(int)m.get(1,1,1));
 		assertEquals(8,m.countArea());
 		assertEquals(1,m.countNodes());
 
@@ -301,11 +301,11 @@ public class TestOctreap {
 		assertEquals(2,m.countNodes());
 		assertEquals(3,m.countArea());
 		assertEquals(null,m.get(-1,-1,-1));
-		assertEquals(3,m.get(1,0,0));
-		assertEquals(3,m.get(0,0,0));
-		assertEquals(3,m.get(-1,0,0));
+		assertEquals(3,(int)m.get(1,0,0));
+		assertEquals(3,(int)m.get(0,0,0));
+		assertEquals(3,(int)m.get(-1,0,0));
 		assertEquals(null,m.get(2,2,2));
-		assertEquals(3,m.get(0,0,0));
+		assertEquals(3,(int)m.get(0,0,0));
 	}
 	
 	@Test public void testBlock2y() {
@@ -315,11 +315,11 @@ public class TestOctreap {
 		assertEquals(3,m.countNodes());
 		assertEquals(3,m.countArea());
 		assertEquals(null,m.get(-1,-1,-1));
-		assertEquals(3,m.get(0,1,0));
-		assertEquals(3,m.get(0,0,0));
-		assertEquals(3,m.get(0,-1,0));
+		assertEquals(3,(int)m.get(0,1,0));
+		assertEquals(3,(int)m.get(0,0,0));
+		assertEquals(3,(int)m.get(0,-1,0));
 		assertEquals(null,m.get(2,2,2));
-		assertEquals(3,m.get(0,0,0));
+		assertEquals(3,(int)m.get(0,0,0));
 		
 		int i=0;
 		Iterator<ZNode> it=m.getNodeIterator();
@@ -337,11 +337,11 @@ public class TestOctreap {
 		assertEquals(3,m.countNodes());
 		assertEquals(3,m.countArea());
 		assertEquals(null,m.get(-1,-1,-1));
-		assertEquals(3,m.get(0,0,1));
-		assertEquals(3,m.get(0,0,0));
-		assertEquals(3,m.get(0,0,-1));
+		assertEquals(3,(int)m.get(0,0,1));
+		assertEquals(3,(int)m.get(0,0,0));
+		assertEquals(3,(int)m.get(0,0,-1));
 		assertEquals(null,m.get(2,2,2));
-		assertEquals(3,m.get(0,0,0));
+		assertEquals(3,(int)m.get(0,0,0));
 	}
 	
 	@Test public void testBlock3() {
@@ -350,17 +350,17 @@ public class TestOctreap {
 		m.setBlock(-1,-1,-1,1,1,1,2);
 		assertEquals(14,m.countNodes());
 		assertEquals(27,m.countArea());
-		assertEquals(2,m.get(-1,-1,-1));
+		assertEquals(2,(int)m.get(-1,-1,-1));
 		assertEquals(null,m.get(2,2,2));
 		assertEquals(null,m.get(-2,-2,-2));
-		assertEquals(2,m.get(0,0,0));
-		assertEquals(2,m.get(0,0,1));
-		assertEquals(2,m.get(0,1,0));
-		assertEquals(2,m.get(0,1,1));
-		assertEquals(2,m.get(1,0,0));
-		assertEquals(2,m.get(1,0,1));
-		assertEquals(2,m.get(1,1,0));
-		assertEquals(2,m.get(1,1,1));
+		assertEquals(2,(int)m.get(0,0,0));
+		assertEquals(2,(int)m.get(0,0,1));
+		assertEquals(2,(int)m.get(0,1,0));
+		assertEquals(2,(int)m.get(0,1,1));
+		assertEquals(2,(int)m.get(1,0,0));
+		assertEquals(2,(int)m.get(1,0,1));
+		assertEquals(2,(int)m.get(1,1,0));
+		assertEquals(2,(int)m.get(1,1,1));
 		assertEquals(27,m.countArea());
 
 		m.clear();
@@ -408,7 +408,7 @@ public class TestOctreap {
 			int z2=Rand.d(11)-6;
 			m.setBlock(x1,y1,z1,x2,y2,z2,i%10);
 			assertTrue(m.check());
-			assertEquals(i%10,m.get(Rand.range(x1, x2),Rand.range(y1, y2),Rand.range(z1, z2)));
+			assertEquals(i%10,(int)m.get(Rand.range(x1, x2),Rand.range(y1, y2),Rand.range(z1, z2)));
 
 		}
 	}

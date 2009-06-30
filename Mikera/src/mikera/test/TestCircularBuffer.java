@@ -45,30 +45,30 @@ public class TestCircularBuffer {
 			cb.add(i);
 		}
 		assertEquals(10,cb.getCount());
-		assertEquals(106,cb.get(0));
-		assertEquals(97,cb.get(9));
+		assertEquals(106,(int)cb.get(0));
+		assertEquals(97,(int)cb.get(9));
 		assertEquals(null,cb.get(10));
 		assertEquals(null,cb.get(1000));
 		
 		cb.setMaxSize(5);
-		assertEquals(106,cb.get(0));
-		assertEquals(102,cb.get(4));
+		assertEquals(106,(int)cb.get(0));
+		assertEquals(102,(int)cb.get(4));
 		assertEquals(null,cb.get(5));		
 		assertEquals(null,cb.get(1000));
 		
 		for (int i=0; i<65; i++) {
 			cb.add(i);
 		}
-		assertEquals(64,cb.get(0));
-		assertEquals(60,cb.get(4));
+		assertEquals(64,(int)cb.get(0));
+		assertEquals(60,(int)cb.get(4));
 		assertEquals(null,cb.get(5));
 		assertEquals(null,cb.get(1000));
 		
 		// expand buffer to 20
 		cb.setMaxSize(20);
 		assertEquals(5,cb.getCount());
-		assertEquals(64,cb.get(0));
-		assertEquals(60,cb.get(4));
+		assertEquals(64,(int)cb.get(0));
+		assertEquals(60,(int)cb.get(4));
 		assertEquals(null,cb.get(5));
 		assertEquals(null,cb.get(1000));
 		
@@ -76,18 +76,18 @@ public class TestCircularBuffer {
 			cb.add(i);
 		}
 		assertEquals(20,cb.getCount());
-		assertEquals(106,cb.get(0));
-		assertEquals(97,cb.get(9));
-		assertEquals(87,cb.get(19));
+		assertEquals(106,(int)cb.get(0));
+		assertEquals(97,(int)cb.get(9));
+		assertEquals(87,(int)cb.get(19));
 		assertEquals(null,cb.get(20));
 		assertEquals(null,cb.get(1000));
 		
 		// make very small
 		cb.setMaxSize(2);
 		assertEquals(2,cb.getCount());
-		assertEquals(106,cb.get(0));
-		assertEquals(105,cb.get(1));
-		assertEquals(null,cb.get(2));
+		assertEquals(106,(int)cb.get(0));
+		assertEquals(105,(int)cb.get(1));
+		assertEquals(null,(int)cb.get(2));
 		
 		// zero size buffer should also work!!
 		cb.setMaxSize(0);
@@ -115,7 +115,7 @@ public class TestCircularBuffer {
 		for (int i=0; i<8; i++) {
 			cb.add(i);
 		}
-		assertEquals(7,cb.get(0));
+		assertEquals(7,(int)cb.get(0));
 		assertEquals(8,cb.getCount());
 		
 		cb.clear();
@@ -157,13 +157,13 @@ public class TestCircularBuffer {
 			cb.add(i+3);
 		}
 
-		assertEquals(4,cb.get(0));
-		assertEquals(3,cb.get(1));
+		assertEquals(4,(int)cb.get(0));
+		assertEquals(3,(int)cb.get(1));
 		
 		assertTrue(cb.tryRemoveEnd());
 		assertEquals(1,cb.getCount());
 
-		assertEquals(4,cb.get(0));
+		assertEquals(4,(int)cb.get(0));
 		assertEquals(null,cb.get(1));
 		
 		assertTrue(cb.tryRemoveEnd());		
@@ -177,20 +177,20 @@ public class TestCircularBuffer {
 		for (int i=1; i<=10; i++) {
 			cb.add(i);
 		}
-		assertEquals(10,cb.removeLastAdded());
-		assertEquals(1,cb.removeFirstAdded());
-		assertEquals(9,cb.removeLastAdded());
-		assertEquals(2,cb.removeFirstAdded());
+		assertEquals(10,(int)cb.removeLastAdded());
+		assertEquals(1,(int)cb.removeFirstAdded());
+		assertEquals(9,(int)cb.removeLastAdded());
+		assertEquals(2,(int)cb.removeFirstAdded());
 		assertEquals(6,cb.getCount());
 		
 		assertTrue(cb.sanityCheck());
 		
-		assertEquals(8,cb.removeLastAdded());
-		assertEquals(3,cb.removeFirstAdded());
-		assertEquals(7,cb.removeLastAdded());
-		assertEquals(4,cb.removeFirstAdded());
-		assertEquals(6,cb.removeLastAdded());
-		assertEquals(5,cb.removeFirstAdded());
+		assertEquals(8,(int)cb.removeLastAdded());
+		assertEquals(3,(int)cb.removeFirstAdded());
+		assertEquals(7,(int)cb.removeLastAdded());
+		assertEquals(4,(int)cb.removeFirstAdded());
+		assertEquals(6,(int)cb.removeLastAdded());
+		assertEquals(5,(int)cb.removeFirstAdded());
 		assertEquals(0,cb.getCount());
 		assertEquals(null,cb.removeLastAdded());
 		assertEquals(null,cb.removeFirstAdded());
@@ -210,15 +210,15 @@ public class TestCircularBuffer {
 		
 		assertTrue(cb.sanityCheck());
 		
-		assertEquals(10,cb.get(0));
-		assertEquals(6,cb.get(4));
-		assertEquals(2,cb.get(5));
-		assertEquals(1,cb.get(6));
+		assertEquals(10,(int)cb.get(0));
+		assertEquals(6,(int)cb.get(4));
+		assertEquals(2,(int)cb.get(5));
+		assertEquals(1,(int)cb.get(6));
 		assertEquals(null,cb.get(7));
 		
-		assertEquals(6,cb.remove(4));
-		assertEquals(2,cb.remove(4));
-		assertEquals(1,cb.remove(4));
+		assertEquals(6,(int)cb.remove(4));
+		assertEquals(2,(int)cb.remove(4));
+		assertEquals(1,(int)cb.remove(4));
 		assertEquals(4,cb.size());
 		
 		assertTrue(cb.sanityCheck());
@@ -234,11 +234,11 @@ public class TestCircularBuffer {
 		
 		assertEquals(10,cb.getCount());
 
-		assertEquals(1,cb.peek());
-		assertEquals(1,cb.element());
+		assertEquals(1,(int)cb.peek());
+		assertEquals(1,(int)cb.element());
 		
-		assertEquals(1,cb.remove());
-		assertEquals(2,cb.poll());
+		assertEquals(1,(int)cb.remove());
+		assertEquals(2,(int)cb.poll());
 		assertEquals(8,cb.getCount());
 		
 		assertEquals(true, cb.offer(11));
@@ -246,11 +246,11 @@ public class TestCircularBuffer {
 		assertTrue(cb.sanityCheck());
 
 		for (int i=3; i<=10; i++) {
-			assertEquals(i,cb.poll());
+			assertEquals(i,(int)cb.poll());
 		}
 		
-		assertEquals(11,cb.peek());
-		assertEquals(11,cb.remove());
+		assertEquals(11,(int)cb.peek());
+		assertEquals(11,(int)cb.remove());
 		assertEquals(null,cb.peek());
 		assertEquals(0,cb.getCount());
 		

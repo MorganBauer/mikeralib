@@ -47,7 +47,7 @@ public class TestIndexedList {
 		
 		for (int i=0; i<100; i++) {
 			assertEquals(i,list.findIndex(i));
-			assertEquals(i+100,list.get(i));
+			assertEquals(i+100,(int)list.get(i));
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class TestIndexedList {
 		dest.putAll(list2);
 		
 		for (int i=0; i<100; i++) {
-			assertEquals(i,dest.get(i));
+			assertEquals(i,(int)dest.get(i));
 		}
 		
 		assertEquals(100,dest.size());
@@ -91,7 +91,7 @@ public class TestIndexedList {
 		}
 		
 		for (int n: list.keySet()) {
-			assertEquals(n,list.get(n));
+			assertEquals(n,(int)list.get(n));
 		}
 	}
 }
