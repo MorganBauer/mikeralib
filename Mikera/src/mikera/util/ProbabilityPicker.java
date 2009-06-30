@@ -105,7 +105,7 @@ public final class ProbabilityPicker<O> {
 		return total;
 	}
 	
-	public double getCount() {
+	public int getCount() {
 		return count;
 	}
 	

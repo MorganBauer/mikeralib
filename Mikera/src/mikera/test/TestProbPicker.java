@@ -22,13 +22,13 @@ public class TestProbPicker {
 		
 		p.add(new Integer(1),0.5);
 		
-		assertEquals(0.5,p.getTotal());
-		assertEquals(1,p.getCount());
+		assertEquals(0.5,p.getTotal(),0.001);
+		assertEquals(1,p.getCount(),0.001);
 		
 		p.remove(new Integer(1));
 		
-		assertEquals(0,p.getTotal());
-		assertEquals(0,p.getCount());
+		assertEquals(0,p.getTotal(),0.001);
+		assertEquals(0,p.getCount(),0.001);
 	}
 	
 	@Test public void testAddAndRemoveLots() {
@@ -39,13 +39,13 @@ public class TestProbPicker {
 			assertEquals(i,p.getCount());
 		}
 		
-		assertEquals(5050,p.getTotal());
+		assertEquals(5050,p.getTotal(),0.001);
 		
 		for (int i=1; i<=100; i++) {
 			p.remove(new Integer(i));
 		}	
 		
-		assertEquals(0,p.getTotal());
+		assertEquals(0,p.getTotal(),0.001);
 		assertEquals(0,p.getCount());
 	}
 	
@@ -56,7 +56,7 @@ public class TestProbPicker {
 			p.add(new Integer(i),100);	
 		}
 		
-		assertEquals(1000,p.getTotal());
+		assertEquals(1000,p.getTotal(),0.001);
 		
 		int[] hits=new int[10];
 		for (int i=0; i<1000; i++) {

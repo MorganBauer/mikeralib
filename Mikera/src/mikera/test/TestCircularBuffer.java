@@ -87,7 +87,7 @@ public class TestCircularBuffer {
 		assertEquals(2,cb.getCount());
 		assertEquals(106,(int)cb.get(0));
 		assertEquals(105,(int)cb.get(1));
-		assertEquals(null,(int)cb.get(2));
+		assertEquals(null,cb.get(2));
 		
 		// zero size buffer should also work!!
 		cb.setMaxSize(0);
