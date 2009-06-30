@@ -53,7 +53,7 @@ public class NullSet<T> implements Collection<T>, Set<T> {
 		return NullArrays.NULL_OBJECTS;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "hiding" })
 	public <T> T[] toArray(T[] a) {
 		// TODO Auto-generated method stub
 		return (T[])toArray();

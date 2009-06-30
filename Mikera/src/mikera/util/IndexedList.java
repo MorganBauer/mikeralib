@@ -132,7 +132,6 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<K> keySet() {
 		return new StaticArrayList<K>(keys);
 	}

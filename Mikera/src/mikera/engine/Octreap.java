@@ -17,9 +17,9 @@ public class Octreap<T> implements Cloneable {
 	public static final class ZNode implements Comparable<ZNode>, Cloneable {
 		private long z1;
 		private long z2;
-		private Object object;
 		private ZNode left;
 		private ZNode right;
+		private Object object;
 		private int priority;
 		
 		public ZNode() {
