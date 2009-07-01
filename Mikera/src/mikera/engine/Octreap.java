@@ -693,6 +693,12 @@ public class Octreap<T> implements Cloneable {
 		return (int)result;
 	}
 	
+	/**
+	 * Extracts every third bit into the lowest order BITS
+	 * 
+	 * @param a z-parameter
+	 * @return
+	 */
 	public static long split3(long a) {
 		long result=0;
 		long m=1;
