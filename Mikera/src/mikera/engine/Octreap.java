@@ -3,7 +3,21 @@ package mikera.engine;
 import mikera.util.Rand;
 import java.util.*;
 
-
+/**
+ * Data structure for 3D grid implemented as Treap
+ * with z-order for cells. Performance for n nodes:
+ *   O(log n) write
+ *   O(log n) read
+ *   O(n) equals
+ * 
+ * Nodes are z-order ranges of cells with non-null objects
+ * 
+ * Adjacent nodes automatically combine on write
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T> type of object to store in each cell
+ */
 public class Octreap<T> implements Cloneable {
 	private static final int BITS=20;
 	private static final int BITS_POWER2=1<<BITS;
@@ -51,6 +65,10 @@ public class Octreap<T> implements Cloneable {
 			if (z1!=a.z1) return false;
 			if (z2!=a.z2) return false;
 			return true;
+		}
+		
+		public int hashCode() {
+			return object.hashCode()+(int)(z1*7+z2*1234567);
 		}
 	}
 	
@@ -203,16 +221,22 @@ public class Octreap<T> implements Cloneable {
 	public void floodFill(int x, int y, int z, T value, T fromValue) {
 		throw new Error("Not yet supported");
 	}
+
+	public void paste(Octreap<T> t) {
+		paste(t,0,0,0);
+	}
 	
-	public void mergeFrom(Octreap<T> t) {
-		NodeVisitor merger=new NodeVisitor() {
-			@SuppressWarnings("unchecked")
-			public Object visit(ZNode n) {
-				setRange(n.z1,n.z2,(T)n.object);
+	public void paste(Octreap<T> t, final int dx, final int dy, final int dz) {
+		BlockVisitor<T> paster=new BlockVisitor<T>() {
+			@Override
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					T value) {
+				setBlock(x1+dx,y1+dy,z1+dz,
+						x2+dx, y2+dy, z2+dz, value);
 				return null;
 			}
 		};
-		t.visitNodes(merger);
+		t.visitBlocks(paster);
 	}
 	
 	@SuppressWarnings("unchecked")
