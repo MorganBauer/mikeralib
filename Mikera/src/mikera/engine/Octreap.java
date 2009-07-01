@@ -678,7 +678,7 @@ public class Octreap<T> implements Cloneable {
 		return extractComponent(2,z);
 	}
 	
-	public static int extractComponent(int index, long z) {
+	public final static int extractComponent(int index, long z) {
 		z>>=index;
 		long result=0;
 		
