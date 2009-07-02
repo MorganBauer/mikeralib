@@ -512,6 +512,22 @@ public class Octreap<T> implements Cloneable {
 		return countNodes(head);
 	}
 	
+	public int countLevels() {
+		return countLevels(head);
+	}
+	
+	public int countLevels(ZNode node) {
+		int result=1;
+		if (node.left!=null) {
+			result+=countLevels(node.left);
+		}
+		if (node.right!=null) {
+			int rl=1+countLevels(node.right);
+			if (rl>result) rl=result;
+		}
+		return result;
+	}
+	
 	private int countNodes(ZNode a) {
 		if (a==null) return 0;
 		return 1+countNodes(a.left)+countNodes(a.right);
@@ -666,16 +682,22 @@ public class Octreap<T> implements Cloneable {
 		return split3(x)+(split3(y)<<1)+(split3(z)<<2);
 	}
 	
-	public static int extractX(long z) {
+	public final static int extractX(long z) {
 		return extractComponent(0,z);
 	}
 	
-	public static int extractY(long z) {
+	public final static int extractY(long z) {
 		return extractComponent(1,z);
 	}
 	
-	public static int extractZ(long z) {
+	public final static int extractZ(long z) {
 		return extractComponent(2,z);
+	}
+	
+	public final static void extractComponents(long z, int[] pt) {
+		pt[0]=extractComponent(0,z);
+		pt[1]=extractComponent(1,z);
+		pt[2]=extractComponent(2,z);
 	}
 	
 	public final static int extractComponent(int index, long z) {

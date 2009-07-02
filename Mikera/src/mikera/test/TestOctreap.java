@@ -74,11 +74,13 @@ public class TestOctreap {
 	@Test public void testSet() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		m.setRange(1,2,1);
+		assertEquals(1,m.countLevels());
 		m.setRange(2,3,2);
 		m.setRange(3,7,3);
 		m.setRange(4,6,4);
 		m.setRange(5,5,5);
 		assertTrue(m.check());		
+		assertTrue(1<m.countLevels());
 		
 		for (int i=1; i<5; i++) {
 			assertEquals(i,(int)m.get(i));
