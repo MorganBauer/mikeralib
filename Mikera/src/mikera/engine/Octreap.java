@@ -228,7 +228,6 @@ public class Octreap<T> implements Cloneable {
 	
 	public void paste(Octreap<T> t, final int dx, final int dy, final int dz) {
 		BlockVisitor<T> paster=new BlockVisitor<T>() {
-			@Override
 			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
 					T value) {
 				setBlock(x1+dx,y1+dy,z1+dz,
@@ -517,15 +516,15 @@ public class Octreap<T> implements Cloneable {
 	}
 	
 	public int countLevels(ZNode node) {
-		int result=1;
+		int subLevels=0;
 		if (node.left!=null) {
-			result+=countLevels(node.left);
+			subLevels=countLevels(node.left);
 		}
 		if (node.right!=null) {
-			int rl=1+countLevels(node.right);
-			if (rl>result) rl=result;
+			int rl=countLevels(node.right);
+			if (rl>subLevels) rl=subLevels;
 		}
-		return result;
+		return 1+subLevels;
 	}
 	
 	private int countNodes(ZNode a) {
