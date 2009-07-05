@@ -60,6 +60,17 @@ public final class Vector {
 		return data.length;
 	}
 	
+	public String toString() {
+		String result="{";
+		int max=data.length-1;
+		for (int i=0; i<max; i++) {
+			result+=Float.toString(data[i]);
+			result+=", ";
+		}
+		result+=Float.toString(data[max]);
+		return result+"}";
+	}
+	
 	public Vector(float x, float y, float z) {
 		this(3);
 		data[0]=x;

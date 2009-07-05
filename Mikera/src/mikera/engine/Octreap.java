@@ -522,7 +522,7 @@ public class Octreap<T> implements Cloneable {
 		}
 		if (node.right!=null) {
 			int rl=countLevels(node.right);
-			if (rl>subLevels) rl=subLevels;
+			if (rl>subLevels) subLevels=rl;
 		}
 		return 1+subLevels;
 	}
