@@ -114,6 +114,14 @@ public class TestOctreap {
 		assertEquals(0,m.countNodes());
 	}
 	
+	@Test public void testFillSpace() {
+		Octreap<Integer> m=new Octreap<Integer>();
+		m.fillSpace(3);
+		assertEquals(3,m.get(100,1000,10000));
+		assertEquals(3,m.get(-100,-10000,-1000));
+		assertEquals(1,m.countNodes());
+	}
+	
 	@Test public void testSlice() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		m.setRange(1, 10, 1);

@@ -212,6 +212,11 @@ public class Octreap<T> implements Cloneable {
 	}
 	
 	
+	public void fillSpace(T value) {
+		clear();
+		setRange(0,FULL_MASK,value);
+	}
+	
 	public void floodFill(int x, int y, int z, T value) {
 		T fromValue=get(x,y,z);
 		if (checkEquals(value,fromValue)) return;
