@@ -8,11 +8,10 @@ import mikera.util.*;
  * @author Mike
  *
  */
-public final class Vector {
+public final class Vector implements Cloneable {
 	public float[] data;
 	
 	public Vector() {
-		
 	}
 	
 	public Vector(int size) {
@@ -36,10 +35,27 @@ public final class Vector {
 		this(a.data);
 	}
 	
+	public float x() {
+		return data[0];
+	}
+	
+	public float y() {
+		return data[1];
+	}
+	
+	public float z() {
+		return data[2];
+	}
+	
 	public Vector(float[] adata) {
 		int size=adata.length;
 		data=new float[size];
 		System.arraycopy(adata, 0, data, 0, size);
+	}
+	
+	public Vector(float[] adata, int offset, int size) {
+		data=new float[size];
+		System.arraycopy(adata, offset, data, 0, size);
 	}
 	
 	public Vector construct(float[] dataToEmbed) {
@@ -129,10 +145,51 @@ public final class Vector {
 		data[2]=z;
 	}
 	
+	
 	public Vector cross(Vector a, Vector b) {
-		float x=a.data[1]*b.data[2]-a.data[2]*b.data[1];
-		float y=a.data[2]*b.data[0]-a.data[0]*b.data[2];
-		float z=a.data[0]*b.data[1]-a.data[1]*b.data[0];	
-		return new Vector(x,y,z);
+		Vector target=new Vector(3);
+		Vector.cross(a.data,0,b.data,0,target.data,0);
+		return target;
+	}
+	
+	public static void cross(float[] adata, int ai, float[]  bdata, int bi, float[] tdata, int ti) {
+		float x=adata[ai+1]*bdata[bi+2]-adata[ai+2]*bdata[bi+1];
+		float y=adata[ai+2]*bdata[bi+0]-adata[ai+0]*bdata[bi+2];
+		float z=adata[ai+0]*bdata[bi+1]-adata[ai+1]*bdata[bi+0];	
+		tdata[ti]=x;
+		tdata[ti+1]=y;
+		tdata[ti+2]=z;
+	}
+	
+	public static float lengthSquared(float[] data, int di, int n) {
+		float result=0;
+		for (int i=0; i<n; i++) {
+			float f=data[di+i];
+			result+=f*f;
+		}
+		return result;			
+	}	
+	
+	public float normalise() {
+		return Vector.normalise(data,0,data.length);
+	}
+	
+	public Vector clone() {
+		return new Vector(this);
+	}
+	
+	public static float normalise(float[] data, int di, int n) {
+		float f=lengthSquared(data, di, n);
+		float factor;
+		if (f!=0.0) {
+			f=(float)Math.sqrt(f);
+			factor=1.0f/f;
+		} else {
+			return 0.0f;
+		}
+		for (int i=0; i<n; i++) {
+			data[di+i]*=factor;
+		}
+		return f;
 	}
 }
