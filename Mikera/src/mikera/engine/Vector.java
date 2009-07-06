@@ -47,6 +47,42 @@ public final class Vector implements Cloneable {
 		return data[2];
 	}
 	
+	public void set(int x, int y, int z) {
+		data[0]=x;
+		data[1]=y;
+		data[2]=z;
+	}
+	
+	public void set(float x, float y, float z) {
+		data[0]=x;
+		data[1]=y;
+		data[2]=z;
+	}
+	
+	public void set(float[] xs, int offset) {
+		for (int i=0; i<data.length; i++) {
+			data[i]=xs[offset+i];
+		}
+	}
+	
+	public void add(float x, float y, float z) {
+		data[0]+=x;
+		data[1]+=y;
+		data[2]+=z;
+	}
+	
+	public void set(double x, double y, double z) {
+		data[0]=(float)x;
+		data[1]=(float)y;
+		data[2]=(float)z;
+	}
+	
+	public void set(Vector v) {
+		data[0]=v.data[0];
+		data[1]=v.data[1];
+		data[2]=v.data[2];
+	}
+	
 	public Vector(float[] adata) {
 		int size=adata.length;
 		data=new float[size];

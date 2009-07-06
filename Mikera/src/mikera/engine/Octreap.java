@@ -144,6 +144,8 @@ public class Octreap<T> implements Cloneable {
 		visitBlocks(head,bf);
 	}
 	
+
+	
 	@SuppressWarnings("unchecked")
 	public void visitBlocks(ZNode node, BlockVisitor<T> bf) {
 		if (node==null) return;
@@ -159,6 +161,14 @@ public class Octreap<T> implements Cloneable {
 		}
 		
 		visitBlocks(node.right,bf);
+	}
+	
+	public void visitCells(BlockVisitor<T> bf, int x1, int y1, int z1, int x2, int y2, int z2, int dx, int dy, int dz) {
+		visitCells(bf,x1,y1,z1,x2,y2,z2,dx,dy,dz,head);
+	}
+	
+	public void visitCells(BlockVisitor<T> bf, int x1, int y1, int z1, int x2, int y2, int z2, int dx, int dy, int dz, ZNode head) {
+		
 	}
 	
 	/*
