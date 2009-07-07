@@ -283,8 +283,12 @@ public class TestOctreap {
 
 		BCounter bcounter=new BCounter();
 		m.visitBlocks(bcounter);
+		assertEquals(8,m.blockSize(0, 0, 0));
 		assertEquals(8,bcounter.size);
 		assertEquals(1,bcounter.count);
+		
+		assertEquals(8,bcounter.oct.countArea());
+		assertEquals(1,bcounter.oct.countNodes());
 		
 		m.clear();
 		assertEquals(0,m.countNodes());
@@ -292,14 +296,39 @@ public class TestOctreap {
 		assertEquals(73,Octreap.fillBits3(64));
 	}
 	
+	@Test public void testSetBlock() {
+		Octreap<Integer> m=new Octreap<Integer>();
+		
+		m.setBlock(-2,-2,-2,1,1,1,2);
+		assertEquals(2,m.get(-1,-1,-1));
+		assertEquals(2,m.get(-2,-2,-2));
+		assertEquals(null,m.get(2,2,2));
+		assertEquals(2,(int)m.get(0,0,0));
+		assertEquals(2,(int)m.get(0,0,1));
+		assertEquals(2,(int)m.get(0,1,0));
+		assertEquals(2,(int)m.get(0,1,1));
+		assertEquals(2,(int)m.get(1,0,0));
+		assertEquals(2,(int)m.get(1,0,1));
+		assertEquals(2,(int)m.get(1,1,0));
+		assertEquals(2,(int)m.get(1,1,1));
+		assertEquals(64,m.countArea());
+		assertEquals(8,m.countNodes());
+		
+		assertEquals(1,m.blockSize(1, 1, 1));
+		assertEquals(8,m.blockSize(0, 0, 0));
+	}
+	
 	private class BCounter implements BlockVisitor<Integer>  {
 		long count=0;
 		long size=0;
+		Octreap<Integer> oct=new Octreap<Integer>();
 		
 		public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
 				Integer value) {
 			count+=1;
-			size+=((long)(x2-x1+1))*(y2-y1+1)*(z2-z2+1);
+			size+=((long)(x2-x1+1))*(y2-y1+1)*(z2-z1+1);
+			
+			oct.setBlock(x1, y1, z1, x2, y2, z2, value);
 			return null;
 		}	
 	};

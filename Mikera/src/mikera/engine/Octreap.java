@@ -153,7 +153,7 @@ public class Octreap<T> implements Cloneable {
 		
 		long pos=node.z1;
 		while (pos<=node.z2) {
-			long size=blockSize(pos,node);
+			long size=blockSize(pos,node); // number of cells in next block
 			
 			long pos2=pos+size-1;
 			bf.visit(extractX(pos), extractY(pos), extractZ(pos), extractX(pos2), extractY(pos2), extractZ(pos2), (T)node.object);
@@ -173,13 +173,19 @@ public class Octreap<T> implements Cloneable {
 	
 	/*
 	 * Gets the largest power of two sided block fitting in node and starting at pos
+	 * look at trailing zeros
 	 */
 	protected static final long blockSize(long pos, ZNode node) {
 		long size=1;
-		while (((pos&(size-1))==0)&&((pos+size-1)<=node.z2)) {
+		while (((pos&size)==0)&&((pos+size*2-1)<=node.z2)) {
 			size=size<<1;
 		}		
 		return size;
+	}
+	
+	public final long blockSize(int x, int y, int z) {
+		long zz=calculateZ(x,y,z);
+		return blockSize(zz,getNode(zz));
 	}
 	
 	protected static final long blockRoot(long pos, ZNode node) {

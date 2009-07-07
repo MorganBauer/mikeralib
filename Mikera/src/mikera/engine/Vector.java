@@ -65,11 +65,7 @@ public final class Vector implements Cloneable {
 		}
 	}
 	
-	public void add(float x, float y, float z) {
-		data[0]+=x;
-		data[1]+=y;
-		data[2]+=z;
-	}
+
 	
 	public void set(double x, double y, double z) {
 		data[0]=(float)x;
@@ -81,6 +77,18 @@ public final class Vector implements Cloneable {
 		data[0]=v.data[0];
 		data[1]=v.data[1];
 		data[2]=v.data[2];
+	}
+	
+	public void add(float x, float y, float z) {
+		data[0]+=x;
+		data[1]+=y;
+		data[2]+=z;
+	}
+	
+	public void subtract(float[] xs, int offset) {
+		for (int i=0; i<data.length; i++) {
+			data[i]-=xs[offset+i];
+		}		
 	}
 	
 	public Vector(float[] adata) {
@@ -123,11 +131,37 @@ public final class Vector implements Cloneable {
 		return result+"}";
 	}
 	
-	public Vector(float x, float y, float z) {
+	public boolean equals(Vector v) {
+		if (this==v) return true;
+		int len=data.length;
+		if (v.data.length!=len) return false;
+		for (int i=0; i<len; i++) {
+			if (data[i]!=v.data[i]) return false;
+		}
+		return true;
+	}
+	
+	public boolean equals(Object o) {
+		if (o instanceof Vector) {
+			return this.equals((Vector)o);
+		}
+		return false;
+	}
+	
+	public Vector(double x, double y, double z) {
 		this(3);
-		data[0]=x;
-		data[1]=y;
-		data[2]=y;
+		data[0]=(float)x;
+		data[1]=(float)y;
+		data[2]=(float)z;
+	}
+	
+	public int hashCode() {
+		int result=178;
+		for (int i=0; i<data.length; i++) {
+			Integer.rotateLeft(result, 7);
+			result^= Float.floatToIntBits(data[i]);
+		}
+		return result;
 	}
 	
 	public void add(Vector v) {

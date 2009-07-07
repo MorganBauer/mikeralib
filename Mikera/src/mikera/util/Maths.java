@@ -1,5 +1,11 @@
 package mikera.util;
 
+/**
+ * Helpful maths functions
+ * 
+ * @author Mike
+ *
+ */
 public final class Maths {
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
@@ -34,4 +40,18 @@ public final class Maths {
 		if (c>result) result=c;
 		return result;
 	}
+	
+	public static float sin(double a) {
+		return (float)Math.sin(a);
+	}
+	
+	public static float cos(double a) {
+		return (float)Math.cos(a);
+	}
+	
+	public static float floor(float a) {
+		return (float)Math.floor(a);
+	}
+	
+
 }

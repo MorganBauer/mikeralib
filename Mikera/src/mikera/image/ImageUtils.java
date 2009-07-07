@@ -1,12 +1,14 @@
 package mikera.image;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.image.*;
+import java.io.IOException;
 import java.net.URL;
+import javax.imageio.*;
 
 
 public class ImageUtils {
-	public static Image getImage(String filename) {
+	public static BufferedImage getImage(String filename) {
 		URL imageURL = ImageUtils.class.getResource(filename);
 		if (imageURL != null) {
 			return getImage(imageURL);
@@ -14,11 +16,13 @@ public class ImageUtils {
 		throw new Error("Image URL not found");
 	}
 
-	public static Image getImage(URL imageURL) {
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-		Image image = null;
-		image = toolkit.getImage(imageURL);
+	public static BufferedImage getImage(URL imageURL) {
+		BufferedImage image;
+		try {
+			image = ImageIO.read(imageURL);
+		} catch (IOException e) {
+			throw new Error("Image read failed", e);
+		}
 
 		return image;
 	}

@@ -7,6 +7,9 @@ public class LineTracer {
 		public abstract boolean visit(int x, int y, int z);
 	}
 
+	public static float trace(Vector v1, Vector v2, TraceFunction func) {
+		return trace(v1.data[0],v1.data[1],v1.data[2],v2.data[0],v2.data[1],v2.data[2],func);
+	}
 	
 	public static float trace(double x1, double y1, double z1, double x2, double y2, double z2, TraceFunction func) {
 		return trace((float)x1,(float)y1,(float)z1,(float)x2,(float)y2,(float)z2,func);
