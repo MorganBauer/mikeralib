@@ -94,5 +94,19 @@ public class TestConnectors {
 		}
 	}
 	
+	@Test public void testByteBufferOutputStream() {
+		ByteBufferOutputStream bbos=new ByteBufferOutputStream();
+		
+		bbos.write(10);
+		bbos.write(20);
+		
+		ByteBuffer bb=bbos.getFlipedBuffer();
+		assertEquals(2,bb.remaining());
+		assertEquals(10,bb.get(0));
+		bbos.clear();
+		
+		
+		
+	}
 
 }

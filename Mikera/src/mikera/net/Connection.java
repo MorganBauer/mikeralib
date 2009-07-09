@@ -199,6 +199,7 @@ public class Connection {
 		}
 	}
 
+	
 	private void handleWrite(SelectionKey key) {
 		try {		
 			synchronized (writeQueue) {
@@ -255,7 +256,14 @@ public class Connection {
 			// initiate write queue with this element
 			if (selector==null) throw new Error("FGEGREH");
 			writeQueue.add(bb);
-			if (empty) channel.register(selector, SelectionKey.OP_WRITE|SelectionKey.OP_READ,this);
+			
+			// if queue was originally empty, we need to register for write events
+			if (empty) {
+				channel.register(selector, SelectionKey.OP_WRITE|SelectionKey.OP_READ,this);
+				
+				// wake up selector so that it picks up new registration
+				selector.wakeup();
+			}
 		}
 	}
 }

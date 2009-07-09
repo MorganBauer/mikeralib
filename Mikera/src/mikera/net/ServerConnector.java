@@ -17,6 +17,7 @@ import java.util.*;
 public class ServerConnector {
 	private static final boolean DEBUG = false;
 
+	// TODO: have a separate thread and selector for writing queue
 	Selector selector;
 
 	ServerSocketChannel server;
@@ -29,7 +30,6 @@ public class ServerConnector {
 
 	public boolean live = false;
 
-	public int BUFFER_SIZE = 4000;
 
 	public ServerConnector() {
 
@@ -75,19 +75,18 @@ public class ServerConnector {
 
 	public Runnable listener = new Runnable() {
 		public void run() {
+			// loop continuously to handle selection events
 			while (true) {
 				try {
 					try {
 						selector.select(1000); // 1 sec heartbeat
 						Set<SelectionKey> keys = selector.selectedKeys();
 
-						if (keys.size() == 0) {
-							
-							debugMessage("Server listening.... nobody calling");
-						} else {
-							// System.err.println("Server selected "+keys.size()+" keys");
+						// System.err.println("Server selected "+keys.size()+" keys");
+						if (keys.size()>0) {
 							handleKeys(keys);
 						}
+						
 					} catch (ClosedSelectorException e) {
 						// bailout, server socket has closed
 						return;

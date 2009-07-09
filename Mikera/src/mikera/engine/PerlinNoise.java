@@ -278,6 +278,11 @@ public class PerlinNoise
 
         return lerp(sz, c, d);
     }
+    
+    public float noise3(double x, double y, double z) {
+    	return noise3((float)x,(float)y,(float)z);
+    }
+
 
     /**
      * Create a turbulent noise output based on the core noise function. This

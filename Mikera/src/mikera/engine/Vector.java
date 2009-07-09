@@ -65,7 +65,13 @@ public final class Vector implements Cloneable {
 		}
 	}
 	
-
+	public int toIntColour() {
+		int col=0xFF000000;
+		col|=   0x00FF0000 & (((int)(data[0]*255))<<16);
+		col|=   0x0000FF00 & (((int)(data[1]*255))<<8);
+		col|=   0x000000FF & (((int)(data[2]*255)));		
+		return col;
+	}
 	
 	public void set(double x, double y, double z) {
 		data[0]=(float)x;

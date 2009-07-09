@@ -3,11 +3,13 @@ package mikera.net;
 import java.util.*;
 import java.nio.*;
 
-public class BufferCache {
+public final class BufferCache {
 	public TreeMap<Integer,ByteBuffer> buffers=new TreeMap<Integer,ByteBuffer>();
 	
-	private BufferCache() {
-		
+	private final boolean direct;
+	
+	private BufferCache(boolean allocateDirect) {
+		direct=allocateDirect;
 	}
 	
 	public synchronized ByteBuffer getBuffer(int size) {
@@ -22,7 +24,16 @@ public class BufferCache {
 		return bb;
 	}
 	
-	public synchronized void recycle(ByteBuffer bb) {
+	public static void recycle(ByteBuffer bb) {
+		if (bb==null) throw new Error("Null ByteBuffer!!");
+		if (bb.isDirect()) {
+			directInstance().recycleBuffer(bb);
+		} else {
+			indirectInstance().recycleBuffer(bb);
+		}
+	}
+	
+	public synchronized void recycleBuffer(ByteBuffer bb) {
 		bb.clear();
 		buffers.put(bb.capacity(),bb);
 	}
@@ -37,12 +48,27 @@ public class BufferCache {
 	
 	private ByteBuffer create(int size) {
 		// TODO: Consider allocateDirect here?
-		return ByteBuffer.allocate(size);
+		if (direct) {
+			return ByteBuffer.allocateDirect(size);
+		} else {
+			return ByteBuffer.allocate(size);
+		}	
 	}
 	
-	private static final BufferCache instance=new BufferCache();
+	private static final BufferCache indirectInstance=new BufferCache(false);
+	
+	private static final BufferCache directInstance=new BufferCache(true);
+
+	
+	public static BufferCache directInstance() {
+		return directInstance;
+	}
+	
+	public static BufferCache indirectInstance() {
+		return indirectInstance;
+	}
 	
 	public static BufferCache instance() {
-		return instance;
+		return directInstance;
 	}
 }
