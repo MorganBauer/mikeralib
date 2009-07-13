@@ -18,7 +18,7 @@ public class TestVector {
 		
 		float len=v.normalise();
 		assertEquals("{1.0, 0.0, 0.0}",v.toString());
-		assertEquals(6,len);
+		assertEquals(6,len,0.0001f);
 	}
 	
 	@Test public void testRotation() {

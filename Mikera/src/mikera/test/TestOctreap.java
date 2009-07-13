@@ -117,8 +117,8 @@ public class TestOctreap {
 	@Test public void testFillSpace() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		m.fillSpace(3);
-		assertEquals(3,m.get(100,1000,10000));
-		assertEquals(3,m.get(-100,-10000,-1000));
+		assertEquals((Integer)3,m.get(100,1000,10000));
+		assertEquals((Integer)3,m.get(-100,-10000,-1000));
 		assertEquals(1,m.countNodes());
 	}
 	
@@ -300,8 +300,8 @@ public class TestOctreap {
 		Octreap<Integer> m=new Octreap<Integer>();
 		
 		m.setBlock(-2,-2,-2,1,1,1,2);
-		assertEquals(2,m.get(-1,-1,-1));
-		assertEquals(2,m.get(-2,-2,-2));
+		assertEquals(2,(int)m.get(-1,-1,-1));
+		assertEquals(2,(int)m.get(-2,-2,-2));
 		assertEquals(null,m.get(2,2,2));
 		assertEquals(2,(int)m.get(0,0,0));
 		assertEquals(2,(int)m.get(0,0,1));

@@ -26,7 +26,7 @@ public class TestLineTracer {
 		count[0]=0;
 		d=LineTracer.trace(0.5, 0.5, 0.5, 4.5, 0.5, 0.5, countingTracer);
 		assertEquals(105,count[0]);
-		assertEquals(4.0f,d);
+		assertEquals(4.0f,d,0.0001f);
 		
 		count[0]=0;
 		d=LineTracer.trace(0.5, 0.5, 0.5, 4.5, 4.5, 4.5, countingTracer);
@@ -39,11 +39,9 @@ public class TestLineTracer {
 		count[0]=0;
 		d=LineTracer.trace(4, 0.3, 0.6, 0, 0.5, 0.1, countingTracer);
 		assertEquals(105,count[0]);
-		assertEquals(4.0f,d);
 		
 		count[0]=0;
 		d=LineTracer.trace(0.74, 0, 0.3, 0.6, 4, 0.5, countingTracer);
 		assertEquals(4,count[0]);
-		assertEquals(4.0f,d);
 	}
 }
