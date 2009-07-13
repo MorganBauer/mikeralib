@@ -52,6 +52,14 @@ public final class Maths {
 	public static float floor(float a) {
 		return (float)Math.floor(a);
 	}
+
+	public static int square(byte b) {
+		return b*b;
+	}
+	
+	public static float square(float a) {
+		return a*a;
+	}
 	
 
 }

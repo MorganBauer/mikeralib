@@ -249,7 +249,7 @@ public class Connection {
 			}
 			
 			if (!bb.hasRemaining()) {
-				bufferCache.recycle(bb);
+				BufferCache.recycle(bb);
 				return;
 			}
 			
