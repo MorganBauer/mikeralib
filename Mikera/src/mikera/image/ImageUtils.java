@@ -26,4 +26,20 @@ public class ImageUtils {
 
 		return image;
 	}
+	
+	@SuppressWarnings("serial")
+	public static Frame display(final Image image) {
+		Frame f=new Frame("Image popup");
+		Canvas c=new Canvas() {
+			public void paint(Graphics g) {
+				g.drawImage(image,0,0,null);
+			}
+		};
+		c.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
+		f.add(c);
+		f.setVisible(true);
+		f.setMinimumSize(new Dimension(image.getWidth(null)+10,image.getHeight(null)+30));
+		
+		return f;
+	}
 }

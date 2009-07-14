@@ -3,6 +3,7 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.net.*;
+import mikera.util.Rand;
 
 import java.nio.*;
 
@@ -106,6 +107,32 @@ public class TestConnectors {
 		bbos.clear();
 		
 		
+		
+	}
+	
+	@Test public void testCompacted() {
+		ByteBuffer bb=ByteBuffer.allocate(1000);
+		
+		for (int i=0; i<1000; i++) {
+			long l=Rand.d(1000)*(Rand.d(10)-Rand.d(10))+(Rand.d(10)-Rand.d(10));
+			if (Rand.d(2)==1) {
+				l=Rand.nextLong();
+			}
+			int len=Util.writeCompacted(bb, l);
+			bb.flip();
+			long ll=Util.readCompacted(bb);
+			// System.err.println(len);
+			assertEquals(l,ll);
+			bb.clear();
+		}
+		
+		assertEquals(1,Util.writeCompacted(bb, 10));
+		assertEquals(1,Util.writeCompacted(bb, 0));
+		assertEquals(1,Util.writeCompacted(bb, 63));
+		assertEquals(2,Util.writeCompacted(bb, 64));
+		
+		assertEquals(1,Util.writeCompacted(bb, -64));
+		assertEquals(2,Util.writeCompacted(bb, -65));
 		
 	}
 

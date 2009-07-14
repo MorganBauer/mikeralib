@@ -29,6 +29,11 @@ public class Rand {
 		return rand.nextInt();
 	}
 	
+	public static final long nextLong() {
+		long result=rand.nextInt();
+		return result>>32+rand.nextInt();
+	}
+	
 	/**
 	 * Random number from zero to s-1
 	 * 
