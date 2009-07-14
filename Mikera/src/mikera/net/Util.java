@@ -17,6 +17,7 @@ public class Util {
 		return i;
 	}
 	
+	
 	public static long readCompacted(ByteBuffer bb) {
 		long result=0;
 		byte b=0;
