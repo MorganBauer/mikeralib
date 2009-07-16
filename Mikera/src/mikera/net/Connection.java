@@ -46,7 +46,7 @@ public class Connection {
 
 	public void clearReceiveBuffer() {
 		if (receiveBuffer != null) {
-			bufferCache.recycle(receiveBuffer);
+			BufferCache.recycle(receiveBuffer);
 			receiveBuffer = null;
 		}
 	}

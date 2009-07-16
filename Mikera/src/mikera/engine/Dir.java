@@ -42,7 +42,7 @@ public class Dir {
 	public static final byte[] DISTORDER_DIRECTIONS={C,N,S,E,W,U,D,NE,NW,SE,SW,UN,US,DN,DS,UE,UW,DE,DW,UNE,UNW,DNE,DNW,USE,USW,DSE,DSW};
 	public static final byte[] ALL_DIRECTIONS_3D   ={C,N,S,E,NE,SE,W,NW,SW,U,UN,US,UE,UNE,USE,UW,UNW,USW,D,DN,DS,DE,DNE,DSE,DW,DNW,DSW};
 	public static final byte[] ALL_DIRECTIONS_2D   ={C,N,S,E,NE,SE,W,NW,SW};
-
+	public static final byte[] REVERSE_DIRECTIONS  =new byte[27];
 	
 	public static long addZ(long z, int dir) {
 		return Octreap.calculateZ(Octreap.extractX(z)+DX[dir], Octreap.extractY(z)+DY[dir], Octreap.extractZ(z)+DZ[dir]);
@@ -62,6 +62,10 @@ public class Dir {
 	static {
 		for (int i=0; i<DIST.length; i++) {
 			DIST[i]=Maths.sqrt(Maths.square(DX[i])+Maths.square(DY[i])+Maths.square(DZ[i]));
+		}
+		
+		for (int i=0; i<REVERSE_DIRECTIONS.length; i++) {
+			REVERSE_DIRECTIONS[i]=getDir(-DX[i],-DY[i],-DZ[i]);
 		}
 	}
 }

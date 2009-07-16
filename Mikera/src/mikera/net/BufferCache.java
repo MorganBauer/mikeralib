@@ -3,6 +3,12 @@ package mikera.net;
 import java.util.*;
 import java.nio.*;
 
+/**
+ * Cache to enable recycling of NIO ByteBuffers
+ * 
+ * @author Mike
+ *
+ */
 public final class BufferCache {
 	public TreeMap<Integer,ByteBuffer> buffers=new TreeMap<Integer,ByteBuffer>();
 	
