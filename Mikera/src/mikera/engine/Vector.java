@@ -237,6 +237,7 @@ public final class Vector implements Cloneable {
 		tdata[ti+2]=z;
 	}
 	
+	
 	public static float lengthSquared(float[] data, int di, int n) {
 		float result=0;
 		for (int i=0; i<n; i++) {

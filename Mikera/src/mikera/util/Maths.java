@@ -71,6 +71,14 @@ public final class Maths {
 		return (float)Math.cos(a);
 	}
 	
+	public static float sin(float a) {
+		return (float)Math.sin(a);
+	}
+	
+	public static float cos(float a) {
+		return (float)Math.cos(a);
+	}
+	
 	public static float floor(float a) {
 		return (float)Math.floor(a);
 	}
