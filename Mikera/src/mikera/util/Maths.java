@@ -7,6 +7,9 @@ package mikera.util;
  *
  */
 public final class Maths {
+	public static final float ROOT_TWO=(float)Math.sqrt(2);
+	public static final float ROOT_THREE=(float)Math.sqrt(3);
+	
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
 	}
@@ -36,6 +39,25 @@ public final class Maths {
 	
 	public static float max(float a, float b, float c) {
 		float result=a;
+		if (b>result) result=b;
+		if (c>result) result=c;
+		return result;
+	}
+	
+	public static int abs(int a) {
+		if (a<0) return -a;
+		return a;
+	}
+	
+	public static int min(int a, int b, int c) {
+		int result=a;
+		if (b<result) result=b;
+		if (c<result) result=c;
+		return result;
+	}
+	
+	public static int max(int a, int b, int c) {
+		int result=a;
 		if (b>result) result=b;
 		if (c>result) result=c;
 		return result;
