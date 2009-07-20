@@ -91,5 +91,8 @@ public final class Maths {
 		return a*a;
 	}
 	
-
+	public static float round(float f, int dp) {
+		float factor=(float)Math.pow(10, -dp);
+		return Math.round(f/factor)*factor;
+	}
 }

@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @param <T> type of object to store in each cell
  */
-public class Octreap<T> implements Cloneable {
+public final class Octreap<T> implements Cloneable {
 	private static final int BITS=20;
 	private static final int BITS_POWER2=1<<BITS;
 	private static final int BITS_MASK=BITS_POWER2-1;
@@ -582,26 +582,26 @@ public class Octreap<T> implements Cloneable {
 		return false;
 	}
 	
-	private ZNode addNode(ZNode node, ZNode head) {
+	private final ZNode addNode(ZNode node, ZNode head) {
 		if (head==null) return node;
 		
-		boolean left=node.compareTo(head)<0;
-		if (left) {
+		boolean addToLeft=node.compareTo(head)<0;
+		if (addToLeft) {
 			head.left=addNode(node,head.left);
 			if (head.left.priority>head.priority) {
-				return pivot(head,left);
+				return pivot(head,addToLeft);
 			}
 		} else {
 			head.right=addNode(node,head.right);
 			if (head.right.priority>head.priority) {
-				return pivot(head,left);
+				return pivot(head,addToLeft);
 			}
 		}
 		
 		return head;
 	}
 	
-	private ZNode pivot(ZNode head, boolean toLeft) {
+	private final ZNode pivot(ZNode head, boolean toLeft) {
 		ZNode newHead=toLeft?head.left:head.right;
 		if (toLeft) {
 			head.left=newHead.right;
@@ -698,7 +698,7 @@ public class Octreap<T> implements Cloneable {
 	}
 
 	
-	public static long calculateZ(int x, int y, int z) {
+	public final static long calculateZ(int x, int y, int z) {
 		return split3(x)+(split3(y)<<1)+(split3(z)<<2);
 	}
 	
@@ -722,17 +722,17 @@ public class Octreap<T> implements Cloneable {
 	
 	public final static int extractComponent(int index, long z) {
 		z>>=index;
-		long result=0;
+		int result=0;
 		
-		long m;
+		int m;
 		for (m=1; m<(BITS_POWER2); m<<=1) {
-			result+=z&m;
+			result+=((int)z)&m;
 			z=z>>2;
 		}
 		result+=z&m; // last bit
 		if (result>=(BITS_POWER2>>1)) result-=BITS_POWER2;
 		
-		return (int)result;
+		return result;
 	}
 	
 	/**
