@@ -1,5 +1,7 @@
 package mikera.engine;
 
+import java.util.ArrayList;
+
 import mikera.util.Maths;
 
 public class LineTracer {
@@ -97,4 +99,14 @@ public class LineTracer {
 
 		return totalDist;
 	}
+	
+	private ArrayList<int[]> lines=new ArrayList<int[]>();
+	private ArrayList<int[]> skips=new ArrayList<int[]>();
+	
+	public void initLines(int maxLength) {
+		lines.clear();
+	
+		
+	}
+	
 }
