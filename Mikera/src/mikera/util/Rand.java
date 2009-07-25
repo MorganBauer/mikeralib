@@ -2,8 +2,8 @@ package mikera.util;
 
 public final class Rand {
 		
-	// Old java random for gaussians
-	private static final java.util.Random rand=new java.util.Random();
+	// For gaussians
+	private static final java.util.Random rand=getGenerator();
 	
 	/**
 	 * Gets a long random value
@@ -19,6 +19,30 @@ public final class Rand {
 		return state;
 	}
 		
+	private static class MikeraRandom extends java.util.Random {
+		long state=System.nanoTime()|1;
+		
+		protected int next(int bits) {
+			return (int)(nextLong()>>>(64-bits));
+		}
+		
+		public long nextLong() {
+			state ^= (state << 21);
+			state ^= (state >>> 35);
+			state ^= (state << 4);
+			return state;
+		}
+		
+		public void setSeed(long seed) {
+			if (seed==0) seed=54384849948L;
+			state=seed;
+		}
+	}
+	
+	public static java.util.Random getGenerator() {
+		return new MikeraRandom();
+	}
+	
 	// Poisson distribution
 	public static int po(double x) {
 		int r = 0;

@@ -47,6 +47,10 @@ public final class Octreap<T> implements Cloneable {
 			return 0;
 		}
 		
+		public Object value() {
+			return object;
+		}
+		
 		public Object clone() {
 			try {
 				ZNode zn=(ZNode)super.clone();
@@ -83,11 +87,11 @@ public final class Octreap<T> implements Cloneable {
 		
 	}
 	
-	public Octreap(Octreap o) {
+	public Octreap(Octreap<T> o) {
 		set(o);
 	}
 	
-	public void set(Octreap o) {
+	public void set(Octreap<T> o) {
 		clear();
 		paste(o);
 	}
@@ -181,7 +185,7 @@ public final class Octreap<T> implements Cloneable {
 	}
 	
 	public void visitCells(BlockVisitor<T> bf, int x1, int y1, int z1, int x2, int y2, int z2, int dx, int dy, int dz, ZNode head) {
-		
+		// TODO
 	}
 	
 	/*
@@ -418,7 +422,7 @@ public final class Octreap<T> implements Cloneable {
 		return null;
 	}
 	
-	private final ZNode getNode(long zz) {
+	public final ZNode getNode(long zz) {
 		ZNode ze=head;
 		while (ze!=null) {
 			if (zz<ze.z1) {
