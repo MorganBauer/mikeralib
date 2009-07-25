@@ -394,6 +394,33 @@ public class TestOctreap {
 		assertEquals(36+27,e.countArea());
 	}
 	
+	@Test public void testChange() {
+		Octreap<Integer> m=new Octreap<Integer>();
+			
+		m.set(0,0,0,1); 
+		m.set(0,0,1,2); 
+		m.set(0,1,0,3); 
+		m.set(0,1,1,4); 
+		m.set(1,0,0,5); 
+		m.set(1,0,1,6); 
+		m.set(1,1,0,7); 
+		m.set(1,1,1,8); 
+
+		assertEquals(8,m.countNodes());
+
+		// one change should result in merge
+		m.changeAll(1,5);
+		m.check();
+		assertEquals(7,m.countNodes());
+		
+		m.changeAll(10);
+		
+		m.check();
+		assertEquals(10,(int)m.get(0,0,1));
+		assertEquals(8,m.countArea());
+		assertEquals(1,m.countNodes());
+	}
+	
 	@Test public void testBlock3() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		

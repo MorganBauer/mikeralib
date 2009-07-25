@@ -1,14 +1,28 @@
 package mikera.util;
 
-import java.util.*;
-
-public class Rand {
-	private static Random rand=new Random();
+public final class Rand {
+		
+	// Old java random for gaussians
+	private static final java.util.Random rand=new java.util.Random();
 	
+	/**
+	 * Gets a long random value
+	 * uses very fast "XORShift" algorithm
+	 * @return
+	 */
+	private static long state=System.nanoTime()|1;
+		
+	public static long nextLong() {
+		state ^= (state << 21);
+		state ^= (state >>> 35);
+		state ^= (state << 4);
+		return state;
+	}
+		
 	// Poisson distribution
 	public static int po(double x) {
 		int r = 0;
-		double a = rand.nextDouble();
+		double a = nextDouble();
 		if (a >= 0.99999999)
 			return 0;
 		double p = Math.exp(-x);
@@ -26,13 +40,10 @@ public class Rand {
 
 	
 	public static final int nextInt() {
-		return rand.nextInt();
+		return (int)(nextLong()>>32);
 	}
 	
-	public static final long nextLong() {
-		long result=rand.nextInt();
-		return result>>32+rand.nextInt();
-	}
+
 	
 	/**
 	 * Random number from zero to s-1
@@ -42,16 +53,20 @@ public class Rand {
 	 */
 	public static final int r(int s) {
 		if (s<=0) return 0;
-		return rand.nextInt(s);
+		long result=((nextLong()>>>32)*s)>>32;
+		return (int) result;
 	}
+
 	
+	private static final double DOUBLE_SCALE_FACTOR=1.0/Math.pow(2,63);
+
 	/**
 	 * Returns standard double in range 0..1
 	 * 
 	 * @return
 	 */
 	public static final double nextDouble() {
-		return rand.nextDouble();
+		return (nextLong()>>>1)*DOUBLE_SCALE_FACTOR;
 	}
 	
 	public static final float nextFloat() {
@@ -71,9 +86,7 @@ public class Rand {
 	
 	// simulates a dice roll with the given number of sides
 	public static final int d(int sides) {
-		if (sides <= 0)
-			return 0;
-		return rand.nextInt(sides) + 1;
+		return r(sides) + 1;
 	}
 	
 	public static final int d3() {

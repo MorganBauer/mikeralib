@@ -21,4 +21,15 @@ public class TestBits {
 		assertEquals(1,Bits.roundDownToPowerOfTwo(1));
 		assertEquals(0,Bits.roundDownToPowerOfTwo(0));
 	}
+	
+	@Test public void testSigBits() {
+		assertEquals(1,Bits.significantBits(0));
+		assertEquals(1,Bits.significantBits(-1));
+
+		assertEquals(4,Bits.significantBits(4));
+		assertEquals(3,Bits.significantBits(3));
+		
+		assertEquals(3,Bits.significantBits(-4));
+
+	}
 }

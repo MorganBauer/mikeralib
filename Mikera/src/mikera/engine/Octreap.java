@@ -79,6 +79,19 @@ public final class Octreap<T> implements Cloneable {
 		setRange(zz,zz,value);
 	}
 	
+	public Octreap() {
+		
+	}
+	
+	public Octreap(Octreap o) {
+		set(o);
+	}
+	
+	public void set(Octreap o) {
+		clear();
+		paste(o);
+	}
+	
 	public void clear() {
 		head=null;
 	}
@@ -231,6 +244,49 @@ public final class Octreap<T> implements Cloneable {
 	public void fillSpace(T value) {
 		clear();
 		setRange(0,FULL_MASK,value);
+	}
+	
+	public void changeAll(T value) {
+		changeAll(head,value);
+	}
+	
+	private boolean changeAll(ZNode head, T value) {
+		if (head==null) return false;
+
+		head.object=value;
+		if (changeAll(head.left,value)) {
+			tryMerge(head.z1);
+		}
+		if (changeAll(head.right,value)) {
+			tryMerge(head.z2+1);
+		}
+		return true;
+	}
+	
+	public void changeAll(T oldValue, T newValue) {
+		if (oldValue.equals(newValue)) return;
+		changeAll(head,oldValue,newValue);
+	}
+	
+	private boolean changeAll(ZNode head, T oldValue, T newValue) {
+		if (head==null) return false;
+
+		boolean checkMerge=false;
+		if (head.object.equals(oldValue)) {
+			head.object=newValue;
+			checkMerge=true;
+		} else if (head.object.equals(newValue)) {
+			// might merge so need to check
+			checkMerge=true;
+		}  
+		
+		if (changeAll(head.left,oldValue,newValue)&&checkMerge) {
+			tryMerge(head.z1);
+		}
+		if (changeAll(head.right,oldValue,newValue)&&checkMerge) {
+			tryMerge(head.z2+1);
+		}
+		return true;
 	}
 	
 	public void floodFill(int x, int y, int z, T value) {
@@ -427,12 +483,14 @@ public final class Octreap<T> implements Cloneable {
 		if (node.left!=null) {
 			if (node.priority<node.left.priority) throw new Error("Priority problem");
 			if (node.z1<=node.left.z2) throw new Error("Bounds problem");
+			if ((node.z1==node.left.z2+1)&&node.object.equals(node.left.object)) throw new Error("Unmerged blocks");
 			if (!check(node.left)) return false;
 		}
 		
 		if (node.right!=null) {
 			if (node.priority<node.right.priority) throw new Error("Priority problem");
 			if (node.z2>=node.right.z1) throw new Error("Bounds problem");
+			if ((node.z2+1==node.right.z1)&&node.object.equals(node.right.object)) throw new Error("Unmerged blocks");
 			if (!check(node.right)) return false;
 		}
 		

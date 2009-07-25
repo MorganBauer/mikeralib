@@ -15,6 +15,20 @@ public class Bits {
 		return n;
 	}
 	
+	/** 
+	 * Returns the number of bits required to fully represent the number (including sign)
+	 * @param a
+	 * @return
+	 */
+	public static int significantBits(long a) {
+		if (a<0) return significantBits(-1-a);
+		for (int i=0; i<64; i++) {
+			long v=(1L<<i)-1;
+			if (a<=v) return (i+1);
+		}
+		return 64;
+	}
+	
 	public static int roundDownToPowerOfTwo(int n) {
 		return n & (~(fillBitsRight(n)>>1));	
 	}
