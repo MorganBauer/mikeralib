@@ -242,6 +242,22 @@ public final class Octreap<T> implements Cloneable {
 	public void floodFill(int x, int y, int z, T value, T fromValue) {
 		throw new Error("Not yet supported");
 	}
+	
+	public Octreap<T> expand() {
+		Octreap<T> o1=this.clone();
+		o1.paste(this, -1, 0, 0);
+		o1.paste(this, +1, 0, 0);
+		
+		Octreap<T> o2=o1.clone();
+		o2.paste(o1, 0,-1, 0);
+		o2.paste(o1, 0,+1, 0);
+
+		Octreap<T> o3=o2.clone();
+		o3.paste(o2, 0, 0,-1);
+		o3.paste(o2, 0, 0,+1);
+		
+		return o3;
+	}
 
 	public void paste(Octreap<T> t) {
 		paste(t,0,0,0);

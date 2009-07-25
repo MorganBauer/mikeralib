@@ -383,6 +383,17 @@ public class TestOctreap {
 		assertEquals(3,(int)m.get(0,0,0));
 	}
 	
+	@Test public void testExpand() {
+		Octreap<Integer> m=new Octreap<Integer>();
+			
+		m.setBlock(0,0,0,0,0,1,1); // 2 cells
+		m.setBlock(100,0,0,100,0,0,1);  // 1 cell
+
+		Octreap e=m.expand();
+		
+		assertEquals(36+27,e.countArea());
+	}
+	
 	@Test public void testBlock3() {
 		Octreap<Integer> m=new Octreap<Integer>();
 		
