@@ -799,8 +799,8 @@ public final class Octreap<T> implements Cloneable {
 	}
 	
 	public static final int extractComponent(long z) {
-		int lo=(int)(z)&01111111111;
-		int hi=(int)(z>>30)&01111111111;
+		int lo=((int)(z))&01111111111;
+		int hi=((int)(z>>30))&01111111111;
 		return ((compressInt3(hi)<<22)>>12)+compressInt3(lo); // sign extend and combine
 	}
 	
@@ -834,7 +834,7 @@ public final class Octreap<T> implements Cloneable {
 	}
 	
 	/**
-	 * Extracts every third bit into the lowest order BITS
+	 * Splits BITS across a long
 	 * via calculation
 	 * 
 	 * @param a coordinate value in lowest BITS
@@ -852,31 +852,36 @@ public final class Octreap<T> implements Cloneable {
 		return result;
 	}
 	
-
-	public static long split3(int a) {
-		return split3l(a);
-	}
-
 	/**
-	 * Extracts every third bit into the lowest order BITS
-	 * via lookup
+	 * Splits BITS across a long
 	 * 
 	 * @param a coordinate value in lowest BITS
 	 * @return
 	 */
-	public static long split3l(int a) {
-		return 	(long)split3bytes[a&LOWBITS]
-			            | ((long)split3bytes[(a&HIGHBITS)>>10])<<30;
+	public static long split3(int a) {
+		return 	(long)split3i(a&LOWBITS)
+  	     | (((long)split3i((a&HIGHBITS)>>10))<<30);
+		//return 	(long)split3lookup[a&LOWBITS]
+		//	            | ((long)split3lookup[(a&HIGHBITS)>>10])<<30;
+	}
+
+	public static int split3i(int a) {
+		// split out the lowest 10 bits to lowest 30 bits
+		a=(a|(a<<12))&00014000377;
+		a=(a|(a<<8)) &00014170017;
+		a=(a|(a<<4)) &00303030303;
+		a=(a|(a<<2)) &01111111111;
+		return a;
 	}
 	
-	private static final int[] split3bytes=new int[1024];
+	//private static final int[] split3lookup=new int[1024];
 	private static final int LOWBITS=1023; // bottom 10 bits
 	private static final int HIGHBITS=1024* 1023; // top 10 bits
 	
 	static {
 		// initialise split lookups
-		for (int i=0; i<1024; i++) {
-			split3bytes[i]=(int)split3c(i);
-		}
+		//for (int i=0; i<1024; i++) {
+		//	split3lookup[i]=(int)split3c(i);
+		//}
 	}
 }

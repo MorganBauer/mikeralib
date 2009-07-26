@@ -1,8 +1,6 @@
 package mikera.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,12 +37,19 @@ public class TestOctreap {
 	}
 	
 	@Test public void testZSpeed() {
-		int x=Rand.d(100)-50;
-		int y=Rand.d(100)-50;
-		int z=Rand.d(100)-50;
+		int x=Rand.d(10000)-5000;
+		int y=Rand.d(10000)-5000;
+		int z=Rand.d(10000)-5000;
 		
 		for (int i=0; i<1000000; i++) {
-			Octreap.calculateZ(x,y,z);
+			x=Rand.d(10000)-5000;
+			y=Rand.d(10000)-5000;
+			z=Rand.d(10000)-5000;
+
+			long zz=Octreap.calculateZ(x,y,z);
+			if(x!=Octreap.extractX(zz)) fail();
+			if(y!=Octreap.extractY(zz)) fail();
+			if(z!=Octreap.extractZ(zz)) fail();
 		}
 	}
 	

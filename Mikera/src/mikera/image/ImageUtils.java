@@ -1,6 +1,8 @@
 package mikera.image;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URL;
@@ -42,4 +44,16 @@ public class ImageUtils {
 		
 		return f;
 	}
+	
+	@SuppressWarnings("serial")
+	public static Frame displayAndExit(Image image) {
+		final Frame f=display(image);
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				f.dispose();
+			}
+		});
+		return f;
+	}
+
 }

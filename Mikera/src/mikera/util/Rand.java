@@ -5,18 +5,21 @@ public final class Rand {
 	// For gaussians
 	private static final java.util.Random rand=getGenerator();
 	
+
+	private static long state=System.nanoTime()|1;
+
 	/**
 	 * Gets a long random value
 	 * uses very fast "XORShift" algorithm
 	 * @return
 	 */
-	private static long state=System.nanoTime()|1;
-		
 	public static long nextLong() {
-		state ^= (state << 21);
-		state ^= (state >>> 35);
-		state ^= (state << 4);
-		return state;
+		long a=state;
+		a ^= (a << 21);
+		a ^= (a >>> 35);
+		a ^= (a << 4);
+		state=a;
+		return a;
 	}
 		
 	private static class MikeraRandom extends java.util.Random {

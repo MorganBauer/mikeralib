@@ -3,21 +3,42 @@ package mikera.util;
 /**
  * Helpful maths functions
  * 
+ * Focus on using floats rather than doubles for speed
+ * 
  * @author Mike
  *
  */
 public final class Maths {
 	public static final float ROOT_TWO=(float)Math.sqrt(2);
 	public static final float ROOT_THREE=(float)Math.sqrt(3);
+	public static final float PI=(float)Math.PI;
 	
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
 	}
 	
-	public static int clamp(int a, int min, int max) {
-		if (a<min) return min;
-		if (a>max) return max;
-		return a;
+	public static int clamp(double value, int min, int max) {
+		int v=(int)value;
+		if (v<min) return min;
+		if (v>max) return max;
+		return v;
+	}
+	
+	public static int clamp(int value, int min, int max) {
+		if (value<min) return min;
+		if (value>max) return max;
+		return value;
+	}
+	
+	public static double clamp(double value, double min, double max) {
+		if (value<min) return min;
+		if (value>max) return max;
+		return value;
+	}
+	
+	public static int sign(double a) {
+		if (a==0.0f) return 0;
+		return (a>0)?1:-1;
 	}
 	
 	public static int sign(float a) {

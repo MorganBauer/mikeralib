@@ -14,6 +14,8 @@ package mikera.engine;
 
 import java.util.Random;
 
+import mikera.util.Rand;
+
 /**
  * Computes Perlin Noise for three dimensions.
  * <p>
@@ -25,6 +27,8 @@ import java.util.Random;
  * <p>
  * Computing noise for one and two dimensions can make use of the 3D problem
  * space by just setting the un-needed dimensions to a fixed value.
+ * 
+ * Improvements by Mike Anderson
  *
  * @author Justin Couch
  * @version $Revision: 1.2 $
@@ -72,7 +76,6 @@ public class PerlinNoise
         p_imp = new int[DEFAULT_SAMPLE_SIZE << 1];
 
         int i, j, k;
-        Random rand = new Random(seed);
 
         // Calculate the table of psuedo-random coefficients.
         for(i = 0; i < DEFAULT_SAMPLE_SIZE; i++)
@@ -82,7 +85,7 @@ public class PerlinNoise
         while(--i > 0)
         {
             k = p_imp[i];
-            j = (int)(rand.nextLong() & DEFAULT_SAMPLE_SIZE);
+            j = (int)(Rand.r(DEFAULT_SAMPLE_SIZE));
             p_imp[i] = p_imp[j];
             p_imp[j] = k;
         }
@@ -575,21 +578,21 @@ public class PerlinNoise
         {
             p[i] = i;
 
-            g1[i] = (float)((Math.random() % (B + B)) - B) / B;
+            g1[i] = (float)((Rand.r(B + B)) - B) / B;
 
             for(j = 0; j < 2; j++)
-                g2[i][j] = (float)((Math.random() % (B + B)) - B) / B;
+                g2[i][j] = (float)((Rand.r(B + B)) - B) / B;
             normalize2(g2[i]);
 
             for(j = 0; j < 3; j++)
-                g3[i][j] = (float)((Math.random() % (B + B)) - B) / B;
+                g3[i][j] = (float)((Rand.r(B + B)) - B) / B;
             normalize3(g3[i]);
         }
 
         while(--i > 0)
         {
             k = p[i];
-            j = (int)(Math.random() % B);
+            j = (int)(Rand.r(B));
             p[i] = p[j];
             p[j] = k;
         }
