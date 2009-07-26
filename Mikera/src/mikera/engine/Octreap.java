@@ -781,25 +781,30 @@ public final class Octreap<T> implements Cloneable {
 	}
 	
 	public final static int extractX(long z) {
-		return extractComponent(0,z);
+		return extractComponent(z);
 	}
 	
 	public final static int extractY(long z) {
-		return extractComponent(1,z);
+		return extractComponent(z>>1);
 	}
 	
 	public final static int extractZ(long z) {
-		return extractComponent(2,z);
+		return extractComponent(z>>2);
 	}
 	
 	public final static void extractComponents(long z, int[] pt) {
-		pt[0]=extractComponent(0,z);
-		pt[1]=extractComponent(1,z);
-		pt[2]=extractComponent(2,z);
+		pt[0]=extractComponent(z);
+		pt[1]=extractComponent(z>>1);
+		pt[2]=extractComponent(z>>2);
 	}
 	
-	public final static int extractComponent(int index, long z) {
-		z>>=index;
+	public static final int extractComponent(long z) {
+		int lo=(int)(z)&01111111111;
+		int hi=(int)(z>>30)&01111111111;
+		return ((compressInt3(hi)<<22)>>12)+compressInt3(lo); // sign extend and combine
+	}
+	
+	public final static int extractComponentOld(long z) {
 		int result=0;
 		
 		int m;
@@ -814,12 +819,28 @@ public final class Octreap<T> implements Cloneable {
 	}
 	
 	/**
-	 * Extracts every third bit into the lowest order BITS
+	 * Compresses every third bit in an int
+	 * Assumes all other bits are zero
 	 * 
-	 * @param a z-parameter
+	 * @param a
 	 * @return
 	 */
-	public static long split3(long a) {
+	public static final int compressInt3(int a) {
+		a=(a|(a>>2)) &00303030303; // group into 2/2/2/2/2 bits (octal)
+		a=(a|(a>>4)) &00014170017; // group into 2/4/4 bits
+		a=(a|(a>>8)) &00014000377; // group into 2/8 bits
+		a=(a|(a>>12))&00000003777; // group into 10 bits
+		return a;
+	}
+	
+	/**
+	 * Extracts every third bit into the lowest order BITS
+	 * via calculation
+	 * 
+	 * @param a coordinate value in lowest BITS
+	 * @return
+	 */
+	public static long split3c(long a) {
 		long result=0;
 		long m=1;
 		for (int i=0; i<(BITS-1); i++) {
@@ -829,5 +850,33 @@ public final class Octreap<T> implements Cloneable {
 		}
 		result+=a&m; // last bit
 		return result;
+	}
+	
+
+	public static long split3(int a) {
+		return split3l(a);
+	}
+
+	/**
+	 * Extracts every third bit into the lowest order BITS
+	 * via lookup
+	 * 
+	 * @param a coordinate value in lowest BITS
+	 * @return
+	 */
+	public static long split3l(int a) {
+		return 	(long)split3bytes[a&LOWBITS]
+			            | ((long)split3bytes[(a&HIGHBITS)>>10])<<30;
+	}
+	
+	private static final int[] split3bytes=new int[1024];
+	private static final int LOWBITS=1023; // bottom 10 bits
+	private static final int HIGHBITS=1024* 1023; // top 10 bits
+	
+	static {
+		// initialise split lookups
+		for (int i=0; i<1024; i++) {
+			split3bytes[i]=(int)split3c(i);
+		}
 	}
 }

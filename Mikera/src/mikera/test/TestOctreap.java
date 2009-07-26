@@ -1,11 +1,18 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.engine.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+import java.util.Iterator;
+
+import mikera.engine.BlockVisitor;
+import mikera.engine.Octreap;
 import mikera.engine.Octreap.ZNode;
 import mikera.util.Rand;
-import java.util.*;
+
+import org.junit.Test;
 
 public class TestOctreap {
 	@Test public void testZ() {
@@ -18,15 +25,27 @@ public class TestOctreap {
 	}
 	
 	@Test public void testZ2() {
+		assertEquals(01777,Octreap.compressInt3(01111111111));
+		
 		int x=Rand.d(100)-50;
 		int y=Rand.d(100)-50;
 		int z=Rand.d(100)-50;
 		
 		long zz=Octreap.calculateZ(x,y,z);
 		
-		assertEquals(x,Octreap.extractX(zz));
+		assertEquals(Integer.toOctalString(x),Integer.toOctalString(Octreap.extractX(zz)));
 		assertEquals(y,Octreap.extractY(zz));
 		assertEquals(z,Octreap.extractZ(zz));
+	}
+	
+	@Test public void testZSpeed() {
+		int x=Rand.d(100)-50;
+		int y=Rand.d(100)-50;
+		int z=Rand.d(100)-50;
+		
+		for (int i=0; i<1000000; i++) {
+			Octreap.calculateZ(x,y,z);
+		}
 	}
 	
 	@Test public void testNulls() {

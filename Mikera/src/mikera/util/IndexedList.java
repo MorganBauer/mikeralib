@@ -14,6 +14,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	private Comparator<K> comparator=null;
 	
 	private static final int INITIAL_SIZE=10;
+	private static final float GROW_RATIO=1.5f;
 	
 	private Object[] keys=new Object[INITIAL_SIZE];
 	private Object[] values=new Object[INITIAL_SIZE];
@@ -31,7 +32,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		int currentLength=keys.length;
 		if (i<=currentLength) return;
 		
-		int nl=Math.min(i,(currentLength*3)/2);
+		int nl=Math.min(i,(int)(currentLength*GROW_RATIO));
 		
 		Object[] newKeys=new Object[nl];
 		Object[] newValues=new Object[nl];
