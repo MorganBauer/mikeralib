@@ -51,6 +51,11 @@ public final class Maths {
 		return (a>0)?1:-1;
 	}
 	
+	public static int sign(long a) {
+		if (a==0) return 0;
+		return (a>0)?1:-1;
+	}
+	
 	public static float min(float a, float b, float c) {
 		float result=a;
 		if (b<result) result=b;

@@ -23,14 +23,16 @@ public final class Octreap<T> implements Cloneable {
 	private static final int BITS_POWER2=1<<BITS;
 	private static final int BITS_MASK=BITS_POWER2-1;
 	private static final long FULL_MASK=(BITS_MASK)*(1L+((1L+(1L<<BITS))<<BITS));
+	public static final long MIN_ZVALUE=0;
+	public static final long MAX_ZVALUE=FULL_MASK;
 	
 	public static interface NodeVisitor {
 		public Object visit(ZNode n);
 	}
 	
 	public static final class ZNode implements Comparable<ZNode>, Cloneable {
-		private long z1;
-		private long z2;
+		public long z1;
+		public long z2;
 		private ZNode left;
 		private ZNode right;
 		private Object object;

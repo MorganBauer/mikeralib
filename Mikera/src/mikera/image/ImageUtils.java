@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.*;
 
+import mikera.util.Rand;
+
 
 public class ImageUtils {
 	public static BufferedImage getImage(String filename) {
@@ -27,6 +29,10 @@ public class ImageUtils {
 		}
 
 		return image;
+	}
+	
+	public static int randColour() {
+		return 0xFF000000+0x10000*Rand.r(256)+0x100*Rand.r(256)+Rand.r(256);
 	}
 	
 	@SuppressWarnings("serial")
