@@ -10,13 +10,16 @@ public class TestPrefixTree {
 		
 		Integer[] a1=new Integer[] {1,2,3};
 		pt.add(a1,"A");
+		assertEquals(3,pt.countNodes());
+		assertEquals(1,pt.countValues());
+		assertEquals(1,pt.countLeaves());
 		
-		a1[2]=4;
-		pt.add(a1,"B");
-		
+		Integer[] a2=new Integer[] {1,2,4};
+		pt.add(a2,"B");
+		Integer[] a3=new Integer[] {1,2,4,5};
+		pt.add(a3,"C");
 		assertEquals(5,pt.countNodes());
-		assertEquals(2,pt.countValues());
+		assertEquals(3,pt.countValues());
 		assertEquals(2,pt.countLeaves());
-		
 	}
 }
