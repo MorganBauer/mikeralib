@@ -30,6 +30,14 @@ public class Generator {
 	    }
 	}
 	
+	public static BufferedImage createSolidImage(int w, int h,int c) {
+		BufferedImage result=newImage(w,h);
+		Graphics2D g=result.createGraphics();
+		g.setColor(new Color(c));
+		g.fillRect(0, 0, w, h);
+		return result;
+	}
+	
 	public static BufferedImage newImage(int w, int h) {
 		BufferedImage result=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
 		return result;
@@ -57,7 +65,8 @@ public class Generator {
 	 */
 	public static void main(String[] args) {
 		BufferedImage b=createPerlinNoise(256,256,20);
-			
-		ImageUtils.displayAndExit(b);
+		BufferedImage c=createSolidImage(256,256,0x00FF00FF);
+		BufferedImage d=merge(b,c,0.3);	
+		ImageUtils.displayAndExit(d);
 	}
 }
