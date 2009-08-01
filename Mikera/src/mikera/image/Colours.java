@@ -5,6 +5,9 @@ import java.awt.Color;
 import mikera.util.Maths;
 
 public class Colours {
+	public static int RGB_MASK=0xFFFFFF;
+	public static int ALPHA_MASK=0xFF000000;
+	
 	public static int getRed(int argb) {
 		return ((argb>>16)&255);
 	}
@@ -17,11 +20,16 @@ public class Colours {
 		return ((argb)&255);
 	}
 	
-	public static int getAplha(int argb) {
+	public static int getAlpha(int argb) {
 		return ((argb>>24)&255);
 	}
 	
-	public static int getARGB(double r, double g, double b, double a) {
+	public static int toGreyScale(int argb) {
+    	int lum=(77*((argb>>16)&255)+150*((argb>>8)&255)+29*((argb)&255))>>8;
+    	return (argb&ALPHA_MASK)|(0x010101*lum);
+	}
+	
+	public static int getARGBClamped(double r, double g, double b, double a) {
     	int ri=Maths.clampToInteger(r, 0, 255);
     	int gi=Maths.clampToInteger(g, 0, 255);
     	int bi=Maths.clampToInteger(b, 0, 255);
@@ -29,16 +37,32 @@ public class Colours {
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
-	public static int getARGB(float r, float g, float b, float a) {
+	public static int getARGBClamped(float r, float g, float b, float a) {
     	int ri=Maths.clampToInteger(r, 0, 255);
     	int gi=Maths.clampToInteger(g, 0, 255);
     	int bi=Maths.clampToInteger(b, 0, 255);
     	int ai=Maths.clampToInteger(a, 0, 255);
+		return getARGBQuick(ri,gi,bi,ai);
+	}
+	
+	public static int getARGBClamped(int r, int g, int b, int a) {
+    	int ri=Maths.clamp(r, 0, 255);
+    	int gi=Maths.clamp(g, 0, 255);
+    	int bi=Maths.clamp(b, 0, 255);
+    	int ai=Maths.clamp(a, 0, 255);
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
 	public static int getARGB(int r, int g, int b, int a) {
 		return getARGBQuick(r&255,g&255,b&255,a&255);
+	}
+	
+	public static int getARGB(int r, int g, int b) {
+		return getARGBQuick(r&255,g&255,b&255,255);
+	}
+	
+	public static int getARGB(int rgb, int alpha) {
+		return (rgb&RGB_MASK)|(alpha<<24);
 	}
 	
 	static int getARGBQuick(int r, int g, int b, int a) {
