@@ -44,8 +44,12 @@ public class Dir {
 	public static final byte[] ALL_DIRECTIONS_2D   ={C,N,S,E,NE,SE,W,NW,SW};
 	public static final byte[] REVERSE_DIRECTIONS  =new byte[27];
 	
-	public static long addZ(long z, int dir) {
+	public static long addToZ(long z, int dir) {
 		return Octreap.calculateZ(Octreap.extractX(z)+DX[dir], Octreap.extractY(z)+DY[dir], Octreap.extractZ(z)+DZ[dir]);
+	}
+	
+	public static int dirMask(int dir) {
+		return 1<<dir;
 	}
 	
 	public static final byte getDir(int dx, int dy, int dz) {

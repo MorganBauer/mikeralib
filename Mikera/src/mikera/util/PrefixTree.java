@@ -20,16 +20,11 @@ public class PrefixTree<K,V> {
 			
 		}
 		
-		@Override
 		public boolean hasNext() {
 			return indexes.size()>0;
 		}
 		
-		private void findNext() {
-			
-		}
 
-		@Override
 		public K[] next() {
 			// TODO Auto-generated method stub
 			return null;
