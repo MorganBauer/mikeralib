@@ -17,7 +17,14 @@ public final class Maths {
 		return (float)Math.sqrt(a);
 	}
 	
-	public static int clamp(double value, int min, int max) {
+	public static int clampToInteger(double value, int min, int max) {
+		int v=(int)value;
+		if (v<min) return min;
+		if (v>max) return max;
+		return v;
+	}
+	
+	public static int clampToInteger(float value, int min, int max) {
 		int v=(int)value;
 		if (v<min) return min;
 		if (v>max) return max;
