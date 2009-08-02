@@ -53,6 +53,13 @@ public class Colours {
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
+	public static void toFloat4(float[] col, int offset, int argb) {
+		col[offset]=getRed(argb);
+		col[offset+1]=getGreen(argb);
+		col[offset+2]=getBlue(argb);
+		col[offset+3]=getAlpha(argb);
+	}
+	
 	public static int getARGB(int r, int g, int b, int a) {
 		return getARGBQuick(r&255,g&255,b&255,a&255);
 	}
