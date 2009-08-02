@@ -200,6 +200,10 @@ public final class Vector implements Cloneable {
 		return result;
 	}
 	
+	public static float dot3(float[] v1, float[] v2) {
+		return v1[0]*v2[0]+v1[1]*v2[1]+v1[1]*v2[1];
+	}
+	
 	public float lengthSquared() {
 		float result=0;
 		for (int i=0; i<data.length; i++) {

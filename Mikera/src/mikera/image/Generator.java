@@ -63,7 +63,7 @@ public class Generator {
 		for (int y=0; y<h; y++) {
 			for (int x=0; x<w; x++) {
 				//double nv=perlin.noise3(x*sx, y*sy,0);
-				double nv=0*perlin.tileableNoise3(x*sx, y*sy, 0 , w*sx, h*sy ,256);
+				double nv=perlin.tileableNoise3(x*sx, y*sy, 0 , w*sx, h*sy ,256);
 				int a=Maths.clampToInteger((128+128*1.9*nv), 0, 255);
 				b.setRGB(x, y, Colours.ALPHA_MASK+0x010101*a);
 			}
