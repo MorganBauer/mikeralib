@@ -19,8 +19,7 @@ public class Gradient {
 		for (int i=0; i<SIZE; i++) {
 			int c=(255-i)*0x010101;
 			gr[i]=c|Colours.ALPHA_MASK;
-		}
-		
+		}	
 		return gr;
 	}
 	

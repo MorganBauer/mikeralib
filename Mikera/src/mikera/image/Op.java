@@ -40,11 +40,13 @@ public class Op {
 	}
 
 	public static BufferedImage merge(BufferedImage b1, BufferedImage b2, double proportion2) {
-		BufferedImage result=Generator.newImage(b1.getWidth(),b1.getHeight());
+		int w=b1.getWidth();
+		int h=b1.getHeight();
+		BufferedImage result=Generator.newImage(w,h);
 		Graphics2D g=result.createGraphics();
 		g.drawImage(b1,0,0,null);
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)proportion2));
-		g.drawImage(b2,0,0,null);
+		g.drawImage(b2,0,0,w,h,null);
 		return result;
 	}
 

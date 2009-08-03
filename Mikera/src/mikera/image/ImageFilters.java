@@ -1,5 +1,6 @@
 package mikera.image;
 
+import java.awt.Color;
 import java.awt.image.BufferedImageFilter;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
@@ -36,6 +37,32 @@ public class ImageFilters {
 	    }
 	}
 	
+	static class RGBtoHSBFilter extends RGBImageFilter {
+		private float[] hsbvals=new float[4];
+		public int filterRGB(int x, int y, int argb) {
+	    	int r=Colours.getRed(argb);
+	    	int g=Colours.getGreen(argb);
+	    	int b=Colours.getBlue(argb);
+	    	int a=Colours.getAlpha(argb);
+	    	Color.RGBtoHSB(r, g, b, hsbvals);
+	    	int hu=(int)(hsbvals[0]*255);
+	    	int st=(int)(hsbvals[1]*255);
+	    	int br=(int)(hsbvals[2]*255);
+			return Colours.getARGB(hu,st,br,a);
+	    }
+	}
+	
+	static class HSBtoRGBFilter extends RGBImageFilter {
+		public int filterRGB(int x, int y, int argb) {
+	    	float hu=Colours.getRed(argb)/255.0f;
+	    	float st=Colours.getGreen(argb)/255.0f;
+	    	float br=Colours.getBlue(argb)/255.0f;
+	    	int a=Colours.getAlpha(argb);
+	    	int rgb=Color.HSBtoRGB(hu, st, br);
+			return Colours.getARGB(rgb,a);
+	    }
+	}
+	
 	
 	static BufferedImageOp blurOperation = new ConvolveOp(
 			new Kernel(3, 3,
@@ -58,12 +85,10 @@ public class ImageFilters {
 	);
 	
 	static class BlurFilter extends BufferedImageFilter {
-
 		public BlurFilter() {
 			super(blurOperation);
 			// TODO Auto-generated constructor stub
 		}
-	
 	}
 
 	static class MultiplyFilter extends RGBImageFilter {

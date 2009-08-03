@@ -131,7 +131,8 @@ public class Generator {
 		int[] grad=Gradient.createRainbowGradient();
 		e=Gradient.applyToIntensity(e,grad);
 		
-		Gradient.fillFromImage(grad, e, 0);
+		e=Op.apply(e, new ImageFilters.HSBtoRGBFilter());
+		e=Op.apply(e, new ImageFilters.RGBtoHSBFilter());
 		
 		Graphics2D gr=o.createGraphics();
 		gr.drawImage(e, 0, 0, null);
