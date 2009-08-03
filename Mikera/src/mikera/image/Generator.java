@@ -83,6 +83,26 @@ public class Generator {
 		return b;
 	}
 	
+	public static BufferedImage createGradient(int[] gradient) {
+		int size=gradient.length;
+		BufferedImage b=newImage(size,size);
+		
+		for (int y=0; y<size; y++) {
+			for (int x=0; x<size; x++) {
+				b.setRGB(x, y, gradient[x]);
+			}
+		}
+		return b;
+	}
+	
+
+	public static BufferedImage copy(BufferedImage b) {
+		BufferedImage result=newImage(b.getWidth(),b.getHeight());
+		Graphics2D gr=result.createGraphics();
+		gr.drawImage(b,0,0,null);
+		return result;
+	}
+	
 	public static BufferedImage createWhiteNoise(int w, int h) {
 		BufferedImage b=newImage(w,h);
 		
@@ -108,10 +128,15 @@ public class Generator {
 		
 		e=Op.resize(e,256,256);
 
+		int[] grad=Gradient.createRainbowGradient();
+		e=Gradient.applyToIntensity(e,grad);
+		
+		Gradient.fillFromImage(grad, e, 0);
 		
 		Graphics2D gr=o.createGraphics();
 		gr.drawImage(e, 0, 0, null);
-		o=tileImage(o,3,3);
+		// o=tileImage(o,3,3);
 		ImageUtils.displayAndExit(o);
 	}
+
 }
