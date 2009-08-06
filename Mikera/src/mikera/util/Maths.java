@@ -11,6 +11,7 @@ package mikera.util;
 public final class Maths {
 	public static final float ROOT_TWO=(float)Math.sqrt(2);
 	public static final float ROOT_THREE=(float)Math.sqrt(3);
+	public static final float E=(float)Math.exp(1);
 	public static final float PI=(float)Math.PI;
 	
 	public static float sqrt(float a) {
