@@ -12,7 +12,7 @@ import mikera.util.Maths;
 import mikera.util.Rand;
 
 public class Generator {
-	
+	 
 	public static BufferedImage blurImage(BufferedImage bi) {
 		BufferedImageOp op = ImageFilters.blurOperation;
 		return op.filter(bi, null);
@@ -126,6 +126,7 @@ public class Generator {
 		BufferedImage c=createWhiteNoise(1024,1024);
 		BufferedImage e=Op.merge(b,c,0.1);	
 		
+		
 		e=Op.resize(e,256,256);
 
 		int[] grad=Gradient.createRainbowGradient();
@@ -138,6 +139,7 @@ public class Generator {
 		gr.drawImage(e, 0, 0, null);
 		// o=tileImage(o,3,3);
 		ImageUtils.displayAndExit(o);
+		System.err.println("Done image generation");
 	}
 
 }
