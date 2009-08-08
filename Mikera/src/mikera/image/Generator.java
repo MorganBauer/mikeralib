@@ -83,13 +83,28 @@ public class Generator {
 		return b;
 	}
 	
-	public static BufferedImage createGradient(int[] gradient) {
+	public static BufferedImage createGradientImage(int[] gradient) {
 		int size=gradient.length;
 		BufferedImage b=newImage(size,size);
 		
 		for (int y=0; y<size; y++) {
 			for (int x=0; x<size; x++) {
 				b.setRGB(x, y, gradient[x]);
+			}
+		}
+		return b;
+	}
+	
+	public static BufferedImage createGradientCircle(int[] gradient, int r) {
+		int size=gradient.length;
+		BufferedImage b=newImage(r*2,r*2);
+		
+		for (int y=-r; y<r; y++) {
+			for (int x=-r; x<r; x++) {
+				int i=(int)(Maths.sqrt(x*x+y*y)*size/r);
+				if (i<size) {	
+					b.setRGB(r+x, r+y, gradient[i]);
+				}
 			}
 		}
 		return b;
@@ -119,9 +134,11 @@ public class Generator {
 	 * Test function
 	 */
 	public static void main(String[] args) {
-		BufferedImage o=createChecker(256,256,16,0xFFFFFFFF,0xFFC080C0);
-		// BufferedImage o=createSolidImage(256,256,0xFFFFFFFF);
+		// background
+		BufferedImage bg=createChecker(256,256,16,0xFFFFFFFF,0xFFC080C0);	
+		bg=createSolidImage(256,256,0xFF000000);
 		
+		// image
 		BufferedImage b=createPerlinNoise(1024,1024,20);
 		BufferedImage c=createWhiteNoise(1024,1024);
 		BufferedImage e=Op.merge(b,c,0.1);	
@@ -130,15 +147,17 @@ public class Generator {
 		e=Op.resize(e,256,256);
 
 		int[] grad=Gradient.createRainbowGradient();
-		e=Gradient.applyToIntensity(e,grad);
+		//e=Gradient.applyToIntensity(e,grad);
+		e=Generator.createGradientCircle(grad, 128);
 		
-		e=Op.apply(e, new ImageFilters.HSBtoRGBFilter());
-		e=Op.apply(e, new ImageFilters.RGBtoHSBFilter());
+		//e=Op.apply(e, new ImageFilters.HSBtoRGBFilter());
+		//e=Op.apply(e, new ImageFilters.RGBtoHSBFilter());
 		
-		Graphics2D gr=o.createGraphics();
+		// finally render
+		Graphics2D gr=bg.createGraphics();
 		gr.drawImage(e, 0, 0, null);
-		// o=tileImage(o,3,3);
-		ImageUtils.displayAndExit(o);
+		//o=tileImage(o,3,3);
+		ImageUtils.displayAndExit(bg);
 		System.err.println("Done image generation");
 	}
 

@@ -14,6 +14,7 @@ package mikera.engine;
 
 import java.util.Random;
 
+import mikera.util.Maths;
 import mikera.util.Rand;
 
 /**
@@ -416,7 +417,11 @@ public class PerlinNoise
                                 float h,
                                 float d)
     {
-        return (noise3(x,     y,     z)     * (w - x) * (h - y) * (d - z) +
+    	x=Maths.fmod(x,w);
+    	y=Maths.fmod(y,h);
+    	z=Maths.fmod(z,d);
+
+    	return (noise3(x,     y,     z)     * (w - x) * (h - y) * (d - z) +
                 noise3(x - w, y,     z)     *      x  * (h - y) * (d - z) +
                 noise3(x,     y - h, z)     * (w - x) *      y  * (d - z) +
                 noise3(x - w, y - h, z)     *      x  *      y  * (d - z) +

@@ -64,6 +64,11 @@ public final class Maths {
 		return (a>0)?1:-1;
 	}
 	
+	public static float fmod(float n, float d) {
+		float x=n/d;
+		return n-floor(x)*d;
+	}
+	
 	public static float min(float a, float b, float c) {
 		float result=a;
 		if (b<result) result=b;
