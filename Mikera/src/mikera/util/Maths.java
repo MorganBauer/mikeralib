@@ -44,6 +44,20 @@ public final class Maths {
 		return value;
 	}
 	
+	public static int middle(int a, int b, int c) {
+		if (a<b) {
+			if (b<c) {
+				return b;
+			}
+			return (a<c)?c:a;
+		} else {
+			if (a<c) {
+				return a;
+			}
+			return (b<c)?c:b;
+		}
+	}
+	
 	public static int sign(double a) {
 		if (a==0.0f) return 0;
 		return (a>0)?1:-1;

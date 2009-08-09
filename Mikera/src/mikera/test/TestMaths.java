@@ -23,8 +23,8 @@ public class TestMaths {
 			max=Math.max(f,max);
 		}
 		
-		System.err.println(min);
-		System.err.println(max);
+		//System.err.println(min);
+		//System.err.println(max);
 	}
 	
 	@Test public void testMod() {

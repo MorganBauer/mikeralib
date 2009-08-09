@@ -41,7 +41,16 @@ public class Gradient {
 		return gr;
 	}
 	
-	public void fillLinearGradient(int[] grad, int p1, int c1, int p2, int c2) {
+	public static void reverseGradient(int[] grad) {
+		int s=grad.length;
+		for (int i=0; i<s/2; i++) {
+			int t=grad[i];
+			grad[i]=grad[s-1-i];
+			grad[s-1-i]=t;
+		}
+	}
+	
+	public static void fillLinearGradient(int[] grad, int p1, int c1, int p2, int c2) {
 		grad[p2]=c2;
 		int d=Maths.sign(p2-p1);
 		if (d==0) return;
