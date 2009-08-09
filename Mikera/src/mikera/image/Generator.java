@@ -31,7 +31,7 @@ public class Generator {
 		int w=bi.getWidth()/th;
 		BufferedImage result=newImage(w,h);
 		Graphics2D gr=result.createGraphics();
-		gr.drawImage(bi,-w/2,-h/2,null);
+		gr.drawImage(bi,-(tw-1)*w/2,-(th-1)*h/2,null);
 		return result;
 	}
 	

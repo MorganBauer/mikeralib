@@ -61,6 +61,12 @@ public class Op {
 		return result;
 	}
 
+	public static BufferedImage applyWithWrap(BufferedImage b, BufferedImageOp op) {
+		BufferedImage c=Generator.createTiledImage(b, 3, 3);
+		c=op.filter(c, null);
+		return Generator.unTileImage(c, 3, 3);
+	}
+	
 	public static BufferedImage apply(BufferedImage b, BufferedImageOp op) {
 		return op.filter(b, null);
 	}

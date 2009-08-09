@@ -341,7 +341,7 @@ public final class Octreap<T> implements Cloneable {
 	public Octreap<T> clone() {
 		try {
 			Octreap<T> zn=(Octreap<T>)super.clone();
-			zn.head=(ZNode)(zn.head.clone());
+			if (zn.head!=null) zn.head=(ZNode)(zn.head.clone());
 			return zn;
 		} catch (Throwable t) {
 			throw new Error(t);
