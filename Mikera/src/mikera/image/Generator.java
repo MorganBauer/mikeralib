@@ -13,12 +13,7 @@ import mikera.util.Rand;
 
 public class Generator {
 	 
-	public static BufferedImage blurImage(BufferedImage bi) {
-		BufferedImageOp op = ImageFilters.blurOperation;
-		return op.filter(bi, null);
-	}
-	
-	public static BufferedImage tileImage(BufferedImage bi, int tw, int th) {
+	public static BufferedImage createTiledImage(BufferedImage bi, int tw, int th) {
 		int h=bi.getHeight();
 		int w=bi.getWidth();
 		BufferedImage result=newImage(w*tw,h*th);
@@ -53,7 +48,7 @@ public class Generator {
 		return result;
 	}
 	
-	private static PerlinNoise perlin=new PerlinNoise();
+	static PerlinNoise perlin=new PerlinNoise();
 	
 	public static BufferedImage createPerlinNoise(int w, int h, double s) {
 		BufferedImage b=newImage(w,h);
@@ -111,13 +106,6 @@ public class Generator {
 	}
 	
 
-	public static BufferedImage copy(BufferedImage b) {
-		BufferedImage result=newImage(b.getWidth(),b.getHeight());
-		Graphics2D gr=result.createGraphics();
-		gr.drawImage(b,0,0,null);
-		return result;
-	}
-	
 	public static BufferedImage createWhiteNoise(int w, int h) {
 		BufferedImage b=newImage(w,h);
 		
@@ -135,8 +123,8 @@ public class Generator {
 	 */
 	public static void main(String[] args) {
 		// background
-		BufferedImage bg=createChecker(256,256,16,0xFFFFFFFF,0xFFC080C0);	
-		bg=createSolidImage(256,256,0xFF000000);
+		BufferedImage bg=createChecker(1024,1024,64,0xFFFFFFFF,0xFFE0B0D0);	
+		bg=createSolidImage(1024,1024,0xFF000000);
 		
 		// image
 		BufferedImage b=createPerlinNoise(1024,1024,20);
@@ -144,19 +132,25 @@ public class Generator {
 		BufferedImage e=Op.merge(b,c,0.1);	
 		
 		
-		e=Op.resize(e,256,256);
 
 		int[] grad=Gradient.createRainbowGradient();
+		Gradient.fillLinearGradient(grad, 0, 0xFF80FF00, 255, 0xFFE0B0D0);
 		//e=Gradient.applyToIntensity(e,grad);
-		e=Generator.createGradientCircle(grad, 128);
+		e=Generator.createGradientCircle(grad, 256);
 		
 		//e=Op.apply(e, new ImageFilters.HSBtoRGBFilter());
 		//e=Op.apply(e, new ImageFilters.RGBtoHSBFilter());
+		e=Op.resize(e, 1024, 1024);
+		
+		
+		e=Op.turbulence(e, 5f, 10f);
+		e=Op.turbulence(e, 50f, 10f);
+		e=Generator.createTiledImage(e,2,2);
+		e=Op.resize(e,0.25f);
 		
 		// finally render
 		Graphics2D gr=bg.createGraphics();
 		gr.drawImage(e, 0, 0, null);
-		//o=tileImage(o,3,3);
 		ImageUtils.displayAndExit(bg);
 		System.err.println("Done image generation");
 	}
