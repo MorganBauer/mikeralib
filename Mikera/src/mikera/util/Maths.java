@@ -83,6 +83,8 @@ public final class Maths {
 		return n-floor(x)*d;
 	}
 	
+	
+	
 	public static float min(float a, float b, float c) {
 		float result=a;
 		if (b<result) result=b;
@@ -100,6 +102,14 @@ public final class Maths {
 	public static int abs(int a) {
 		if (a<0) return -a;
 		return a;
+	}
+	
+	public static int min(int a, int b) {
+		return (a<b)?a:b;
+	}
+	
+	public static int max(int a, int b) {
+		return (a>b)?a:b;
 	}
 	
 	public static int min(int a, int b, int c) {
