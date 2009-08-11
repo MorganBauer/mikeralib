@@ -15,7 +15,6 @@ public class PathFinder {
 			return h+g;
 		}
 		
-		@Override
 		public int compareTo(PathNode arg0) {
 			return Maths.sign(total()-arg0.total());
 		}
