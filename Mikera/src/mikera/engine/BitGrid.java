@@ -22,6 +22,7 @@ public class BitGrid {
 	private int gy;
 	private int gz;
 	
+	// width, height and depth in blocks (not coordinates!!)
 	private int gw;
 	private int gh;
 	private int gd;
@@ -36,26 +37,35 @@ public class BitGrid {
 	}
 	
 	public int width() {
-		return gw;
+		return gw<<XLOWBITS;
 	}
 	
 	public int height() {
-		return gh;
+		return gh<<YLOWBITS;
 	}
 	
 	public int depth() {
-		return gd;
+		return gd<<ZLOWBITS;
 	}
 	
 	public int get(int x, int y, int z) {
 		if (data==null) return 0;
 		if ((x<gx)||(y<gy)||(z<gz)) return 0;
-		x-=gx; if (x>=gw) return 0;
-		y-=gy; if (y>=gh) return 0;
-		z-=gz; if (x>=gd) return 0;
-		int i=index(x,y,z);
+		x-=gx; if (x>=width()) return 0;
+		y-=gy; if (y>=height()) return 0;
+		z-=gz; if (z>=depth()) return 0;
+		int i=dataIndex(x,y,z);
 		int bi=bitPos(x,y,z);
 		return ((data[i]>>bi)&1)>0 ? 1:0;
+	}
+	
+	public void clear() {
+		data=null;
+	}
+	
+	public int dataLength() {
+		if (data==null) return 0;
+		return data.length;
 	}
 	
 	private void init(int x, int y, int z) {
@@ -63,7 +73,7 @@ public class BitGrid {
 		gy=y&(~YLOWMASK);
 		gz=z&(~ZLOWMASK);
 		data=new int[1];
-		gw=4; gh=4; gd=2;
+		gw=1; gh=1; gd=1;
 	}
 	
 	public void growToInclude(int x, int y, int z) {
@@ -73,13 +83,9 @@ public class BitGrid {
 		if ((x<gx)||(y<gy)||(z<gz)) { growToIncludeLocal(x,y,z); return; }
 		
 		// ok providing we don't need
-		if (x>=((gx+gw)|XLOWMASK)) {growToIncludeLocal(x,y,z); return; }
-		if (y>=((gy+gh)|YLOWMASK)) {growToIncludeLocal(x,y,z); return; }
-		if (z>=((gz+gd)|ZLOWMASK)) {growToIncludeLocal(x,y,z); return; }	
-		// extend gw,gh,gd if necessary
-		if (x>=(gx+gw)) gw=x-gx+1;
-		if (y>=(gy+gh)) gh=x-gy+1;
-		if (z>=(gz+gd)) gd=x-gz+1;
+		if (x>=((gx+width())|XLOWMASK)) {growToIncludeLocal(x,y,z); return; }
+		if (y>=((gy+height())|YLOWMASK)) {growToIncludeLocal(x,y,z); return; }
+		if (z>=((gz+depth())|ZLOWMASK)) {growToIncludeLocal(x,y,z); return; }	
 	}
 	
 	private void growToIncludeLocal(int x, int y, int z) {	
@@ -87,17 +93,28 @@ public class BitGrid {
 		int ngx=Maths.min(gx,x)&(~XLOWMASK);
 		int ngy=Maths.min(gy,y)&(~YLOWMASK);
 		int ngz=Maths.min(gz,z)&(~ZLOWMASK);
-		int ngw=Maths.max(gx+gw, x+1)-ngx;
-		int ngh=Maths.max(gy+gh, y+1)-ngy;
-		int ngd=Maths.max(gz+gd, z+1)-ngz;
+		int ngw=(Maths.max(gx+width(), x+1)-ngx+XLOWMASK)>>XLOWBITS;
+		int ngh=(Maths.max(gy+height(),y+1)-ngy+YLOWMASK)>>YLOWBITS;
+		int ngd=(Maths.max(gz+depth(), z+1)-ngz+ZLOWMASK)>>ZLOWBITS;
 		resize(ngx,ngy,ngz,ngw,ngh,ngd);
 	}
 		
 	private void resize(int ngx, int ngy, int ngz, int ngw, int ngh, int ngd) {
-		int nl=dataSize(ngw,ngh,ngd);
+		int nl=ngw*ngh*ngd;
 		int[] ndata=new int[nl];
 		if (data!=null) {
-			if (ndata.length>0) throw new Error("TODO copy current data");
+			int si=0;
+			for (int z=0; z<gd; z++) {
+				for (int y=0; y<gh; y++) {
+					int di=0;
+					di+=((gz-ngz)>>ZLOWBITS)*ngw*ngh;
+					di+=((gy-ngy)>>YLOWBITS)*ngw;
+					di+=((gx-ngx)>>XLOWBITS);
+					for (int x=0; x<gw; x++) {
+						ndata[di++]=data[si++];
+					}					
+				}
+			}
 		}
 		data=ndata;
 		gx=ngx;
@@ -113,15 +130,15 @@ public class BitGrid {
 			init(x,y,z);
 		} else {
 			if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
-			x-=gx; if (x>=gw) growToIncludeLocal(x+gx,y,z);
-			y-=gy; if (y>=gh) growToIncludeLocal(x+gx,y+gy,z);
-			z-=gz; if (x>=gd) growToIncludeLocal(x+gx,y+gy,z+gz);		
+			x-=gx; if (x>=width()) growToIncludeLocal(x+gx,y,z);
+			y-=gy; if (y>=height()) growToIncludeLocal(x+gx,y+gy,z);
+			z-=gz; if (x>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
 		}
 		setLocal(x,y,z,v);
 	}
 	
 	private void setLocal(int x, int y, int z, int v) {
-		int i=index(x,y,z);
+		int i=dataIndex(x,y,z);
 		int bi=bitPos(x,y,z);
 		long bv=1L<<bi;
 		if (v!=0) {
@@ -131,15 +148,9 @@ public class BitGrid {
 		}
 	}
 	
-	public int dataSize(int w, int h, int d) {
-		// note: gx,gy,gz assumed to be aligned (zero low bits)
-		// so we can safely do this
-		return (w+XLOWMASK>>XLOWBITS)*((h+YLOWMASK)>>YLOWBITS)*((d+ZLOWMASK)>>ZLOWBITS);
-	}
-	
 	// get index relative to grid origin
-	private int index(int rx, int ry, int rz) {
-		return (rx>>XLOWBITS)+(ry>>YLOWBITS)*gw+(rz>>ZLOWBITS)*gw*gh;
+	private int dataIndex(int rx, int ry, int rz) {
+		return (rx>>XLOWBITS)+gw*((ry>>YLOWBITS)+gh*(rz>>ZLOWBITS));
 	}
 	
 	public int bitPos(int x, int y, int z) {

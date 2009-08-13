@@ -16,8 +16,8 @@ public class TestLineTracer {
 		
 		final int[] count=new int[1];
 		
-		LineTracer.TraceFunction countingTracer=new LineTracer.TraceFunction() {
-			public boolean visit(int x, int y, int z) {
+		PointVisitor<Integer> countingTracer=new PointVisitor<Integer>() {
+			public boolean visit(int x, int y, int z, Integer v) {
 				count[0]+=o.get(x, y, z);
 				return false;
 			}

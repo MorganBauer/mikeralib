@@ -40,7 +40,7 @@ public class TestBits {
 		assertEquals(4,bg.height());
 		assertEquals(2,bg.depth());
 		assertEquals(21,bg.bitPos(1, 1, 1));
-		
+		assertEquals(1,bg.dataLength());
 		
 		bg.set(1,1,1,1);
 		assertEquals(0,bg.get(0, 0, 0));
@@ -49,6 +49,12 @@ public class TestBits {
 		bg.set(0,0,0,0);
 		assertEquals(0,bg.get(0, 0, 0));
 		assertEquals(1,bg.get(1, 1, 1));
+		
+		bg.set(-10,-10,-10,1);
+		assertEquals(0,bg.get(0, 0, 0));
+		assertEquals(1,bg.get(-10, -10, -10));
+		assertEquals(1,bg.get(1, 1, 1));
+		
 		
 	}
 }

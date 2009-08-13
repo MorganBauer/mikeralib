@@ -5,24 +5,20 @@ import java.util.ArrayList;
 import mikera.util.Maths;
 
 public class LineTracer {
-	public abstract static class TraceFunction {
-		public abstract boolean visit(int x, int y, int z);
-	}
-
-	public static float trace(Vector v1, Vector v2, TraceFunction func) {
+	public static float trace(Vector v1, Vector v2, PointVisitor<Integer> func) {
 		return trace(v1.data[0],v1.data[1],v1.data[2],v2.data[0],v2.data[1],v2.data[2],func);
 	}
 	
-	public static float trace(double x1, double y1, double z1, double x2, double y2, double z2, TraceFunction func) {
+	public static float trace(double x1, double y1, double z1, double x2, double y2, double z2, PointVisitor<Integer> func) {
 		return trace((float)x1,(float)y1,(float)z1,(float)x2,(float)y2,(float)z2,func);
 	}
 
-	public static float trace(float x1, float y1, float z1, float x2, float y2, float z2, TraceFunction func) {
+	public static float trace(float x1, float y1, float z1, float x2, float y2, float z2, PointVisitor<Integer> func) {
 		int x=(int)Math.floor(x1);
 		int y=(int)Math.floor(y1);
 		int z=(int)Math.floor(z1);
 
-		if (func.visit(x,y,z)) return 0.0f;
+		if (func.visit(x,y,z,null)) return 0.0f;
 
 		float dx=x2-x1;
 		float dy=y2-y1;
@@ -89,7 +85,7 @@ public class LineTracer {
 				z+=step_z;
 			}
 			
-			if (func.visit(x,y,z)) return currentDist;
+			if (func.visit(x,y,z,null)) return currentDist;
 			
 			// update location
 			x1+=dx*distanceIncrement;
