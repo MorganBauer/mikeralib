@@ -59,6 +59,32 @@ public class BitGrid {
 		return ((data[i]>>bi)&1)>0 ? 1:0;
 	}
 	
+	public void visitSetBits(PointVisitor<Integer> pv) {
+		if (data==null) return;
+		// TODO
+	}
+	
+	public void visitBits(PointVisitor<Integer> pv) {
+		if (data==null) return;
+		int si=0;
+		int tgw=gw; int tgh=gh; int tgd=gd; // make local copy to enable loop optimisation?
+		for (int z=0; z<(tgd<<ZLOWBITS); z+=1<<ZLOWBITS) {
+			for (int y=0; y<(tgh<<YLOWBITS); y+=1<<YLOWBITS) {
+				for (int x=0; x<(tgw<<XLOWBITS); x+=1<<XLOWBITS) {
+					int bv=data[si++];
+					for (int i=0; i<32; i++) {
+						pv.visit(
+								x+(i&XLOWMASK),
+								y+((i>>XLOWBITS)&YLOWMASK),
+								z+((i>>(XLOWBITS+YLOWBITS))&ZLOWMASK), 
+								((bv&1)==1)?1:0);
+						bv>>=1;
+					}
+				}					
+			}
+		}	
+	}
+	
 	public void clear() {
 		data=null;
 	}
@@ -102,18 +128,16 @@ public class BitGrid {
 	private void resize(int ngx, int ngy, int ngz, int ngw, int ngh, int ngd) {
 		int nl=ngw*ngh*ngd;
 		int[] ndata=new int[nl];
-		if (data!=null) {
-			int si=0;
-			for (int z=0; z<gd; z++) {
-				for (int y=0; y<gh; y++) {
-					int di=0;
-					di+=((gz-ngz)>>ZLOWBITS)*ngw*ngh;
-					di+=((gy-ngy)>>YLOWBITS)*ngw;
-					di+=((gx-ngx)>>XLOWBITS);
-					for (int x=0; x<gw; x++) {
-						ndata[di++]=data[si++];
-					}					
-				}
+		int si=0;
+		for (int z=0; z<gd; z++) {
+			for (int y=0; y<gh; y++) {
+				int di=0;
+				di+=((gz-ngz)>>ZLOWBITS)*ngw*ngh;
+				di+=((gy-ngy)>>YLOWBITS)*ngw;
+				di+=((gx-ngx)>>XLOWBITS);
+				for (int x=0; x<gw; x++) {
+					ndata[di++]=data[si++];
+				}					
 			}
 		}
 		data=ndata;
@@ -128,6 +152,7 @@ public class BitGrid {
 	public void set(int x, int y, int z, int v) {
 		if (data==null) {
 			init(x,y,z);
+			x-=gx; y-=gy; z-=gz;
 		} else {
 			if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
 			x-=gx; if (x>=width()) growToIncludeLocal(x+gx,y,z);

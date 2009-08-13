@@ -55,6 +55,9 @@ public class TestBits {
 		assertEquals(1,bg.get(-10, -10, -10));
 		assertEquals(1,bg.get(1, 1, 1));
 		
-		
+		bg.clear();
+		assertEquals(0,bg.dataLength());
+		bg.set(-10,-10,-10,1);
+		assertEquals(1,bg.dataLength());
 	}
 }
