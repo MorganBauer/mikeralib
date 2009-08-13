@@ -67,6 +67,8 @@ public class BitGrid {
 	}
 	
 	public void growToInclude(int x, int y, int z) {
+		if (data==null) {init(x,y,z); return;}
+		
 		// check if array needs resizing
 		if ((x<gx)||(y<gy)||(z<gz)) { growToIncludeLocal(x,y,z); return; }
 		
@@ -80,28 +82,45 @@ public class BitGrid {
 		if (z>=(gz+gd)) gd=x-gz+1;
 	}
 	
-	private void growToIncludeLocal(int x, int y, int z) {
+	private void growToIncludeLocal(int x, int y, int z) {	
 		// assumes a change in size
-		int ngx=Maths.min(gx,x);
+		int ngx=Maths.min(gx,x)&(~XLOWMASK);
+		int ngy=Maths.min(gy,y)&(~YLOWMASK);
+		int ngz=Maths.min(gz,z)&(~ZLOWMASK);
 		int ngw=Maths.max(gx+gw, x+1)-ngx;
-		int ngy=Maths.min(gy,y);
 		int ngh=Maths.max(gy+gh, y+1)-ngy;
-		int ngz=Maths.min(gz,z);
 		int ngd=Maths.max(gz+gd, z+1)-ngz;
+		resize(ngx,ngy,ngz,ngw,ngh,ngd);
+	}
+		
+	private void resize(int ngx, int ngy, int ngz, int ngw, int ngh, int ngd) {
 		int nl=dataSize(ngw,ngh,ngd);
 		int[] ndata=new int[nl];
-		if (ndata.length>0) throw new Error("TODO manage resizing");
+		if (data!=null) {
+			if (ndata.length>0) throw new Error("TODO copy current data");
+		}
 		data=ndata;
 		gx=ngx;
 		gy=ngy;
 		gz=ngz;
+		gw=ngw;
+		gh=ngh;
+		gd=ngd;
 	}
 	
 	public void set(int x, int y, int z, int v) {
-		if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
-		x-=gx; if (x>=gw) growToIncludeLocal(x+gx,y,z);
-		y-=gy; if (y>=gh) growToIncludeLocal(x+gx,y+gy,z);
-		z-=gz; if (x>=gd) growToIncludeLocal(x+gx,y+gy,z+gz);
+		if (data==null) {
+			init(x,y,z);
+		} else {
+			if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
+			x-=gx; if (x>=gw) growToIncludeLocal(x+gx,y,z);
+			y-=gy; if (y>=gh) growToIncludeLocal(x+gx,y+gy,z);
+			z-=gz; if (x>=gd) growToIncludeLocal(x+gx,y+gy,z+gz);		
+		}
+		setLocal(x,y,z,v);
+	}
+	
+	private void setLocal(int x, int y, int z, int v) {
 		int i=index(x,y,z);
 		int bi=bitPos(x,y,z);
 		long bv=1L<<bi;
