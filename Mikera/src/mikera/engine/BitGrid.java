@@ -1,5 +1,6 @@
 package mikera.engine;
 
+import mikera.util.Bits;
 import mikera.util.Maths;
 /**
  * Class for storing flexible 3D bit arrays
@@ -46,6 +47,16 @@ public class BitGrid {
 	
 	public int depth() {
 		return gd<<ZLOWBITS;
+	}
+	
+	public int countSetBits() {
+		int[] dt=data;
+		if (dt==null) return 0;
+		int result=0;
+		for (int i=0; i<dt.length; i++) {
+			result+=Bits.countSetBits(dt[i]);
+		}
+		return result;
 	}
 	
 	public int get(int x, int y, int z) {
@@ -123,7 +134,7 @@ public class BitGrid {
 		int ngh=(Maths.max(gy+height(),y+1)-ngy+YLOWMASK)>>YLOWBITS;
 		int ngd=(Maths.max(gz+depth(), z+1)-ngz+ZLOWMASK)>>ZLOWBITS;
 		resize(ngx,ngy,ngz,ngw,ngh,ngd);
-	}
+	} 
 		
 	private void resize(int ngx, int ngy, int ngz, int ngw, int ngh, int ngd) {
 		int nl=ngw*ngh*ngd;

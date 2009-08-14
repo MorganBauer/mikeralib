@@ -1,6 +1,15 @@
 package mikera.util;
 
 public class Bits {
+	public static int countSetBits(int i) {
+		i=(i&(0x55555555))+((i>>>1)&0x55555555);
+		i=(i&(0x33333333))+((i>>>2)&0x33333333);
+		i=((i+(i>>4))&0x0F0F0F0F);
+		i=((i+(i>>8))&0x00FF00FF);
+		i=((i+(i>>16))&0x0000FFFF);
+		return i;
+	}
+	
 	public static int roundUpToPowerOfTwo(int n) {
 		n = n - 1;
 		n = fillBitsRight(n);
