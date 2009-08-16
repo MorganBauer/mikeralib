@@ -165,15 +165,13 @@ public class Generator {
 		// background
 		BufferedImage bg=createChecker(1024,1024,64,0xFFFFFFFF,0xFFE0B0D0);	
 		
-		VectorFunction f=VF.cloudFunction(2,1);
-		f=VF.add(f, 1);
-		f=VF.multiply(f,0.5);
+		VectorFunction f=VF.cloudFunction(2,3);
 		
 		f=VF.zeroExtendComponents(f, 4); // make into 4-vector
 		f=VF.add(f, new Vector(0,0,0,1));
 		f=VF.scale(f, 15);
 		
-		f=VF.perturb(f,VF.cloudFunction(2, 2));
+		f=VF.perturb(f,VF.cloudFunction(2, 2),1.5f);
 		
 		BufferedImage e=createFunction4(512,512,f);	
 

@@ -4,6 +4,15 @@ public abstract class BaseVectorFunction implements VectorFunction {
 	int inputDimensions=0;
 	int outputDimensions=1;
 	
+	public BaseVectorFunction() {
+		
+	}
+	
+	public BaseVectorFunction(int inputs, int outputs) {
+		inputDimensions=inputs;
+		outputDimensions=outputs;
+	}
+	
 	public int inputDimensions() {
 		return inputDimensions;
 	}

@@ -4,7 +4,7 @@ import mikera.util.Bits;
 import mikera.util.Maths;
 /**
  * Class for storing flexible 3D bit arrays
- * Stores bits in arrays of ints (4*4*2 aligned blocks
+ * Stores bits in arrays of ints (4*4*2 aligned blocks)
  * 
  * @author Mike Anderson
  *
@@ -72,7 +72,29 @@ public class BitGrid implements Cloneable {
 	
 	public void visitSetBits(PointVisitor<Integer> pv) {
 		if (data==null) return;
-		// TODO
+		int si=0;
+		int tgw=gw; int tgh=gh; int tgd=gd; // make local copy to enable loop optimisation?
+		for (int z=0; z<(tgd<<ZLOWBITS); z+=1<<ZLOWBITS) {
+			for (int y=0; y<(tgh<<YLOWBITS); y+=1<<YLOWBITS) {
+				for (int x=0; x<(tgw<<XLOWBITS); x+=1<<XLOWBITS) {
+					int bv=data[si++];
+					if (bv==0) continue;
+					for (int i=0; i<32; i++) {
+						if ((bv&15)!=0) {
+							i+=3;
+							bv>>=4;
+							continue;
+						}
+						if ((bv&1)!=0) pv.visit(
+								x+(i&XLOWMASK),
+								y+((i>>XLOWBITS)&YLOWMASK),
+								z+((i>>(XLOWBITS+YLOWBITS))&ZLOWMASK), 
+								1);
+						bv>>=1;
+					}
+				}					
+			}
+		}		
 	}
 	
 	public void visitBits(PointVisitor<Integer> pv) {

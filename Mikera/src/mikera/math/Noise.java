@@ -4,12 +4,12 @@ import mikera.util.*;
 
 public class Noise {
 	public static final float FLOAT_FACTOR=1.0f/(-Integer.MIN_VALUE);
-	public static final int SEED=Rand.nextInt();
+	public int SEED=Rand.nextInt();
 	
 	public static final int CLOUD_OFFSET=101;
 	public static final int CLOUD_OCTAVES=8;
 	
-	public static float clouds(float x) {
+	public float clouds(float x) {
 		float result=0;
 		float factor=1.0f;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
@@ -17,10 +17,10 @@ public class Noise {
 			x+=0.25f/factor+CLOUD_OFFSET;
 			factor*=2;
 		}
-		return result*0.5f;
+		return 0.5f+result*0.25f;
 	}
 	
-	public static float clouds(float x, float y) {
+	public float clouds(float x, float y) {
 		float result=0;
 		float factor=1.0f;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
@@ -29,10 +29,10 @@ public class Noise {
 			y+=0.25f/factor;
 			factor*=2;
 		}
-		return result*0.5f;
+		return 0.5f+result*0.25f;
 	}
 	
-	public static float clouds(float x, float y, float z) {
+	public float clouds(float x, float y, float z) {
 		float result=0;
 		float factor=1.0f;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
@@ -42,10 +42,10 @@ public class Noise {
 			z+=0.25f/factor;
 			factor*=2;
 		}
-		return result*0.5f;
+		return 0.5f+result*0.25f;
 	}
 	
-	public static float clouds(float x, float y, float z, float t) {
+	public float clouds(float x, float y, float z, float t) {
 		float result=0;
 		float factor=1.0f;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
@@ -56,10 +56,10 @@ public class Noise {
 			t+=0.25f/factor;
 			factor*=2;
 		}
-		return result*0.5f;
+		return 0.5f+result*0.25f;
 	}
 	
-	public static float noise(float x) {
+	public float noise(float x) {
 		int ix=Maths.floor(x);
 		x-=ix;
 		
@@ -69,7 +69,7 @@ public class Noise {
 		return Maths.lerp(fx, v0, v1);
 	}
 	
-	public static float noise(float x, float y) {
+	public float noise(float x, float y) {
 		int ix=Maths.floor(x);
 		x-=ix;
 		int iy=Maths.floor(y);
@@ -84,7 +84,7 @@ public class Noise {
 		return Maths.lerp(fy, Maths.lerp(fx, v00,v01), Maths.lerp(fx, v10,v11));
 	}
 	
-	public static float noise(float x, float y, float z) {
+	public float noise(float x, float y, float z) {
 		int ix=Maths.floor(x);
 		x-=ix;
 		int iy=Maths.floor(y);
@@ -108,7 +108,7 @@ public class Noise {
 				Maths.lerp(fy, Maths.lerp(fx, v100,v101), Maths.lerp(fx, v110,v111)));
 	}
 	
-	public static float noise(float x, float y, float z, float t) {
+	public float noise(float x, float y, float z, float t) {
 		int ix=Maths.floor(x);
 		x-=ix;
 		int iy=Maths.floor(y);
@@ -149,14 +149,14 @@ public class Noise {
 	
 
 	
-	public static float gridValue(int ix) {
+	public float gridValue(int ix) {
 		ix*=0x12345678;
 		int v=SEED+ix;
 		v= Rand.xorShift32(v);
 		return v*FLOAT_FACTOR;
 	}
 	
-	public static float gridValue(int ix, int iy) {
+	public float gridValue(int ix, int iy) {
 		ix*=0x12345678;
 		iy*=0x87654321;
 		int v=SEED+ix+iy;
@@ -164,7 +164,7 @@ public class Noise {
 		return v*FLOAT_FACTOR;
 	}
 	
-	public static float gridValue(int ix, int iy, int iz) {
+	public float gridValue(int ix, int iy, int iz) {
 		ix*=0x12345678;
 		iy*=0x87654321;
 		iz*=0x84736251;
@@ -173,7 +173,7 @@ public class Noise {
 		return v*FLOAT_FACTOR;
 	}
 	
-	public static float gridValue(int ix, int iy, int iz, int it) {
+	public float gridValue(int ix, int iy, int iz, int it) {
 		ix*=0x12345678;
 		iy*=0x87654321;
 		iz*=0x84736251;
