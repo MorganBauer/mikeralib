@@ -21,6 +21,20 @@ public final class Rand {
 		state=a;
 		return a;
 	}
+	
+	public static long xorShift64(long a) {
+		a ^= (a << 21);
+		a ^= (a >>> 35);
+		a ^= (a << 4);
+		return a;
+	}
+	
+	public static int xorShift32(int a) {
+		a ^= (a << 13);
+		a ^= (a >>> 17);
+		a ^= (a << 5);
+		return a;
+	}
 		
 	private static class MikeraRandom extends java.util.Random {
 		long state=System.nanoTime()|1;

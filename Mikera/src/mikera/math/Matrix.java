@@ -3,12 +3,12 @@ package mikera.math;
 import mikera.util.*;
 
 /**
- * Multi-dimension vector class
+ * Multi-dimension Matrix
  * 
  * @author Mike
  *
  */
-public final class Matrix implements Function<Vector,Vector> {
+public final class Matrix implements VectorFunction {
 	public float[] data;
 	private int rows=0;
 	private int columns=0;
@@ -123,5 +123,14 @@ public final class Matrix implements Function<Vector,Vector> {
 
 	public void calculate(Vector input, Vector output) {
 		multiplyVector(data,0,rows,columns,input.data,0,output.data,0);
+	}
+
+	public int inputDimensions() {
+		return columns;
+	}
+
+	public int outputDimensions() {
+		// TODO Auto-generated method stub
+		return rows;
 	}
 }

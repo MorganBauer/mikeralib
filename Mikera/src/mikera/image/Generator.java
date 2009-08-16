@@ -128,10 +128,13 @@ public class Generator {
 
 	public static BufferedImage createWhiteNoise(int w, int h) {
 		BufferedImage b=newImage(w,h);
+		int s=1;
 		
 		for (int y=0; y<h; y++) {
 			for (int x=0; x<w; x++) {
-				int a=Rand.r(256);
+				s=Rand.xorShift32(s);
+				//int a=Rand.r(256);
+				int a =s>>>24;
 				b.setRGB(x, y, 0xFF000000+0x010101*a);
 			}
 		}
@@ -162,18 +165,15 @@ public class Generator {
 		// background
 		BufferedImage bg=createChecker(1024,1024,64,0xFFFFFFFF,0xFFE0B0D0);	
 		
-		Function<Vector,Vector> b=VF.noiseFunction(1);
-		b=VF.muliply(b, 2);
+		VectorFunction f=VF.cloudFunction(2,1);
+		f=VF.add(f, 1);
+		f=VF.multiply(f,0.5);
 		
-		Function<Vector,Vector> f=VF.noiseFunction(2);
-		f=VF.perturb(f,VF.noiseFunction(2),10);
-		f=VF.perturb(f,f);
-		
-		f=VF.compose(VF.zeroExtendComponents(2, 4),f,2); // make into 4-vector
+		f=VF.zeroExtendComponents(f, 4); // make into 4-vector
 		f=VF.add(f, new Vector(0,0,0,1));
-		f=VF.scale(f, 10);
+		f=VF.scale(f, 15);
 		
-		f=VF.setComponent(f, 2, b);
+		f=VF.perturb(f,VF.cloudFunction(2, 2));
 		
 		BufferedImage e=createFunction4(512,512,f);	
 

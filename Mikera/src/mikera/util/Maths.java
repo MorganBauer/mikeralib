@@ -142,8 +142,16 @@ public final class Maths {
 		return (float)Math.cos(a);
 	}
 	
-	public static float floor(float a) {
-		return (float)Math.floor(a);
+	public static int floor(float a) {
+		if (a>=0) return (int)a;
+		int x=(int)a;
+		return (a==x)?x:x-1;
+	}
+	
+	public static int floor(double a) {
+		if (a>=0) return (int)a;
+		int x=(int)a;
+		return (a==x)?x:x-1;
 	}
 
 	public static int square(byte b) {
@@ -230,5 +238,13 @@ public final class Maths {
 	        return 1;
 	    float t = clamp((x - a) / (b - a), 0.0f, 1.0f);
 	    return t * t * (3 - 2 * t);
+	}
+	
+	public static final float lerp(float t,float a, float b) {
+	    return (1-t) * a + t*b;		
+	}
+	
+	public static final float smoothFactor(float t) {
+	    return t * t * (3 - 2 * t);		
 	}
 }

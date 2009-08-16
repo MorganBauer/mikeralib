@@ -40,4 +40,14 @@ public class TestMaths {
 
 		
 	}
+	
+	@Test public void testFloor() {
+		assertEquals(0,Maths.floor(0));
+		assertEquals(1,Maths.floor(1));
+		assertEquals(-1,Maths.floor(-1));
+		assertEquals(1,Maths.floor(1.2));
+		assertEquals(-1,Maths.floor(-0.0001));
+		assertEquals(-1,Maths.floor(-0.9001));
+		
+	}
 }
