@@ -10,7 +10,7 @@
  *
  ****************************************************************************/
 
-package mikera.engine;
+package mikera.math;
 
 import java.util.Random;
 

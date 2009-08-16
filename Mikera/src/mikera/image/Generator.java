@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.*;
 import mikera.engine.*;
+import mikera.math.PerlinNoise;
 
 import mikera.util.Maths;
 import mikera.util.Rand;
@@ -117,6 +118,23 @@ public class Generator {
 		}
 		return b;
 	}
+	
+	public static BufferedImage createConvolvedNoise(int w, int h) {
+		BufferedImage b=newImage(w,h);
+		
+		for (int y=0; y<h; y++) {
+			for (int x=0; x<w; x++) {
+				float cx=Maths.sin(x/20.f+10*Maths.sin(y/33.0f));
+				float cy=Maths.sin(y/30.f+15*Maths.sin(x/22.0f));
+				cx=Maths.sin(cy+Maths.sin(cx+x/23));
+				cy=Maths.sin(cx+Maths.sin(cy-y/13));
+
+				int a=(int)(128+127*Maths.sin(cx)*Maths.cos(cy));
+				b.setRGB(x, y, 0xFF000000+0x010101*a);
+			}
+		}
+		return b;
+	}
 
 	/**
 	 * Test function
@@ -147,6 +165,8 @@ public class Generator {
 		e=Op.turbulence(e, 50f, 10f);
 		e=Generator.createTiledImage(e,2,2);
 		e=Op.resize(e,0.25f);
+		
+		e=Generator.createConvolvedNoise(256, 256);
 		
 		// finally render
 		Graphics2D gr=bg.createGraphics();

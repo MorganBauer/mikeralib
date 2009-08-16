@@ -2,6 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import mikera.math.PerlinNoise;
 import mikera.util.*;
 import mikera.engine.*;
 

@@ -9,7 +9,7 @@ import mikera.util.Maths;
  * @author Mike Anderson
  *
  */
-public class BitGrid {
+public class BitGrid implements Cloneable {
 	private static final int XLOWBITS=2;
 	private static final int YLOWBITS=2;
 	private static final int ZLOWBITS=1;	
@@ -94,6 +94,22 @@ public class BitGrid {
 				}					
 			}
 		}	
+	}
+	
+	public BitGrid clone() {
+		BitGrid nbg;
+		try {
+			nbg = (BitGrid)super.clone();
+			int[] dt=data;
+			if (dt!=null) {
+				int[] ndt=new int[dt.length];
+				System.arraycopy(dt, 0, ndt, 0,ndt.length);
+				nbg.data=ndt;
+			}
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
+		return nbg;
 	}
 	
 	public void clear() {
