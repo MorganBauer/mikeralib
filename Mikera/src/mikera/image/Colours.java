@@ -2,6 +2,7 @@ package mikera.image;
 
 import java.awt.Color;
 
+import mikera.math.Vector;
 import mikera.util.Maths;
 
 public class Colours {
@@ -52,6 +53,30 @@ public class Colours {
     	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
     	int ai=Maths.clampToInteger(a*MAX_BYTE, 0, 255);
 		return getARGBQuick(ri,gi,bi,ai);
+	}
+	
+	public static int getARGBClamped3(Vector v) {
+		int result=0xFF000000;
+		float r=v.data[0];
+    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, 255)<<16;
+		float g=v.data[1];
+		result+=Maths.clampToInteger(g*MAX_BYTE, 0, 255)<<8;
+		float b=v.data[2];
+		result+=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
+		return result;
+	}
+	
+	public static int getARGBClamped4(Vector v) {
+		int result=0x00000000;
+		float r=v.data[0];
+    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, 255)<<16;
+		float g=v.data[1];
+		result+=Maths.clampToInteger(g*MAX_BYTE, 0, 255)<<8;
+		float b=v.data[2];
+		result+=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
+		float a=v.data[3];
+		result+=Maths.clampToInteger(a*MAX_BYTE, 0, 255)<<24;
+		return result;
 	}
 	
 	public static int getARGBClamped(int r, int g, int b, int a) {

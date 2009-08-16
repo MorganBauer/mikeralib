@@ -2,6 +2,7 @@ package mikera.engine;
 
 import java.util.ArrayList;
 
+import mikera.math.Vector;
 import mikera.util.Maths;
 
 public class LineTracer {

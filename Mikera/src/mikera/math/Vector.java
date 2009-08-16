@@ -1,4 +1,4 @@
-package mikera.engine;
+package mikera.math;
 
 import mikera.util.*;
 
@@ -22,6 +22,36 @@ public final class Vector implements Cloneable {
 		this(2);
 		data[0]=x;
 		data[1]=y;
+	}
+	
+	public Vector(float x, float y, float z) {
+		this(3);
+		data[0]=x;
+		data[1]=y;
+		data[2]=z;
+	}
+	
+	public Vector(float x, float y, float z, float t) {
+		this(4);
+		data[0]=x;
+		data[1]=y;
+		data[2]=z;
+		data[3]=t;
+	}
+	
+	public Vector(double x, double y, double z) {
+		this(3);
+		data[0]=(float)x;
+		data[1]=(float)y;
+		data[2]=(float)z;
+	}
+	
+	public Vector(double x, double y, double z, double t) {
+		this(4);
+		data[0]=(float)x;
+		data[1]=(float)y;
+		data[2]=(float)z;
+		data[3]=(float)t;
 	}
 	
 	public Vector(int x, int y, int z) {
@@ -152,13 +182,6 @@ public final class Vector implements Cloneable {
 			return this.equals((Vector)o);
 		}
 		return false;
-	}
-	
-	public Vector(double x, double y, double z) {
-		this(3);
-		data[0]=(float)x;
-		data[1]=(float)y;
-		data[2]=(float)z;
 	}
 	
 	public int hashCode() {

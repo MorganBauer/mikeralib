@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.*;
 import mikera.engine.*;
-import mikera.math.PerlinNoise;
+import mikera.math.*;
 
 import mikera.util.Maths;
 import mikera.util.Rand;
@@ -59,9 +59,28 @@ public class Generator {
 		for (int y=0; y<h; y++) {
 			for (int x=0; x<w; x++) {
 				//double nv=perlin.noise3(x*sx, y*sy,0);
-				double nv=perlin.tileableNoise3(x*sx, y*sy, 0 , w*sx, h*sy ,256);
-				int a=Maths.clampToInteger((128+128*1.9*nv), 0, 255);
+				//double nv=perlin.tileableNoise3(x*sx, y*sy, 0 , w*sx, h*sy ,256);
+				double nv=PerlinScalar.pnoise(x*sx, y*sy, 0 , w*sx, h*sy ,256);
+				//int a=Maths.clampToInteger((128+128*1.9*nv), 0, 255);
+				int a=Maths.clampToInteger(255*nv, 0, 255);
 				b.setRGB(x, y, Colours.ALPHA_MASK+0x010101*a);
+			}
+		}
+		return b;
+	}
+	
+	public static BufferedImage createFunction4(int w, int h, Function<Vector,Vector> f) {
+		BufferedImage b=newImage(w,h);
+		Vector input=new Vector(2);
+		Vector output=new Vector(4);
+		
+		for (int y=0; y<h; y++) {
+			for (int x=0; x<w; x++) {
+				input.data[0]=x/(float)w;
+				input.data[1]=y/(float)h;
+				f.calculate(input, output);
+				int rgba=Colours.getARGBClamped4(output);
+				b.setRGB(x, y, rgba);
 			}
 		}
 		return b;
@@ -142,33 +161,22 @@ public class Generator {
 	public static void main(String[] args) {
 		// background
 		BufferedImage bg=createChecker(1024,1024,64,0xFFFFFFFF,0xFFE0B0D0);	
-		bg=createSolidImage(1024,1024,0xFF000000);
 		
-		// image
-		BufferedImage b=createPerlinNoise(1024,1024,20);
-		BufferedImage c=createWhiteNoise(1024,1024);
-		BufferedImage e=Op.merge(b,c,0.1);	
+		Function<Vector,Vector> b=VF.noiseFunction(1);
+		b=VF.muliply(b, 2);
 		
+		Function<Vector,Vector> f=VF.noiseFunction(2);
+		f=VF.perturb(f,VF.noiseFunction(2),10);
+		f=VF.perturb(f,f);
 		
+		f=VF.compose(VF.zeroExtendComponents(2, 4),f,2); // make into 4-vector
+		f=VF.add(f, new Vector(0,0,0,1));
+		f=VF.scale(f, 10);
+		
+		f=VF.setComponent(f, 2, b);
+		
+		BufferedImage e=createFunction4(512,512,f);	
 
-		int[] grad=Gradient.createRainbowGradient();
-		Gradient.fillLinearGradient(grad, 0, 0xFF80FF00, 255, 0xFFE0B0D0);
-		//e=Gradient.applyToIntensity(e,grad);
-		e=Generator.createGradientCircle(grad, 256);
-		
-		//e=Op.apply(e, new ImageFilters.HSBtoRGBFilter());
-		//e=Op.apply(e, new ImageFilters.RGBtoHSBFilter());
-		e=Op.resize(e, 1024, 1024);
-		
-		
-		e=Op.turbulence(e, 5f, 10f);
-		e=Op.turbulence(e, 50f, 10f);
-		e=Generator.createTiledImage(e,2,2);
-		e=Op.resize(e,0.25f);
-		
-		e=Generator.createConvolvedNoise(256, 256);
-		
-		// finally render
 		Graphics2D gr=bg.createGraphics();
 		gr.drawImage(e, 0, 0, null);
 		ImageUtils.displayAndExit(bg);

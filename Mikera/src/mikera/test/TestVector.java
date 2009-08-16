@@ -3,6 +3,8 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.engine.*;
+import mikera.math.Matrix;
+import mikera.math.Vector;
 import mikera.util.*;
 
 public class TestVector {

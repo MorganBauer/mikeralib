@@ -1,4 +1,4 @@
-package mikera.engine;
+package mikera.math;
 
 import mikera.util.*;
 
@@ -8,7 +8,7 @@ import mikera.util.*;
  * @author Mike
  *
  */
-public final class Matrix {
+public final class Matrix implements Function<Vector,Vector> {
 	public float[] data;
 	private int rows=0;
 	private int columns=0;
@@ -119,5 +119,9 @@ public final class Matrix {
 			}
 			target[o3+y]=val;
 		}
+	}
+
+	public void calculate(Vector input, Vector output) {
+		multiplyVector(data,0,rows,columns,input.data,0,output.data,0);
 	}
 }
