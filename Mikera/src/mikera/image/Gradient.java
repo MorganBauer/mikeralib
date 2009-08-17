@@ -41,6 +41,18 @@ public class Gradient {
 		return gr;
 	}
 	
+	public static int[] createLandscapeGradient() {
+		int[] gr=create();
+		fillLinearGradient(gr, 0, 0xFF000000, 127, 0xFF0080FF);
+		fillLinearGradient(gr, 128, 0xFF80FF20, 129, 0xFFC0FF00);
+		fillLinearGradient(gr, 130, 0xFFFFFF00, 132, 0xFFFFFF00);
+		fillLinearGradient(gr, 133, 0xFF00FF00, 160, 0xFF006000);
+		fillLinearGradient(gr, 161, 0xFF006000, 170, 0xFF605040);
+		fillLinearGradient(gr, 171, 0xFF605040, 190, 0xFF707070);
+		fillLinearGradient(gr, 191, 0xFFFFFFFF, 255, 0xFFB0FFFF);
+		return gr;
+	}
+	
 	public static void reverseGradient(int[] grad) {
 		int s=grad.length;
 		for (int i=0; i<s/2; i++) {

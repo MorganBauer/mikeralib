@@ -86,6 +86,25 @@ public class Generator {
 		return b;
 	}
 	
+	public static BufferedImage createFunctionGradient(int w, int h, Function<Vector,Vector> f, int[] grad) {
+		BufferedImage b=newImage(w,h);
+		Vector input=new Vector(2);
+		Vector output=new Vector(20);
+		
+		for (int y=0; y<h; y++) {
+			for (int x=0; x<w; x++) {
+				input.data[0]=x/(float)w;
+				input.data[1]=y/(float)h;
+				f.calculate(input, output);
+				int max=grad.length;
+				int i=Maths.clampToInteger(output.data[0]*max, 0, max);
+				int rgba=grad[i];
+				b.setRGB(x, y, rgba);
+			}
+		}
+		return b;
+	}
+	
 	public static BufferedImage createChecker(int w, int h, int tiles, int c1, int c2) {
 		BufferedImage b=newImage(w,h);
 		
@@ -169,12 +188,14 @@ public class Generator {
 		
 		f=VF.zeroExtendComponents(f, 4); // make into 4-vector
 		f=VF.add(f, new Vector(0,0,0,1));
-		f=VF.scale(f, 15);
+		f=VF.scale(f, 5);
 		
-		f=VF.perturb(f,VF.cloudFunction(2, 2),1.5f);
+		f=VF.perturb(f,VF.cloudFunction(2, 2),1.0f);
 		
-		BufferedImage e=createFunction4(512,512,f);	
-
+		int[] grad=Gradient.createLandscapeGradient();
+		//BufferedImage e=createFunction4(512,512,f);	
+		BufferedImage e=createFunctionGradient(512,512,f, grad);
+		
 		Graphics2D gr=bg.createGraphics();
 		gr.drawImage(e, 0, 0, null);
 		ImageUtils.displayAndExit(bg);
