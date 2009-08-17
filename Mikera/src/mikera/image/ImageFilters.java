@@ -74,7 +74,7 @@ public class ImageFilters {
 			        		
 	);
 	
-	static BufferedImageOp embossOperation = new ConvolveOp(
+	public static BufferedImageOp embossOperation = new ConvolveOp(
 			new Kernel(3, 3,
 			        new float[] {
 			             1.0f,  0.5f,  0.0f,
@@ -84,7 +84,7 @@ public class ImageFilters {
 			        		
 	);
 	
-	static class BlurFilter extends BufferedImageFilter {
+	public static class BlurFilter extends BufferedImageFilter {
 		public BlurFilter() {
 			super(blurOperation);
 			// TODO Auto-generated constructor stub

@@ -96,7 +96,7 @@ public class Generator {
 				input.data[0]=x/(float)w;
 				input.data[1]=y/(float)h;
 				f.calculate(input, output);
-				int max=grad.length;
+				int max=grad.length-1;
 				int i=Maths.clampToInteger(output.data[0]*max, 0, max);
 				int rgba=grad[i];
 				b.setRGB(x, y, rgba);
@@ -191,10 +191,23 @@ public class Generator {
 		f=VF.scale(f, 5);
 		
 		f=VF.perturb(f,VF.cloudFunction(2, 2),1.0f);
+		f=VF.madd(f, VF.scale(VF.noiseFunction(2, 4),30),0.03);
 		
 		int[] grad=Gradient.createLandscapeGradient();
 		//BufferedImage e=createFunction4(512,512,f);	
 		BufferedImage e=createFunctionGradient(512,512,f, grad);
+		
+		grad=Gradient.createMonoGradient();
+		f=VF.max(f,0.5);
+		
+		Vector v=new Vector(-0.001,-0.001);
+		f=VF.madd(f, VF.offset(f, v), -1);
+		f=VF.multiply(f, 100);
+		f=VF.add(f, 0.5);
+		BufferedImage ee=createFunctionGradient(512,512,f, grad);
+		
+		e=Op.multiply(e, ee);
+		e=Op.multiply(e, 2, 2, 2, 1);
 		
 		Graphics2D gr=bg.createGraphics();
 		gr.drawImage(e, 0, 0, null);

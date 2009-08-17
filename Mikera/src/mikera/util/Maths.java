@@ -112,6 +112,14 @@ public final class Maths {
 		return (a>b)?a:b;
 	}
 	
+	public static float min(float a, float b) {
+		return (a<b)?a:b;
+	}
+	
+	public static float max(float a, float b) {
+		return (a>b)?a:b;
+	}
+	
 	public static int min(int a, int b, int c) {
 		int result=a;
 		if (b<result) result=b;

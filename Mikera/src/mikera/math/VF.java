@@ -198,6 +198,54 @@ public class VF {
 		return vf;
 	}
 	
+	public static VectorFunction min(final VectorFunction f1, double d) {
+		Vector v=new Vector(f1.outputDimensions());
+		v.fill((float)d);
+		return min(f1,v);
+	}
+
+	public static VectorFunction min(final VectorFunction f1, Vector v) {
+		return min(f1,constant(v));	
+	}
+
+	public static VectorFunction min(final VectorFunction f1, final VectorFunction f2) {
+		BaseVectorFunction vf=new BaseVectorFunction(f1.inputDimensions(),f1.outputDimensions()) {
+			Vector temp=new Vector(f2.outputDimensions());
+			public void calculate(Vector input, Vector output) {
+				f2.calculate(input, temp);
+				f1.calculate(input, output);
+				for (int i=0; i<outputDimensions; i++) {
+					output.data[i]=Maths.min(output.data[i],temp.data[i]);
+				}
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction max(final VectorFunction f1, double d) {
+		Vector v=new Vector(f1.outputDimensions());
+		v.fill((float)d);
+		return max(f1,v);
+	}
+
+	public static VectorFunction max(final VectorFunction f1, Vector v) {
+		return max(f1,constant(v));	
+	}
+
+	public static VectorFunction max(final VectorFunction f1, final VectorFunction f2) {
+		BaseVectorFunction vf=new BaseVectorFunction(f1.inputDimensions(),f1.outputDimensions()) {
+			Vector temp=new Vector(f2.outputDimensions());
+			public void calculate(Vector input, Vector output) {
+				f2.calculate(input, temp);
+				f1.calculate(input, output);
+				for (int i=0; i<outputDimensions; i++) {
+					output.data[i]=Maths.max(output.data[i],temp.data[i]);
+				}
+			}
+		};		
+		return vf;
+	}
+
 	public static VectorFunction madd(final VectorFunction f1, final VectorFunction f2, final double v) {
 		BaseVectorFunction vf=new BaseVectorFunction(f2.inputDimensions(),f2.outputDimensions()) {
 			Vector temp=new Vector(f2.outputDimensions());
@@ -335,6 +383,22 @@ public class VF {
 				f2.calculate(input, temp);
 				for (int i=0; i<isize; i++) {
 					temp.data[i]=temp.data[i]*factor+input.data[i];
+				}
+				f1.calculate(temp, output);
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction offset(final VectorFunction f1, final Vector v) {
+		if (v.size()!=f1.inputDimensions()) throw new Error("Wrong dimension ["+v.size()+"] for offset, expected "+f1.inputDimensions());
+		BaseVectorFunction vf=new BaseVectorFunction(f1.inputDimensions(),f1.outputDimensions()) {
+			Vector vector=new Vector(v);
+			Vector temp=new Vector(f1.inputDimensions());
+			public void calculate(Vector input, Vector output) {
+				int isize=inputDimensions;
+				for (int i=0; i<isize; i++) {
+					temp.data[i]=input.data[i]+vector.data[i];
 				}
 				f1.calculate(temp, output);
 			}

@@ -138,6 +138,12 @@ public final class Vector implements Cloneable {
 		System.arraycopy(adata, offset, data, 0, size);
 	}
 	
+	public Vector(double x, double y) {
+		this(2);
+		data[0]=(float)x;
+		data[1]=(float)y;
+	}
+
 	public Vector construct(float[] dataToEmbed) {
 		Vector v=new Vector();
 		v.data=dataToEmbed;
@@ -295,5 +301,12 @@ public final class Vector implements Cloneable {
 			data[di+i]*=factor;
 		}
 		return f;
+	}
+
+	public void fill(float v) {
+		int l=data.length;
+		for (int i=0; i<l; i++) {
+			data[i]=v;
+		}
 	}
 }
