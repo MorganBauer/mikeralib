@@ -10,11 +10,15 @@ import mikera.util.Maths;
 public class Gradient {
 	public static final int SIZE=256;
 	
+	/**
+	 * Creates a new gradient array of default size (256)
+	 * @return
+	 */
 	public static int[] create() {
 		return new int[SIZE];
 	}
 	
-	public static int[] createInvertedGradient() {
+	public static int[] createInvertedMonoGradient() {
 		int[] gr=create();
 		for (int i=0; i<SIZE; i++) {
 			int c=(255-i)*0x010101;
@@ -23,13 +27,23 @@ public class Gradient {
 		return gr;
 	}
 	
+	/**
+	 * Fills a gradient from a line in an image
+	 * taking the first 256 pixels in the given line
+	 * @param grad
+	 * @param b
+	 * @param line
+	 */
 	public static void fillFromImage(int[] grad, BufferedImage b, int line) {
 		for (int i=0; i<SIZE; i++) {
 			grad[i]=b.getRGB(i, line);
 		}
 	}
 
-	
+	/**
+	 * Creates a rainbow coloured gradient
+	 * @return
+	 */
 	public static int[] createRainbowGradient() {
 		int[] gr=create();
 		int size=SIZE;
@@ -41,9 +55,15 @@ public class Gradient {
 		return gr;
 	}
 	
+	/**
+	 * Creates a gradient suitable for colouring a generated
+	 * fractal landscape, with sea level at midpoint
+	 * @return
+	 */
 	public static int[] createLandscapeGradient() {
 		int[] gr=create();
-		fillLinearGradient(gr, 0, 0xFF000000, 127, 0xFF0080FF);
+		fillLinearGradient(gr, 0, 0xFF000000, 80, 0xFF0000FF);
+		fillLinearGradient(gr, 81, 0xFF0000FF, 127, 0xFF0080FF);
 		fillLinearGradient(gr, 128, 0xFFFFFF00, 130, 0xFFFFFF00);
 		fillLinearGradient(gr, 131, 0xFF00FF00, 160, 0xFF006000);
 		fillLinearGradient(gr, 161, 0xFF006000, 170, 0xFF808080);
@@ -52,12 +72,20 @@ public class Gradient {
 		return gr;
 	}
 	
+	/**
+	 * Creates a monochrome gradient from black to white
+	 * @return
+	 */
 	public static int[] createMonoGradient() {
 		int[] gr=create();
 		fillLinearGradient(gr, 0, 0xFF000000, 255, 0xFFFFFFFF);
 		return gr;
 	}
 	
+	/**
+	 * Reverses a gradient
+	 * @param grad
+	 */
 	public static void reverseGradient(int[] grad) {
 		int s=grad.length;
 		for (int i=0; i<s/2; i++) {

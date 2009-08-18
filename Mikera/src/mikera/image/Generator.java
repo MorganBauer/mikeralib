@@ -188,7 +188,7 @@ public class Generator {
 		
 		f=VF.zeroExtendComponents(f, 4); // make into 4-vector
 		f=VF.add(f, new Vector(0,0,0,1));
-		f=VF.scale(f, 5);
+		f=VF.scale(f, 7);
 		
 		f=VF.perturb(f,VF.cloudFunction(2, 2),1.0f);
 		f=VF.madd(f, VF.scale(VF.noiseFunction(2, 4),30),0.03);
