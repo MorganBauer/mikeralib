@@ -83,7 +83,11 @@ public final class Maths {
 		return n-floor(x)*d;
 	}
 	
-	
+	public static int mod(int n, int d) {
+		int r= (n%d);
+		if (r<0) r+=d;
+		return r;
+	}
 	
 	public static float min(float a, float b, float c) {
 		float result=a;

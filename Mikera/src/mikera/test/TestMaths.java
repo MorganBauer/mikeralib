@@ -41,6 +41,15 @@ public class TestMaths {
 		
 	}
 	
+	@Test public void testIntMod() {
+		assertEquals(2,Maths.mod(2, 5));
+		assertEquals(2,Maths.mod(7, 5));
+		assertEquals(1,Maths.mod(-7, 8));
+		assertEquals(0,Maths.mod(10, 10));
+
+		
+	}
+	
 	@Test public void testFloor() {
 		assertEquals(0,Maths.floor(0));
 		assertEquals(1,Maths.floor(1));

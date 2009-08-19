@@ -234,11 +234,15 @@ public final class Vector implements Cloneable {
 	}
 	
 	public float lengthSquared() {
+		return lengthSquared(data);	
+	}
+	
+	public static float lengthSquared(float[] data) {
 		float result=0;
 		for (int i=0; i<data.length; i++) {
 			result+=data[i]*data[i];
 		}
-		return result;		
+		return result;			
 	}
 	
 	public float length() {
@@ -255,10 +259,14 @@ public final class Vector implements Cloneable {
 	}
 	
 	
-	public Vector cross(Vector a, Vector b) {
+	public static Vector cross(Vector a, Vector b) {
 		Vector target=new Vector(3);
 		Vector.cross(a.data,0,b.data,0,target.data,0);
 		return target;
+	}
+	
+	public static void cross(Vector a, Vector b, Vector target) {
+		Vector.cross(a.data,0,b.data,0,target.data,0);
 	}
 	
 	public static void cross(float[] adata, int ai, float[]  bdata, int bi, float[] tdata, int ti) {

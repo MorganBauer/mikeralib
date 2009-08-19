@@ -11,7 +11,7 @@ public class Noise {
 	
 	public float clouds(float x) {
 		float result=0;
-		float factor=1.0f;
+		int factor=1;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
 			result+=noise(x*factor)/factor;
 			x+=0.25f/factor+CLOUD_OFFSET;
@@ -20,9 +20,20 @@ public class Noise {
 		return 0.5f+result*0.25f;
 	}
 	
+	public float tiledClouds(float x, int grid) {
+		float result=0;
+		int factor=1;
+		for (int i=0; i<CLOUD_OCTAVES; i++) {
+			result+=tiledNoise(x*factor, grid*factor)/factor;
+			x+=0.25f/factor+CLOUD_OFFSET;
+			factor*=2;
+		}
+		return 0.5f+result*0.25f;
+	}
+	
 	public float clouds(float x, float y) {
 		float result=0;
-		float factor=1.0f;
+		int factor=1;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
 			result+=noise(x*factor,y*factor)/factor;
 			x+=0.25f/factor+CLOUD_OFFSET;
@@ -32,9 +43,21 @@ public class Noise {
 		return 0.5f+result*0.25f;
 	}
 	
+	public float tiledClouds(float x, float y, int grid) {
+		float result=0;
+		int factor=1;
+		for (int i=0; i<CLOUD_OCTAVES; i++) {
+			result+=tiledNoise(x*factor,y*factor, grid*factor)/factor;
+			x+=0.25f/factor+CLOUD_OFFSET;
+			y+=0.25f/factor;
+			factor*=2;
+		}
+		return 0.5f+result*0.25f;
+	}
+	
 	public float clouds(float x, float y, float z) {
 		float result=0;
-		float factor=1.0f;
+		int factor=1;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
 			result+=noise(x*factor,y*factor,z*factor)/factor;
 			x+=0.25f/factor+CLOUD_OFFSET;
@@ -45,9 +68,22 @@ public class Noise {
 		return 0.5f+result*0.25f;
 	}
 	
+	public float tiledClouds(float x, float y, float z, int grid) {
+		float result=0;
+		int factor=1;
+		for (int i=0; i<CLOUD_OCTAVES; i++) {
+			result+=tiledNoise(x*factor,y*factor,z*factor, grid*factor)/factor;
+			x+=0.25f/factor+CLOUD_OFFSET;
+			y+=0.25f/factor;
+			z+=0.25f/factor;
+			factor*=2;
+		}
+		return 0.5f+result*0.25f;
+	}
+	
 	public float clouds(float x, float y, float z, float t) {
 		float result=0;
-		float factor=1.0f;
+		int factor=1;
 		for (int i=0; i<CLOUD_OCTAVES; i++) {
 			result+=noise(x*factor,y*factor,z*factor,t*factor)/factor;
 			x+=0.25f/factor+CLOUD_OFFSET;
@@ -59,10 +95,33 @@ public class Noise {
 		return 0.5f+result*0.25f;
 	}
 	
+	public float tiledClouds(float x, float y, float z, float t, int grid) {
+		float result=0;
+		int factor=1;
+		for (int i=0; i<CLOUD_OCTAVES; i++) {
+			result+=tiledNoise(x*factor,y*factor,z*factor,t*factor, grid*factor)/factor;
+			x+=0.25f/factor+CLOUD_OFFSET;
+			y+=0.25f/factor;
+			z+=0.25f/factor;
+			t+=0.25f/factor;
+			factor*=2;
+		}
+		return 0.5f+result*0.25f;
+	}
+	
+
+	
 	public float noise(float x) {
 		int ix=Maths.floor(x);
-		x-=ix;
+		return noiseLocal(x-ix,ix);
+	}
+	
+	public float tiledNoise(float x, int grid) {
+		int ix=Maths.floor(x);
+		return noiseLocal(x-ix,Maths.mod(ix,grid));
+	}
 		
+	private float noiseLocal(float x, int ix) {
 		float v0=gridValue(ix);
 		float v1=gridValue(ix+1);
 		float fx=Maths.smoothFactor(x);
@@ -71,10 +130,18 @@ public class Noise {
 	
 	public float noise(float x, float y) {
 		int ix=Maths.floor(x);
-		x-=ix;
 		int iy=Maths.floor(y);
-		y-=iy;
+		return noiseLocal(x-ix,y-iy,ix,iy);
+	}
+	
+	public float tiledNoise(float x, float y,int grid) {
+		int ix=Maths.floor(x);
+		int iy=Maths.floor(y);
+		return noiseLocal(x-ix,y-iy,Maths.mod(ix,grid),Maths.mod(iy,grid));
+	}
 
+
+	private float noiseLocal(float x, float y, int ix, int iy) {
 		float v00=gridValue(ix,iy);
 		float v01=gridValue(ix+1,iy);
 		float v10=gridValue(ix,iy+1);
@@ -86,12 +153,19 @@ public class Noise {
 	
 	public float noise(float x, float y, float z) {
 		int ix=Maths.floor(x);
-		x-=ix;
 		int iy=Maths.floor(y);
-		y-=iy;
 		int iz=Maths.floor(z);
-		z-=iz;
+		return noiseLocal(x-ix,y-iy,z-iz,ix,iy,iz);
+	}
 
+	public float tiledNoise(float x, float y, float z,int grid) {
+		int ix=Maths.floor(x);
+		int iy=Maths.floor(y);
+		int iz=Maths.floor(z);
+		return noiseLocal(x-ix,y-iy, z-iz,Maths.mod(ix,grid),Maths.mod(iy,grid),Maths.mod(iz,grid));
+	}
+
+	private float noiseLocal(float x, float y, float z, int ix, int iy, int iz) {
 		float v000=gridValue(ix,iy,iz);
 		float v001=gridValue(ix+1,iy,iz);
 		float v010=gridValue(ix,iy+1,iz);
@@ -110,14 +184,22 @@ public class Noise {
 	
 	public float noise(float x, float y, float z, float t) {
 		int ix=Maths.floor(x);
-		x-=ix;
 		int iy=Maths.floor(y);
-		y-=iy;
 		int iz=Maths.floor(z);
-		z-=iz;
 		int it=Maths.floor(t);
-		t-=it;
+		return noiseLocal(x-ix,y-iy,z-iz,t-it,ix,iy,iz,it);
+	}
+	
+	public float tiledNoise(float x, float y, float z, float t, int grid) {
+		int ix=Maths.floor(x);
+		int iy=Maths.floor(y);
+		int iz=Maths.floor(z);
+		int it=Maths.floor(z);
+		return noiseLocal(x-ix,y-iy, z-iz, t-it,Maths.mod(ix,grid),Maths.mod(iy,grid),Maths.mod(iz,grid),Maths.mod(it,grid));
+	}
 
+	
+	private float noiseLocal(float x, float y, float z, float t, int ix, int iy, int iz, int it) {
 		float v0000=gridValue(ix,iy,iz,it);
 		float v0001=gridValue(ix+1,iy,iz,it);
 		float v0010=gridValue(ix,iy+1,iz,it);
@@ -174,6 +256,50 @@ public class Noise {
 	}
 	
 	public float gridValue(int ix, int iy, int iz, int it) {
+		ix*=0x12345678;
+		iy*=0x87654321;
+		iz*=0x84736251;
+		it*=0x15263748;
+		int v=SEED+ix+iy+iz+it;
+		v= Rand.xorShift32(v);
+		return v*FLOAT_FACTOR;
+	}
+	
+	public float gridValueTiled(int ix, int sx) {
+		ix=Maths.mod(ix,sx);
+		ix*=0x12345678;
+		int v=SEED+ix;
+		v= Rand.xorShift32(v);
+		return v*FLOAT_FACTOR;
+	}
+	
+	public float gridValueTiled(int ix, int iy, int sx, int sy) {
+		ix=Maths.mod(ix,sx);
+		iy=Maths.mod(iy,sy);
+		ix*=0x12345678;
+		iy*=0x87654321;
+		int v=SEED+ix+iy;
+		v= Rand.xorShift32(v);
+		return v*FLOAT_FACTOR;
+	}
+	
+	public float gridValueTiled(int ix, int iy, int iz, int sx, int sy, int sz) {
+		ix=Maths.mod(ix,sx);
+		iy=Maths.mod(iy,sy);
+		iz=Maths.mod(iz,sz);
+		ix*=0x12345678;
+		iy*=0x87654321;
+		iz*=0x84736251;
+		int v=SEED+ix+iy+iz;
+		v= Rand.xorShift32(v);
+		return v*FLOAT_FACTOR;
+	}
+	
+	public float gridValueTiled(int ix, int iy, int iz, int it, int sx, int sy, int sz, int st) {
+		ix=Maths.mod(ix,sx);
+		iy=Maths.mod(iy,sy);
+		iz=Maths.mod(iz,sz);
+		it=Maths.mod(it,st);
 		ix*=0x12345678;
 		iy*=0x87654321;
 		iz*=0x84736251;

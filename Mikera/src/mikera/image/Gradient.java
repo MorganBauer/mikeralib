@@ -62,8 +62,8 @@ public class Gradient {
 	 */
 	public static int[] createLandscapeGradient() {
 		int[] gr=create();
-		fillLinearGradient(gr, 0, 0xFF000000, 80, 0xFF0000FF);
-		fillLinearGradient(gr, 81, 0xFF0000FF, 127, 0xFF0080FF);
+		fillLinearGradient(gr, 0, 0xFF000000, 110, 0xFF0000FF);
+		fillLinearGradient(gr, 111, 0xFF0000FF, 127, 0xFF0080FF);
 		fillLinearGradient(gr, 128, 0xFFFFFF00, 130, 0xFFFFFF00);
 		fillLinearGradient(gr, 131, 0xFF00FF00, 160, 0xFF006000);
 		fillLinearGradient(gr, 161, 0xFF006000, 170, 0xFF808080);
