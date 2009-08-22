@@ -104,6 +104,8 @@ public class VF {
 		return vf;
 	}
 	
+	
+	
 	public static VectorFunction zeroExtendComponents(final VectorFunction f, int outputDimensions) {
 		BaseVectorFunction vf=new BaseVectorFunction(f.inputDimensions(),outputDimensions) {
 			final int od=f.outputDimensions();
@@ -335,6 +337,73 @@ public class VF {
 		return vf;
 	}
 	
+	public static VectorFunction sin(final float freq) {
+		BaseVectorFunction vf=new BaseVectorFunction(1,1) {
+			public void calculate(Vector input, Vector output) {
+				output.data[0]=Maths.sin(input.data[0]*freq);
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction cos(final float freq) {
+		BaseVectorFunction vf=new BaseVectorFunction(1,1) {
+			public void calculate(Vector input, Vector output) {
+				output.data[0]=Maths.cos(input.data[0]*freq);
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction dist(final int inputDimensions) {
+		BaseVectorFunction vf=new BaseVectorFunction(inputDimensions,1) {
+			public void calculate(Vector input, Vector output) {
+				float result=0;
+				for (int i=0; i<inputDimensions; i++) {
+					float x=input.data[i];
+					result+=x*x;
+				}			
+				output.data[0]=Maths.sqrt(result);
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction hump(final int inputDimensions) {
+		BaseVectorFunction vf=new BaseVectorFunction(inputDimensions,1) {
+			public void calculate(Vector input, Vector output) {
+				float result=0;
+				for (int i=0; i<inputDimensions; i++) {
+					float x=input.data[i];
+					result+=x*x;
+				}			
+				output.data[0]=1.0f/(1.0f+result);
+			}
+		};		
+		return vf;
+	}
+	
+	public static VectorFunction mandelbrot(final float step, final float max) {
+		BaseVectorFunction vf=new BaseVectorFunction(2,1) {
+			public void calculate(Vector input, Vector output) {
+				float result=0;
+				float cx=input.data[0];
+				float cy=input.data[1];
+				float x=cx;
+				float y=cy;
+				while (result<max) {
+					float tx=x;
+					x=x*x-y*y+cx;
+					y=2*tx*y+cy;
+					result+=step;
+					if ((x*x+y*y)>4) break;
+				}			
+				output.data[0]=result;
+			}
+		};		
+		return vf;
+	}
+	
 	public static VectorFunction concat(final VectorFunction f1, final VectorFunction f2) {
 		BaseVectorFunction vf=new BaseVectorFunction(f1.inputDimensions(),f1.outputDimensions()+f2.outputDimensions()) {
 			final Vector temp=new Vector(f2.outputDimensions());
@@ -372,6 +441,8 @@ public class VF {
 	public static VectorFunction perturb(final VectorFunction f1, final VectorFunction f2) {
 		return perturb(f1,f2,1);
 	}
+	
+
 	
 	public static VectorFunction perturb(final VectorFunction f1, final VectorFunction f2, final double v) {
 		if (f2.outputDimensions()!=f1.inputDimensions()) throw new Error("Wrong dimension ["+f2.outputDimensions()+"] for perturbation");
