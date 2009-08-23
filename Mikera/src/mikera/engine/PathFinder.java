@@ -5,7 +5,7 @@ import java.util.*;
 import mikera.util.Maths;
 
 public class PathFinder {
-	private static class PathNode implements Comparable<PathNode> {
+	public static class PathNode implements Comparable<PathNode> {
 		public float h=0;
 		public float g=0;
 		public byte lastDir=0;
@@ -34,7 +34,7 @@ public class PathFinder {
 		return Maths.max(dx,dy,dz);
 	}
 	
-	private PriorityQueue<PathNode> nodes=new PriorityQueue<PathNode>();
+	protected PriorityQueue<PathNode> nodes=new PriorityQueue<PathNode>();
 	
 	public void clear() {
 		
@@ -42,7 +42,6 @@ public class PathFinder {
 	
 	public void pathFind(int x,int y, int z, int tx, int ty, int tz, PathFunction pf) {
 		PathNode pn=new PathNode();
-		
 		
 	}
 }

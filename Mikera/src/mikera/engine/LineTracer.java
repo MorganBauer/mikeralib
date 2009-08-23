@@ -102,7 +102,7 @@ public class LineTracer {
 	
 	public void initLines(int maxLength) {
 		lines.clear();
-	
+		skips.clear();
 		
 	}
 	

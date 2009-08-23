@@ -413,7 +413,7 @@ public class TestOctreap {
 		m.setBlock(0,0,0,0,0,1,1); // 2 cells
 		m.setBlock(100,0,0,100,0,0,1);  // 1 cell
 
-		Octreap e=m.expand();
+		Octreap<Integer> e=m.expand();
 		
 		assertEquals(36+27,e.countArea());
 	}

@@ -156,8 +156,8 @@ public class ServerConnector {
 			Selector s) {
 		Connection cr = new Connection(clientChannel, s);
 		cr.handler = handler;
-		cr.tag = createTag();
-		connections.put(cr.tag, cr);
+		cr.internalTag = createTag();
+		connections.put(cr.internalTag, cr);
 		return cr;
 	}
 
@@ -167,19 +167,9 @@ public class ServerConnector {
 		SelectionKey clientKey = clientChannel.register(selector,
 				SelectionKey.OP_READ, connection);
 
-		debugMessage("Added client ID=" + connection.tag);
+		debugMessage("Added client ID=" + connection.internalTag);
 
 		return clientKey;
-	}
-
-	/**
-	 * Handle a complete message (prefixed with message length)
-	 * 
-	 * @param buffer2
-	 */
-	protected void handleMessage(ByteBuffer buffer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void close() {

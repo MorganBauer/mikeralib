@@ -1,6 +1,7 @@
 package mikera.net;
 
 import java.nio.*;
+import java.nio.charset.*;
 
 public class Util {
 	public static int writeCompacted(ByteBuffer bb, long a) {
@@ -15,6 +16,20 @@ public class Util {
 		}
 		bb.put(b); i++;
 		return i;
+	}
+	
+	public static int compactedLength(long a) {
+		byte b=(byte)(a&127); // get bottom 7 bits
+		a>>=7;
+		int i=0;
+		while ((((b&64)==0)&&(a!=0))||(((b&64)!=0)&&(a!=-1))) {
+			b|=128;
+			i++;
+			b=(byte)(a&127);
+			a>>=7;
+		}
+		i++;
+		return i;		
 	}
 	
 	
@@ -33,5 +48,43 @@ public class Util {
 			result=(result<<(64-bits))>>(64-bits);
 		}
 		return result;
+	}
+	
+	
+
+	public static int writeASCIIString(ByteBuffer bb, String src) {
+
+		int startPos=bb.position();
+		
+		if (src!=null) {		
+			int len=src.length();
+			writeCompacted(bb,len);			
+			for (int i=0; i<len; i++) {
+				bb.put((byte)(src.charAt(i)));
+			}
+		} else {
+			// send -1 for null string
+			writeCompacted(bb,-1);	
+		}
+		return bb.position()-startPos;
+	}
+	
+	public static int readASCIIString(ByteBuffer bb, String[] dest) {
+		int startPos=bb.position();
+		int len=(int)readCompacted(bb);
+
+		if (len>=0) {
+			char[] readChars=new char[len];
+			for (int i=0; i<len; i++) {
+				readChars[i]=(char)(bb.get());
+			}
+			
+			dest[0]=new String(readChars);
+		} else {
+			// negative len means null string
+			dest[0]=null;
+		}
+		
+		return bb.position()-startPos;
 	}
 }

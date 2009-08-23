@@ -11,11 +11,21 @@ public class Connection {
 	// header uses one int for message length, can be zero
 	private static final int HEADER_LENGTH=4;
 
+	public int MAX_MESSAGE_SIZE=10000;
 	
 	private SocketChannel channel;
 	private Selector selector;
 	MessageHandler handler;
-	public Object tag;
+	
+	/**
+	 * Tag that identifies the connection to the server, assigned on creation
+	 */
+	Object internalTag;
+	
+	/**
+	 * Tag that can be freely assigned by application using this connection
+	 */
+	public Object userTag=null;
 
 	// temporary receiving buffer for one message
 	private ByteBuffer receiveBuffer;
@@ -116,6 +126,10 @@ public class Connection {
 			}
 
 			int messageLength = buffer.getInt(0);
+			if (messageLength>MAX_MESSAGE_SIZE) {
+				System.err.println("Message too large: "+messageLength+" bytes");
+				close();
+			}
 
 			if (messageLength > buffer.capacity()) {
 				debugMessage("Connection.handleReadEvent(): Growing receive buffer to "
@@ -160,7 +174,12 @@ public class Connection {
 
 	private void handleMessage(ByteBuffer data) {
 		if (handler != null) {
-			handler.handleMessage(data, this);
+			try {
+				handler.handleMessage(data, this);
+			} catch (Exception e) {
+				System.err.println("Error in handleMessage!");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -208,7 +227,7 @@ public class Connection {
 					if (!bb.hasRemaining()) {
 						// message completed so recycle buffer
 						writeQueue.removeFirst();
-						bufferCache.recycle(bb);
+						BufferCache.recycle(bb);
 						continue;
 					}
 					

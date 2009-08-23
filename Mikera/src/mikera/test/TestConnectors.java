@@ -11,7 +11,7 @@ public class TestConnectors {
 	private class Receiver implements MessageHandler {
 
 		public void handleMessage(ByteBuffer data, Connection c) {
-			int recLen=data.remaining();
+			//int recLen=data.remaining();
 			received[recCount]=BufferCache.instance().getBuffer(data.remaining());
 			received[recCount].put(data);
 			received[recCount].flip();
@@ -54,11 +54,11 @@ public class TestConnectors {
 			assertEquals(8,cc.getConnection().write(bb1));
 			
 			// 9000 bytes
-			for (int i=0; i<90000; i++) {
+			for (int i=0; i<9000; i++) {
 				bb2.put((byte)100);
 			}
 			bb2.flip();
-			assertEquals(90000,cc.getConnection().write(bb2));
+			assertEquals(9000,cc.getConnection().write(bb2));
 			
 			// now write zero bytes
 			assertEquals(0,cc.getConnection().write(bb2));
@@ -110,10 +110,40 @@ public class TestConnectors {
 		
 	}
 	
+	@Test public void testStrings() {
+		ByteBuffer bb=ByteBuffer.allocate(1000);
+
+		int i=0;
+		i+=Util.writeASCIIString(bb, null);
+		i+=Util.writeASCIIString(bb, "A");
+		i+=Util.writeASCIIString(bb, "Dffdeuvcfdeghvuohvoehvrett");
+		i+=Util.writeASCIIString(bb, "");
+
+		assertEquals(i,bb.position());
+		
+		bb.flip();
+		String[] ss=new String[1];
+		
+		Util.readASCIIString(bb, ss);
+		assertEquals(null,ss[0]);
+
+		Util.readASCIIString(bb, ss);
+		assertEquals('A',ss[0].charAt(0));
+		assertEquals("A",ss[0]);
+
+		Util.readASCIIString(bb, ss);
+		assertEquals("Dffdeuvcfdeghvuohvoehvrett",ss[0]);
+
+		Util.readASCIIString(bb, ss);
+		assertEquals("",ss[0]);
+
+		assertEquals(i,bb.position());
+
+	}
+	
 	
 	@Test public void testCompacted() {
 		ByteBuffer bb=ByteBuffer.allocate(1000);
-		java.util.Random rand=new java.util.Random();
 		
 		for (int i=0; i<100; i++) {
 			long l=Rand.d(1000)*(Rand.d(10)-Rand.d(10))+(Rand.d(10)-Rand.d(10));
@@ -121,6 +151,8 @@ public class TestConnectors {
 				l=Rand.nextLong();
 			}
 			int len=Util.writeCompacted(bb, l);
+			
+			assertEquals(len,Util.compactedLength(l));
 			
 			int sb=Bits.significantBits(l);
 			assertEquals((sb+6)/7,len); // right number of bits
