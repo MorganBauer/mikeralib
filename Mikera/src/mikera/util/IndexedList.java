@@ -2,7 +2,7 @@ package mikera.util;
 import java.util.*;
 
 /**
- * Indexed list class
+ * Indexed list class <K,V>
  * 
  * @author Mike
  *
@@ -46,7 +46,9 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	
 	// shift entries, assumes all bounds checked
 	private void copyEntries(int src, int dst, int num) {
-		if (src>dst) {
+		/*
+		  if (src>dst) {
+
 			for (int i=0; i<num; i++) {
 				keys[dst+i]=keys[src+i];
 				values[dst+i]=values[src+i];
@@ -57,6 +59,9 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 				values[dst+i]=values[src+i];
 			}
 		}
+		*/
+		System.arraycopy(keys, src, keys, dst, num);
+		System.arraycopy(values, src, values, dst, num);
 	}
 	
 	@SuppressWarnings("unchecked")
