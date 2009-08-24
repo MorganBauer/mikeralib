@@ -184,14 +184,7 @@ public class Generator {
 		// background
 		BufferedImage bg=createChecker(1024,1024,64,0xFFFFFFFF,0xFFE0B0D0);	
 		
-		VectorFunction f=VF.cloudFunction(2,3);
-		
-		f=VF.zeroExtendComponents(f, 4); // make into 4-vector
-		f=VF.add(f, new Vector(0,0,0,1));
-		f=VF.scale(f, 7);
-		
-		f=VF.perturb(f,VF.cloudFunction(2, 2),1.0f);
-		f=VF.madd(f, VF.scale(VF.noiseFunction(2, 4),30),0.03);
+		VectorFunction f = Functions.createLandscapeFunction(7);
 		
 		int[] grad=Gradient.createLandscapeGradient();
 		//BufferedImage e=createFunction4(512,512,f);	

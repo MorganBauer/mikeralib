@@ -76,6 +76,42 @@ public class VF {
 		return vf;
 	}
 	
+	public static VectorFunction tiledCloudFunction(int inputDimensions, int outputDimensions, final int grid) {
+		BaseVectorFunction vf=new BaseVectorFunction() {
+			public final Noise noise=new Noise();
+			public void calculate(Vector input, Vector output) {
+				int isize=input.size();
+				switch (isize) {
+					case 1:
+						for (int i=0; i<outputDimensions; i++) {
+							output.data[i]=noise.tiledClouds(input.data[0], i, grid);
+						}
+						return;
+					case 2:
+						for (int i=0; i<outputDimensions; i++) {
+							output.data[i]=noise.tiledClouds(input.data[0],input.data[1], i, grid);
+						}
+						return;
+					case 3:
+						for (int i=0; i<outputDimensions; i++) {
+							output.data[i]=noise.tiledClouds(input.data[0],input.data[1], input.data[2], i, grid);
+						}
+						return;
+					case 4:
+						for (int i=0; i<outputDimensions; i++) {
+							output.data[i]=noise.tiledClouds(input.data[0]+29*i,input.data[1]-3*i, input.data[2]+10*i, input.data[3]-17*i, grid);
+						}
+						return;
+
+				}
+				throw new Error("Unsupported noise input dimension: "+isize);
+			}
+		};
+		vf.outputDimensions=outputDimensions;
+		vf.inputDimensions=inputDimensions;
+		return vf;
+	}
+	
 	public static VectorFunction clamp(final VectorFunction f, final float min, final float max) {
 		BaseVectorFunction vf=new BaseVectorFunction() {
 			public void calculate(Vector input, Vector output) {
