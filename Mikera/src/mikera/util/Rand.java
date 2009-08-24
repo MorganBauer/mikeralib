@@ -63,19 +63,29 @@ public final class Rand {
 	// Poisson distribution
 	public static int po(double x) {
 		if (x<=0) return 0;
+		if (x>400) {
+			return poLarge(x);
+		}
+		return poMedium(x);
+	}
+
+	private static int poMedium(double x) {
 		int r = 0;
 		double a = nextDouble();
 		double p = Math.exp(-x);
-		if (p==0) {
-			// normal approximation
-			return (int)(n(x,Math.sqrt(x)));
-		}
+
 		while (a > p) {
 			r++;
 			a = a - p;
 			p = p * x / r;
 		}
 		return r;
+	}
+	
+	private static int poLarge(double x) {
+		// normal approximation to poisson
+		// strictly needed for x>=746 (=> Math.exp(-x)==0)
+		return (int)(0.5+n(x,Math.sqrt(x)));
 	}
 
 	public static int po(int numerator, int denominator) {

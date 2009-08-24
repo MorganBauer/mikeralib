@@ -23,10 +23,12 @@ public class TestRand {
 	
 	@Test public void testPo() {
 		int r=0;
+		
 		for (int i=0; i<1000; i++) {
 			r+=Rand.po(1000);
 		}
-		assertTrue(r>500000);
+		assertTrue(r>900000);
+		assertTrue(r<1100000);
 	
 	}
 }
