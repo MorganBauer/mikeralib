@@ -15,9 +15,7 @@ public final class Rand {
 	 */
 	public static long nextLong() {
 		long a=state;
-		a ^= (a << 21);
-		a ^= (a >>> 35);
-		a ^= (a << 4);
+		a = xorShift64(a);
 		state=a;
 		return a;
 	}
@@ -37,6 +35,8 @@ public final class Rand {
 	}
 		
 	private static class MikeraRandom extends java.util.Random {
+		private static final long serialVersionUID = 6868944865706425166L;
+
 		long state=System.nanoTime()|1;
 		
 		protected int next(int bits) {
@@ -44,10 +44,10 @@ public final class Rand {
 		}
 		
 		public long nextLong() {
-			state ^= (state << 21);
-			state ^= (state >>> 35);
-			state ^= (state << 4);
-			return state;
+			long a=state;
+			a=Rand.xorShift64(a);
+			state=a;
+			return a;
 		}
 		
 		public void setSeed(long seed) {
@@ -62,12 +62,15 @@ public final class Rand {
 	
 	// Poisson distribution
 	public static int po(double x) {
+		if (x<=0) return 0;
 		int r = 0;
 		double a = nextDouble();
-		if (a >= 0.99999999)
-			return 0;
 		double p = Math.exp(-x);
-		while (a >= p) {
+		if (p==0) {
+			// normal approximation
+			return (int)(n(x,Math.sqrt(x)));
+		}
+		while (a > p) {
 			r++;
 			a = a - p;
 			p = p * x / r;
@@ -100,6 +103,7 @@ public final class Rand {
 
 	
 	private static final double DOUBLE_SCALE_FACTOR=1.0/Math.pow(2,63);
+	private static final float FLOAT_SCALE_FACTOR=(float)(1.0/Math.pow(2,63));
 
 	/**
 	 * Returns standard double in range 0..1
@@ -111,7 +115,7 @@ public final class Rand {
 	}
 	
 	public static final float nextFloat() {
-		return (float)nextDouble();
+		return (float)((nextLong()>>>1)*FLOAT_SCALE_FACTOR);
 	}
 
     /**
