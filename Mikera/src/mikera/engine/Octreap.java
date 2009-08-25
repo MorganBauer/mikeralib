@@ -863,8 +863,6 @@ public final class Octreap<T> implements Cloneable {
 	public static long split3(int a) {
 		return 	(long)split3i(a&LOWBITS)
   	     | (((long)split3i((a&HIGHBITS)>>10))<<30);
-		//return 	(long)split3lookup[a&LOWBITS]
-		//	            | ((long)split3lookup[(a&HIGHBITS)>>10])<<30;
 	}
 
 	public static int split3i(int a) {
@@ -876,14 +874,6 @@ public final class Octreap<T> implements Cloneable {
 		return a;
 	}
 	
-	//private static final int[] split3lookup=new int[1024];
 	private static final int LOWBITS=1023; // bottom 10 bits
 	private static final int HIGHBITS=1024* 1023; // top 10 bits
-	
-	static {
-		// initialise split lookups
-		//for (int i=0; i<1024; i++) {
-		//	split3lookup[i]=(int)split3c(i);
-		//}
-	}
 }

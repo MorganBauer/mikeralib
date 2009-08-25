@@ -1,5 +1,7 @@
 package mikera.engine;
 
+import java.util.Arrays;
+
 import mikera.util.Bits;
 import mikera.util.Maths;
 /**
@@ -51,8 +53,11 @@ public class IntGrid implements Cloneable {
 	}
 	
 	public int get(int x, int y, int z) {
-		int i=dataIndex(x-gx,y-gy,z-gz);
-		return (data[i]);
+		int i=dataIndexRelative(x-gx,y-gy,z-gz);
+		if (i<0) return 0;
+		int[] dt=data;
+		if (i>dt.length) return 0;
+		return (dt[i]);
 	}
 	
 	public void visitNonZero(PointVisitor<Integer> pv) {
@@ -70,7 +75,7 @@ public class IntGrid implements Cloneable {
 		}		
 	}
 	
-	public void visitBits(PointVisitor<Integer> pv) {
+	public void visitGrid(PointVisitor<Integer> pv) {
 		if (data==null) return;
 		int si=0;
 		int tgw=gw; int tgh=gh; int tgd=gd; // make local copy to enable loop optimisation?
@@ -172,20 +177,42 @@ public class IntGrid implements Cloneable {
 			y-=gy; if (y>=height()) growToIncludeLocal(x+gx,y+gy,z);
 			z-=gz; if (x>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
 		}
-		setLocal(x,y,z,v);
+		setLocalRelative(x,y,z,v);
 	}
 	
-	private void setLocal(int x, int y, int z, int v) {
-		int i=dataIndex(x,y,z);
-		if (v!=0) {
-			data[i]=v;
-		} else {
-			data[i]=v;
-		}
+	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {
+		growToInclude(x1,y1,z1);
+		growToInclude(x2,y2,z2);
+		int w=x2-x1+1;
+		int h=y2-y1+1;
+		int d=z2-z1+1;
+		int di=(x1-gx)+(y1-gy)*gw+(z1-gz)*gw*gh;
+		for (int z=0; z<d; z++) {
+			for (int y=0; y<h; y++) {
+				Arrays.fill(data,di,di+w,v);
+				di+=gw;
+			}
+			di+=gw*(gh-h);
+		}		
 	}
 	
-	// get index relative to grid origin
-	private int dataIndex(int rx, int ry, int rz) {
+	/**
+	 * Sets the grid cell, assumes bounds are already checked
+	 * and that relative to grid coordinates are used
+	 */
+	private void setLocalRelative(int x, int y, int z, int v) {
+		int i=dataIndexRelative(x,y,z);
+		data[i]=v;
+	}
+	
+	/**
+	 * Get data array index relative to grid origin
+	 * @param rx x-coord relative to gx
+	 * @param ry y-coord relative to gy
+	 * @param rz z-coord relative to gz
+	 * @return
+	 */
+	private int dataIndexRelative(int rx, int ry, int rz) {
 		return rx+gw*(ry+gh*rz);
 	}
 }

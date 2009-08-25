@@ -1,7 +1,9 @@
 package mikera.util;
 
+import mikera.util.emptyobjects.NullArrays;
+
 public class FloatArray {
-	public static final float[] NULL_FLOATS=new float[0];
+	public static final float[] NULL_FLOATS=NullArrays.NULL_FLOATS;
 	
 	public static float squareDistance(float[] a, float[] b) {
 		float eSquared=0;
