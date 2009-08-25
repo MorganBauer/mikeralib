@@ -1,12 +1,10 @@
 package mikera.util;
 
 public final class Rand {
-		
-	// For gaussians
-	private static final java.util.Random rand=getGenerator();
-	
-
-	private static long state=System.nanoTime()|1;
+	/**
+	 * State for random number generation
+	 */
+	private static volatile long state=System.nanoTime()|1;
 
 	/**
 	 * Gets a long random value
@@ -37,7 +35,7 @@ public final class Rand {
 	private static class MikeraRandom extends java.util.Random {
 		private static final long serialVersionUID = 6868944865706425166L;
 
-		long state=System.nanoTime()|1;
+		private volatile long state=System.nanoTime()|1;
 		
 		protected int next(int bits) {
 			return (int)(nextLong()>>>(64-bits));
@@ -121,11 +119,11 @@ public final class Rand {
 	 * @return
 	 */
 	public static final double nextDouble() {
-		return (nextLong()>>>1)*DOUBLE_SCALE_FACTOR;
+		return ( nextLong()>>>1 ) * DOUBLE_SCALE_FACTOR;
 	}
 	
 	public static final float nextFloat() {
-		return (float)((nextLong()>>>1)*FLOAT_SCALE_FACTOR);
+		return (float)(( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR);
 	}
 
     /**
@@ -185,6 +183,23 @@ public final class Rand {
 	}
 	
 	public static double n(double u, double sd) {
-		return rand.nextGaussian()*sd+u;
+		return nextGaussian()*sd+u;
+	}
+	
+	public static double nextGaussian() {
+		// create a guassian random variable based on
+		// Box-Muller transform
+		double x, y, d2;
+		do { 
+			// sample a point in the unit disc
+			x = 2*nextDouble()-1;  
+			y = 2*nextDouble()-1;  
+			d2 = x*x + y*y;
+		} while ((d2 > 1) || (d2==0));
+		// create the radius factor
+		double radiusFactor = Math.sqrt(-2 * Math.log(d2) / d2);
+		return x * radiusFactor;
+		// could save and use the other value?
+		// double anotherGaussian = y * radiusFactor;
 	}
 }

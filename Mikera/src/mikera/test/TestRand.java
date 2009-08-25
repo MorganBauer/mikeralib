@@ -24,8 +24,8 @@ public class TestRand {
 	@Test public void testPo() {
 		int r=0;
 		
-		for (int i=0; i<1000; i++) {
-			r+=Rand.po(1000);
+		for (int i=0; i<2000; i+=2) {
+			r+=Rand.po(i);
 		}
 		assertTrue(r>900000);
 		assertTrue(r<1100000);
