@@ -73,18 +73,23 @@ public class Util {
 		int startPos=bb.position();
 		int len=(int)readCompacted(bb);
 
-		if (len>=0) {
-			char[] readChars=new char[len];
-			for (int i=0; i<len; i++) {
-				readChars[i]=(char)(bb.get());
-			}
-			
-			dest[0]=new String(readChars);
-		} else {
-			// negative len means null string
-			dest[0]=null;
-		}
+		dest[0]=readASCIIStringChars(bb,len);
 		
 		return bb.position()-startPos;
+	}
+	
+	public static String readASCIIString(ByteBuffer bb) {
+		int len=(int)readCompacted(bb);
+		return readASCIIStringChars(bb,len);
+	}
+	
+	public static String readASCIIStringChars(ByteBuffer bb, int numChars) {
+		int len=numChars;
+		if (len<0) return null;
+		char[] readChars=new char[len];
+		for (int i=0; i<len; i++) {
+			readChars[i]=(char)(bb.get());
+		}
+		return new String(readChars);
 	}
 }

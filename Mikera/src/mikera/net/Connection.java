@@ -54,9 +54,13 @@ public class Connection {
 		return receiveBuffer;
 	}
 
-	public void clearReceiveBuffer() {
+	/**
+	 * Clears receive buffer
+	 * @param recycle true if buffer should be recycles (false implies the caller wants to keep the ByteBuffer
+	 */
+	public void clearReceiveBuffer(boolean recycle) {
 		if (receiveBuffer != null) {
-			BufferCache.recycle(receiveBuffer);
+			if (recycle) BufferCache.recycle(receiveBuffer);
 			receiveBuffer = null;
 		}
 	}
@@ -159,8 +163,8 @@ public class Connection {
 				// prepare to read
 				buffer.flip();
 				buffer.getInt(); // take away the message length
-				handleMessage(buffer);
-				clearReceiveBuffer();
+				boolean recycleBuffer=handleMessage(buffer);
+				clearReceiveBuffer(recycleBuffer);
 			} catch (Throwable t) {
 				t.printStackTrace();
 				key.cancel();
@@ -172,15 +176,17 @@ public class Connection {
 		}
 	}
 
-	private void handleMessage(ByteBuffer data) {
+	private boolean handleMessage(ByteBuffer data) {
 		if (handler != null) {
 			try {
-				handler.handleMessage(data, this);
+				return handler.handleMessage(data, this);
 			} catch (Exception e) {
 				System.err.println("Error in handleMessage!");
 				e.printStackTrace();
+				return false;
 			}
 		}
+		return true;
 	}
 
 	/**

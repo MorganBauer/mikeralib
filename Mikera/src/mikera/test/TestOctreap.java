@@ -41,7 +41,7 @@ public class TestOctreap {
 		int y=Rand.d(10000)-5000;
 		int z=Rand.d(10000)-5000;
 		
-		for (int i=0; i<1000000; i++) {
+		for (int i=0; i<10000; i++) {
 			x=Rand.d(10000)-5000;
 			y=Rand.d(10000)-5000;
 			z=Rand.d(10000)-5000;

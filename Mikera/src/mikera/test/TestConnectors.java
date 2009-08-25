@@ -10,13 +10,14 @@ import java.nio.*;
 public class TestConnectors {
 	private class Receiver implements MessageHandler {
 
-		public void handleMessage(ByteBuffer data, Connection c) {
+		public boolean handleMessage(ByteBuffer data, Connection c) {
 			//int recLen=data.remaining();
 			received[recCount]=BufferCache.instance().getBuffer(data.remaining());
 			received[recCount].put(data);
 			received[recCount].flip();
 			recCount++;
 			// System.err.println("TestConnectors.Receiver: "+ recLen+" bytes in message received");
+			return true;
 		}
 	}
 	

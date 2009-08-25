@@ -41,7 +41,7 @@ public class PathFinder {
 	}
 	
 	public void pathFind(int x,int y, int z, int tx, int ty, int tz, PathFunction pf) {
-		PathNode pn=new PathNode();
+		//PathNode pn=new PathNode();
 		
 	}
 }

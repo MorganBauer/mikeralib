@@ -42,9 +42,10 @@ public class ServerConnector {
 	}
 
 	public static final MessageHandler ECHO_HANDLER = new MessageHandler() {
-		public void handleMessage(ByteBuffer data, Connection c) {
+		public boolean handleMessage(ByteBuffer data, Connection c) {
 			debugMessage("Echoing " + data.remaining() + " bytes");
 			c.write(data);
+			return true;
 		}
 	};
 
