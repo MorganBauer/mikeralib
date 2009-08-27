@@ -191,6 +191,7 @@ public class Connection {
 
 	/**
 	 * Write data, prepending total message length as an integer
+	 * Assumes data is already flipped
 	 * 
 	 * @param data
 	 * @return number of bytes in message, excluding header
@@ -198,10 +199,6 @@ public class Connection {
 	public int write(ByteBuffer data) {
 		synchronized (this) {
 			try {
-
-				// flip data to make it ready for writing
-				// data.flip();
-
 				int fullMessageLength = data.remaining() + HEADER_LENGTH;
 				ByteBuffer bb = bufferCache.getBuffer(fullMessageLength);
 				debugMessage("Connection.write(): writing " + fullMessageLength
