@@ -38,4 +38,20 @@ public class TestSoftHashMap {
 	}
 	*/
 	
+	@Test public void testHashCache() {
+		HashCache<Integer> h=new HashCache<Integer>(1000);
+	
+		Integer a = new Integer(100);
+		Integer b = new Integer(200);
+		Integer c = new Integer(200);
+		
+		Integer ca=h.cache(a);
+		Integer cb=h.cache(b);
+		Integer cc=h.cache(c);
+		
+		assertTrue(cb==cc);
+		assertTrue(cc==b);
+		assertTrue(ca!=cb);
+		assertTrue(cc!=c);
+	}
 }

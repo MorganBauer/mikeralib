@@ -8,6 +8,8 @@ import java.lang.ref.*;
  * 
  * Under memory pressure, values will be cleared (switching to null) and memory released.
  * 
+ * Note this class is not thread safe!
+ * 
  * @author Mike
  *
  * @param <K> Key type
