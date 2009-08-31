@@ -22,12 +22,21 @@ public class TestIntSet {
 		IntSet is1=IntSet.create(array);
 		IntSet is2=null;
 		
+		IntSet is3=IntSet.create(104);
+		
 		for (int i=0; i<50; i++) {
 			int v=Rand.r(50);
+			boolean contains=is1.contains(v);
 			is2=IntSet.createMerged(is1, v);
 			assertTrue(is2.contains(is1));
 			assertTrue(is2.contains(v));
+			assertFalse(is2.contains(is3));
 			assertFalse(is2.hasDuplicates());
+			
+			IntSet ist=IntSet.createWithout(is2, v);
+			assertFalse(ist.hasDuplicates());
+			if (!contains) assertTrue(is1.equals(ist)); // must get back to where we were
+			
 			is1=is2;
 		}
 		
@@ -40,6 +49,15 @@ public class TestIntSet {
 		assertTrue(is1.size()==c);
 	}
 	
+	@Test public void test2without() {
+		int[] array=new int[] {1,2,3};
+		IntSet is1=IntSet.create(array);
+		IntSet is2=IntSet.createWithout(is1, 3);
+
+		IntSet is3=IntSet.create(new int[]{1,2});
+		assertTrue(is2.equals(is3));
+	}
+	
 	@Test public void test3() {
 		int[] array=new int[] {1,2,3};
 		IntSet is1=IntSet.create(array);
@@ -50,4 +68,5 @@ public class TestIntSet {
 		assertTrue(is1!=is3);
 		assertTrue(is1.equals(is3));
 	}
+
 }

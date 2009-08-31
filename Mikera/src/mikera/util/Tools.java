@@ -11,21 +11,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class Tools {
-	public static int middle(int a, int b, int c) {
-		if (a<b) {
-			if (b<c) {
-				return b;
-			}
-			return (a<c)?c:a;
-		} else {
-			if (a<c) {
-				return a;
-			}
-			return (b<c)?c:b;
-		}
-		
-	}
-	
+
 	public static void writeXMLToFile(Document doc, String fileName) {
 		try {
 			TransformerFactory factory=TransformerFactory.newInstance();

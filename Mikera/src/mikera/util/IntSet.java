@@ -15,9 +15,9 @@ public final class IntSet implements Set<Integer>, Cloneable {
 	
 	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
 
-	private static final HashCache<IntSet> cache=new HashCache<IntSet>(400);
+	private static final HashCache<IntSet> cache=new HashCache<IntSet>(401);
 	
-	private IntSet(int [] values) {
+	private IntSet(int[] values) {
 		data =values;
 	}
 	
@@ -32,7 +32,7 @@ public final class IntSet implements Set<Integer>, Cloneable {
 				int s=sdata[si++];
 				if (s>needed) return false; // not found
 				if (s==needed) break;
-				if (si>sdata.length) return false;
+				if (si>=sdata.length) return false;
 			}
 		}
 		return true;
@@ -76,6 +76,13 @@ public final class IntSet implements Set<Integer>, Cloneable {
 		return -1;
 	}
 	
+	public static IntSet create(int value) {
+		int hc=hashCode(value);
+		IntSet is=cache.getCachedValueForHashCode(hc);
+		if ((is!=null)&&(is.size()==1)&&(is.data[0]==value)) return is;
+		return createLocal(new int[] {value});
+	}
+	
 	public static IntSet create(int[] data) {
 		return create(data,0,data.length);
 	}
@@ -98,6 +105,17 @@ public final class IntSet implements Set<Integer>, Cloneable {
 			ndata[i]=data[i-1];
 			i++;
 		}
+		return createLocal(ndata);
+	}
+	
+	public static IntSet createWithout(IntSet is, int v) {
+		int pos=is.findIndex(v);
+		if (pos<0) return is; // no removal
+		int[] data=is.data;
+		int ol=data.length;
+		int[] ndata=new int[ol-1];
+		System.arraycopy(data, 0, ndata, 0, pos);
+		System.arraycopy(data, pos+1, ndata, pos, ol-pos-1);
 		return createLocal(ndata);
 	}
 	
@@ -143,7 +161,7 @@ public final class IntSet implements Set<Integer>, Cloneable {
 	 * @return
 	 */
 	public static int hashCode(int i) {
-		return i+(i<<(i&15));
+		return i+(i<<(i&31));
 	}
 	
 	public IntSet clone() {
