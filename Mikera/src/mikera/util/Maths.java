@@ -13,6 +13,8 @@ public final class Maths {
 	public static final float ROOT_THREE=(float)Math.sqrt(3);
 	public static final float E=(float)Math.exp(1);
 	public static final float PI=(float)Math.PI;
+	public static final float TWO_PI=2.0f*PI;
+	public static final float HALF_PI=0.5f*PI;
 	
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
@@ -83,9 +85,15 @@ public final class Maths {
 		return n-floor(x)*d;
 	}
 	
-	public static int mod(int n, int d) {
-		int r= (n%d);
-		if (r<0) r+=d;
+	/**
+	 * Integer modulus function
+	 * @param n number
+	 * @param d divisor
+	 * @return
+	 */
+	public static int mod(int number, int divisor) {
+		int r= (number%divisor);
+		if (r<0) r+=divisor;
 		return r;
 	}
 	
@@ -104,6 +112,11 @@ public final class Maths {
 	}
 	
 	public static int abs(int a) {
+		if (a<0) return -a;
+		return a;
+	}
+	
+	public static float abs(float a) {
 		if (a<0) return -a;
 		return a;
 	}

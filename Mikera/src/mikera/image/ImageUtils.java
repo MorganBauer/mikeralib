@@ -51,7 +51,6 @@ public class ImageUtils {
 		return f;
 	}
 	
-	@SuppressWarnings("serial")
 	public static Frame displayAndExit(Image image) {
 		final Frame f=display(image);
 		f.addWindowListener(new WindowAdapter() {

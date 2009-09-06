@@ -133,6 +133,13 @@ public final class Vector implements Cloneable {
 		System.arraycopy(adata, 0, data, 0, size);
 	}
 	
+	public Vector(Vector3 vector) {
+		this(3);
+		data[0]=vector.x;
+		data[1]=vector.y;
+		data[2]=vector.z;		
+	}
+	
 	public Vector(float[] adata, int offset, int size) {
 		data=new float[size];
 		System.arraycopy(adata, offset, data, 0, size);

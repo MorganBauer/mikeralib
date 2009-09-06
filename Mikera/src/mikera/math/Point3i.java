@@ -92,6 +92,10 @@ public final class Point3i implements Comparable<Point3i> {
         return "("+x+", "+y+", "+z+")";
     }
     
+    public final Vector3 toVector3() {
+        return new Vector3(x,y,z);
+    }
+    
 	public boolean equals(Object o) {
 		if (o instanceof Point3i) {
 			return equals((Point3i)o);

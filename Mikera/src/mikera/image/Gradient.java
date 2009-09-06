@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
 
+import mikera.math.Vector;
+import mikera.math.VectorFunction;
 import mikera.util.Maths;
 
 public class Gradient {
@@ -37,6 +39,19 @@ public class Gradient {
 	public static void fillFromImage(int[] grad, BufferedImage b, int line) {
 		for (int i=0; i<SIZE; i++) {
 			grad[i]=b.getRGB(i, line);
+		}
+	}
+	
+	public static void fillFromFunction(int[] grad, VectorFunction vf) {
+		Vector col=new Vector(4);
+		Vector pos=new Vector(1);
+		col.data[3]=1.0f; // default to full alpha
+		
+		int s=grad.length;
+		for (int i=0; i<s; i++) {
+			col.data[0]=((float)i)/s;
+			vf.calculate(pos, col);
+			grad[i]=Colours.fromVector(col);
 		}
 	}
 

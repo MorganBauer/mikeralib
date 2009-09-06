@@ -6,8 +6,11 @@ import mikera.math.Vector;
 import mikera.util.Maths;
 
 public class Colours {
-	public static int RGB_MASK=0xFFFFFF;
-	public static int ALPHA_MASK=0xFF000000;
+	public static int RGB_MASK=   0x00FFFFFF;
+	public static int RED_MASK=   0x00FF0000;
+	public static int GREEN_MASK= 0x0000FF00;
+	public static int BLUE_MASK=  0x000000FF;
+	public static int ALPHA_MASK= 0xFF000000;
 	public static final int BYTE_MASK=255;
 	
 	private static final int MAX_BYTE=255;
@@ -40,50 +43,50 @@ public class Colours {
 	}
 	
 	public static int getARGBClamped(double r, double g, double b, double a) {
-    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, 255);
-    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, 255);
-    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
-    	int ai=Maths.clampToInteger(a*MAX_BYTE, 0, 255);
+    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE);
+    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE);
+    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
+    	int ai=Maths.clampToInteger(a*MAX_BYTE, 0, MAX_BYTE);
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
 	public static int getARGBClamped(float r, float g, float b, float a) {
-    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, 255);
-    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, 255);
-    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
-    	int ai=Maths.clampToInteger(a*MAX_BYTE, 0, 255);
+    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE);
+    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE);
+    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
+    	int ai=Maths.clampToInteger(a*MAX_BYTE, 0, MAX_BYTE);
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
 	public static int getARGBClamped3(Vector v) {
 		int result=0xFF000000;
 		float r=v.data[0];
-    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, 255)<<16;
+    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE)<<16;
 		float g=v.data[1];
-		result+=Maths.clampToInteger(g*MAX_BYTE, 0, 255)<<8;
+		result+=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE)<<8;
 		float b=v.data[2];
-		result+=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
+		result+=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
 		return result;
 	}
 	
 	public static int getARGBClamped4(Vector v) {
 		int result=0x00000000;
 		float r=v.data[0];
-    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, 255)<<16;
+    	result+=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE)<<16;
 		float g=v.data[1];
-		result+=Maths.clampToInteger(g*MAX_BYTE, 0, 255)<<8;
+		result+=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE)<<8;
 		float b=v.data[2];
-		result+=Maths.clampToInteger(b*MAX_BYTE, 0, 255);
+		result+=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
 		float a=v.data[3];
-		result+=Maths.clampToInteger(a*MAX_BYTE, 0, 255)<<24;
+		result+=Maths.clampToInteger(a*MAX_BYTE, 0, MAX_BYTE)<<24;
 		return result;
 	}
 	
 	public static int getARGBClamped(int r, int g, int b, int a) {
-    	int ri=Maths.clamp(r, 0, 255);
-    	int gi=Maths.clamp(g, 0, 255);
-    	int bi=Maths.clamp(b, 0, 255);
-    	int ai=Maths.clamp(a, 0, 255);
+    	int ri=Maths.clamp(r, 0, MAX_BYTE);
+    	int gi=Maths.clamp(g, 0, MAX_BYTE);
+    	int bi=Maths.clamp(b, 0, MAX_BYTE);
+    	int ai=Maths.clamp(a, 0, MAX_BYTE);
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
@@ -96,6 +99,10 @@ public class Colours {
 
 	public static int fromFloat4(float[] col, int p) {
 		return getARGBClamped(col[p],col[p+1],col[p+2],col[p+3]);
+	}
+	
+	public static int fromVector(Vector col) {
+		return fromFloat4(col.data,0);
 	}
 	
 	public static int getARGB(int r, int g, int b, int a) {

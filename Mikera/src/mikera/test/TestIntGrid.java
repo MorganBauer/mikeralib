@@ -33,4 +33,17 @@ public class TestIntGrid {
 		assertEquals(512,ig.countNonZero());	
 		assertEquals(512,ig.dataLength());
 	}
+	
+	@Test public void testGrid() {
+		Grid<Integer> ig=new Grid<Integer>();
+		
+		ig.setBlock(3, 3, 3,10,10,10, 1);
+		assertEquals(null,ig.get(0,0,0));
+		assertEquals(1,(int)ig.get(10,10,10));
+		assertEquals(1,(int)ig.get(3,3,3));
+		assertEquals(null,ig.get(11,11,11));
+		
+		assertEquals(512,ig.countNonNull());	
+		assertEquals(512,ig.dataLength());
+	}
 }
