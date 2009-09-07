@@ -20,6 +20,36 @@ public final class Maths {
 		return (float)Math.sqrt(a);
 	}
 	
+	public static float fastInverseSqrt(float x) {
+	    float xhalf = 0.5f*x;
+	    int i = Float.floatToRawIntBits(x);
+	    i = 0x5F3759DF - (i>>1);
+	    x = Float.intBitsToFloat(i);
+	    x = x*(1.5f - xhalf*x*x);
+	    return x;
+	}
+	
+	/**
+	 * Interesting way to approximate a square root.... however seems to be slower than standard Math.sqrt() approach
+	 * @param x
+	 * @return
+	 */
+	public static float alternateSqrt(float x) {
+		if (x<0) return 0;
+		float r=approxSqrt(x);
+		r=r-(0.5f*((r*r)-x)/r); // Newton iteration
+		r=r-(0.5f*((r*r)-x)/r); // Newton iteration
+		return r;
+	}
+	
+	public static float approxSqrt(float x) {
+	    int i = Float.floatToRawIntBits(x);
+	    //int exponent=i&0x7F800000; // 8 bits below sign bit
+	    //int value=(i&0x7FFFFFF)+((exponent!=0)?0:0x08000000); // 23 low bits, implicit 1 unless exponent=0
+	    i=(i+0x3F800000)>>>1;
+	    return Float.intBitsToFloat(i);
+	}
+	
 	public static int clampToInteger(double value, int min, int max) {
 		int v=(int)value;
 		if (v<min) return min;

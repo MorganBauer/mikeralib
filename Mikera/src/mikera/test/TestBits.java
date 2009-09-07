@@ -24,15 +24,50 @@ public class TestBits {
 	}
 	
 	@Test public void testSigBits() {
-		assertEquals(1,Bits.significantBits(0));
-		assertEquals(1,Bits.significantBits(-1));
+		assertEquals(1,Bits.significantSignedBits(0));
+		assertEquals(1,Bits.significantSignedBits(-1));
 
-		assertEquals(4,Bits.significantBits(4));
-		assertEquals(3,Bits.significantBits(3));
+		assertEquals(4,Bits.significantSignedBits(4));
+		assertEquals(3,Bits.significantSignedBits(3));
 		
-		assertEquals(3,Bits.significantBits(-4));
+		assertEquals(3,Bits.significantSignedBits(-4));
 
 	}
+	
+	@Test public void testTrailingZeros() {
+		assertEquals(0,Bits.countTrailingZeros(0x1L));
+		assertEquals(1,Bits.countTrailingZeros(2));
+		assertEquals(16,Bits.countTrailingZeros(0xFFFF0000));
+		assertEquals(0,Bits.countTrailingZeros(-1));
+		assertEquals(0,Bits.countTrailingZeros(-1L));
+		assertEquals(32,Bits.countTrailingZeros(0xFFFFFFFF00000000L));
+		assertEquals(48,Bits.countTrailingZeros(0xFFFF000000000000L));
+		assertEquals(64,Bits.countTrailingZeros(0L));
+		assertEquals(32,Bits.countTrailingZeros(0));
+
+	}
+	
+	@Test public void testLeadingZeros() {
+		assertEquals(63,Bits.countLeadingZeros(0x1L));
+		assertEquals(30,Bits.countLeadingZeros(2));
+		assertEquals(0,Bits.countLeadingZeros(-1));
+		assertEquals(0,Bits.countLeadingZeros(-1L));
+		assertEquals(32,Bits.countLeadingZeros(0x00000000FFFFFFFFL));
+		assertEquals(48,Bits.countLeadingZeros(0xFFFFL));
+		assertEquals(64,Bits.countLeadingZeros(0L));
+		assertEquals(32,Bits.countLeadingZeros(0));
+
+	}
+	
+	@Test public void testLowestSetBit() {
+		assertEquals(0,Bits.lowestSetBit(0));
+		assertEquals(1,Bits.lowestSetBit(0x1FFF));
+		assertEquals(0x80000000,Bits.lowestSetBit(0x80000000));
+		assertEquals(2,Bits.lowestSetBit(6));
+	}
+
+	
+	
 	
 	@Test public void testBitGrid1() {
 		BitGrid bg=new BitGrid(0,0,0);

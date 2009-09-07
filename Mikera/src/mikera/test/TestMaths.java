@@ -50,6 +50,16 @@ public class TestMaths {
 		
 	}
 	
+	@Test public void testAbs() {
+		assertEquals(0.0f,Maths.abs(0.0f),0.00001f);
+	}
+	
+	@Test public void testFastSqrt() {
+		assertEquals(0.5,Maths.fastInverseSqrt(4),0.01f);
+		
+		// System.out.println(Maths.alternateSqrt(33f)+" vs."+Maths.sqrt(33f));
+	}
+	
 	@Test public void testFloor() {
 		assertEquals(0,Maths.floor(0));
 		assertEquals(1,Maths.floor(1));
@@ -58,5 +68,19 @@ public class TestMaths {
 		assertEquals(-1,Maths.floor(-0.0001));
 		assertEquals(-1,Maths.floor(-0.9001));
 		
+	}
+	
+	@Test public void testSpeed1() {
+		for (int i=0; i<1000000; i++) {
+			float f=Maths.sqrt(i);
+			assertEquals(f,f,0.01f);
+		}
+	}
+	
+	@Test public void testSpeed2() {
+		for (int i=0; i<1000000; i++) {
+			float f=Maths.alternateSqrt(i);
+			assertEquals(f,f,0.01f);
+		}
 	}
 }

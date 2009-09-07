@@ -155,7 +155,7 @@ public class TestConnectors {
 			
 			assertEquals(len,Util.compactedLength(l));
 			
-			int sb=Bits.significantBits(l);
+			int sb=Bits.significantSignedBits(l);
 			assertEquals((sb+6)/7,len); // right number of bits
 			
 			bb.flip();
