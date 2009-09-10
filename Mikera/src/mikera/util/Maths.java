@@ -70,6 +70,12 @@ public final class Maths {
 		return value;
 	}
 	
+	public static float clamp(float value, float min, float max) {
+		if (value<min) return min;
+		if (value>max) return max;
+		return value;
+	}
+	
 	public static double clamp(double value, double min, double max) {
 		if (value<min) return min;
 		if (value>max) return max;
@@ -77,6 +83,20 @@ public final class Maths {
 	}
 	
 	public static int middle(int a, int b, int c) {
+		if (a<b) {
+			if (b<c) {
+				return b;
+			}
+			return (a<c)?c:a;
+		} else {
+			if (a<c) {
+				return a;
+			}
+			return (b<c)?c:b;
+		}
+	}
+	
+	public static float middle(float a, float b, float c) {
 		if (a<b) {
 			if (b<c) {
 				return b;
@@ -213,7 +233,15 @@ public final class Maths {
 		return b*b;
 	}
 	
+	public static int square(int a) {
+		return a*a;
+	}
+	
 	public static float square(float a) {
+		return a*a;
+	}
+	
+	public static double square(double a) {
 		return a*a;
 	}
 	
@@ -240,14 +268,6 @@ public final class Maths {
 	    y = b - (int) Math.floor(b);
 	    y = (y - y * y) * 0.33971f;
 	    return Float.intBitsToFloat((int) ((b + 127 - y) * (1 << 23)));
-	}
-
-	public static final float clamp(float x, float min, float max) {
-	    if (x > max)
-	        return max;
-	    if (x > min)
-	        return x;
-	    return min;
 	}
 
 	public static final double min(double a, double b, double c) {

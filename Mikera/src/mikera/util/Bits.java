@@ -75,6 +75,7 @@ public class Bits {
 		if ((a&0x1)==0) {r+=1;}
 		return r;
 	}
+
 	
 	public static int lowestSetBit(int a) {
 		return (a & (-a));

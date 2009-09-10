@@ -67,7 +67,7 @@ public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>> {
 	public int hashCode() {
 		int result=0;
 		if (a!=null) result+=a.hashCode();
-		if (b!=null) result+=b.hashCode();
+		if (b!=null) result+=Bits.rollLeft(b.hashCode(),16);
 		return result;
 	}
 }

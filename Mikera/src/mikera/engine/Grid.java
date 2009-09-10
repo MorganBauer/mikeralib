@@ -100,7 +100,7 @@ public class Grid<T> implements Cloneable {
 			Object[] dt=data;
 			if (dt!=null) {
 				
-				Object[] ndt=Arrays.copyOf(dt, dt.length);
+				Object[] ndt=new Object[dt.length];
 				System.arraycopy(dt, 0, ndt, 0,ndt.length);
 				nbg.data=ndt;
 			}
