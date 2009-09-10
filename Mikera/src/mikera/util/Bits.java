@@ -115,4 +115,16 @@ public class Bits {
 		n = n | (n >> 16);
 		return n;
 	}
+	
+	public static int rollRight(int v, int count) {
+		count&=31;
+		v=(v>>>count)|(v<<(32-count));
+		return v;
+	}
+	
+	public static int rollLeft(int v, int count) {
+		count&=31;
+		v=(v<<count)|(v>>>(32-count));
+		return v;
+	}
 }

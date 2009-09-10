@@ -86,6 +86,42 @@ public final class IntSet implements Set<Integer>, Cloneable {
 	public static IntSet create(int[] data) {
 		return create(data,0,data.length);
 	}
+
+	public static IntSet createMerged(IntSet a, IntSet b) {
+		int ai=0;
+		int bi=0;
+		int nsize=0;
+		while ((ai<a.data.length)&&(bi<b.data.length)) {
+			int c=a.data[ai]-b.data[bi];
+			if (c>0) {
+				bi++;
+			} else if (c<0) {
+				ai++;
+			} else {
+				ai++;
+				bi++;
+			}
+			nsize++;
+		}
+		nsize+=a.data.length+b.data.length-ai-bi;	
+		int[] ndata=new int[nsize];
+		ai=0;
+		bi=0;
+		for (int i=0; i<nsize; i++) {
+			if (ai>=a.data.length) {ndata[i]=b.data[bi++]; continue;}
+			if (bi>=b.data.length) {ndata[i]=a.data[ai++]; continue;}
+			int c=a.data[ai]-b.data[bi];
+			if (c>0) {
+				ndata[i]=b.data[bi++];
+			} else if (c<0) {
+				ndata[i]=a.data[ai++];
+			} else {
+				ndata[i]=a.data[ai++];
+				bi++;
+			}
+		}
+		return createLocal(ndata);
+	}
 	
 	public static IntSet createMerged(IntSet is, int v) {
 		if (is.contains(v)) return is;

@@ -116,6 +116,17 @@ public class TestBits {
 
 	}
 	
+	@Test public void testRoll() {
+		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,20));
+		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,52));
+		assertEquals(0xFFF0000F,Bits.rollLeft(0xFFF0000F,0));
+		
+		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,12));
+		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,44));
+		assertEquals(0xFFF0000F,Bits.rollRight(0xFFF0000F,0));
+
+	}
+	
 	@Test public void testBitGridVisitors() {
 		BitGrid bg=new BitGrid(0,0,0);
 		
