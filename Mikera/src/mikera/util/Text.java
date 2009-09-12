@@ -232,8 +232,11 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 	
 	public Text firstBlock() {
-		if (data!=null) return this;
-		return front.firstBlock();
+		Text t=this;
+		while (t.data==null) {
+			t=t.front;
+		}
+		return t;
 	}
 	
 	public Text getBlock(int pos) {
@@ -287,8 +290,12 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 	
 	public boolean equals(Object o) {
-		if (!(o instanceof Text)) return false;
-		return compareTo((Text)o)==0;
+		if (o instanceof Text) {
+			Text t=(Text)o;
+			if (hashCode!=t.hashCode) return false;
+			return compareTo(t)==0;
+		}
+		return false;
 	}
 
 	public int compareTo(Text t) {

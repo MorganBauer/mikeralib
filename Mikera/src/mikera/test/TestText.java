@@ -30,6 +30,11 @@ public class TestText {
 		Text t3=Text.create(TextUtils.whiteSpace(1000));
 		Text t4=Text.create(TextUtils.whiteSpace(1001));
 		
+		testTextObject(t1);
+		testTextObject(t2);
+		testTextObject(t3);
+		testTextObject(t4);
+
 		assertEquals(16,t4.countBlocks()); // low level blocks
 		assertEquals(31,t4.countNodes()); // total nodes including tree
 		
@@ -62,12 +67,12 @@ public class TestText {
 		Text t1=Text.create("");
 		StringBuffer sb=new StringBuffer();
 		
-		for (int i=0; i<100; i++) {
+		for (int i=0; i<200; i++) {
 			String s=Integer.toString(Rand.d(100));
 			sb.append(s);
 			t1=t1.append(s);
 			
-			if (Rand.d(10)==1) {
+			if (Rand.d(30)==1) {
 				int a=Rand.r(sb.length());
 				int b=Rand.range(a, sb.length()-1);
 				sb=new StringBuffer(sb.substring(a, b));
@@ -75,14 +80,40 @@ public class TestText {
 			}
 		}
 		
+		testTextObject(t1);
+		
 		assertEquals(t1.toString(),sb.toString());
+		assertEquals(t1.hashCode(),Text.create(sb.toString()).hashCode());
 		
 		StringBuffer sb2=new StringBuffer();
 		for (Character ch: t1) {
 			sb2.append(ch);
 		}
 		assertEquals(sb.toString(),sb2.toString());
+		
+		
 	}
 	
+	@Test public void testConcat() {
+		Text t1=Text.create("AB");
+		Text t2=Text.create("CD");
+		
+		assertEquals("ABCD",Text.concat(t1, t2).toString());
+		assertEquals(t1,Text.concat(t1, Text.EMPTY));
+		assertEquals(t1,Text.concat(Text.EMPTY,t1));
+		
+	}
 	
+	public void testTextObject(Text t) {
+		int len=t.length();
+		
+		assertTrue(len>=0);
+		assertNull(t.getBlock(-1));
+		assertNull(t.getBlock(len));
+		assertNotNull(t.getBlock(0));
+		assertNotNull(t.getBlock(len-1));
+		t.isPacked();
+		assertTrue(t.countNodes()>=t.countBlocks());
+		assertEquals(len*2,Text.concat(t, t).length());
+	}
 }

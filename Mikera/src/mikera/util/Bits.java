@@ -38,6 +38,15 @@ public class Bits {
 		return 64;
 	}
 	
+	/** 
+	 * Returns the number of bits required to fully represent the unsigned number 
+	 * @param a
+	 * @return
+	 */
+	public static int significantUnsignedBits(int a) {
+		return 32-countLeadingZeros(a);
+	}
+	
 	public static boolean isUnsignedPowerOfTwo(long a) {
 		return (a&(a-1))==0;
 	}

@@ -1,8 +1,17 @@
 package mikera.util;
 
-public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>> {
-	public A a;
-	public B b;
+import java.io.Serializable;
+
+/**
+ * Immutable pair class
+ * @author Mike
+ *
+ * @param <A>
+ * @param <B>
+ */
+public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>>, Serializable {
+	public final A a;
+	public final B b;
 	
 	public Pair() {
 		a=null;
@@ -54,14 +63,12 @@ public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>> {
 		return 0;
 	}
 	
-	@SuppressWarnings("unchecked")
+	public Pair<B,A> swap() {
+		return new Pair<B,A>(b,a);
+	}
+	
 	public Pair<A,B> clone() {
-		try {
-			Pair<A,B> p=(Pair<A,B>)super.clone();
-			return p;
-		} catch (CloneNotSupportedException e) {
-			throw new Error(e);
-		}
+		return this;
 	}
 	
 	public int hashCode() {
