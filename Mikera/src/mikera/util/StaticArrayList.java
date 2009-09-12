@@ -3,7 +3,7 @@ package mikera.util;
 import java.util.*;
 
 /**
- * List using a static array
+ * Immutable list using a static array
  * 
  * @author Mike
  *
@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class StaticArrayList<T> extends AbstractList<T> implements Set<T> {
 
-	Object[] array;
+	private final Object[] array;
 	
 	public StaticArrayList(Object[] referencedArray) {
 		array=referencedArray;

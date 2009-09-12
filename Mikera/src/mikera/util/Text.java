@@ -1,410 +1,356 @@
-
 package mikera.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Iterator;
 
-/** 
-* Class containing utility functions for text manipulations
-*/
-public class Text {
-    public static String NL = System.getProperty("line.separator");
+import mikera.util.emptyobjects.NullArrays;
 
+/**
+ * Immutable char sequence implementation based on a tree with pre-computed hashcodes
+ * 
+ * Initially creates packed blocks, i.e. all blocks full except from final block, although this is not
+ * guaranteed to be maintained (especially with concatenation / substring operations)
+ * 
+ * Also tries to maintain balanced tree
+ * 
+ * @author Mike
+ *
+ */
+public final class Text implements CharSequence, Comparable<Text>, Iterable<Character>, Cloneable, Serializable {
+	public static final int BLOCK_SIZE_BITS=6;
+	public static final int BLOCK_SIZE=1<<BLOCK_SIZE_BITS;
+	public static final Text EMPTY=new Text(NullArrays.NULL_CHARS);
+	
+	private final char[] data;
+	private final Text front;
+	private final Text back;
+	private final int count;
+	private final int hashCode;
+	
+	public static Text create(String s) {
+		return create(s,0,s.length());
+	}
+	
+	public static Text create(String s, int start, int end) {
+		int length=end-start;
+		if (length==0) return Text.EMPTY;
+		if (length<=BLOCK_SIZE) {
+			char[] chars=new char[length];
+			s.getChars(start, end, chars, 0);
+			return new Text(chars);
+		} else {
+			int mid=((start+end+(BLOCK_SIZE-1))>>(BLOCK_SIZE_BITS+1))<<(BLOCK_SIZE_BITS);
+			return new Text(create(s,start, mid),create(s,mid, end));
+		}
+	}
 
+	private Text(Text f, Text b) {
+		data=null;
+		front=f;
+		back=b;
+		count=f.count+b.count;
+		hashCode=calculateConcatenatedHash(f,b);
+	}
+
+	
+	private Text(char[] charData) {
+		data=charData;
+		count=data.length;
+		back=null;
+		front=null;
+		hashCode=calculateHash(0,charData);
+	}
+	
+	public Text subText(int start, int end) {
+		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
+		if (start==end) return Text.EMPTY;
+		if ((start==0)&&(end==count)) return this;
+		if (data!=null) {
+			int len=end-start;
+			char[] ndata=new char[len];
+			System.arraycopy(data, start, ndata, 0, len);
+			return new Text(ndata);			
+		} else {
+			int frontCount=front.count;
+			if (end<=frontCount) return front.subText(start,end);
+			if (start>=frontCount) return back.subText(start-frontCount,end-frontCount);
+			return concat(front.subText(start, frontCount),back.subText(0, end-frontCount));
+		}
+	}
+	
+	public int countNodes() {
+		if (data!=null) {
+			return 1;
+		} else {
+			return 1+front.countNodes()+back.countNodes();
+		}
+	}
+	
+	public int countBlocks() {
+		if (data!=null) {
+			return 1;
+		} else {
+			return front.countBlocks()+back.countBlocks();
+		}
+	}
+	
 	/**
-	 * return Roman numerals
+	 * Deletes a block of text
 	 * 
-	 * note that beyond MMMCMXCIX = 3999 we can't show roman numerals in ascii
-	 * since would require putting a line on top of V for 5000....
-	 * 
-	 */ 
-	public static String roman(int n) {
-		if (n<0) return "-"+roman(-n);
-		if (n==0) return "nullus";
-		
-		String r = "";
-		switch (n / 1000) {
-			case 0 :
-				break;
-			case 1 :
-				r += "M";
-				break;
-			case 2 :
-				r += "MM";
-				break;
-			case 3 :
-				r += "MMM";
-				break;
-			default:
-				throw new Error("Number "+r+" too big to convert to roman numerals");
-		}
-		n = n % 1000;
-
-		switch (n / 100) {
-			case 1 :
-				r += "C";
-				break;
-			case 2 :
-				r += "CC";
-				break;
-			case 3 :
-				r += "CCC";
-				break;
-			case 4 :
-				r += "CD";
-				break;
-			case 5 :
-				r += "D";
-				break;
-			case 6 :
-				r += "DC";
-				break;
-			case 7 :
-				r += "DCC";
-				break;
-			case 8 :
-				r += "DCCC";
-				break;
-			case 9 :
-				r += "CM";
-				break;
-		}
-		n = n % 100;
-
-		switch (n / 10) {
-			case 1 :
-				r += "X";
-				break;
-			case 2 :
-				r += "XX";
-				break;
-			case 3 :
-				r += "XXX";
-				break;
-			case 4 :
-				r += "XL";
-				break;
-			case 5 :
-				r += "L";
-				break;
-			case 6 :
-				r += "LX";
-				break;
-			case 7 :
-				r += "LXX";
-				break;
-			case 8 :
-				r += "LXXX";
-				break;
-			case 9 :
-				r += "XC";
-				break;
-		}
-		n = n % 10;
-
-		switch (n) {
-			case 1 :
-				r += "I";
-				break;
-			case 2 :
-				r += "II";
-				break;
-			case 3 :
-				r += "III";
-				break;
-			case 4 :
-				r += "IV";
-				break;
-			case 5 :
-				r += "V";
-				break;
-			case 6 :
-				r += "VI";
-				break;
-			case 7 :
-				r += "VII";
-				break;
-			case 8 :
-				r += "VIII";
-				break;
-			case 9 :
-				r += "IX";
-				break;
-		}
-
-		return r;
-	}
-
-	public static String ordinal(int n) {
-        String st=Integer.toString(n);
-        if (((n % 100) >= 11) && ((n % 100) <= 13)) {
-            return st + "th";
-        } else if (n % 10 == 1) {
-            return st + "st";
-        } else if (n % 10 == 2) {
-            return st + "nd";
-        } else if (n % 10 == 3) {
-            return st + "rd";
-        } else {
-            return st + "th";
-        }
-	}
-	
-	// return index of string s in array ss
-	public static int index(String s, String[] ss) {
-		for (int i = 0; i < ss.length; i++) {
-			if (s.equals(ss[i]))
-				return i;
-		}
-		return -1;
-	}
-	
-	public static String arrayToString(float[] as) {
-		StringBuffer sb=new StringBuffer("{");
-		for (int i = 0; i < as.length; i++) {
-			if (i>0) sb.append(", ");
-			sb.append(Float.toString(as[i]));
-		}
-		sb.append("}");
-		return sb.toString();
-	}
- 
-	/**
-	 * Soft HashMap containing whitespace strings of various lengths
-	 */
-	private static SoftHashMap<Integer,String> whiteSpaceStore=new SoftHashMap<Integer,String>();
-	private static String whiteSpaceString="                                "; // initial length of 32
-	
-	public static String whiteSpace(int l) {
-		if (l<0) throw new Error("Negative whitespace not possible");
-		if (l==0) return "";
-		
-		String s=whiteSpaceStore.get(l);
-		if (s!=null) return s;
-
-		while (whiteSpaceString.length()<l) {
-			whiteSpaceString=whiteSpaceString+whiteSpaceString;
-		}
-
-		s=whiteSpaceString.substring(0, l);
-		whiteSpaceStore.put(l,s);
-        return s;
-	}
-
-	public static String leftPad(String s, int l) {
-		if (s==null) s="";
-		return whiteSpace(l-s.length())+s;
-	}
-	
-	public static String rightPad(String s, int l) {
-		if (s==null) s="";
-		return s+whiteSpace(l-s.length());
-	}
-	
-	// returns a+whitesapce+b with total length len
-	public static String centrePad(String a, String b, int len) {
-		len = len - a.length();
-		len = len - b.length();
-		return a + whiteSpace(len) + b;
-	}
-
-	public static String capitalise(String s) {
-		if (s==null) return null;
-		if (s.length()==0) return "";
-		char c = s.charAt(0);
-		if (Character.isUpperCase(c))
-			return s;
-		StringBuffer sb = new StringBuffer(s);
-		sb.setCharAt(0, Character.toUpperCase(c));
-		return sb.toString();
-	}
-
-	public static String titleCase(String s) {
-		StringBuffer sb = new StringBuffer(s);
-		for (int i=0; i<s.length(); i++) {
-			if ((i==0)||(!Character.isLetterOrDigit(s.charAt(i-1)))) {
-				sb.setCharAt(i, Character.toUpperCase(s.charAt(i)));
-			}
-		}
-		return sb.toString();
-	}
-	
-	public static int countChar(String s, char c) {
-		int count = 0;
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) == c)
-				count++;
-		}
-		return count;
-	}
-
-	public static int wrapLength(String s, int start, int len) {
-		if ((s.length() - start) <= len)
-			return (s.length() - start);
-
-		for (int i = len; i >= 0; i--) {
-			if (Character.isWhitespace(s.charAt(i + start)))
-				return i;
-		}
-
-		return len;
-	}
-
-	public static String loadFromFile(String name) {
-        StringBuffer sb=new StringBuffer();
-    	
-	    try {
-	    	InputStream in=String.class.getResourceAsStream(name);
-	    	
-	    	BufferedReader br=new BufferedReader(new InputStreamReader(in));
-	    	for ( String s=br.readLine(); s!=null; s=br.readLine()) {
-		        sb.append(s);
-		        sb.append(NL);
-		    }
-	    } catch (Throwable t) {
-        	t.printStackTrace();
-        	return null;
-        }
-        
-		return sb.toString();
-	}
-	
-	public static String[] wrapString(String s, int len) {
-		String[] working = new String[1 + ((2 * s.length()) / len)];
-
-		int end = s.length();
-		int pos = 0;
-		int i = 0;
-		while (pos < end) {
-			int inc = wrapLength(s, pos, len);
-			working[i] = s.substring(pos, pos + inc);
-			i++;
-			pos = pos + inc;
-			while ((pos < end) && Character.isWhitespace(s.charAt(pos)))
-				pos++;
-		}
-
-		// return empty string if size zero
-		if (i == 0) {
-			i = 1;
-			working[0] = "";
-		}
-
-		String[] result = new String[i];
-		System.arraycopy(working, 0, result, 0, i);
-		return result;
-	}
-
-	public static int encryptionHash(String s) {
-		// mildly tricky encryption hash
-		// can't be bothered with anything tougher yet
-		int len = s.length();
-
-		int a = 0;
-		int f = 1;
-		for (int i = len - 1; i >= 0; i--) {
-			a += s.charAt(i) * f;
-			f *= 31;
-		}
-
-		return a;
-	}
-
-	public static String[] separateString(String s, char c) {
-		int num = countChar(s, c);
-		int start = 0;
-		int finish = 0;
-		String[] result = new String[num + 1];
-		for (int i = 0; i < (num + 1); i++) {
-			finish = s.indexOf(c, start);
-			if (finish < start)
-				finish = s.length();
-			if (start < finish) {
-				result[i] = s.substring(start, finish);
-			} else {
-				result[i] = "";
-			}
-			start = finish + 1;
-		}
-		return result;
-	}
-
-	public static boolean isVowel(char c) {
-		c = Character.toLowerCase(c);
-		return ((c == 'a') || (c == 'e') || (c == 'i') || (c == 'o') || (c == 'u'));
-    }
-
-    /**
-     * Convert a string with embedded spaces into proper camel notation.
-     @param input a string to camelize.
-     @return the newly camelized string.
-    */
-    public static String camelizeString(String input) {
-        StringTokenizer tokenizer = new StringTokenizer(input," ");
-        StringBuffer output = new StringBuffer();
-        String token = null;
-        while (tokenizer.hasMoreElements()) {
-            token = tokenizer.nextToken();
-            char first = token.charAt(0);
-            if (Character.isLetter(first)) {
-                output.append(Character.toUpperCase(first));
-                output.append(token.substring(1));
-            } else {
-                output.append(token);
-            }
-        }
-        return output.toString();
-    }
-
-    /**
-     * Convert a string with embedded spaces into proper case notation.
-     @param input a string to properCase.
-     @return the newly properCased string.
-    */    
-    
-    public static String properCase(String input) {
-      StringTokenizer tokenizer = new StringTokenizer(input," ");
-      StringBuffer output = new StringBuffer();
-      String token = null;
-      while (tokenizer.hasMoreElements()) {
-          token = tokenizer.nextToken();
-          char first = token.charAt(0);
-          if (Character.isLetter(first)) {
-              output.append(Character.toUpperCase(first));
-              output.append(token.substring(1));
-          } else {
-              output.append(token);
-          }
-          if( tokenizer.hasMoreElements() ){
-            output.append(" ");
-          }
-      }
-      return output.toString();
-  }
-    
-    
-    
-	/**
-	 * Converts a string into the appropriate Object for Tyrant properties
-	 * 
-	 * @param s
+	 * @param start
+	 * @param end
 	 * @return
 	 */
-    public static Object parseObject(String s) {
-    	s=s.trim();
-    	if (Character.isDigit(s.charAt(0))) {
-    		try { 	
-	    		if (s.indexOf(".")>=1) {
-	    			return new Double(Double.parseDouble(s));
-	    		} 
-	    			
-	    		return new Integer(Integer.parseInt(s));
-	    		
-	    	} catch (Throwable t) {
-	    		// safe catch
-	    	}
-    	}
-    	return s;
-    }
-            
+	public Text deleteRange(int start, int end) {
+		if (start>=end) return this;
+		if ((start<=0)&&(end>=count)) return Text.EMPTY;
+		if (start<=0) return subText(end,count);
+		if (end>=count) return subText(0,start);
+		return concat(subText(0,start),subText(end,count));
+	}
+	
+	/**
+	 * Concatenates two Text objects, balancing the tree as far as possible
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static Text concat(Text a, Text b) {
+		int alen=a.length(); if (alen==0) return b;
+		int blen=b.length(); if (blen==0) return a;
+		
+		if (alen+blen<BLOCK_SIZE) {
+			char[] ndata=new char[alen+blen];
+			a.getChars(0, alen, ndata, 0);
+			b.getChars(0, blen, ndata, alen);
+			return new Text(ndata);
+		}
+		
+		if ((alen<(blen>>1))&&(b.data==null)) {
+			return new Text(concat(a,b.front),b.back);
+		} 
+		
+		if ((blen<(alen>>1))&&(b.data==null)) {
+			return new Text(a.front,concat(a.back,b));	
+		}
+		
+		return new Text(a,b);
+	}
+	
+	public boolean isPacked() {
+		return isFullyPacked(this,true);
+	}
+	
+	public Text append(String s) {
+		return concat(this,Text.create(s));
+	}
+	
+	public Text concat(Text t) {
+		return concat(this,t);
+	}
+	
+	private static boolean isFullyPacked(Text t, boolean end) {
+		if (t.data!=null) {
+			return (end)||(t.data.length==BLOCK_SIZE);
+		} else {
+			return isFullyPacked(t.front,false)&&(isFullyPacked(t.back,true));
+		}
+	}
+	
+	public String substring(int start, int end) {
+		char[] chars=new char[end-start];
+		getChars(start,end,chars,0);
+		return new String(chars);
+	}
+	
+	public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
+		if ((srcBegin<0)||(srcEnd>count)) throw new IndexOutOfBoundsException();
+		if (srcEnd<=srcBegin) return;
+		
+		int pos=srcBegin;
+		Text t=getBlock(pos);
+		int tpos=getBlockStartPosition(pos);
+		int tlen=t.length();
+		
+		int offset=dstBegin-srcBegin;
+		while (pos<srcEnd) {
+			dst[pos+offset]=t.data[pos-tpos];
+			pos++;
+			if (pos>=tpos+tlen) {
+				t=getBlock(pos);
+				tpos=getBlockStartPosition(pos);
+				if(t!=null) tlen=t.length();	
+			}
+		}
+	}
+	
+	/**
+	 * Calculated hashcode based on rolled character values plus the length of the character array
+	 * 
+	 * @param initialHash
+	 * @param data
+	 * @return
+	 */
+	public static int calculateHash(int initialHash,char[] data) {
+		int result=0;
+		for (int i=0; i<data.length; i++) {
+			result=Bits.rollLeft(result, 7) ^ ((int)data[i]);
+		}
+		return result+data.length;
+	}
+	
+	public static int calculateConcatenatedHash(Text front,Text back) {
+		int frontCount=front.count;
+		int backCount=back.count;
+		int hc=front.hashCode()-frontCount;
+		hc=Bits.rollLeft(hc, 7*back.length());
+		hc=hc^(back.hashCode()-backCount);
+		return hc+frontCount+backCount;
+	}
+
+	
+	public int hashCode() {
+		return hashCode;
+	}
+
+	public char charAt(int index) {
+		if (data!=null) {
+			return data[index];
+		} else {
+			int fc=front.count;
+			if (fc>index) {
+				return front.charAt(index);
+			} else {
+				return back.charAt(index);
+			}
+		}
+	}
+
+	public int length() {
+		return count;
+	}
+	
+	public Text firstBlock() {
+		if (data!=null) return this;
+		return front.firstBlock();
+	}
+	
+	public Text getBlock(int pos) {
+		if ((pos<0)||(pos>=count)) return null;
+		return getBlockLocal(this,pos);
+	}
+	
+	public int getBlockStartPosition(int pos) {
+		if ((pos<0)||(pos>count)) throw new IndexOutOfBoundsException();
+		return getBlockStartPositionLocal(this,pos);
+	}
+	
+	private static Text getBlockLocal(Text head, int pos) {
+		while (head.data==null) {
+			int frontCount=head.front.count;
+			if (pos<frontCount) {
+				head=head.front;
+			} else {
+				pos-=frontCount;
+				head=head.back;
+			}
+		}
+		return head;
+	}
+	
+	private static int getBlockStartPositionLocal(Text head, int pos) {
+		int result=0;
+		while (head.data==null) {
+			int frontCount=head.front.count;
+			if (pos<frontCount) {
+				head=head.front;
+			} else {
+				pos-=frontCount;
+				result+=frontCount;
+				head=head.back;
+			}
+		}
+		return result;
+	}
+
+	public CharSequence subSequence(int start, int end) {
+		return new TextUtils.SourceSubSequence(this, start, end);
+	}
+	
+	public String toString() {
+		return new String(substring(0,count));
+	}
+	
+	public Text clone() {
+		return this;
+	}
+	
+	public boolean equals(Object o) {
+		if (!(o instanceof Text)) return false;
+		return compareTo((Text)o)==0;
+	}
+
+	public int compareTo(Text t) {
+		int pos=0;
+		int s1=0;
+		int s2=0;
+		Text text1=this.getBlock(0);
+		Text text2=t.getBlock(0);
+		int len1=text1.length();
+		int len2=text2.length();
+
+		while (true) {
+			if (text1==null) {
+				return (text2==null)?0:-1;
+			}
+			if (text2==null) {
+				return 1;
+			}
+					
+			int c=text1.data[pos-s1]-text2.data[pos-s2];
+			if (c!=0) return c;
+			
+			pos++; 
+			if (pos-s1>=len1) {
+				text1=this.getBlock(pos);
+				if (text1!=null) len1=text1.length();
+				s1=pos;
+			}
+			if (pos-s2>=len2) {
+				text2=t.getBlock(pos);
+				if (text2!=null) len2=text2.length();
+				s2=pos;
+			}
+		}
+	}
+
+	private class TextIterator implements Iterator<Character> {
+		private int pos=0;
+		private Text block=getBlock(0);
+		private int blockStart=0;
+		
+		public boolean hasNext() {
+			return pos<count;
+		}
+
+		public Character next() {
+			char c=block.data[pos-blockStart];
+			pos++;
+			if (pos>=blockStart+block.count) {
+				block=getBlock(pos);
+				blockStart=pos;
+			}
+			
+			return Character.valueOf(c);
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+	
+	public Iterator<Character> iterator() {
+		return new TextIterator();
+	}
 }
