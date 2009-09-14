@@ -90,6 +90,14 @@ public class Bits {
 		return (a & (-a));
 	}
 	
+	public static int getNthSetBit(int a, int bitno) {
+		if (bitno<=0) return 0;
+		for (int i=1; i<bitno; i++) {
+			a^=(a & (-a));
+		}
+		return (a&(-a));
+	}
+	
 	public static int reverseBits(int a) {
 		a = ((a >>> 1)  & 0x55555555) | ((a << 1)  & 0xAAAAAAAA);
 		a = ((a >>> 2)  & 0x33333333) | ((a << 2)  & 0xCCCCCCCC);
@@ -100,7 +108,7 @@ public class Bits {
 	}
 	
 	public static long reverseBits(long a) {	
-		return (((long)(reverseBits((int)a)))<<32)^reverseBits((int)(a>>>32));
+		return (((0xFFFFFFFFL&reverseBits((int)a)))<<32)^(0xFFFFFFFFL&reverseBits((int)(a>>>32)));
 	}
 	
 	public static int roundDownToPowerOfTwo(int n) {

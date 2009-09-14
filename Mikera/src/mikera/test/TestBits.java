@@ -66,11 +66,25 @@ public class TestBits {
 		assertEquals(2,Bits.lowestSetBit(6));
 	}
 	
+	@Test public void testGetNthSetBit() {
+		assertEquals(1,Bits.getNthSetBit(0xFF, 1));
+		assertEquals(0x80,Bits.getNthSetBit(0xFF, 8));
+		assertEquals(0,Bits.getNthSetBit(0xFF, 32));
+		assertEquals(0x80000000,Bits.getNthSetBit(0xFFFFFFFF, 32));
+		assertEquals(0,Bits.getNthSetBit(0xFFFFFFFF, 33));
+	}
+	
 	@Test public void testReverse() {
 		assertEquals(0x000F0000,Bits.reverseBits(0x0000F000));
 		assertEquals(Integer.toHexString(((int)0xFF0FF0F0L)),Integer.toHexString(Bits.reverseBits(((int)0x0F0FF0FFL))));
 		assertEquals(Long.toHexString(0x0FFFFF0F00FF0FF0L),Long.toHexString(Bits.reverseBits(0x0FF0FF00F0FFFFF0L)));
 		assertEquals(((int)0xFF0FF0F0L),Bits.reverseBits(((int)0x0F0FF0FFL)));
+		
+		int x=Rand.nextInt();
+		assertEquals(x,Bits.reverseBits(Bits.reverseBits(x)));
+
+		long xl=Rand.nextLong();
+		assertEquals(xl,Bits.reverseBits(Bits.reverseBits(xl)));
 	}
 
 	

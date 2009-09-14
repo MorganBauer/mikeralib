@@ -10,6 +10,7 @@ import java.io.Serializable;
  * @param <B>
  */
 public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>>, Serializable {
+	private static final long serialVersionUID = -7930545169533958038L;
 	public final A a;
 	public final B b;
 	
