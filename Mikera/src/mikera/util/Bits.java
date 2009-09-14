@@ -91,12 +91,16 @@ public class Bits {
 	}
 	
 	public static int reverseBits(int a) {
-		a = ((a >> 1)  & 0x55555555) | ((a << 1)  & 0xAAAAAAAA);
-		a = ((a >> 2)  & 0x33333333) | ((a << 2)  & 0xCCCCCCCC);
-		a = ((a >> 4)  & 0x0F0F0F0F) | ((a << 4)  & 0xF0F0F0F0);
-		a = ((a >> 8)  & 0x00FF00FF) | ((a << 8)  & 0xFF00FF00);
-		a = ((a >> 16) & 0x0000FFFF) | ((a << 16) & 0xFFFF0000);	
+		a = ((a >>> 1)  & 0x55555555) | ((a << 1)  & 0xAAAAAAAA);
+		a = ((a >>> 2)  & 0x33333333) | ((a << 2)  & 0xCCCCCCCC);
+		a = ((a >>> 4)  & 0x0F0F0F0F) | ((a << 4)  & 0xF0F0F0F0);
+		a = ((a >>> 8)  & 0x00FF00FF) | ((a << 8)  & 0xFF00FF00);
+		a = ((a >>> 16) & 0x0000FFFF) | ((a << 16) & 0xFFFF0000);	
 		return a;
+	}
+	
+	public static long reverseBits(long a) {	
+		return (((long)(reverseBits((int)a)))<<32)^reverseBits((int)(a>>>32));
 	}
 	
 	public static int roundDownToPowerOfTwo(int n) {

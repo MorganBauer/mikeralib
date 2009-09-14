@@ -65,6 +65,13 @@ public class TestBits {
 		assertEquals(0x80000000,Bits.lowestSetBit(0x80000000));
 		assertEquals(2,Bits.lowestSetBit(6));
 	}
+	
+	@Test public void testReverse() {
+		assertEquals(0x000F0000,Bits.reverseBits(0x0000F000));
+		assertEquals(Integer.toHexString(((int)0xFF0FF0F0L)),Integer.toHexString(Bits.reverseBits(((int)0x0F0FF0FFL))));
+		assertEquals(Long.toHexString(0x0FFFFF0F00FF0FF0L),Long.toHexString(Bits.reverseBits(0x0FF0FF00F0FFFFF0L)));
+		assertEquals(((int)0xFF0FF0F0L),Bits.reverseBits(((int)0x0F0FF0FFL)));
+	}
 
 	
 	
