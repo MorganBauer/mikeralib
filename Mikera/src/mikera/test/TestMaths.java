@@ -71,14 +71,14 @@ public class TestMaths {
 	}
 	
 	@Test public void testSpeed1() {
-		for (int i=0; i<1000000; i++) {
+		for (int i=0; i<100000; i++) {
 			float f=Maths.sqrt(i);
 			assertEquals(f,f,0.01f);
 		}
 	}
 	
 	@Test public void testSpeed2() {
-		for (int i=0; i<1000000; i++) {
+		for (int i=0; i<100000; i++) {
 			float f=Maths.alternateSqrt(i);
 			assertEquals(f,f,0.01f);
 		}

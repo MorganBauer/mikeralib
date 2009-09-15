@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * Immutable pair class
- * @author Mike
  *
  * @param <A>
  * @param <B>

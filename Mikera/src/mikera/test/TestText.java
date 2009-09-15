@@ -104,6 +104,13 @@ public class TestText {
 		
 	}
 	
+	@Test public void testInsetr() {
+		Text t1=Text.create("AB");
+		Text t2=Text.create("CD");
+		
+		assertEquals("ACDB",t1.insert(1, t2).toString());		
+	}
+	
 	public void testTextObject(Text t) {
 		int len=t.length();
 		

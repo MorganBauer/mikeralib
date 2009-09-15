@@ -99,6 +99,14 @@ public final class Rand {
 		return (char)(nextLong()>>32);
 	}
 	
+	public static final String nextLetterString(int length) {
+		char[] cs=new char[length];
+		for (int i=0; i<length; i++) {
+			cs[i]=nextLetter();
+		}
+		return new String(cs);
+	}
+	
 	public static final byte nextByte() {
 		return (byte)(nextLong()>>32);
 	}

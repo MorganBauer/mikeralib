@@ -11,7 +11,7 @@ import mikera.util.emptyobjects.NullArrays;
  * Initially creates packed blocks, i.e. all blocks full except from final block, although this is not
  * guaranteed to be maintained (especially with concatenation / substring operations)
  * 
- * Also tries to maintain balanced tree
+ * Also tries to maintain balanced tree as far as possible
  * 
  * @author Mike
  *
@@ -151,6 +151,14 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 		return concat(this,t);
 	}
 	
+	public Text insert(int index, Text t) {
+		return concat(concat(subText(0,index),t),subText(index,count));
+	}
+	
+	public Text insert(int index, String s) {
+		return insert(index,Text.create(s));
+	}
+	
 	private static boolean isFullyPacked(Text t, boolean end) {
 		if (t.data!=null) {
 			return (end)||(t.data.length==BLOCK_SIZE);
@@ -225,14 +233,19 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 
 	public char charAt(int index) {
+		if ((index<0)||(index>count)) throw new IndexOutOfBoundsException();
+		return charAtLocal(index);
+	}
+	
+	private char charAtLocal(int index) {
 		if (data!=null) {
 			return data[index];
 		} else {
 			int fc=front.count;
 			if (fc>index) {
-				return front.charAt(index);
+				return front.charAtLocal(index);
 			} else {
-				return back.charAt(index);
+				return back.charAtLocal(index);
 			}
 		}
 	}
@@ -309,6 +322,7 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 
 	public int compareTo(Text t) {
+		if (t==this) return 0;
 		int pos=0;
 		int s1=0;
 		int s2=0;
