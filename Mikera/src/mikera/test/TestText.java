@@ -110,8 +110,10 @@ public class TestText {
 		assertTrue(len>=0);
 		assertNull(t.getBlock(-1));
 		assertNull(t.getBlock(len));
-		assertNotNull(t.getBlock(0));
-		assertNotNull(t.getBlock(len-1));
+		if (len>0) {
+			assertNotNull(t.getBlock(0));
+			assertNotNull(t.getBlock(len-1));
+		}
 		t.isPacked();
 		assertTrue(t.countNodes()>=t.countBlocks());
 		assertEquals(len*2,Text.concat(t, t).length());
