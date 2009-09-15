@@ -2,6 +2,12 @@ package mikera.math;
 
 import mikera.util.*;
 
+/**
+ * Mike Anderson's implementation of value based noise
+ * 
+ * @author Mike Anderson
+ *
+ */
 public class Noise {
 	public static final float FLOAT_FACTOR=1.0f/(-Integer.MIN_VALUE);
 	public int SEED=Rand.nextInt();
