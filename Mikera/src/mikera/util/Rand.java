@@ -95,6 +95,10 @@ public final class Rand {
 		return (int)(nextLong()>>32);
 	}
 	
+	public static final byte nextByte() {
+		return (byte)(nextLong()>>32);
+	}
+	
 
 	
 	/**
