@@ -197,6 +197,10 @@ public class TextUtils {
 		return whiteSpace(l-s.length())+s;
 	}
 	
+	public static String leftPad(int v, int l) {
+		return leftPad(Integer.toString(v),l);
+	}        
+	
 	public static String rightPad(String s, int l) {
 		if (s==null) s="";
 		return s+whiteSpace(l-s.length());
@@ -445,5 +449,7 @@ public class TextUtils {
 		public SourceSubSequence clone() {
 			return this;
 		}
-    }        
+    }
+
+
 }
