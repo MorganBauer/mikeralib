@@ -160,11 +160,20 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 	
 	public String substring(int start, int end) {
+		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
 		char[] chars=new char[end-start];
 		getChars(start,end,chars,0);
 		return new String(chars);
 	}
 	
+	/**
+	 * Gets characters into a given char[] buffer
+	 * 
+	 * @param srcBegin
+	 * @param srcEnd
+	 * @param dst
+	 * @param dstBegin
+	 */
 	public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
 		if ((srcBegin<0)||(srcEnd>count)) throw new IndexOutOfBoundsException();
 		if (srcEnd<=srcBegin) return;
@@ -283,7 +292,7 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	}
 	
 	public String toString() {
-		return new String(substring(0,count));
+		return substring(0,count);
 	}
 	
 	public Text clone() {
