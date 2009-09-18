@@ -139,14 +139,16 @@ public class Bits {
 	}
 	
 	public static int rollRight(int v, int count) {
-		count&=31;
-		v=(v>>>count)|(v<<(32-count));
-		return v;
+		return Integer.rotateRight(v, count);
+		//count&=31;
+		//v=(v>>>count)|(v<<(32-count));
+		//return v;
 	}
 	
 	public static int rollLeft(int v, int count) {
-		count&=31;
-		v=(v<<count)|(v>>>(32-count));
-		return v;
+		return Integer.rotateLeft(v, count);
+		//count&=31;
+		//v=(v<<count)|(v>>>(32-count));
+		//return v;
 	}
 }

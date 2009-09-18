@@ -84,6 +84,15 @@ public class TestIntSet {
 		assertTrue(rs2.equals(rs3));
 		assertTrue(is1.equals(rs4)); 
 	}
+	
+	@Test public void test5() {
+		int[] array=new int[] {4,4,1,2,2,2,3};
+		IntSet is1=IntSet.create(array);
+		IntSet is2=IntSet.create(new int[] {4,2,1,3});
+
+		assertEquals(4,is1.size());
+		assertTrue(is1.equals(is2));
+	}
 
 
 }

@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Immutable small set of integers, stored as a sorted array
  * 
- * Should not contain duplicates, but not enforced
+ * Should never contain duplicates
  * 
  * @author Mike
  *
@@ -160,6 +160,7 @@ public final class IntSet implements Set<Integer>, Cloneable {
 		int[] ndata=new int[size];
 		System.arraycopy(data, offset, ndata, 0, size);
 		java.util.Arrays.sort(ndata);
+		ndata=Arrays.deduplicate(ndata);
 		return createLocal(ndata);
 	}
 		
