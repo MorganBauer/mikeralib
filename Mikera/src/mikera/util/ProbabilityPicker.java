@@ -1,8 +1,10 @@
 package mikera.util;
 
+import mikera.util.emptyobjects.NullArrays;
+
 public final class ProbabilityPicker<O> {
-	private static double[] NULLCHANCES=new double[0];
-	private static Object[] NULLOBJECTS=new Object[0];
+	private static final double[] NULLCHANCES=NullArrays.NULL_DOUBLES;
+	private static final Object[] NULLOBJECTS=NullArrays.NULL_OBJECTS;
 	
 	private int count=0;
 	private double[] chances=NULLCHANCES;

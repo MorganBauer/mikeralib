@@ -4,6 +4,9 @@ import java.util.*;
 /**
  * Indexed list class <K,V>
  * 
+ * Implemented using binary searchable key array 
+ * and value array of same size
+ * 
  * @author Mike
  *
  * @param <K>
