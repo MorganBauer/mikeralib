@@ -40,15 +40,15 @@ public class NullStringMap implements Map<String, Object> {
 	}
 
 	public Object put(String key, Object value) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void putAll(Map<? extends String, ? extends Object> m) {
-
+		throw new UnsupportedOperationException();
 	}
 
 	public Object remove(Object key) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public int size() {

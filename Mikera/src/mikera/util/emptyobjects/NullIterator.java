@@ -12,7 +12,7 @@ public class NullIterator<T> implements Iterator<T> {
 	}
 
 	public void remove() {
-
+		throw new UnsupportedOperationException();
 	}
 
 }

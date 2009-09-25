@@ -38,11 +38,11 @@ public class NullSet<T> implements Collection<T>, Set<T> {
 	}
 
 	public boolean removeAll(Collection<?> c) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean retainAll(Collection<?> c) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public int size() {

@@ -7,5 +7,5 @@ public class NullArrays {
 	public static final int[] NULL_INTS=new int[0];
 	public static final char[] NULL_CHARS=new char[0];
 	public static final byte[] NULL_BYTES=new byte[0];
-	public static final String[] NULL_Strings=new String[0];
+	public static final String[] NULL_STRINGS=new String[0];
 }
