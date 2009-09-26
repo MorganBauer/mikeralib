@@ -5,7 +5,14 @@ import java.util.*;
 import mikera.persistent.*;
 
 public class NullSet<T> implements Collection<T>, PersistentSet<T> {
-
+	
+	@SuppressWarnings("unchecked")
+	public static NullSet<?> INSTANCE=new NullSet();
+	
+	private NullSet() {
+		
+	}
+	
 	public boolean add(T e) {
 		throw new Error("Cannot add to NullSet");
 	}
@@ -30,13 +37,13 @@ public class NullSet<T> implements Collection<T>, PersistentSet<T> {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Iterator<T> iterator() {
-		return new NullIterator<T>();
+		return (Iterator<T>)NullIterator.INSTANCE;
 	}
 
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean removeAll(Collection<?> c) {
@@ -59,6 +66,14 @@ public class NullSet<T> implements Collection<T>, PersistentSet<T> {
 	public <T> T[] toArray(T[] a) {
 		// TODO Auto-generated method stub
 		return (T[])toArray();
+	}
+
+	public PersistentCollection<T> deleteAll(T value) {
+		return this;
+	}
+
+	public PersistentCollection<T> deleteAll(PersistentCollection<T> values) {
+		return this;
 	}
 
 
