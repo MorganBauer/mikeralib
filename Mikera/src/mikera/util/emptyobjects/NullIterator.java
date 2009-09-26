@@ -3,6 +3,14 @@ package mikera.util.emptyobjects;
 import java.util.*;
 
 public class NullIterator<T> implements ListIterator<T> {
+	
+	@SuppressWarnings("unchecked")
+	public static NullIterator<?> INSTANCE= new NullIterator();
+	
+	private NullIterator() {
+		
+	}
+	
 	public boolean hasNext() {
 		return false;
 	}
