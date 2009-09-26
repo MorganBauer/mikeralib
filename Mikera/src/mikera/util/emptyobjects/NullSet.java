@@ -2,7 +2,9 @@ package mikera.util.emptyobjects;
 
 import java.util.*;
 
-public class NullSet<T> implements Collection<T>, Set<T> {
+import mikera.persistent.*;
+
+public class NullSet<T> implements Collection<T>, PersistentSet<T> {
 
 	public boolean add(T e) {
 		throw new Error("Cannot add to NullSet");
