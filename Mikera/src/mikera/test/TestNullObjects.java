@@ -7,7 +7,7 @@ import java.util.*;
 
 public class TestNullObjects {
 	@Test public void test1() {
-		Map<String,Object> nm=NullStringMap.INSTANCE;
+		Map<String,Object> nm=NullMap.INSTANCE;
 		
 		assertEquals(null,nm.get("Hello"));
 		
