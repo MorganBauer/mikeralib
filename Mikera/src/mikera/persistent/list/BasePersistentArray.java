@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
 
 @SuppressWarnings("serial")
@@ -205,5 +206,27 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 	 */
 	public int hashCode() {
 		return 0;
+	}
+
+	public PersistentList<T> delete(int index) {
+		throw new UnsupportedOperationException();
+	}
+
+	public PersistentList<T> delete(int start, int end) {
+		throw new UnsupportedOperationException();
+	}
+
+	public PersistentList<T> deleteFirst(T value) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public PersistentList<T> deleteAll(T value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PersistentList<T> deleteAll(PersistentCollection<T> values) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

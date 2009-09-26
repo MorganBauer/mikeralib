@@ -10,5 +10,11 @@ public interface PersistentList<T> extends PersistentCollection<T>, List<T> {
 
 	public PersistentList<T> append(PersistentList<T> value);
 	
-	public int size();
+	public PersistentList<T> delete(int index);
+	
+	public PersistentList<T> delete(int start, int end);
+
+	public PersistentList<T> deleteFirst(T value);
+
+	
 }
