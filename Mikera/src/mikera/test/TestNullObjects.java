@@ -6,8 +6,9 @@ import mikera.util.emptyobjects.*;
 import java.util.*;
 
 public class TestNullObjects {
+	@SuppressWarnings("unchecked")
 	@Test public void test1() {
-		Map<String,Object> nm=NullMap.INSTANCE;
+		Map<String,Object> nm=NullMap2.INSTANCE;
 		
 		assertEquals(null,nm.get("Hello"));
 		
