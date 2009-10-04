@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class NullMap<K,V> implements Map<K, V> {
+	
+	@SuppressWarnings("unchecked")
+	public static final NullMap INSTANCE=new NullMap();
+	
 	private NullMap() {
 		
 	}
@@ -21,39 +25,44 @@ public class NullMap<K,V> implements Map<K, V> {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return null;
-	}
-
-	public V get(Object key) {
-		return null;
+		return (Set<java.util.Map.Entry<K, V>>) NullSet.INSTANCE;
 	}
 
 	public boolean isEmpty() {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Set<K> keySet() {
-		return new NullSet<K>();
+		return (Set<K>) NullSet.INSTANCE;
 	}
 
 	public V put(K key, V value) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	public void putAll(Map<? extends K, ? extends V> m) {
 
-	}
-
-	public V remove(Object key) {
-		return null;
-	}
 
 	public int size() {
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<V> values() {
-		return new NullSet<V>();
+		return (Collection<V>) NullSet.INSTANCE;
+	}
+
+	public void putAll(Map<? extends K, ? extends V> m) {
+		throw new UnsupportedOperationException();
+	}
+
+	public V get(Object key) {
+		return null;
+	}
+
+	public V remove(Object key) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -60,7 +60,16 @@ public final class ProbabilityPicker<O> {
 	
 	
 	public void add(O object, double probability) {
-		if (probability<0) probability=0;
+		int i=getIndex(object);
+		if (i<0) {
+			addNew(object,probability);
+			return;
+		}
+		setChance(i,probability+chances[i]);
+	}
+	
+	private void addNew(O object, double probability) {
+		if (probability<0) return;
 		
 		ensureSize(count+1);
 		
@@ -69,10 +78,25 @@ public final class ProbabilityPicker<O> {
 		
 		objects[i]=object;
 
-		setChance(i,probability);
+		setChance(i,probability);		
 	}
 	
-	public void set(O o, double p) {
+	public int getIndex(O o) {
+		for (int i=0; i<count; i++) {
+			if (objects[i].equals(o)) {
+				return i;
+			}
+		}		
+		return -1;
+	}
+	
+	public double get(O o) {
+		int i=getIndex(o);
+		if (i<0) return 0.0;
+		return chances[i];
+	}
+	
+	protected void update(O o, double p) {
 		for (int i=0; i<count; i++) {
 			if (objects[i].equals(o)) {
 				setChance(i,p);
@@ -111,25 +135,29 @@ public final class ProbabilityPicker<O> {
 		return count;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void remove(Object object) {
-		for (int i=0; i<count; i++) {
-			if (objects[i].equals(object)) {
-				setChance(i,0);
-				int last=count-1;
-				
-				if (i<last) {
-					//move object from end
-					double cd=chances[last];
-					setChance(last,0);
-					objects[i]=objects[last];
-					setChance(i,cd);
-					objects[last]=null;
-				}
-			
-				count--;
-				return;
-			}
+		O o=(O)object;
+		int i=getIndex(o);
+		if (i<0) throw new Error("Object not found: "+object.toString());
+		remove(i);
+	}
+		
+	private void remove(int i) {
+		setChance(i,0);
+		int last=count-1;
+		
+		if (i<last) {
+			//move object from end
+			double cd=chances[last];
+			setChance(last,0);
+			objects[i]=objects[last];
+			setChance(i,cd);
+			objects[last]=null;
 		}
+	
+		count--;
+		return;
 	}
 	
 	@SuppressWarnings("unchecked")
