@@ -11,7 +11,32 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class Tools {
-
+	public static int compareWithNulls(Object a, Object b) {
+		if ((a==null)&&(b==null)) {
+			return 0;
+		}
+		throw new Error("Objects not comparable unless they implement the Comparable interface!");
+	}
+	
+	public static boolean equalsWithNulls(Object a, Object b) {
+		if ((a==null)&&(b==null)) {
+			return true;
+		}
+		return a.equals(b);
+	}
+	
+	public static <T extends Comparable<T>> int compareWithNulls(T a, T b) {
+		if (a==null) {
+			if (b==null) {
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+		if (b==null) return 1;
+		return a.compareTo(b);
+	}
+	
 	public static void writeXMLToFile(Document doc, String fileName) {
 		try {
 			TransformerFactory factory=TransformerFactory.newInstance();

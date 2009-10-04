@@ -17,4 +17,15 @@ public class TestTools {
 		
 		assertTrue(Arrays.isSorted(a, 0, 99));
 	}
+	
+	@Test public void testCompares() {
+		assertEquals(-1, Tools.compareWithNulls(null, 1));
+		assertEquals(-1, Tools.compareWithNulls(1, 2));
+		assertEquals(1, Tools.compareWithNulls(2, null));
+		assertEquals(0, Tools.compareWithNulls(null, null));
+		assertEquals(0, Tools.compareWithNulls(1, 1));
+		
+		assertEquals(0, Tools.compareWithNulls(1, 1));
+
+	}
 }

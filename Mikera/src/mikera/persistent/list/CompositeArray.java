@@ -16,6 +16,10 @@ public class CompositeArray<T> extends BasePersistentArray<T> {
 		throw new UnsupportedOperationException();
 	}
 	
+	public static <T> CompositeArray<T> create(T[] data,  int fromIndex, int toIndex) {
+		throw new UnsupportedOperationException();
+	}
+	
 	private CompositeArray(PersistentList<T> a, PersistentList<T> b ) {
 		front=a;
 		back=b;

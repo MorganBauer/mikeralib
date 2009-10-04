@@ -4,8 +4,14 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
+import mikera.persistent.Singleton;
+import mikera.persistent.Tuple;
+import mikera.util.Maths;
+import mikera.util.Tools;
+import mikera.util.emptyobjects.NullList;
 
 @SuppressWarnings("serial")
 public class BasePersistentArray<T> implements PersistentList<T> {
@@ -14,12 +20,13 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public PersistentList<T> append(T value) {
-		return null;
+		return ListFactory.concat(this,Singleton.create(value));
 	}
 
 	public PersistentList<T> append(PersistentList<T> value) {
-		return CompositeArray.concat(this,value);
+		return ListFactory.concat(this,value);
 	}
 
 	public int end() {
@@ -31,10 +38,6 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 	}
 
 	public int size() {
-		throw new UnsupportedOperationException();
-	}
-
-	public int start() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -174,9 +177,9 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		throw new UnsupportedOperationException();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<T> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return ListFactory.create(this,fromIndex,toIndex);
 	}
 
 	public Object[] toArray() {
@@ -205,7 +208,15 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 	 * Returns hashcode of the persistent array. Defined as XOR of all elements rotated right for each element
 	 */
 	public int hashCode() {
-		return 0;
+		int result=0;
+		for (int i=0; i<size(); i++) {
+			Object v=get(i);
+			if (v!=null) {
+				result^=v.hashCode();
+			}
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
 	}
 
 	public PersistentList<T> delete(int index) {
@@ -229,4 +240,17 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public int compareTo(PersistentList<T> o) {
+		int n=Maths.min(o.size(), size());
+		for (int i=0; i<n; i++) {
+			int r=Tools.compareWithNulls(this, o);
+			if (r!=0) return r;
+		}
+		if (size()<o.size()) return -1;
+		if (size()>o.size()) return 1;
+		return 0;
+	}
+
+
 }
