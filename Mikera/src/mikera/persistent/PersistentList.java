@@ -16,5 +16,14 @@ public interface PersistentList<T> extends PersistentCollection<T>, List<T>, Com
 
 	public PersistentList<T> deleteFirst(T value);
 
+	public <V> V[] toArray(V[] a);
+
+	public <V> V[] toArray(V[] a, int offset);
+
+	public PersistentList<T> subList(int fromIndex, int toIndex);
 	
+	public PersistentList<T> front();
+
+	public PersistentList<T> back();
+
 }

@@ -12,9 +12,12 @@ import mikera.persistent.list.*;
 import mikera.util.emptyobjects.NullList;
 
 
-public final class Tuple<T> extends BasePersistentArray<T>  implements PersistentList<T>  {
+public final class Tuple<T> extends BasePersistentArray<T> implements PersistentList<T>  {
 	
 	private final T[] data;
+	
+	@SuppressWarnings("unchecked")
+	static final Tuple EMPTY=new Tuple(new Object[0]);
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values) {
@@ -42,6 +45,7 @@ public final class Tuple<T> extends BasePersistentArray<T>  implements Persisten
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
+		if (n<=0) return EMPTY;
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values[i+fromIndex];
@@ -50,11 +54,12 @@ public final class Tuple<T> extends BasePersistentArray<T>  implements Persisten
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Tuple<T> create(List<T> values) {
+	public static <T> Tuple<T> create(Collection<T> values) {
 		int n=values.size();
 		T[] ndata=(T[]) new Object[n];
-		for (int i=0; i<n; i++) {
-			ndata[i]=values.get(i);
+		int i=0;
+		for (T t : values) {
+			ndata[i++]=t;
 		}
 		return new Tuple(ndata);
 	}
@@ -62,6 +67,10 @@ public final class Tuple<T> extends BasePersistentArray<T>  implements Persisten
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(List<T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
+		if (n<=0) {
+			if (n==0) return EMPTY;
+			throw new IllegalArgumentException("Negative range in Tuple.create: ("+fromIndex+","+toIndex+")");
+		}
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values.get(i+fromIndex);
@@ -98,6 +107,14 @@ public final class Tuple<T> extends BasePersistentArray<T>  implements Persisten
 	
 	public Tuple<T> clone() {
 		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> subList(int fromIndex, int toIndex) {
+		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
+		if (fromIndex>=toIndex) return EMPTY;
+		if ((fromIndex<=0)&&(toIndex>=size())) return this;
+		return SubTuple.create(data, fromIndex, toIndex-fromIndex);
 	}
 
 }

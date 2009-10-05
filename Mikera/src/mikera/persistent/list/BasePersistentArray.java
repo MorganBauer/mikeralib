@@ -177,9 +177,16 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		throw new UnsupportedOperationException();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<T> subList(int fromIndex, int toIndex) {
+	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		return ListFactory.create(this,fromIndex,toIndex);
+	}
+	
+	public PersistentList<T> front() {
+		return subList(0,size()/2);
+	}
+
+	public PersistentList<T> back() {
+		return subList(size()/2,size());
 	}
 
 	public Object[] toArray() {
@@ -200,6 +207,19 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		int i=0;
 		for (T it: this) {
 			a[i++]=(V)it;
+		}
+		return a;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <V> V[] toArray(V[] a, int offset) {
+		int size=size();
+		if (a.length<(size+offset)) {
+			a=(V[]) Array.newInstance(a.getClass().getComponentType(), size);
+		}
+		int i=0;
+		for (T it: this) {
+			a[offset+(i++)]=(V)it;
 		}
 		return a;
 	}

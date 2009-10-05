@@ -26,4 +26,13 @@ public final class Singleton<T> extends BasePersistentArray<T> {
 	private Singleton(T object) {
 		value=object;
 	}
+	
+	public PersistentList<T> front() {
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> back() {
+		return Tuple.EMPTY;
+	}
 }

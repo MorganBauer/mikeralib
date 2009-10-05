@@ -71,7 +71,7 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 		throw new UnsupportedOperationException();
 	}
 
-	public List<T> subList(int fromIndex, int toIndex) {
+	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		return this;
 	}
 
@@ -80,6 +80,21 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 		return 0;
 	}
 
+	public <V> V[] toArray(V[] a, int offset) {
+		return null;
+	}
 
+	public int hashCode() {
+		// need to be 0 to be consistent will zero length PersistentList
+		return 0;
+	}
+
+	public PersistentList<T> back() {
+		return this;
+	}
+
+	public PersistentList<T> front() {
+		return this;
+	}
 
 }
