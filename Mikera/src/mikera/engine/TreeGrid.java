@@ -1,8 +1,7 @@
 package mikera.engine;
 
 public class TreeGrid<T> extends BaseGrid<T> {
-	private static final int TOPMASK=3<<18;
-	
+
 	final Object[] data=new Object[64];
 	
 	@SuppressWarnings("unchecked")
