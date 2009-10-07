@@ -6,6 +6,9 @@ import mikera.persistent.*;
 import mikera.persistent.list.CompositeArray;
 
 public class NullList<T> extends NullCollection<T> implements PersistentList<T> {
+	
+	private static final long serialVersionUID = -268387358134950528L;
+
 	@SuppressWarnings("unchecked")
 	public static NullList<?> INSTANCE=new NullList();
 	
@@ -30,6 +33,10 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 	}
 
 	public PersistentList<T> deleteFirst(T value) {
+		return this;
+	}
+	
+	public PersistentList<T> deleteAll(Collection<T> values) {
 		return this;
 	}
 
@@ -95,6 +102,10 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 
 	public PersistentList<T> front() {
 		return this;
+	}
+
+	public int indexOf(T value, int start) {
+		return -1;
 	}
 
 }

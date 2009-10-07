@@ -22,9 +22,14 @@ public class CompositeArray<T> extends BasePersistentArray<T> {
 		if (a.size()<(b.size()>>1)) {
 			if (b instanceof CompositeArray<?>) {
 				CompositeArray<T> cb=(CompositeArray<T>)b;
-				if (cb!=null) {
-					
-				}
+				return new CompositeArray(concat(a,cb.front()),cb.back());
+			}
+		}
+		
+		if (b.size()<(a.size()>>1)) {
+			if (a instanceof CompositeArray<?>) {
+				CompositeArray<T> ca=(CompositeArray<T>)a;
+				return new CompositeArray(ca.front(),concat(ca.back(),b));
 			}
 		}
 		

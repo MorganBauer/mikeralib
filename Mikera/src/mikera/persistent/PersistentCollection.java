@@ -7,7 +7,7 @@ public interface PersistentCollection<T> extends Collection<T>, Cloneable, Seria
 
 	public PersistentCollection<T> deleteAll(T value);
 
-	public PersistentCollection<T> deleteAll(PersistentCollection<T> values);
+	public PersistentCollection<T> deleteAll(Collection<T> values);
 
 	public int size();
 }

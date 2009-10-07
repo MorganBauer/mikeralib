@@ -85,6 +85,20 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		}
 		return -1;
 	}
+	
+	public int indexOf(Object o, int start) {
+		int i=start;
+		while(i<size()) {
+			T it=get(i);
+			if (it!=null) {
+				if (it.equals(o)) return i;
+			} else {
+				if (o==null) return i;
+			}
+			i++;
+		}
+		return -1;
+	}
 
 	public boolean isEmpty() {
 		return size()>0;
@@ -240,25 +254,33 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 	}
 
 	public PersistentList<T> delete(int index) {
-		throw new UnsupportedOperationException();
+		return ListFactory.concat(subList(0,index),subList(index+1,size()));
 	}
 
 	public PersistentList<T> delete(int start, int end) {
-		throw new UnsupportedOperationException();
+		return ListFactory.concat(subList(0,start),subList(end,size()));
 	}
 
 	public PersistentList<T> deleteFirst(T value) {
-		throw new UnsupportedOperationException();
+		return subList(1,size());
 	}
 	
 	public PersistentList<T> deleteAll(T value) {
-		// TODO Auto-generated method stub
-		return null;
+		PersistentList<T> pl=this;
+		int i=pl.indexOf(value);
+		while (i>=0) {
+			pl=delete(i);
+			i=pl.indexOf(value,i);
+		}
+		return pl;
 	}
 
-	public PersistentList<T> deleteAll(PersistentCollection<T> values) {
-		// TODO Auto-generated method stub
-		return null;
+	public PersistentList<T> deleteAll(Collection<T> values) {
+		PersistentList<T> pl=this;
+		for (T t : values) { 
+			pl=(PersistentList<T>) pl.deleteAll(t);
+		}
+		return pl;
 	}
 
 	public int compareTo(PersistentList<T> o) {

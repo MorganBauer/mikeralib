@@ -1,10 +1,13 @@
 package mikera.persistent;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 public interface PersistentList<T> extends PersistentCollection<T>, List<T>, Comparable<PersistentList<T>> {
 	public T get(int i);
+	
+	public int indexOf(T value, int start);
 	
 	public PersistentList<T> append(T value);
 
@@ -14,6 +17,8 @@ public interface PersistentList<T> extends PersistentCollection<T>, List<T>, Com
 	
 	public PersistentList<T> delete(int start, int end);
 
+	public PersistentList<T> deleteAll(Collection<T> values);
+	
 	public PersistentList<T> deleteFirst(T value);
 
 	public <V> V[] toArray(V[] a);

@@ -3,6 +3,9 @@ package mikera.persistent;
 import mikera.persistent.list.BasePersistentArray;
 
 public final class Singleton<T> extends BasePersistentArray<T> {
+
+	private static final long serialVersionUID = 8273587747838774580L;
+	
 	final T value;
 	
 	@SuppressWarnings("unchecked")

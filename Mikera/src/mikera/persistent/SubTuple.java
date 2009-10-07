@@ -13,6 +13,9 @@ import mikera.util.emptyobjects.NullList;
 
 
 public final class SubTuple<T> extends BasePersistentArray<T> implements PersistentList<T>  {	
+
+	private static final long serialVersionUID = 3559316900529560364L;
+
 	private final T[] data;
 	private final int offset;
 	private final int length;

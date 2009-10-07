@@ -6,6 +6,8 @@ import mikera.persistent.*;
 
 public class NullCollection<T> implements Collection<T>, PersistentCollection<T> {
 
+	private static final long serialVersionUID = 2925953822669265599L;
+
 	@SuppressWarnings("unchecked")
 	public static NullCollection<?> INSTANCE=new NullCollection();
 	
@@ -65,7 +67,6 @@ public class NullCollection<T> implements Collection<T>, PersistentCollection<T>
 
 	@SuppressWarnings({ "unchecked", "hiding" })
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
 		return (T[])toArray();
 	}
 
@@ -73,9 +74,7 @@ public class NullCollection<T> implements Collection<T>, PersistentCollection<T>
 		return this;
 	}
 
-	public PersistentCollection<T> deleteAll(PersistentCollection<T> values) {
+	public PersistentCollection<T> deleteAll(Collection<T> values) {
 		return this;
 	}
-
-
 }
