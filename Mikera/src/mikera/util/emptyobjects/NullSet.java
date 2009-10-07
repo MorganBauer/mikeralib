@@ -4,7 +4,7 @@ import java.util.*;
 
 import mikera.persistent.*;
 
-public class NullSet<T> extends NullCollection<T> implements PersistentSet<T> {
+public final class NullSet<T> extends NullCollection<T> implements PersistentSet<T> {
 	private static final long serialVersionUID = -6170277533575154354L;
 	
 	@SuppressWarnings("unchecked")

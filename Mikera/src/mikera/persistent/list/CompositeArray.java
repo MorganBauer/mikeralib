@@ -62,6 +62,7 @@ public class CompositeArray<T> extends BasePersistentArray<T> {
 	
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
+		if ((fromIndex==0)&&(toIndex==size)) return this;
 		int fs=front.size();
 		if (toIndex<=fs) return front.subList(fromIndex, toIndex);
 		if (fromIndex>=fs) return back.subList(fromIndex-fs, toIndex-fs);

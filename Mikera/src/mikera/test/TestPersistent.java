@@ -6,6 +6,7 @@ import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
 import mikera.persistent.Singleton;
 import mikera.persistent.Tuple;
+import mikera.persistent.list.RepeatArray;
 import mikera.util.*;
 import mikera.util.emptyobjects.*;
 
@@ -18,11 +19,14 @@ public class TestPersistent {
 		
 		PersistentList<Integer> pl=ListFactory.create(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
-		testPersistentList(pl);
 		
+		testPersistentList(pl);
+		testPersistentList(pl.subList(1, 4));
 		testPersistentList(NullList.INSTANCE);
 		testPersistentList(Tuple.create(new Integer[] {1,2,3,4,5}));
 		testPersistentList(Singleton.create("Hello persistent lists!"));
+		testPersistentList(RepeatArray.create("Hello", 1000));
+
 	}
 	
 	public <T> void testPersistentList(PersistentList<T> a) {
@@ -30,6 +34,82 @@ public class TestPersistent {
 		testAppends(a);
 		testConcats(a);
 		testCuts(a);
+		testDeletes(a);
+		testEquals(a);
+		testInserts(a);
+		testExceptions(a);
+	}
+	
+	public <T> void testExceptions(PersistentList<T> a) {
+		try {
+			a.get(-1);
+			fail();
+		} catch (IndexOutOfBoundsException x) {/* OK */}
+		
+		try {
+			a.get(a.size());
+			fail();
+		} catch (IndexOutOfBoundsException x) {/* OK */}
+		
+		try {
+			// negative delete range
+			a.delete(2,0);
+			fail();
+		} catch (Exception x) {/* OK */}
+		
+		try {
+			// negative delete position
+			a.delete(-3,2);
+			fail();
+		} catch (Exception x) {/* OK */}
+
+		try {
+			// out of range delete
+			a.delete(0,1000000000);
+			fail();
+		} catch (Exception x) {/* OK */}
+
+		try {
+			// negative delete position
+			a.delete(-4,-4);
+			fail();
+		} catch (Exception x) {/* OK */}
+
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public <T> void testEquals(PersistentList<T> a) {
+		assertEquals(a,a.clone());
+		assertEquals(a,a.append((PersistentList<T>)NullList.INSTANCE));
+		assertEquals(a,a.delete(0,0));
+	}
+	
+	public <T> void testDeletes(PersistentList<T> a) {
+		int start=Rand.r(a.size());
+		int end=Rand.range(start, a.size());
+		
+		PersistentList<T> sl=a.subList(start,end);
+		
+		PersistentList<T> dl=a.delete(start, end);
+		if (start>0) {
+			assertEquals(a.get(start-1),dl.get(start-1));
+		}
+		if (end<a.size()) {
+			assertEquals(a.get(end),dl.get(start));
+		}
+		
+		PersistentList<T> nl=dl.insert(start, sl);
+		
+		assertEquals(a,nl);
+	}
+	
+	public <T> void testInserts(PersistentList<T> a) {
+		int start=Rand.r(a.size());
+		PersistentList<T> pl=a.insert(start, a);
+		if (a.size()>0) {
+			assertEquals(a.get(0),pl.get(start));
+		}
 	}
 
 	public <T> void testCuts(PersistentList<T> a) {
@@ -92,4 +172,22 @@ public class TestPersistent {
 			}
 		}
 	}
+	
+	@Test public void testRepeats() {
+		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,1,1,1,1}));
+		PersistentList<Integer> rl=(RepeatArray.create(1, 5));
+		assertEquals(tl,rl);
+	}
+	
+	@Test public void testDeleting() {
+		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,2,3,4,5}));
+		PersistentList<Integer> ol=(Tuple.create(new Integer[] {1,3,5}));
+		PersistentList<Integer> pl=tl;
+		pl=(PersistentList<Integer>) pl.deleteAll(2);
+		pl=(PersistentList<Integer>) pl.deleteAll(4);
+		assertEquals(ol,pl);
+		assertEquals(ol,tl.delete(1).delete(2));
+	}
+
+
 }

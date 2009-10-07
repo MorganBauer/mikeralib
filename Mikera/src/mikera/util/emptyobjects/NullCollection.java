@@ -24,7 +24,7 @@ public class NullCollection<T> implements Collection<T>, PersistentCollection<T>
 	}
 
 	public void clear() {
-
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean contains(Object o) {
@@ -46,15 +46,15 @@ public class NullCollection<T> implements Collection<T>, PersistentCollection<T>
 	}
 
 	public boolean remove(Object o) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean removeAll(Collection<?> c) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean retainAll(Collection<?> c) {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public int size() {
@@ -75,6 +75,10 @@ public class NullCollection<T> implements Collection<T>, PersistentCollection<T>
 	}
 
 	public PersistentCollection<T> deleteAll(Collection<T> values) {
+		return this;
+	}
+	
+	public PersistentCollection<T> clone() {
 		return this;
 	}
 }

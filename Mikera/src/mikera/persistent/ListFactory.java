@@ -22,30 +22,42 @@ public class ListFactory<T> {
 		return CompositeArray.create(data,fromIndex,toIndex);
 	}
 
-	public static <T> PersistentList<T> create(List<T> source) {
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentList<T> create(Collection<T> source) {
 		if (source instanceof PersistentList<?>) {
 			return (PersistentList<T>)source;
-		}
-		return create(source,0,source.size());
+		} else if (source instanceof List<?>) {
+			return create((List<T>)source,0,source.size());
+		} 
+		
+		Object[] data=source.toArray();
+		return create((T[])data);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(List<T> source, int fromIndex, int toIndex) {
+		int maxSize=source.size();
+		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {
 			if (fromIndex==toIndex) return (PersistentList<T>)NullList.INSTANCE;
 			throw new IllegalArgumentException();
 		}
 			
 		int n=toIndex-fromIndex;
+		
+		// use sublist if possible
+		if (source instanceof PersistentList) {
+			if (n==maxSize) return (PersistentList)source;
+			return ((PersistentList)source).subList(fromIndex, toIndex);
+		}
+		
 		if (n==1) return Singleton.create(source.get(fromIndex));
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
 			return Tuple.create(source,fromIndex,toIndex);
 		}
 		
-		if (source instanceof PersistentList) {
-			return ((PersistentList)source).subList(fromIndex, toIndex);
-		}
+
 		
 		return CompositeArray.create(source, fromIndex, toIndex);
 	}

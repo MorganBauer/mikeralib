@@ -5,7 +5,7 @@ import java.util.*;
 import mikera.persistent.*;
 import mikera.persistent.list.CompositeArray;
 
-public class NullList<T> extends NullCollection<T> implements PersistentList<T> {
+public final class NullList<T> extends NullCollection<T> implements PersistentList<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 
@@ -16,8 +16,9 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public PersistentList<T> append(T value) {
-		return Tuple.create(value);
+		return Singleton.create(value);
 	}
 
 	public PersistentList<T> append(PersistentList<T> value) {
@@ -25,11 +26,12 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 	}
 
 	public PersistentList<T> delete(int index) {
-		return this;
+		throw new IndexOutOfBoundsException();
 	}
 
 	public PersistentList<T> delete(int start, int end) {
-		return this;
+		if ((start==0)&&(end==0)) return this;
+		throw new IndexOutOfBoundsException();
 	}
 
 	public PersistentList<T> deleteFirst(T value) {
@@ -95,6 +97,18 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 		// need to be 0 to be consistent will zero length PersistentList
 		return 0;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof List<?>) {
+			return equals((List<T>)o);
+		}
+		return false;
+	}
+	
+	public boolean equals(List<T> list) {
+		return list.size()==0;
+	}
 
 	public PersistentList<T> back() {
 		return this;
@@ -104,8 +118,23 @@ public class NullList<T> extends NullCollection<T> implements PersistentList<T> 
 		return this;
 	}
 
-	public int indexOf(T value, int start) {
+	public int indexOf(Object value, int start) {
 		return -1;
+	}
+
+	public PersistentList<T> update(int index, T value) {
+		throw new IndexOutOfBoundsException();
+	}
+
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> insert(int index, T value) {
+		if (index!=0) throw new IndexOutOfBoundsException();
+		return Singleton.create(value);
+	}
+
+	public PersistentList<T> insert(int index, Collection<T> values) {
+		if (index!=0) throw new IndexOutOfBoundsException();
+		return ListFactory.create(values);
 	}
 
 }

@@ -25,8 +25,8 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return ListFactory.concat(this,Singleton.create(value));
 	}
 
-	public PersistentList<T> append(PersistentList<T> value) {
-		return ListFactory.concat(this,value);
+	public PersistentList<T> append(PersistentList<T> values) {
+		return ListFactory.concat(this,values);
 	}
 
 	public int end() {
@@ -212,17 +212,8 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return os;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <V> V[] toArray(V[] a) {
-		int size=size();
-		if (a.length<size) {
-			a=(V[]) Array.newInstance(a.getClass().getComponentType(), size);
-		}
-		int i=0;
-		for (T it: this) {
-			a[i++]=(V)it;
-		}
-		return a;
+		return toArray(a,0);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -241,6 +232,7 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 	/**
 	 * Returns hashcode of the persistent array. Defined as XOR of all elements rotated right for each element
 	 */
+	@Override
 	public int hashCode() {
 		int result=0;
 		for (int i=0; i<size(); i++) {
@@ -252,17 +244,43 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		}
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof List<?>) {
+			return equals((List<T>)o);
+		}
+		return false;
+	}
+	
+	public boolean equals(List<T> pl) {
+		int size=size();
+		if (size!=pl.size()) return false;
+		for (int i=0; i<size; i++) {
+			if (get(i)!=pl.get(i)) return false;
+		}
+		return true;
+	}
 
 	public PersistentList<T> delete(int index) {
-		return ListFactory.concat(subList(0,index),subList(index+1,size()));
+		return delete(index,index+1);
 	}
 
 	public PersistentList<T> delete(int start, int end) {
-		return ListFactory.concat(subList(0,start),subList(end,size()));
+		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
+		if (start>=end) {
+			if (start>end) throw new IllegalArgumentException();
+			return this;
+		}
+		if (start==0) return subList(end,size());
+		if (end==size()) return subList(0,start);
+		return subList(0,start).append(subList(end,size()));
 	}
 
 	public PersistentList<T> deleteFirst(T value) {
-		return subList(1,size());
+		int i=indexOf(value);
+		if (i<0) return this;
+		return delete(i,i+1);
 	}
 	
 	public PersistentList<T> deleteAll(T value) {
@@ -294,5 +312,19 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return 0;
 	}
 
+	public PersistentList<T> update(int index, T value) {
+		return subList(0,index).append(value).append(subList(index+1,size()));
+	}
 
+	public PersistentList<T> insert(int index, T value) {
+		return subList(0,index).append(value).append(subList(index,size()));
+	}
+
+	public PersistentList<T> insert(int index, Collection<T> values) {
+		if (values instanceof PersistentList<?>) {
+			return subList(0,index).append((PersistentList<T>)values).append(subList(index,size()));
+		}
+		PersistentList<T> pl=ListFactory.create(values);
+		return subList(0,index).append(pl).append(subList(index,size()));
+	}
 }

@@ -114,9 +114,28 @@ public final class Tuple<T> extends BasePersistentArray<T> implements Persistent
 	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
-		if (fromIndex>=toIndex) return EMPTY;
-		if ((fromIndex<=0)&&(toIndex>=size())) return this;
+		if ((fromIndex==0)&&(toIndex==size())) return this;
+		if (fromIndex>=toIndex) {
+			if (fromIndex==toIndex) return EMPTY;
+			throw new IllegalArgumentException();
+		}
 		return SubTuple.create(data, fromIndex, toIndex-fromIndex);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> delete(int start, int end) {
+		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
+		if (start>=end) {
+			if (start>end) throw new IllegalArgumentException();
+			return this;
+		}
+		if ((start==0)&&(end==size())) return (PersistentList<T>) NullList.INSTANCE;
+		if (start==end) return this;
+		int ns=size()-(end-start);
+		T[] ndata=(T[]) new Object[ns];
+		System.arraycopy(data, 0, ndata, 0, start);
+		System.arraycopy(data, end, ndata, start, size()-end);
+		return new Tuple(ndata);
 	}
 
 }
