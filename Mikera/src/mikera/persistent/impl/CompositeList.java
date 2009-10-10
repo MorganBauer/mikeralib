@@ -44,6 +44,10 @@ public class CompositeList<T> extends BasePersistentList<T> {
 		return new CompositeList(ListFactory.create(data,fromIndex,midIndex),ListFactory.create(data,midIndex,toIndex));
 	}
 	
+	public static <T> CompositeList<T> create(List<T> source) {
+		return create(source,0,source.size());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;

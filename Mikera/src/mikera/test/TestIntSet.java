@@ -2,6 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import mikera.persistent.IntSet;
 import mikera.util.*;
 
 public class TestIntSet {
@@ -65,7 +66,7 @@ public class TestIntSet {
 		IntSet is3=is1.clone();
 
 		assertTrue(is1==is2); // should get cached version
-		assertTrue(is1!=is3);
+		assertTrue(is1==is3);
 		assertTrue(is1.equals(is3));
 	}
 	

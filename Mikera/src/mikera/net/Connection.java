@@ -275,6 +275,7 @@ public class Connection {
 				throw new Error("Write Failed!");
 			}
 			
+			// recycle buffer and exit if write is fully completed
 			if (!bb.hasRemaining()) {
 				BufferCache.recycle(bb);
 				return;

@@ -1,6 +1,8 @@
-package mikera.util;
+package mikera.persistent;
 
 import java.io.Serializable;
+
+import mikera.util.Bits;
 
 /**
  * Immutable pair class

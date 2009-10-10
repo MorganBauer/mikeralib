@@ -1,8 +1,11 @@
-package mikera.util;
+package mikera.persistent;
 
 import java.io.Serializable;
 import java.util.Iterator;
 
+import mikera.util.Bits;
+import mikera.util.TextUtils;
+import mikera.util.TextUtils.SourceSubSequence;
 import mikera.util.emptyobjects.NullArrays;
 
 /**

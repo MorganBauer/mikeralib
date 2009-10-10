@@ -2,6 +2,9 @@ package mikera.net;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.List;
 
 import mikera.util.Maths;
 
@@ -11,7 +14,7 @@ import mikera.util.Maths;
  * @author Mike
  *
  */
-public final class Data implements Cloneable, Serializable {
+public final class Data extends AbstractList<Byte> implements Cloneable, Serializable {
 	private static final int DEFAULT_DATA_SIZE=24;
 	
 	private byte[] data;
@@ -32,6 +35,26 @@ public final class Data implements Cloneable, Serializable {
 	private Data(byte[] bytes) {
 		data=bytes;
 		size=bytes.length;
+	}
+	
+	private class DataIterator implements Iterator<Byte> {
+		private int pos=0;
+		
+		public boolean hasNext() {
+			return pos<data.length;
+		}
+
+		public Byte next() {
+			return data[pos++];
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+	
+	public Iterator<Byte> iterator() {
+		return new DataIterator();
 	}
 	
 	/**
@@ -76,6 +99,12 @@ public final class Data implements Cloneable, Serializable {
 			size=i+1;
 		}		
 		data[i]=b;
+	}
+	
+	public Byte set(int i, Byte b) {
+		Byte result=get(i);
+		put(i,b);
+		return result;
 	}
 	
 	public void put(int i, byte[] bs, int offset, int len) {
@@ -142,14 +171,44 @@ public final class Data implements Cloneable, Serializable {
 		return bs;
 	}
 	
+	public int hashCode() {
+		int result=0;
+		for(int i=0; i<size; i++) {
+			result^=data[i];
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
 	public Data clone() {
 		Data nd=new Data(size);
 		copy(0,nd,0,size);
 		return nd;
 	}
-
-	public byte get(int i) {
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof List<?>) {
+			return equals((List<Byte>) o);
+		}
+		return super.equals(o);
+	}
+	
+	public boolean equals(List<Byte> l) {
+		int size=size();
+		if (size!=l.size()) return false;
+		for (int i=0; i<size; i++) {
+			if (data[i]!=l.get(i)) return false;
+		}
+		return true;
+	}
+	
+	public byte getByte(int i) {
 		if ((i<0)||(i>size)) throw new IndexOutOfBoundsException();
 		return data[i];
+	}
+
+	public Byte get(int i) {
+		return getByte(i);
 	}
 }

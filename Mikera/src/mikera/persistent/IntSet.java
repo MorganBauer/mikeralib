@@ -1,9 +1,10 @@
-package mikera.util;
+package mikera.persistent;
 
 import java.util.*;
 
-import mikera.persistent.PersistentSet;
 import mikera.persistent.impl.BasePersistentCollection;
+import mikera.util.Arrays;
+import mikera.util.HashCache;
 
 /**
  * Immutable small set of integers, stored as a sorted array

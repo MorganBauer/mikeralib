@@ -33,6 +33,11 @@ public abstract class BasePersistentCollection<T> implements PersistentCollectio
 	}
 
 
+	public boolean remove(Object o) {
+		throw new UnsupportedOperationException();
+	}
+
+	
 	public boolean add(T e) {
 		throw new UnsupportedOperationException();
 	}

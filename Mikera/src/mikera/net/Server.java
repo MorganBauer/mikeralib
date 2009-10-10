@@ -9,7 +9,7 @@ public class Server {
 	public static final int SERVER_PORT=8080;
 	public static final int SERVER_TICK_MILLIS=150;
 	
-	ServerConnector serverConnector;
+	private ServerConnector serverConnector;
 	
 	private Thread serverThread;
 	boolean running=false;
@@ -92,6 +92,18 @@ public class Server {
 		System.err.println(s);
 	}
 
+	/*
+	 * ===============================================================
+	 * Messaging
+	 * ===============================================================
+	 */
+	
+	public void sendMessage(Data data, int playerNo) {
+		Connection c=playerList.getPlayer(playerNo).connection;
+		c.write(data);
+	}
+	
+	
 	/*
 	 * ===============================================================
 	 * Server tick handling

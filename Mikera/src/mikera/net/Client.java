@@ -4,8 +4,8 @@ import mikera.net.*;
 import java.nio.*;
 
 public class Client {
-	public ClientConnector clientConnector=new ClientConnector();
-	public Connection connection=null;
+	private ClientConnector clientConnector=new ClientConnector();
+	private Connection connection=null;
 	
 	public void connectLocal() {
 		connect("127.0.0.1", Server.SERVER_PORT);

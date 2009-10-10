@@ -148,10 +148,6 @@ public abstract class BasePersistentList<T> extends BasePersistentCollection<T> 
 		return new BaseIterator();
 	}
 
-	public boolean remove(Object o) {
-		throw new UnsupportedOperationException();
-	}
-
 
 
 	public T set(int index, T element) {

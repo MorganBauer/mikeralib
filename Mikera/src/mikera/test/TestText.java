@@ -2,6 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import mikera.persistent.Text;
 import mikera.util.*;
 
 public class TestText {

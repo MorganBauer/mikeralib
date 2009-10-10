@@ -1,6 +1,9 @@
 package mikera.util;
 import java.util.*;
 
+import mikera.persistent.impl.ArraySet;
+import mikera.persistent.impl.Tuple;
+
 /**
  * Indexed list class <K,V>
  * 
@@ -19,8 +22,11 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	private static final int INITIAL_SIZE=10;
 	private static final float GROW_RATIO=1.5f;
 	
-	private Object[] keys=new Object[INITIAL_SIZE];
-	private Object[] values=new Object[INITIAL_SIZE];
+	@SuppressWarnings("unchecked")
+	private K[] keys=(K[])new Comparable[INITIAL_SIZE];
+	
+	@SuppressWarnings("unchecked")
+	private V[] values=(V[])new Comparable[INITIAL_SIZE];
 	
 	private int count=0;
 	
@@ -31,14 +37,15 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		comparator=c;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void ensureSize(int i) {
 		int currentLength=keys.length;
 		if (i<=currentLength) return;
 		
 		int nl=Math.min(i,(int)(currentLength*GROW_RATIO));
 		
-		Object[] newKeys=new Object[nl];
-		Object[] newValues=new Object[nl];
+		K[] newKeys=(K[])new Comparable[nl];
+		V[] newValues=(V[])new Comparable[nl];
 		
 		System.arraycopy(keys, 0, newKeys, 0, count);
 		System.arraycopy(values, 0, newValues, 0, count);
@@ -79,14 +86,13 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	 * @param key
 	 * @return index of key value, or -1 if not found;
 	 */
-	@SuppressWarnings("unchecked")
 	public int findIndex(K key) {
 		int max=count;
 		int min=0;
 		
 		while (min<max) {
 			int i=(max+min)>>1;
-			int c=compare(key,(K)keys[i]);
+			int c=compare(key,keys[i]);
 			if (c==0) return i;
 			if (c<0) {
 				max=i;
@@ -104,12 +110,13 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		return -1;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void clear() {
 		count=0;
 		int kl=keys.length;
 		if (kl>INITIAL_SIZE) {
-			keys=new Object[INITIAL_SIZE];
-			values=new Object[INITIAL_SIZE];	
+			keys=(K[])new Comparable[INITIAL_SIZE];
+			values=(V[])new Comparable[INITIAL_SIZE];	
 		} else {
 			for (int i=0; i<kl; i++) {
 				keys[i]=null;
@@ -142,10 +149,9 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	}
 
 	public Set<K> keySet() {
-		return new StaticArrayList<K>(keys);
+		return ArraySet.create(keys);
 	}
 
-	@SuppressWarnings("unchecked")
 	public V put(K key, V value) {
 		int max=count;
 		int min=0;
@@ -153,7 +159,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		
 		while (min<max) {
 			i=(max+min)>>1;
-			int c=compare(key,(K)keys[i]);
+			int c=compare(key,keys[i]);
 			if (c==0) {
 				V old=(V)values[i];
 				values[i]=value;
@@ -190,8 +196,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	}
 	
 	public void setToClone(IndexedList<K,V> list) {
-		keys=(Object[]) list.keys.clone();
-		values=(Object[]) list.values.clone();
+		keys=(K[]) list.keys.clone();
+		values=(V[]) list.values.clone();
 		count=list.count;
 	}
 	
@@ -207,8 +213,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		
 		int newSize=count+list.size();
 		
-		Object[] newKeys=new Object[newSize];
-		Object[] newValues=new Object[newSize];
+		K[] newKeys=(K[])new Comparable[newSize];
+		V[] newValues=(V[])new Comparable[newSize];
 		
 		int ia=0;
 		int ib=0;
@@ -280,9 +286,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		return count;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Collection<V> values() {
-		return new StaticArrayList<V>((V[])values);
+		return Tuple.create(values);
 	}
 
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
@@ -301,14 +306,12 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 						return new java.util.Map.Entry<K, V>() {
 							int i=pos;
 							
-							@SuppressWarnings("unchecked")
 							public K getKey() {
-								return (K)keys[i];
+								return keys[i];
 							}
 
-							@SuppressWarnings("unchecked")
 							public V getValue() {
-								return (V)values[i];
+								return values[i];
 							}
 
 							public V setValue(V value) {
@@ -319,7 +322,6 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 					}
 
 					public void remove() {
-						// TODO Auto-generated method stub
 						throw new UnsupportedOperationException();
 					}
 				};

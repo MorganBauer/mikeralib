@@ -14,14 +14,14 @@ public class TestData {
 		
 		d.append((byte) 1);
 		d.append((byte) 2);
-		assertEquals(1,d.get(0));
-		assertEquals(2,d.get(1));
+		assertEquals(1,d.getByte(0));
+		assertEquals(2,d.getByte(1));
 		assertEquals(2,d.size());
 		
 		Data dd=d.clone();
 		dd.append(d);
 		assertEquals(4,dd.size());
-		assertEquals(2,dd.get(3));
+		assertEquals(2,dd.getByte(3));
 		
 		try {
 			dd.get(10);
@@ -49,7 +49,7 @@ public class TestData {
 
 		Data d3=Data.create(bb2);
 		assertEquals(4,d3.size());
-		assertEquals(2,d3.get(3));
+		assertEquals(2,d3.getByte(3));
 		
 	}
 }

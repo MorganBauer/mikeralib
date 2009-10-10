@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
+import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.RepeatList;
 import mikera.persistent.impl.Singleton;
 import mikera.persistent.impl.Tuple;
@@ -26,6 +27,7 @@ public class TestPersistent {
 		testPersistentList(Tuple.create(new Integer[] {1,2,3,4,5}));
 		testPersistentList(Singleton.create("Hello persistent lists!"));
 		testPersistentList(RepeatList.create("Hello", 1000));
+		testPersistentList(CompositeList.create(pl));
 
 	}
 	

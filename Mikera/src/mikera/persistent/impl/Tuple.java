@@ -12,7 +12,7 @@ import mikera.persistent.impl.*;
 import mikera.util.emptyobjects.NullList;
 
 
-public final class Tuple<T> extends BasePersistentList<T>  {
+public final class Tuple<T> extends BasePersistentList<T> {
 	
 	private static final long serialVersionUID = -3717695950215145009L;
 
@@ -65,6 +65,11 @@ public final class Tuple<T> extends BasePersistentList<T>  {
 		}
 		return new Tuple(ndata);
 	}
+
+	public static <T> Tuple<T> create(List<T> values) {
+		return create(values,0,values.size());
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(List<T> values, int fromIndex, int toIndex) {
