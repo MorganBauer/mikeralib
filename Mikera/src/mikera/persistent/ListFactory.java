@@ -1,6 +1,8 @@
 package mikera.persistent;
 
-import mikera.persistent.list.CompositeArray;
+import mikera.persistent.impl.CompositeList;
+import mikera.persistent.impl.Singleton;
+import mikera.persistent.impl.Tuple;
 import mikera.util.emptyobjects.NullList;
 import java.util.*;
 
@@ -19,7 +21,7 @@ public class ListFactory<T> {
 			// note this covers negative length case
 			return (PersistentList<T>) Tuple.create(data,fromIndex,toIndex);
 		}	
-		return CompositeArray.create(data,fromIndex,toIndex);
+		return CompositeList.create(data,fromIndex,toIndex);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -32,6 +34,14 @@ public class ListFactory<T> {
 		
 		Object[] data=source.toArray();
 		return create((T[])data);
+	}
+	
+	public static<T> PersistentList<T> create(Iterator<T> source) {
+		ArrayList<T> al=new ArrayList<T>();
+		while(source.hasNext()) {
+			al.add(source.next());
+		}
+		return create(al);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,7 +69,7 @@ public class ListFactory<T> {
 		
 
 		
-		return CompositeArray.create(source, fromIndex, toIndex);
+		return CompositeList.create(source, fromIndex, toIndex);
 	}
 	
 	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
@@ -71,6 +81,6 @@ public class ListFactory<T> {
 			return Tuple.concat(a,b);
 		}
 		
-		return CompositeArray.concat(a, b);
+		return CompositeList.concat(a, b);
 	}
 }

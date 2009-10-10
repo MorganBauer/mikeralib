@@ -2,6 +2,9 @@ package mikera.util;
 
 import java.util.*;
 
+import mikera.persistent.PersistentSet;
+import mikera.persistent.impl.BasePersistentCollection;
+
 /**
  * Immutable small set of integers, stored as a sorted array
  * 
@@ -10,7 +13,7 @@ import java.util.*;
  * @author Mike
  *
  */
-public final class IntSet implements Set<Integer>, Cloneable {
+public final class IntSet extends BasePersistentCollection<Integer> {
 	private final int[] data;
 	
 	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
@@ -83,6 +86,8 @@ public final class IntSet implements Set<Integer>, Cloneable {
 		return createLocal(new int[] {value});
 	}
 	
+
+
 	public static IntSet create(int[] data) {
 		return create(data,0,data.length);
 	}
@@ -180,29 +185,35 @@ public final class IntSet implements Set<Integer>, Cloneable {
 	/**
 	 * Hash code based on summed hash codes of individual integer values
 	 * 
+	 * Defined as XOR of hashcodes of all elements rotated right for each element, to be consistent with PersistentList<T>
+	 * 
 	 * @param data
 	 * @return
 	 */
 	public static int hashCode(int[] data) {
 		int result=0;
 		for(int i=0; i<data.length; i++) {
-			result+=hashCode(data[i]);
+			result^=hashCode(data[i]);
+			result=Integer.rotateRight(result, 1);
 		}
 		return result;
 	}
 	
 	/**
-	 * Custom hash value for a single integer, purpose is to reduce hash collisions for small sets of small integers
+	 * Hashcode for an int, defined as the value of the int itself for consistency with java.lang.Integer
 	 * 
-	 * @param i integer value for which to obtain the hashCode
+	 * @param value
 	 * @return
 	 */
-	public static int hashCode(int i) {
-		return i+(i<<(i&31));
+	private static int hashCode(int value) {
+		return value;
 	}
 	
+	/**
+	 * clone() returns the same IntSet, as it is defined to be immutable
+	 */
 	public IntSet clone() {
-		return new IntSet(data);
+		return this;
 	}
 	
 	public boolean equals(IntSet is) {
@@ -216,8 +227,10 @@ public final class IntSet implements Set<Integer>, Cloneable {
 	}
 	
 	public boolean equals(Object o) {
-		if (! (o instanceof IntSet)) return false;
-		return equals((IntSet) o);
+		if ((o instanceof IntSet)) {
+			return equals((IntSet) o);
+		}
+		return super.equals(o);
 	}
 
 	/**

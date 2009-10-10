@@ -3,7 +3,8 @@ package mikera.util.emptyobjects;
 import java.util.*;
 
 import mikera.persistent.*;
-import mikera.persistent.list.CompositeArray;
+import mikera.persistent.impl.CompositeList;
+import mikera.persistent.impl.Singleton;
 
 public final class NullList<T> extends NullCollection<T> implements PersistentList<T> {
 	

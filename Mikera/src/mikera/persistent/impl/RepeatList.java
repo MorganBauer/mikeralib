@@ -1,23 +1,23 @@
-package mikera.persistent.list;
+package mikera.persistent.impl;
 
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullList;
 
-public class RepeatArray<T> extends BasePersistentArray<T> {
+public class RepeatList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = -4991558599811750311L;
 
 	final T value;
 	final int count;
 	
-	private RepeatArray(T object, int num) {
+	private RepeatList(T object, int num) {
 		value=object;
 		count=num;
 	}
 	
-	public static <T> RepeatArray<T> create(T object, int number) {
-		return new RepeatArray<T>(object,number);
+	public static <T> RepeatList<T> create(T object, int number) {
+		return new RepeatList<T>(object,number);
 	}
 	
 	public int size() {
@@ -55,8 +55,8 @@ public class RepeatArray<T> extends BasePersistentArray<T> {
 	}
 	
 	public PersistentList<T> append(PersistentList<T> values) {
-		if (values instanceof RepeatArray<?>) {
-			RepeatArray<T> ra=(RepeatArray<T>)values;
+		if (values instanceof RepeatList<?>) {
+			RepeatList<T> ra=(RepeatList<T>)values;
 			if (Tools.equalsWithNulls(ra.value, value)) {
 				return create(value,ra.count+count);
 			}

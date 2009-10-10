@@ -11,7 +11,7 @@ public class TestConnectors {
 	private class Receiver implements MessageHandler {
 
 		public boolean handleMessage(ByteBuffer data, Connection c) {
-			//int recLen=data.remaining();
+			// int recLen=data.remaining();
 			received[recCount]=BufferCache.instance().getBuffer(data.remaining());
 			received[recCount].put(data);
 			received[recCount].flip();

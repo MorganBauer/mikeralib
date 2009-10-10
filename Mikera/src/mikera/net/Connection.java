@@ -220,6 +220,11 @@ public class Connection {
 			}
 		}
 	}
+	
+	public int write(Data data) {
+		ByteBuffer bb=data.toFlippedByteBuffer();
+		return write(bb);
+	}
 
 	
 	private void handleWrite(SelectionKey key) {

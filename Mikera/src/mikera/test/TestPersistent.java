@@ -4,9 +4,9 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
-import mikera.persistent.Singleton;
-import mikera.persistent.Tuple;
-import mikera.persistent.list.RepeatArray;
+import mikera.persistent.impl.RepeatList;
+import mikera.persistent.impl.Singleton;
+import mikera.persistent.impl.Tuple;
 import mikera.util.*;
 import mikera.util.emptyobjects.*;
 
@@ -25,7 +25,7 @@ public class TestPersistent {
 		testPersistentList(NullList.INSTANCE);
 		testPersistentList(Tuple.create(new Integer[] {1,2,3,4,5}));
 		testPersistentList(Singleton.create("Hello persistent lists!"));
-		testPersistentList(RepeatArray.create("Hello", 1000));
+		testPersistentList(RepeatList.create("Hello", 1000));
 
 	}
 	
@@ -175,7 +175,7 @@ public class TestPersistent {
 	
 	@Test public void testRepeats() {
 		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,1,1,1,1}));
-		PersistentList<Integer> rl=(RepeatArray.create(1, 5));
+		PersistentList<Integer> rl=(RepeatList.create(1, 5));
 		assertEquals(tl,rl);
 	}
 	

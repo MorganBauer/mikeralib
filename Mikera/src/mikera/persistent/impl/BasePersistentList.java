@@ -1,4 +1,4 @@
-package mikera.persistent.list;
+package mikera.persistent.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -7,16 +7,14 @@ import java.util.*;
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
-import mikera.persistent.Singleton;
-import mikera.persistent.Tuple;
 import mikera.util.Maths;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullList;
 
 @SuppressWarnings("serial")
-public class BasePersistentArray<T> implements PersistentList<T> {
+public abstract class BasePersistentList<T> extends BasePersistentCollection<T> implements PersistentList<T> {
 
-	public BasePersistentArray<T> clone() {
+	public BasePersistentList<T> clone() {
 		return this;
 	}
 
@@ -33,44 +31,25 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		throw new UnsupportedOperationException();
 	}
 
-	public T get(int i) {
-		throw new UnsupportedOperationException();
-	}
 
-	public int size() {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean add(T e) {
-		throw new UnsupportedOperationException();
-	}
 
 	public void add(int index, T element) {
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean addAll(Collection<? extends T> c) {
-		throw new UnsupportedOperationException();
-	}
+
 
 	public boolean addAll(int index, Collection<? extends T> c) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void clear() {
-		throw new UnsupportedOperationException();
-	}
+
 
 	public boolean contains(Object o) {
 		return indexOf(o)>=0;
 	}
 
-	public boolean containsAll(Collection<?> c) {
-		for (Object it: c) {
-			if (!contains(it)) return false;
-		}
-		return true;
-	}
+
 	
 
 	public int indexOf(Object o) {
@@ -100,9 +79,7 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return -1;
 	}
 
-	public boolean isEmpty() {
-		return size()>0;
-	}
+
 
 	public Iterator<T> iterator() {
 		return new BaseIterator();
@@ -175,17 +152,7 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		throw new UnsupportedOperationException();
 	}
 
-	public T remove(int index) {
-		throw new UnsupportedOperationException();
-	}
 
-	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean retainAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
 
 	public T set(int index, T element) {
 		throw new UnsupportedOperationException();
@@ -203,34 +170,10 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		return subList(size()/2,size());
 	}
 
-	public Object[] toArray() {
-		Object[] os=new Object[size()];
-		int i=0;
-		for (T it: this) {
-			os[i++]=it;
-		}
-		return os;
-	}
 
-	public <V> V[] toArray(V[] a) {
-		return toArray(a,0);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <V> V[] toArray(V[] a, int offset) {
-		int size=size();
-		if (a.length<(size+offset)) {
-			a=(V[]) Array.newInstance(a.getClass().getComponentType(), size);
-		}
-		int i=0;
-		for (T it: this) {
-			a[offset+(i++)]=(V)it;
-		}
-		return a;
-	}
 	
 	/**
-	 * Returns hashcode of the persistent array. Defined as XOR of all elements rotated right for each element
+	 * Returns hashcode of the persistent array. Defined as XOR of hashcodes of all elements rotated right for each element
 	 */
 	@Override
 	public int hashCode() {
@@ -250,14 +193,14 @@ public class BasePersistentArray<T> implements PersistentList<T> {
 		if (o instanceof List<?>) {
 			return equals((List<T>)o);
 		}
-		return false;
+		return super.equals(o);
 	}
 	
 	public boolean equals(List<T> pl) {
 		int size=size();
 		if (size!=pl.size()) return false;
 		for (int i=0; i<size; i++) {
-			if (get(i)!=pl.get(i)) return false;
+			if (!Tools.equalsWithNulls(get(i),pl.get(i))) return false;
 		}
 		return true;
 	}

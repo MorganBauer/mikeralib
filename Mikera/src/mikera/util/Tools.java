@@ -25,6 +25,14 @@ public class Tools {
 		return a.equals(b);
 	}
 	
+	/**
+	 * Compares two Comparable values, considering null as the lowest possible value 
+	 * 
+	 * @param <T>
+	 * @param a
+	 * @param b
+	 * @return
+	 */
 	public static <T extends Comparable<T>> int compareWithNulls(T a, T b) {
 		if (a==null) {
 			if (b==null) {

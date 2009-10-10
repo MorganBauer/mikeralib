@@ -1,4 +1,4 @@
-package mikera.persistent;
+package mikera.persistent.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import mikera.persistent.*;
-import mikera.persistent.list.*;
+import mikera.persistent.impl.*;
 import mikera.util.emptyobjects.NullList;
 
 
-public final class Tuple<T> extends BasePersistentArray<T> implements PersistentList<T>  {
+public final class Tuple<T> extends BasePersistentList<T>  {
 	
 	private static final long serialVersionUID = -3717695950215145009L;
 

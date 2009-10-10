@@ -1,8 +1,8 @@
-package mikera.persistent;
+package mikera.persistent.impl;
 
-import mikera.persistent.list.BasePersistentArray;
+import mikera.persistent.PersistentList;
 
-public final class Singleton<T> extends BasePersistentArray<T> {
+public final class Singleton<T> extends BasePersistentList<T> {
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	

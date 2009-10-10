@@ -1,10 +1,10 @@
-package mikera.persistent.list;
+package mikera.persistent.impl;
 
 import java.util.List;
 
 import mikera.persistent.*;
 
-public class CompositeArray<T> extends BasePersistentArray<T> {
+public class CompositeList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 1L;
 	
 	public final PersistentList<T> front;
@@ -20,41 +20,38 @@ public class CompositeArray<T> extends BasePersistentArray<T> {
 		}
 		
 		if (a.size()<(b.size()>>1)) {
-			if (b instanceof CompositeArray<?>) {
-				CompositeArray<T> cb=(CompositeArray<T>)b;
-				return new CompositeArray(concat(a,cb.front()),cb.back());
+			if (b instanceof CompositeList<?>) {
+				CompositeList<T> cb=(CompositeList<T>)b;
+				return new CompositeList(concat(a,cb.front()),cb.back());
 			}
 		}
 		
 		if (b.size()<(a.size()>>1)) {
-			if (a instanceof CompositeArray<?>) {
-				CompositeArray<T> ca=(CompositeArray<T>)a;
-				return new CompositeArray(ca.front(),concat(ca.back(),b));
+			if (a instanceof CompositeList<?>) {
+				CompositeList<T> ca=(CompositeList<T>)a;
+				return new CompositeList(ca.front(),concat(ca.back(),b));
 			}
 		}
 		
 		// TODO: balance!!
-		return new CompositeArray(a,b);
+		return new CompositeList(a,b);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> create(T[] data,  int fromIndex, int toIndex) {
+	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n<=ListFactory.MAX_TUPLE_BUILD_SIZE) return ListFactory.create(data, fromIndex, toIndex);
-		int midIndex=n/ListFactory.MAX_TUPLE_BUILD_SIZE;
-		return new CompositeArray(create(data,fromIndex,midIndex),create(data,midIndex,toIndex));
+		int midIndex=fromIndex+((n>>1)/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+		return new CompositeList(ListFactory.create(data,fromIndex,midIndex),ListFactory.create(data,midIndex,toIndex));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> create(List<T> source, int fromIndex, int toIndex) {
-		if ((toIndex-fromIndex)<=ListFactory.MAX_TUPLE_BUILD_SIZE) {
-			return Tuple.create(source, fromIndex, toIndex);
-		}
-		int midIndex=(fromIndex+toIndex)>>1;
-		return new CompositeArray(create(source,fromIndex,midIndex),create(source,midIndex,toIndex));
+	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
+		int n=toIndex-fromIndex;
+		int midIndex=fromIndex+((n>>1)/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+		return new CompositeList(ListFactory.create(source,fromIndex,midIndex),ListFactory.create(source,midIndex,toIndex));
 	}
 	
-	private CompositeArray(PersistentList<T> a, PersistentList<T> b ) {
+	private CompositeList(PersistentList<T> a, PersistentList<T> b ) {
 		front=a;
 		back=b;
 		size=a.size()+b.size();
