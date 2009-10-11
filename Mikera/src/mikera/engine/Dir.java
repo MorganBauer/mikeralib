@@ -33,6 +33,7 @@ public class Dir {
 	public static final byte DSE=DS+E;
 	public static final byte DSW=DS+W;	
 	
+
 	public static final byte[] DX={0, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 0, 1, 1, 1,-1,-1,-1};
 	public static final byte[] DY={0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1};
 	public static final byte[] DZ={0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
