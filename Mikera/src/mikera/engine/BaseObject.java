@@ -19,9 +19,6 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
     public static boolean SET_OUTPUT_DEBUG = false; 
     public static final boolean OPTIMIZE = true;  
    
-    @SuppressWarnings("unchecked")
-    public static final Map<String,Object> NULL_MAP=mikera.util.emptyobjects.NullMap.INSTANCE;
-
     // properties
     private HashMap<String,Object> local;
     private ObjectProperties inherited;

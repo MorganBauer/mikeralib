@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import mikera.util.Bits;
 import mikera.util.Maths;
+import mikera.util.emptyobjects.NullArrays;
 /**
  * Class for storing flexible 3D int arrays
  * Stores arrays of ints
@@ -54,10 +55,11 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 	
 	@SuppressWarnings("unchecked")
 	public T get(int x, int y, int z) {
+		if (data==null) return null;
 		int i=dataIndexRelative(x-gx,y-gy,z-gz);
 		if (i<0) return null;
 		Object[] dt=data;
-		if (i>dt.length) return null;
+		if (i>=dt.length) return null;
 		return (T)(dt[i]);
 	}
 	
@@ -115,7 +117,6 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 	}
 	
 	public int dataLength() {
-		if (data==null) return 0;
 		return data.length;
 	}
 	

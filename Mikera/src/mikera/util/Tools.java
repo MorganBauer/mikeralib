@@ -85,7 +85,7 @@ public class Tools {
 		mergeInOrder(src,dst,start,middle,middle+1,end);
 	}
 	
-	public static <T extends Comparable<? super T>> void swap(T[] a, int x, int y) {
+	public static <T> void swap(T[] a, int x, int y) {
 		T t=a[x];
 		a[x]=a[y];
 		a[y]=t;

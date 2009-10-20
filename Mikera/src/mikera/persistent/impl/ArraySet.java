@@ -57,4 +57,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 			throw new UnsupportedOperationException();
 		}
 	}
+	
+	private static final long serialVersionUID = -3125683703717134995L;
+
 }

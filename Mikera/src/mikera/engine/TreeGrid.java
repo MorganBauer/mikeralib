@@ -1,8 +1,20 @@
 package mikera.engine;
 
+import java.util.Arrays;
+
+/**
+ * Grid implemented as a heirarchy of 4*4*4 grids
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T>
+ */
 public class TreeGrid<T> extends BaseGrid<T> {
 
-	final Object[] data=new Object[64];
+	// each cell contains either object of type T or a sub-grid
+	private final Object[] data=new Object[64];
+	
+
 	
 	@SuppressWarnings("unchecked")
 	public T get(int x, int y, int z) {
@@ -22,6 +34,10 @@ public class TreeGrid<T> extends BaseGrid<T> {
 			head=(TreeGrid<T>)d;
 		}
 		throw new Error("This shouldn't happen!!");
+	}
+	
+	public void clear() {
+		Arrays.fill(data, null);
 	}
 	
 	public TreeGrid() {
