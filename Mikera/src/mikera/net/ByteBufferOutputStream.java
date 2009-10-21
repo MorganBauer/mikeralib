@@ -27,13 +27,13 @@ public class ByteBufferOutputStream extends OutputStream {
 
 	public void ensureBufferSize(int size) {
 		if (buffer==null) {
-			buffer=BufferCache.directInstance().getBuffer(size);
+			buffer=BufferCache.instance().getBuffer(size);
 		} else {
 			int currentCapacity=buffer.capacity();
 			if (currentCapacity<size) {
 				int targetSize=Math.max(size,currentCapacity+MIN_GROW_SIZE);
 				targetSize=Math.max(targetSize,(int)Math.floor(currentCapacity*MIN_GROW_RATIO));
-				buffer=BufferCache.directInstance().grow(buffer, targetSize);
+				buffer=BufferCache.instance().grow(buffer, targetSize);
 			}
 		}
 	}

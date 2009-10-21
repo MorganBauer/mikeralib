@@ -12,10 +12,8 @@ import java.nio.*;
 public final class BufferCache {
 	public TreeMap<Integer,ByteBuffer> buffers=new TreeMap<Integer,ByteBuffer>();
 	
-	private final boolean direct;
-	
-	private BufferCache(boolean allocateDirect) {
-		direct=allocateDirect;
+	private BufferCache() {
+
 	}
 	
 	public synchronized ByteBuffer getBuffer(int size) {
@@ -32,11 +30,7 @@ public final class BufferCache {
 	
 	public static void recycle(ByteBuffer bb) {
 		if (bb==null) throw new Error("Null ByteBuffer!!");
-		if (bb.isDirect()) {
-			directInstance().recycleBuffer(bb);
-		} else {
-			indirectInstance().recycleBuffer(bb);
-		}
+		instance().recycleBuffer(bb);
 	}
 	
 	public synchronized void recycleBuffer(ByteBuffer bb) {
@@ -54,25 +48,10 @@ public final class BufferCache {
 	
 	private ByteBuffer create(int size) {
 		// TODO: Consider allocateDirect here?
-		if (direct) {
-			return ByteBuffer.allocateDirect(size);
-		} else {
-			return ByteBuffer.allocate(size);
-		}	
+		return ByteBuffer.allocateDirect(size);
 	}
 	
-	private static final BufferCache indirectInstance=new BufferCache(false);
-	
-	private static final BufferCache directInstance=new BufferCache(true);
-
-	
-	public static BufferCache directInstance() {
-		return directInstance;
-	}
-	
-	public static BufferCache indirectInstance() {
-		return indirectInstance;
-	}
+	private static final BufferCache directInstance=new BufferCache();
 	
 	public static BufferCache instance() {
 		return directInstance;

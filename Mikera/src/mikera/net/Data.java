@@ -153,7 +153,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public ByteBuffer toFlippedByteBuffer() {
-		ByteBuffer bb=BufferCache.indirectInstance().getBuffer(size);
+		ByteBuffer bb=BufferCache.instance().getBuffer(size);
 		bb.put(data,0,size);
 		bb.flip();
 		return bb;

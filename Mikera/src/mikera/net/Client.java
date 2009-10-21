@@ -26,7 +26,7 @@ public class Client {
 
 	public void login(String name, String pass) {
 		if (connection==null) throw new Error("Connection not established!");
-		ByteBuffer bb=BufferCache.indirectInstance().getBuffer(1000);
+		ByteBuffer bb=BufferCache.instance().getBuffer(1000);
 		CommonMessages.addJoinMessage(bb, name, pass);
 		bb.flip();
 		connection.write(bb);
