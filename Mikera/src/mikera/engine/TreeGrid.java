@@ -25,10 +25,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
-			int lx=(x>>shift)&3;
-			int ly=(y>>shift)&3;
-			int lz=(z>>shift)&3;
-			int li=lx+(ly<<2)+(lz<<4);
+			int li=index(x,y,z,shift);
 			Object d=head.data[li];
 			if (d==null) return null;
 			if (!(d instanceof TreeGrid<?>)) {
@@ -59,10 +56,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
-			int lx=(x>>shift)&3;
-			int ly=(y>>shift)&3;
-			int lz=(z>>shift)&3;
-			int li=lx+(ly<<2)+(lz<<4);
+			int li=index(x,y,z,shift);
 			Object d=head.data[li];
 			if ((d==null)&&(shift>0)) {
 				if (value==null) return;
@@ -94,15 +88,44 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		return true;
 	}
 	
-	private void solidify(int x, int y, int z, int shift) {
+	private int index(int x, int y, int z, int shift) {
 		int lx=(x>>shift)&3;
 		int ly=(y>>shift)&3;
 		int lz=(z>>shift)&3;
 		int li=lx+(ly<<2)+(lz<<4);
+		return li;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Object solidify(int x, int y, int z, int shift) {
+		int li=index(x,y,z,shift);
 		Object d=data[li];
-		// TODO
-		if (shift>0) solidify(x,y,z,shift-1);
+
+		if (d instanceof TreeGrid<?>) {
+			TreeGrid<T> g=(TreeGrid<T>)d;
+			Object r=g.solidify(x,y,z,shift-DIM_SPLIT_BITS);
+			if (r==g) return this;
+			data[li]=r;
+			d=r;
+		} 
 		
+		if (isSolid((T)d)) {
+			return d;
+		}
+		return this;
+	}
+	
+	@Override
+	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
+		// TODO: optimise for setting complete blocks
+		
+		for (int z=z1; z<=z2; z++) {
+			for (int y=y1; y<=y2; y++) {
+				for (int x=x1; x<=x2; x++) {
+					set(x,y,z,value);
+				}	
+			}		
+		}
 	}
 
 }

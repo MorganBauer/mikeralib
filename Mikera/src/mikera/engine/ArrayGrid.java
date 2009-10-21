@@ -18,7 +18,7 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 	private int gy;
 	private int gz;
 	
-	// width, height and depth in blocks (not coordinates!!)
+	// width, height and depth 
 	private int gw;
 	private int gh;
 	private int gd;
@@ -181,8 +181,10 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 			if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
 			x-=gx; if (x>=width()) growToIncludeLocal(x+gx,y,z);
 			y-=gy; if (y>=height()) growToIncludeLocal(x+gx,y+gy,z);
-			z-=gz; if (x>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
+			z-=gz; if (z>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
 		}
+		if (!inRange(x+gx,y+gy,z+gz)) throw new Error("Range error: "+(x+gx)+","+(y+gy)+","+(z+gz));
+		
 		setLocalRelative(x,y,z,v);
 	}
 	
@@ -209,6 +211,15 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 	private void setLocalRelative(int x, int y, int z, T v) {
 		int i=dataIndexRelative(x,y,z);
 		data[i]=v;
+	}
+	
+	/**
+	 * Check if coordinate is within the existing range
+	 */
+	public boolean inRange(int x, int y, int z) {
+		if ((x<gx)||(y<gy)||(z<gz)) return false;
+		if ((x>=gx+gw)||(y>=gy+gh)||(z>=gz+gd)) return false;
+		return true;
 	}
 	
 	/**

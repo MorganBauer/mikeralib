@@ -175,7 +175,7 @@ public class IntGrid implements Cloneable {
 			if ((x<gx)||(y<gy)||(z<gz)) growToIncludeLocal(x,y,z);
 			x-=gx; if (x>=width()) growToIncludeLocal(x+gx,y,z);
 			y-=gy; if (y>=height()) growToIncludeLocal(x+gx,y+gy,z);
-			z-=gz; if (x>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
+			z-=gz; if (z>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
 		}
 		setLocalRelative(x,y,z,v);
 	}

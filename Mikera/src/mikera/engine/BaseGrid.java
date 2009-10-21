@@ -7,10 +7,8 @@ public abstract class BaseGrid<T> implements Grid<T> {
 			for (int y=y1; y<=y2; y++) {
 				for (int x=x1; x<=x2; x++) {
 					set(x,y,z,value);
-				}
-				
-			}
-			
+				}	
+			}		
 		}
 	}
 }
