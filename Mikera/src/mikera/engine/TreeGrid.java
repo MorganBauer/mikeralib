@@ -2,6 +2,8 @@ package mikera.engine;
 
 import java.util.Arrays;
 
+import mikera.util.Tools;
+
 /**
  * Grid implemented as a heirarchy of 4*4*4 grids
  * 
@@ -117,8 +119,44 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	
 	@Override
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		// TODO: optimise for setting complete blocks
+		setBlockLooped(x1, y1, z1, x2, y2, z2, value);
 		
+		// TODO: switch to smart version
+		//setBlock(x1, y1, z1, x2, y2, z2, value,TOP_SHIFT);
+	}
+
+	protected void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
+		if (shift==0) {
+			setBlockLooped(x1, y1, z1, x2, y2, z2, value);
+			return;
+		}
+		int bmask=3<<shift;
+		int bstep=1<<shift;
+		int bx1=(x1)&(bmask);
+		int by1=(y1)&(bmask);
+		int bz1=(z1)&(bmask);
+	
+		// TODO: finish code for setting complete blocks
+		for (int z=bz1; z<=z2; z+=bstep) {
+			for (int y=by1; y<=y2; y+=bstep) {
+				for (int x=bx1; x<=x2; x+=bstep) {
+					int li=index(x,y,z,shift);
+					Object d=data[li];
+					if (Tools.equalsWithNulls(d, value)) continue;
+					
+					//int bx2=bx1+bstep-1;
+					//int by2=by1+bstep-1;
+					//int bz2=bz1+bstep-1;
+					
+					
+					setBlockLooped(x1, y1, z1, x2, y2, z2, value);
+				}
+			}
+		}
+	}
+	
+	private void setBlockLooped(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
+
 		for (int z=z1; z<=z2; z++) {
 			for (int y=y1; y<=y2; y++) {
 				for (int x=x1; x<=x2; x++) {

@@ -2,6 +2,7 @@ package mikera.math;
 
 public class Functions {
 	public static VectorFunction createLandscapeFunction(int d) {
+		// TODO: Solve bug in this code leading to funny lines
 		
 		VectorFunction f=VF.tiledCloudFunction(2,3,d);
 		
