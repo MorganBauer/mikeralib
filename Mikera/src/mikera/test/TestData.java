@@ -52,4 +52,13 @@ public class TestData {
 		assertEquals(2,d3.getByte(3));
 		
 	}
+	
+	@Test public void testData2() {
+		Data d=new Data();
+		d.appendInt(1000);
+		d.appendInt(-2000);
+
+		assertEquals(1000,d.getInt(0));
+		assertEquals(-2000,d.getInt(4));
+	}
 }

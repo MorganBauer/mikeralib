@@ -1,8 +1,18 @@
 package mikera.persistent.impl;
 
 import mikera.persistent.PersistentList;
+import mikera.persistent.PersistentSet;
 
-public final class Singleton<T> extends BasePersistentList<T> {
+/**
+ * Singleton instance
+ * 
+ * Note: can be considered either as a list or a set
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T>
+ */
+public final class Singleton<T> extends BasePersistentList<T> implements PersistentSet<T>{
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	

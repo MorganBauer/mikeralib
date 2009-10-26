@@ -17,7 +17,7 @@ import mikera.util.Maths;
 public final class Data extends AbstractList<Byte> implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 293989965333996558L;
-	private static final int DEFAULT_DATA_SIZE=24;
+	private static final int DEFAULT_DATA_SIZE=50;
 	
 	private byte[] data;
 	private int size=0;
@@ -85,6 +85,16 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	
 	public void append(byte b) {
 		put(size,b);
+	}
+	
+	public void appendInt(int v) {
+		int pos=size;
+		ensureCapacity(size+4);
+		data[pos]=(byte)(v);
+		data[pos+1]=(byte)(v>>>8);
+		data[pos+2]=(byte)(v>>>16);
+		data[pos+3]=(byte)(v>>>24);
+		size+=4;
 	}
 	
 	public void append(Data d) {
@@ -206,8 +216,16 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public byte getByte(int i) {
-		if ((i<0)||(i>size)) throw new IndexOutOfBoundsException();
+		if ((i<0)||(i>=size)) throw new IndexOutOfBoundsException();
 		return data[i];
+	}
+	
+	public int getInt(int i) {
+		if ((i<0)||((i+3)>=size)) throw new IndexOutOfBoundsException();
+		return ((int)data[i]&255)
+	      |(((int)data[i+1]&255)<<8)		
+	      |(((int)data[i+2]&255)<<16)		
+	      |(((int)data[i+3]&255)<<24);		
 	}
 
 	public Byte get(int i) {
