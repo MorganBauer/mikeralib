@@ -15,12 +15,16 @@ import mikera.util.HashCache;
  *
  */
 public final class IntSet extends BasePersistentCollection<Integer> {
-	private final int[] data;
-	
-	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
 
+	private static final long serialVersionUID = 2677550392326589873L;
+	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
 	private static final HashCache<IntSet> cache=new HashCache<IntSet>(401);
-	
+
+	/**
+	 * data field contains an ordered list of unique integers
+	 */
+	private final int[] data;
+		
 	private IntSet(int[] values) {
 		data =values;
 	}

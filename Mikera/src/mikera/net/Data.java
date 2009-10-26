@@ -15,6 +15,8 @@ import mikera.util.Maths;
  *
  */
 public final class Data extends AbstractList<Byte> implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 293989965333996558L;
 	private static final int DEFAULT_DATA_SIZE=24;
 	
 	private byte[] data;

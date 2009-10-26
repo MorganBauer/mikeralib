@@ -29,6 +29,20 @@ public class TestRand {
 		}
 		assertTrue(r>900000);
 		assertTrue(r<1100000);
+	}
 	
+	@Test public void testIntegerRandom() {
+		assertTrue(1<=Rand.d6());
+		assertTrue(0<=Rand.r(6));
+		assertTrue(0<=Rand.r(2));
+		assertTrue(6>=Rand.d6());
+		assertTrue(5>=Rand.r(6));
+		assertTrue(1>=Rand.r(2));
+
+	}
+	
+	@Test public void testXORShoft() {
+		long l=Rand.xorShift64(1L);
+		assertTrue(l!=1);
 	}
 }

@@ -9,6 +9,7 @@ import mikera.persistent.PersistentCollection;
 import mikera.util.Tools;
 
 public abstract class BasePersistentCollection<T> implements PersistentCollection<T> {
+	private static final long serialVersionUID = -7947652969767900848L;
 
 	public PersistentCollection<T> deleteAll(final T value) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
