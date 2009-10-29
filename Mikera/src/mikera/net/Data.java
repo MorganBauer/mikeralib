@@ -97,6 +97,15 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		size+=4;
 	}
 	
+	public void appendFloat(float v) {
+		appendInt(Float.floatToIntBits(v));
+	}
+	
+	public void appendLong(long lv) {
+		appendInt((int)(lv));
+		appendInt((int)(lv>>32));
+	}
+	
 	public void append(Data d) {
 		put(size,d,0,d.size());
 	}
@@ -105,42 +114,42 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		put(size,bs,offset,len);
 	}
 	
-	public void put(int i, byte b) {
-		if (i+1>size) {
-			ensureCapacity(i+1);
-			size=i+1;
+	public void put(int pos, byte b) {
+		if (pos+1>size) {
+			ensureCapacity(pos+1);
+			size=pos+1;
 		}		
-		data[i]=b;
+		data[pos]=b;
 	}
 	
-	public Byte set(int i, Byte b) {
-		Byte result=get(i);
-		put(i,b);
+	public Byte set(int pos, Byte b) {
+		Byte result=get(pos);
+		put(pos,b);
 		return result;
 	}
 	
-	public void put(int i, byte[] bs, int offset, int len) {
-		if (i+len>size) {
-			ensureCapacity(i+len);
-			size=i+len;
+	public void put(int pos, byte[] bs, int offset, int len) {
+		if (pos+len>size) {
+			ensureCapacity(pos+len);
+			size=pos+len;
 		}
-		System.arraycopy(bs, offset, data, i, len);
+		System.arraycopy(bs, offset, data, pos, len);
 	}
 	
-	public void put(int i, Data d, int offset, int len) {
-		if (i+len>size) {
-			ensureCapacity(i+len);
-			size=i+len;
+	public void put(int pos, Data d, int offset, int len) {
+		if (pos+len>size) {
+			ensureCapacity(pos+len);
+			size=pos+len;
 		}
-		System.arraycopy(d.data, offset, data, i, len);
+		System.arraycopy(d.data, offset, data, pos, len);
 	}
 	
-	public void copy(int i, byte[] dest, int destoffset, int len) {
-		System.arraycopy(data, i, dest, destoffset, len);	
+	public void copy(int pos, byte[] dest, int destoffset, int len) {
+		System.arraycopy(data, pos, dest, destoffset, len);	
 	}
 	
-	public void copy(int i, Data dest, int destoffset, int len) {
-		dest.put(destoffset,data,i,len);	
+	public void copy(int pos, Data dest, int destoffset, int len) {
+		dest.put(destoffset,data,pos,len);	
 	}
 	
 	public int size() {
@@ -215,20 +224,30 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return true;
 	}
 	
-	public byte getByte(int i) {
-		if ((i<0)||(i>=size)) throw new IndexOutOfBoundsException();
-		return data[i];
+	public byte getByte(int pos) {
+		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
+		return data[pos];
 	}
 	
-	public int getInt(int i) {
-		if ((i<0)||((i+3)>=size)) throw new IndexOutOfBoundsException();
-		return ((int)data[i]&255)
-	      |(((int)data[i+1]&255)<<8)		
-	      |(((int)data[i+2]&255)<<16)		
-	      |(((int)data[i+3]&255)<<24);		
+	public int getInt(int pos) {
+		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
+		return ((int)data[pos]&255)
+	      |(((int)data[pos+1]&255)<<8)		
+	      |(((int)data[pos+2]&255)<<16)		
+	      |(((int)data[pos+3]&255)<<24);		
+	}
+	
+	public float getFloat(int pos) {
+		return Float.intBitsToFloat(getInt(pos));
+	}
+	
+	public long getLong(int pos) {
+		long lv=((long)getInt(pos))&0xFFFFFFFFl;
+		lv^=((long)getInt(pos+4))<<32;
+		return lv;
 	}
 
-	public Byte get(int i) {
-		return getByte(i);
+	public Byte get(int pos) {
+		return getByte(pos);
 	}
 }
