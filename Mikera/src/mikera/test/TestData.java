@@ -69,6 +69,14 @@ public class TestData {
 		d.appendFloat(fv);
 		assertEquals(fv,d.getFloat(16),0);
 		
-		assertEquals(20,d.size());
+		double dv=Rand.nextDouble();
+		d.appendDouble(dv);
+		assertEquals(dv,d.getDouble(20),0);
+
+		char cv=(char)Rand.nextInt();
+		d.appendChar(cv);
+		assertEquals(cv,d.getChar(28),0);
+	
+		assertEquals(30,d.size());
 	}
 }

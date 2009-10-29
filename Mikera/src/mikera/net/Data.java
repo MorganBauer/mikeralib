@@ -83,6 +83,44 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return new Data(bytes);
 	}
 	
+	public byte getByte(int pos) {
+		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
+		return data[pos];
+	}
+	
+	public int getInt(int pos) {
+		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
+		return ((int)data[pos]&255)
+	      |(((int)data[pos+1]&255)<<8)		
+	      |(((int)data[pos+2]&255)<<16)		
+	      |(((int)data[pos+3]&255)<<24);		
+	}
+	
+	public char getChar(int pos) {
+		if ((pos<0)||((pos+1)>=size)) throw new IndexOutOfBoundsException();
+		int res= ((data[pos])&(255))
+	      |(((data[pos+1])&(255))<<8);
+		return (char)res;
+	}
+	
+	public float getFloat(int pos) {
+		return Float.intBitsToFloat(getInt(pos));
+	}
+	
+	public long getLong(int pos) {
+		long lv=((long)getInt(pos))&0xFFFFFFFFl;
+		lv^=((long)getInt(pos+4))<<32;
+		return lv;
+	}
+	
+	public double getDouble(int pos) {
+		return Double.longBitsToDouble(getLong(pos));
+	}
+
+	public Byte get(int pos) {
+		return getByte(pos);
+	}
+	
 	public void append(byte b) {
 		put(size,b);
 	}
@@ -97,14 +135,28 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		size+=4;
 	}
 	
+	public void appendChar(char v) {
+		int pos=size;
+		ensureCapacity(size+2);
+		data[pos]=(byte)(v);
+		data[pos+1]=(byte)(v>>>8);
+		size+=2;
+	}
+	
 	public void appendFloat(float v) {
 		appendInt(Float.floatToIntBits(v));
+	}
+	
+	public void appendDouble(double v) {
+		appendLong(Double.doubleToLongBits(v));
 	}
 	
 	public void appendLong(long lv) {
 		appendInt((int)(lv));
 		appendInt((int)(lv>>32));
 	}
+	
+	
 	
 	public void append(Data d) {
 		put(size,d,0,d.size());
@@ -224,30 +276,5 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return true;
 	}
 	
-	public byte getByte(int pos) {
-		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
-		return data[pos];
-	}
-	
-	public int getInt(int pos) {
-		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
-		return ((int)data[pos]&255)
-	      |(((int)data[pos+1]&255)<<8)		
-	      |(((int)data[pos+2]&255)<<16)		
-	      |(((int)data[pos+3]&255)<<24);		
-	}
-	
-	public float getFloat(int pos) {
-		return Float.intBitsToFloat(getInt(pos));
-	}
-	
-	public long getLong(int pos) {
-		long lv=((long)getInt(pos))&0xFFFFFFFFl;
-		lv^=((long)getInt(pos+4))<<32;
-		return lv;
-	}
 
-	public Byte get(int pos) {
-		return getByte(pos);
-	}
 }
