@@ -65,4 +65,8 @@ public final class NullMap<K,V> implements Map<K, V> {
 	public V remove(Object key) {
 		throw new UnsupportedOperationException();
 	}
+	
+	public NullMap<K,V> clone() {
+		return this;
+	}
 }

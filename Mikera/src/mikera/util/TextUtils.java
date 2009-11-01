@@ -169,6 +169,11 @@ public class TextUtils {
 		sb.append("}");
 		return sb.toString();
 	}
+	
+	private static char[] HEXCHARS={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	public static char toHexChar(int i) {
+		return HEXCHARS[i&15];
+	}
  
 	/**
 	 * Soft HashMap containing whitespace strings of various lengths

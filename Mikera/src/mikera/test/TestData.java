@@ -3,8 +3,15 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.net.Data;
+import mikera.net.DataOutputStream;
 import mikera.util.*;
 
+import mikera.net.DataInputStream;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -78,5 +85,76 @@ public class TestData {
 		assertEquals(cv,d.getChar(28),0);
 	
 		assertEquals(30,d.size());
+	}
+	
+	@Test public void testDataStreams() {
+		DataOutputStream dos=new DataOutputStream();
+		
+		byte val=(byte)Rand.r(1000);
+		dos.write(val);
+		
+		Data d=dos.getData();
+		
+		assertEquals(1,d.size());
+		assertEquals(val,d.getByte(0));
+		d.clear();
+				
+		try {
+			ObjectOutputStream oos=new ObjectOutputStream(dos);
+			oos.writeObject(new String("Hello"));
+			assertTrue(d.size()>10);
+		} catch (IOException e) {
+			throw new Error(e);
+		}
+		
+		DataInputStream dis=new DataInputStream(d);
+		try {
+			ObjectInputStream ois=new ObjectInputStream(dis);
+			Object o=ois.readObject();
+			assertEquals("Hello",o);
+			assertEquals(0,dis.getRemaining());
+			assertEquals(-1,dis.read());
+			
+			try {
+				o=ois.readObject();
+				fail();
+			} catch (EOFException e) {
+				// OK;
+			}
+		} catch (Exception e) {
+			throw new Error(e);
+		}
+		
+	}
+	
+	/**
+	 * Test copying ByteBuffer into Data and back again
+	 */
+	@Test public void testDataToByteBuffers() {
+		ByteBuffer bb=ByteBuffer.allocate(100);
+		for (int i=0; i<100; i++) {
+			bb.put((byte)i);
+		}
+		bb.flip();
+		assertEquals(100,bb.remaining());
+		
+		Data d=new Data();
+		d.appendByteBuffer(bb);
+		assertEquals(0,bb.remaining());
+		assertEquals(100,d.size());
+		d.appendByteBuffer(bb); // should do nothing
+		assertEquals(0,bb.remaining());
+		assertEquals(100,d.size());
+		
+		assertEquals(37,d.getByte(37));
+		
+		ByteBuffer bb2=d.toFlippedByteBuffer();
+		
+		assertEquals(100,bb2.remaining());
+		for (int i=0; i<100; i++) {
+			assertEquals(i,bb2.get());
+		}
+		assertEquals(0,bb2.remaining());
+
 	}
 }

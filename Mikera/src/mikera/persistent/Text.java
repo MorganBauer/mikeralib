@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import mikera.util.Bits;
+import mikera.util.Maths;
 import mikera.util.TextUtils;
 import mikera.util.TextUtils.SourceSubSequence;
 import mikera.util.emptyobjects.NullArrays;
@@ -19,7 +20,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike
  *
  */
-public final class Text implements CharSequence, Comparable<Text>, Iterable<Character>, Cloneable, Serializable {
+public final class Text implements CharSequence, Comparable<CharSequence>, Iterable<Character>, Cloneable, Serializable {
 	private static final long serialVersionUID = 5744895584967327995L;
 	public static final int BLOCK_SIZE_BITS=6;
 	public static final int BLOCK_SIZE=1<<BLOCK_SIZE_BITS;
@@ -35,6 +36,14 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 		return create(s,0,s.length());
 	}
 	
+	/**
+	 * Return a new Text instance
+	 * 
+	 * @param s String from which to source characters
+	 * @param start Index of starting character (inclusive) within string
+	 * @param end Index of ending character (exclusive) within string
+	 * @return Newly created Text object
+	 */
 	public static Text create(String s, int start, int end) {
 		int length=end-start;
 		if (length==0) return Text.EMPTY;
@@ -172,6 +181,11 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 	
 	public String substring(int start, int end) {
 		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
+		if (data!=null) {
+			return new String(data,start,end-start);
+		}
+		
+		// construct string from large char array
 		char[] chars=new char[end-start];
 		getChars(start,end,chars,0);
 		return new String(chars);
@@ -324,6 +338,18 @@ public final class Text implements CharSequence, Comparable<Text>, Iterable<Char
 		return false;
 	}
 
+	public int compareTo(CharSequence cs) {
+		if (cs instanceof Text) {
+			return compareTo((Text)cs);
+		}
+		int size=Maths.min(length(), cs.length());
+		for (int i=0; i<size; i++) {
+			// TODO
+		}
+		// TODO
+		return 0;
+	}
+	
 	public int compareTo(Text t) {
 		if (t==this) return 0;
 		int pos=0;

@@ -1,5 +1,9 @@
 package mikera.net;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.AbstractList;
@@ -7,23 +11,27 @@ import java.util.Iterator;
 import java.util.List;
 
 import mikera.util.Maths;
+import mikera.util.TextUtils;
+import mikera.util.emptyobjects.NullArrays;
 
 /**
  * Class representing a chunk of data
  * 
+ * Note: big-endian format used for numbers, this allows for 
+ * data comparison to be equivalent to numerical comparison
+ * 
  * @author Mike
  *
  */
-public final class Data extends AbstractList<Byte> implements Cloneable, Serializable {
+public final class Data extends AbstractList<Byte> implements Cloneable, Serializable, Comparable<Data>, Externalizable {
 
 	private static final long serialVersionUID = 293989965333996558L;
-	private static final int DEFAULT_DATA_SIZE=50;
+	private static final int DEFAULT_DATA_INCREMENT=50;
 	
-	private byte[] data;
+	private byte[] data=NullArrays.NULL_BYTES;
 	private int size=0;
 	
 	public Data() {
-		this(DEFAULT_DATA_SIZE);
 	}
 	
 	/**
@@ -32,6 +40,11 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	 */
 	public Data(int length) {
 		data=new byte[length];
+	}
+	
+	public Data(Data d) {
+		this(d.size());
+		d.copyTo(0, this, 0, d.size());
 	}
 	
 	private Data(byte[] bytes) {
@@ -90,16 +103,16 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	
 	public int getInt(int pos) {
 		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
-		return ((int)data[pos]&255)
-	      |(((int)data[pos+1]&255)<<8)		
-	      |(((int)data[pos+2]&255)<<16)		
-	      |(((int)data[pos+3]&255)<<24);		
+		return ((int)data[pos+3]&255)
+	      |(((int)data[pos+2]&255)<<8)		
+	      |(((int)data[pos+1]&255)<<16)		
+	      |(((int)data[pos]&255)<<24);		
 	}
 	
 	public char getChar(int pos) {
 		if ((pos<0)||((pos+1)>=size)) throw new IndexOutOfBoundsException();
-		int res= ((data[pos])&(255))
-	      |(((data[pos+1])&(255))<<8);
+		int res= ((data[pos+1])&(255))
+	      |(((data[pos])&(255))<<8);
 		return (char)res;
 	}
 	
@@ -108,8 +121,8 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public long getLong(int pos) {
-		long lv=((long)getInt(pos))&0xFFFFFFFFl;
-		lv^=((long)getInt(pos+4))<<32;
+		long lv=((long)getInt(pos+4))&0xFFFFFFFFl;
+		lv^=((long)getInt(pos))<<32;
 		return lv;
 	}
 	
@@ -128,18 +141,25 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	public void appendInt(int v) {
 		int pos=size;
 		ensureCapacity(size+4);
-		data[pos]=(byte)(v);
-		data[pos+1]=(byte)(v>>>8);
-		data[pos+2]=(byte)(v>>>16);
-		data[pos+3]=(byte)(v>>>24);
+		data[pos+3]=(byte)(v);
+		data[pos+2]=(byte)(v>>>8);
+		data[pos+1]=(byte)(v>>>16);
+		data[pos]=(byte)(v>>>24);
 		size+=4;
+	}
+	
+	public void appendByteBuffer(ByteBuffer bb) {
+		int rem=bb.remaining();
+		ensureCapacity(size+rem);
+		bb.get(data, size, rem);
+		size+=rem;
 	}
 	
 	public void appendChar(char v) {
 		int pos=size;
 		ensureCapacity(size+2);
-		data[pos]=(byte)(v);
-		data[pos+1]=(byte)(v>>>8);
+		data[pos+1]=(byte)(v);
+		data[pos]=(byte)(v>>>8);
 		size+=2;
 	}
 	
@@ -152,8 +172,8 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public void appendLong(long lv) {
-		appendInt((int)(lv));
 		appendInt((int)(lv>>32));
+		appendInt((int)(lv));
 	}
 	
 	
@@ -196,11 +216,11 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		System.arraycopy(d.data, offset, data, pos, len);
 	}
 	
-	public void copy(int pos, byte[] dest, int destoffset, int len) {
+	public void copyTo(int pos, byte[] dest, int destoffset, int len) {
 		System.arraycopy(data, pos, dest, destoffset, len);	
 	}
 	
-	public void copy(int pos, Data dest, int destoffset, int len) {
+	public void copyTo(int pos, Data dest, int destoffset, int len) {
 		dest.put(destoffset,data,pos,len);	
 	}
 	
@@ -212,17 +232,24 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		size=0;
 	}
 	
-	public byte[] getInternalData() {
+	byte[] getInternalData() {
 		return data;
 	}
 	
 	public void ensureCapacity(int len) {
-		if (data.length<len) {
-			int nlen=Maths.max(len,data.length*2);
+		int dlen=data.length;
+		
+		// extend data array if too small
+		if (dlen<len) {
+			int nlen=Maths.max(len,dlen*2,dlen+DEFAULT_DATA_INCREMENT);
 			byte[] ndata=new byte[nlen];
 			System.arraycopy(data, 0, ndata,0, size);
 			data=ndata;
 		}
+	}
+	
+	public int currentCapacity() {
+		return data.length;
 	}
 	
 	public ByteBuffer toFlippedByteBuffer() {
@@ -253,9 +280,10 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return result;
 	}
 	
+	@Override
 	public Data clone() {
 		Data nd=new Data(size);
-		copy(0,nd,0,size);
+		copyTo(0,nd,0,size);
 		return nd;
 	}
 	
@@ -276,5 +304,41 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return true;
 	}
 	
+	public int compareTo(Data d) {
+		int n=Maths.min(size(), d.size());
+		for (int i=0; i<n; i++) {
+			int bd=getByte(i)-d.getByte(i);
+			if (bd!=0) return bd;
+		}
+		if (size()<d.size()) return -1;
+		if (size()>d.size()) return 1;
+		return 0;
+	}
+	
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		
+		int s=size();
+		for (int i=0; i<s; i++) {
+			int b=data[i];
+			sb.append(TextUtils.toHexChar(b>>4));
+			sb.append(TextUtils.toHexChar(b));
+			if (i<(s-1)) sb.append(' ');
+		}
+		
+		return sb.toString();
+	}
 
+	public void readExternal(ObjectInput oi) throws IOException,
+			ClassNotFoundException {
+		int len=oi.readInt();
+		data=new byte[len];
+		oi.read(data, 0, len);
+		size=len;
+	}
+
+	public void writeExternal(ObjectOutput oo) throws IOException {
+		oo.writeInt(size);
+		oo.write(data, 0, size);
+	}
 }

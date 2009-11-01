@@ -5,6 +5,7 @@ import java.lang.ref.SoftReference;
 public class HashCache<T> {
 	private SoftReference<T>[] data;
 	
+	// TODO: Implement cache resizing
 	@SuppressWarnings("unchecked")
 	public HashCache(int size) {
 		data=new SoftReference[size];
