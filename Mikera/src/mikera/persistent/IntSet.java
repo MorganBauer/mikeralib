@@ -72,7 +72,7 @@ public final class IntSet extends BasePersistentCollection<Integer> {
 
 	public int findIndex(int v, int lo, int hi) {
 		while (lo<hi) {
-			int m=(lo+hi)>>1;
+			int m=(lo+hi)>>>1;
 			int dv=data[m];
 			if (dv==v) return m;
 			if (dv<v) {

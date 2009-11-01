@@ -28,4 +28,12 @@ public class TestTools {
 		assertEquals(0, Tools.compareWithNulls(1, 1));
 
 	}
+	
+	@Test public void testEquals() {
+		assertEquals(false, Tools.equalsWithNulls(null, 1));
+		assertEquals(false, Tools.equalsWithNulls(1, 2));
+		assertEquals(false, Tools.equalsWithNulls(2, null));
+		assertEquals(true, Tools.equalsWithNulls(null, null));
+		assertEquals(true, Tools.equalsWithNulls(1, 1));
+	}
 }

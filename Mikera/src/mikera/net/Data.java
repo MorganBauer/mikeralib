@@ -333,7 +333,8 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 			ClassNotFoundException {
 		int len=oi.readInt();
 		data=new byte[len];
-		oi.read(data, 0, len);
+		int res=oi.read(data, 0, len);
+		if (res!=len) throw new IOException("Error: "+res+" bytes read out of length "+len+" expected");
 		size=len;
 	}
 

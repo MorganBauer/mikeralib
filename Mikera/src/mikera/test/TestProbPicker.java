@@ -20,12 +20,12 @@ public class TestProbPicker {
 	@Test public void testAddAndRemove() {
 		ProbabilityPicker<Integer> p=new ProbabilityPicker<Integer>();
 		
-		p.add(new Integer(1),0.5);
+		p.add(Integer.valueOf(1),0.5);
 		
 		assertEquals(0.5,p.getTotal(),0.001);
 		assertEquals(1,p.getCount(),0.001);
 		
-		p.remove(new Integer(1));
+		p.remove(Integer.valueOf(1));
 		
 		assertEquals(0,p.getTotal(),0.001);
 		assertEquals(0,p.getCount(),0.001);
@@ -35,14 +35,14 @@ public class TestProbPicker {
 		ProbabilityPicker<Integer> p=new ProbabilityPicker<Integer>();
 		
 		for (int i=1; i<=100; i++) {
-			p.add(new Integer(i),i);	
+			p.add(Integer.valueOf(i),i);	
 			assertEquals(i,p.getCount());
 		}
 		
 		assertEquals(5050,p.getTotal(),0.001);
 		
 		for (int i=1; i<=100; i++) {
-			p.remove(new Integer(i));
+			p.remove(Integer.valueOf(i));
 		}	
 		
 		assertEquals(0,p.getTotal(),0.001);
@@ -53,7 +53,7 @@ public class TestProbPicker {
 		ProbabilityPicker<Integer> p=new ProbabilityPicker<Integer>();
 		
 		for (int i=0; i<10; i++) {
-			p.add(new Integer(i),100);	
+			p.add(Integer.valueOf(i),100);	
 		}
 		
 		assertEquals(1000,p.getTotal(),0.001);

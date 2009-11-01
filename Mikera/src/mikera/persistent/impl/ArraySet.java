@@ -2,6 +2,7 @@ package mikera.persistent.impl;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import mikera.persistent.Text;
@@ -50,6 +51,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 
 		@SuppressWarnings("unchecked")
 		public K next() {
+			if (pos>=data.length) throw new NoSuchElementException();
 			return (K)data[pos++];
 		}
 

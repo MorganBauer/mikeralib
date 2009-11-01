@@ -88,7 +88,7 @@ public class TestConnectors {
 
 			assertEquals(4,recCount);
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -107,7 +107,7 @@ public class TestConnectors {
 		assertEquals(10,bb.get(0));
 		bbos.clear();
 		
-		
+		bbos.close();
 		
 	}
 	

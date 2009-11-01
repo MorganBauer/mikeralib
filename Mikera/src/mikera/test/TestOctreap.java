@@ -342,7 +342,7 @@ public class TestOctreap {
 		assertEquals(8,m.blockSize(0, 0, 0));
 	}
 	
-	private class BCounter implements BlockVisitor<Integer>  {
+	private static class BCounter implements BlockVisitor<Integer>  {
 		long count=0;
 		long size=0;
 		Octreap<Integer> oct=new Octreap<Integer>();

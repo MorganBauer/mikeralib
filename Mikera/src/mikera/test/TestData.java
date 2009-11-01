@@ -101,7 +101,7 @@ public class TestData {
 				
 		try {
 			ObjectOutputStream oos=new ObjectOutputStream(dos);
-			oos.writeObject(new String("Hello"));
+			oos.writeObject("Hello");
 			assertTrue(d.size()>10);
 		} catch (IOException e) {
 			throw new Error(e);
@@ -116,7 +116,7 @@ public class TestData {
 			assertEquals(-1,dis.read());
 			
 			try {
-				o=ois.readObject();
+				ois.readObject();
 				fail();
 			} catch (EOFException e) {
 				// OK;

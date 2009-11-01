@@ -2,6 +2,7 @@ package mikera.engine;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * The BaseObject class is the root for all game 
@@ -42,7 +43,12 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
      */
     @SuppressWarnings("unchecked")
 	public Object clone() {
-        BaseObject o=new BaseObject();
+        BaseObject o;
+		try {
+			o = (BaseObject) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
         o.inherited=inherited;
         if (local!=null) {
         	o.local=(HashMap<String,Object>)local.clone();
@@ -59,9 +65,10 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
     }
     
     public BaseObject(Map<String,Object> data) {
-    	for (Iterator<String> it=data.keySet().iterator(); it.hasNext();) {
-    		String key=it.next();
-    		set(key,data.get(key));
+    	for (Iterator<Entry<String, Object>> it=data.entrySet().iterator(); it.hasNext();) {
+    		Entry<String, Object> e=it.next();
+    		String key=e.getKey();
+    		set(key,e.getValue());
     	}
     }
     
@@ -75,11 +82,11 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
 	}
 
     public void set(String s, boolean value) {
-        set(s, (value ? new Integer(1) : new Integer(0)));
+        set(s, (value ? Integer.valueOf(1) : Integer.valueOf(0)));
     }
 
     public void set(String s, int value) {
-        set(s, new Integer(value));
+        set(s, Integer.valueOf(value));
     }
     
     public void set(String s, double value) {
@@ -87,10 +94,10 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
     }
 
     public void setProperties(Map<String,Object> map) {
-    	Iterator<String> it=map.keySet().iterator();
-    	while (it.hasNext()) {
-    		String key=(String)it.next();
-    		set(key,map.get(key));
+    	for (Iterator<Entry<String, Object>> it=map.entrySet().iterator(); it.hasNext();) {
+    		Entry<String, Object> e=it.next();
+    		String key=e.getKey();
+    		set(key,e.getValue());
     	}
     }
     
@@ -125,7 +132,7 @@ public class BaseObject implements Cloneable, Serializable, ObjectProperties {
     private static final boolean checkEquals(Object a, Object b) {
     	if (a==b) return true;
     	if (a==null) {
-    		return (b==null);
+    		return false;
     	} else {
     		return a.equals(b);
     	}

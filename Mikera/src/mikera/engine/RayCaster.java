@@ -102,7 +102,6 @@ public class RayCaster {
 				cache.put(cn,cn);
 				return cn;
 			} else {
-				cn=n;
 				return n;
 			}
 		}

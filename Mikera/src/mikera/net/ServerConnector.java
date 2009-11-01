@@ -150,7 +150,7 @@ public class ServerConnector {
 	private int tag_id = 1;
 
 	private Object createTag() {
-		return new Integer(tag_id++);
+		return Integer.valueOf(tag_id++);
 	}
 
 	private Connection createClientConnection(SocketChannel clientChannel,

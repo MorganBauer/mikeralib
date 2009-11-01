@@ -48,7 +48,7 @@ public class PlayerList {
 		return players.size();
 	}
 	
-	public void removePlayer(Integer id) {
+	public void removePlayer(int id) {
 		if (id==(players.size()-1)) {
 			players.remove(id);
 		} else {

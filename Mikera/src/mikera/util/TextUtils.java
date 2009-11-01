@@ -262,20 +262,19 @@ public class TextUtils {
 
 	public static String loadFromFile(String name) {
         StringBuffer sb=new StringBuffer();
-    	
 	    try {
 	    	InputStream in=String.class.getResourceAsStream(name);
-	    	
 	    	BufferedReader br=new BufferedReader(new InputStreamReader(in));
+	    	
 	    	for ( String s=br.readLine(); s!=null; s=br.readLine()) {
 		        sb.append(s);
 		        sb.append(NEWLINE);
 		    }
+	    	br.close();
 	    } catch (Throwable t) {
         	t.printStackTrace();
         	return null;
-        }
-        
+	    }	    
 		return sb.toString();
 	}
 	
@@ -408,7 +407,7 @@ public class TextUtils {
 	    			return new Double(Double.parseDouble(s));
 	    		} 
 	    			
-	    		return new Integer(Integer.parseInt(s));
+	    		return Integer.valueOf(Integer.parseInt(s));
 	    		
 	    	} catch (Throwable t) {
 	    		// safe catch

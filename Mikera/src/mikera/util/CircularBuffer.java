@@ -50,6 +50,7 @@ public class CircularBuffer<V> extends AbstractQueue<V> {
 			}
 			
 			public V next() {
+				if (!hasNext()) throw new NoSuchElementException();
 				V value=getLocal(pos);
 				pos++;
 				return value;

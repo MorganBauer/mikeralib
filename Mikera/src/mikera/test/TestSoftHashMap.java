@@ -41,9 +41,9 @@ public class TestSoftHashMap {
 	@Test public void testHashCache() {
 		HashCache<Integer> h=new HashCache<Integer>(1000);
 	
-		Integer a = new Integer(100);
-		Integer b = new Integer(200);
-		Integer c = new Integer(200);
+		Integer a = Integer.valueOf(100);
+		Integer b = Integer.valueOf(200);
+		Integer c = Integer.valueOf(200);
 		
 		Integer ca=h.cache(a);
 		Integer cb=h.cache(b);

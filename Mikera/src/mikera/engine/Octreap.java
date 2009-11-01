@@ -63,6 +63,13 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 				throw new Error(t);
 			}
 		}
+
+		public boolean equals(Object o) {
+			if (o instanceof ZNode) {
+				return equals((ZNode)o);
+			}
+			return false;
+		}
 		
 		public boolean equals(ZNode a) {
 			// note we ignore priority - not content relevant
@@ -229,7 +236,7 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
     private boolean checkEquals(T a, T b) {
     	if (a==b) return true;
     	if (a==null) {
-    		return (b==null);
+    		return false;
     	} else {
     		return a.equals(b);
     	}

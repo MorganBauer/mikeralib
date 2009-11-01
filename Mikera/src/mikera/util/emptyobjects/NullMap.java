@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public final class NullMap<K,V> implements Map<K, V> {
+public final class NullMap<K,V> implements Map<K, V>, Cloneable {
 	
 	@SuppressWarnings("unchecked")
 	public static final NullMap INSTANCE=new NullMap();

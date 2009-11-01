@@ -170,14 +170,15 @@ public final class Vector implements Cloneable {
 	}
 	
 	public String toString() {
-		String result="{";
+		StringBuffer result=new StringBuffer("{");
 		int max=data.length-1;
 		for (int i=0; i<max; i++) {
-			result+=Float.toString(data[i]);
-			result+=", ";
+			result.append(Float.toString(data[i]));
+			result.append(", ");
 		}
-		result+=Float.toString(data[max]);
-		return result+"}";
+		result.append(Float.toString(data[max]));
+		result.append("}");
+		return result.toString();
 	}
 	
 	public boolean equals(Vector v) {

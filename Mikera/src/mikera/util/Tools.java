@@ -12,7 +12,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public class Tools {
 	
-	public static class HashComparator<T> implements Comparator<T> {
+	public static class HashComparator<T> implements Comparator<T>, Serializable {
 
 		public int compare(T o1, T o2) {
 			return o2.hashCode()-o1.hashCode();
@@ -28,8 +28,8 @@ public class Tools {
 	}
 	
 	public static boolean equalsWithNulls(Object a, Object b) {
-		if ((a==null)&&(b==null)) {
-			return true;
+		if (a==null) {
+			return (b==null);
 		}
 		return a.equals(b);
 	}

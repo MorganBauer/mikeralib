@@ -5,7 +5,7 @@ import java.util.*;
 import mikera.util.Maths;
 
 public class PathFinder {
-	public static class PathNode implements Comparable<PathNode> {
+	public static class PathNode  {
 		public float h=0;
 		public float g=0;
 		public byte lastDir=0;
@@ -15,9 +15,9 @@ public class PathFinder {
 			return h+g;
 		}
 		
-		public int compareTo(PathNode arg0) {
-			return Maths.sign(total()-arg0.total());
-		}
+		//public int compareTo(PathNode arg0) {
+		//	return Maths.sign(total()-arg0.total());
+		//}
 	}
 	
 	public static interface PathFunction {

@@ -91,7 +91,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		int min=0;
 		
 		while (min<max) {
-			int i=(max+min)>>1;
+			int i=(max+min)>>>1;
 			int c=compare(key,keys[i]);
 			if (c==0) return i;
 			if (c<0) {
@@ -158,7 +158,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		int i=0;
 		
 		while (min<max) {
-			i=(max+min)>>1;
+			i=(max+min)>>>1;
 			int c=compare(key,keys[i]);
 			if (c==0) {
 				V old=(V)values[i];
@@ -183,8 +183,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 
 	@SuppressWarnings("unchecked")
 	public void putAll(Map<? extends K, ? extends V> map) {
-		if (map instanceof IndexedList) {
-			putAll(map);
+		if (map instanceof IndexedList<?,?>) {
+			putAll((IndexedList<K,V>)map);
 			return;
 		}
 		
@@ -245,12 +245,14 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 					newValues[newCount]=values[ia];
 					ia++;
 					a=null;
+					break;
 				}
 				case 2: {
 					newKeys[newCount]=b;
 					newValues[newCount]=list.values[ib];
 					ib++;
 					b=null;
+					break;
 				}
 				case 3: {
 					newKeys[newCount]=b;
@@ -259,6 +261,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 					ib++;
 					a=null;
 					b=null;
+					break;
 				}
 			}
 			newCount++;

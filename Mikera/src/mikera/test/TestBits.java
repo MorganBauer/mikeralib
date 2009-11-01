@@ -119,7 +119,7 @@ public class TestBits {
 		assertEquals(1,bg.dataLength());
 	}
 	
-	public class TestVisitor extends PointVisitor<Integer> {
+	public static class TestVisitor extends PointVisitor<Integer> {
 		int count=0;
 		int tcount=0;
 		@Override

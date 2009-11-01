@@ -25,6 +25,14 @@ public class Pair<A,B> implements Cloneable, Comparable<Pair<A,B>>, Serializable
 		this.b=b;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof Pair<?,?>) {
+			return equals((Pair<A,B>)o);
+		}
+		return false;
+	}
+	
 	public boolean equals(Pair<A,B> p) {
 		if (p==null) return false;
 		
