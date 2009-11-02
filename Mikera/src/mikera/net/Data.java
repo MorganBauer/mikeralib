@@ -15,7 +15,8 @@ import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;
 
 /**
- * Class representing a chunk of data
+ * Class representing a chunk of data as a 
+ * variable length block of bytes
  * 
  * Note: big-endian format used for numbers, this allows for 
  * data comparison to be equivalent to numerical comparison

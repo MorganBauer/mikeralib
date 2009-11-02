@@ -3,7 +3,9 @@ package mikera.math;
 import java.io.Serializable;
 
 public final class Point3i implements Comparable<Point3i>, Serializable {
-    public int x, y, z;
+	private static final long serialVersionUID = 6938913329599405951L;
+
+	public int x, y, z;
 
     public Point3i() {
     }

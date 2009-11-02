@@ -11,6 +11,8 @@ import mikera.util.*;
  *
  */
 public final class Vector implements Cloneable, Serializable {
+	private static final long serialVersionUID = -265007091119573847L;
+
 	public float[] data;
 	
 	public Vector() {
