@@ -101,6 +101,11 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return data[pos];
 	}
 	
+	public boolean getBoolean(int pos) {
+		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
+		return data[pos]!=0;
+	}
+	
 	public int getInt(int pos) {
 		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
 		return ((int)data[pos+3]&255)
@@ -114,6 +119,13 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		int res= ((data[pos+1])&(255))
 	      |(((data[pos])&(255))<<8);
 		return (char)res;
+	}
+	
+	public short getShort(int pos) {
+		if ((pos<0)||((pos+1)>=size)) throw new IndexOutOfBoundsException();
+		int res= ((data[pos+1])&(255))
+	      |(((data[pos])&(255))<<8);
+		return (short)res;
 	}
 	
 	public float getFloat(int pos) {
@@ -138,6 +150,10 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		put(size,b);
 	}
 	
+	public void appendBoolean(boolean b) {
+		put(size,(byte)(b?1:0));
+	}
+	
 	public void appendInt(int v) {
 		int pos=size;
 		ensureCapacity(size+4);
@@ -156,6 +172,14 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public void appendChar(char v) {
+		int pos=size;
+		ensureCapacity(size+2);
+		data[pos+1]=(byte)(v);
+		data[pos]=(byte)(v>>>8);
+		size+=2;
+	}
+	
+	public void appendShort(short v) {
 		int pos=size;
 		ensureCapacity(size+2);
 		data[pos+1]=(byte)(v);
@@ -230,6 +254,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	
 	public void clear() {
 		size=0;
+		data=NullArrays.NULL_BYTES;
 	}
 	
 	byte[] getInternalData() {
@@ -320,10 +345,16 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		
 		int s=size();
 		for (int i=0; i<s; i++) {
+			if (i>0) {
+				if ((i&15)==0) {
+					sb.append('\n');
+				} else {
+					sb.append(' ');					
+				}
+			}
 			int b=data[i];
 			sb.append(TextUtils.toHexChar(b>>4));
 			sb.append(TextUtils.toHexChar(b));
-			if (i<(s-1)) sb.append(' ');
 		}
 		
 		return sb.toString();

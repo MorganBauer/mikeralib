@@ -87,6 +87,19 @@ public class TestData {
 		assertEquals(30,d.size());
 	}
 	
+	@Test public void testData3() {
+		Data d=new Data();
+		assertEquals("",d.toString());
+		d.appendInt(1000);
+		d.appendInt(-2000);
+		assertEquals("00 00 03 E8 FF FF F8 30",d.toString());
+		
+		byte[] bs=d.toNewByteArray();	
+		Data d2=Data.create(bs);
+		bs[1]=88; // check that this does not disrupt data copy
+		assertEquals(d2,d);	
+	}
+	
 	@Test public void testDataStreams() {
 		DataOutputStream dos=new DataOutputStream();
 		
@@ -94,13 +107,14 @@ public class TestData {
 		dos.write(val);
 		
 		Data d=dos.getData();
-		
 		assertEquals(1,d.size());
 		assertEquals(val,d.getByte(0));
 		d.clear();
+		
 				
 		try {
 			ObjectOutputStream oos=new ObjectOutputStream(dos);
+			oos.writeObject(new Data());
 			oos.writeObject("Hello");
 			assertTrue(d.size()>10);
 		} catch (IOException e) {
@@ -111,6 +125,8 @@ public class TestData {
 		try {
 			ObjectInputStream ois=new ObjectInputStream(dis);
 			Object o=ois.readObject();
+			assertTrue(o instanceof Data);
+			o=ois.readObject();
 			assertEquals("Hello",o);
 			assertEquals(0,dis.getRemaining());
 			assertEquals(-1,dis.read());

@@ -1,5 +1,7 @@
 package mikera.math;
 
+import java.io.Serializable;
+
 import mikera.util.*;
 
 /**
@@ -8,7 +10,7 @@ import mikera.util.*;
  * @author Mike
  *
  */
-public final class Vector implements Cloneable {
+public final class Vector implements Cloneable, Serializable {
 	public float[] data;
 	
 	public Vector() {

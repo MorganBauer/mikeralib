@@ -32,7 +32,7 @@ public final class Rand {
 		return a;
 	}
 		
-	private static class MikeraRandom extends java.util.Random {
+	static class MikeraRandom extends java.util.Random {
 		private static final long serialVersionUID = 6868944865706425166L;
 
 		private volatile long state=System.nanoTime()|1;
@@ -51,6 +51,25 @@ public final class Rand {
 		public void setSeed(long seed) {
 			if (seed==0) seed=54384849948L;
 			state=seed;
+		}
+		
+		public long getSeed() {
+			return state;
+		}
+		
+		public boolean equals(Object o) {
+			if (o instanceof MikeraRandom) {
+				return equals((MikeraRandom)o);
+			}
+			return super.equals(o);
+		}
+		
+		public boolean equals(MikeraRandom o) {
+			return state==o.state;
+		}
+		
+		public int hashCode() {
+			return ((int)state)^((int)(state>>>32));
 		}
 	}
 	

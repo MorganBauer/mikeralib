@@ -1,6 +1,8 @@
 package mikera.math;
 
-public final class Point3i implements Comparable<Point3i> {
+import java.io.Serializable;
+
+public final class Point3i implements Comparable<Point3i>, Serializable {
     public int x, y, z;
 
     public Point3i() {
