@@ -2,10 +2,13 @@ package mikera.engine;
 
 import java.util.Arrays;
 
+import mikera.util.Maths;
 import mikera.util.Tools;
 
 /**
- * Grid implemented as a heirarchy of 4*4*4 grids
+ * Grid implemented as a hierarchy of 4*4*4 grids
+ * 
+ * Very fast!!
  * 
  * @author Mike Anderson
  *
@@ -13,14 +16,35 @@ import mikera.util.Tools;
  */
 public class TreeGrid<T> extends BaseGrid<T> {
 
-	
 	private static final int DIM_SPLIT_BITS=2;
 	private static final int SIGNIFICANT_BITS=20;
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);
-
+	private static final int SIGNIFICANT_MASK=(1<<SIGNIFICANT_BITS)-1;
+	
 	// each cell contains either object of type T or a sub-grid
 	private final Object[] data=new Object[DATA_ARRAY_SIZE];
+	
+	public int countNonNull() {
+		return countNonNull(TOP_SHIFT);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private int countNonNull(int shift) {
+		int res=0;
+		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
+			Object d=data[i];
+			if (d==null) continue;
+			if (d instanceof TreeGrid<?>) {
+				if (shift<=0) throw new Error("TreeGrid element where shift="+shift);
+				TreeGrid<T> tg=(TreeGrid<T>)d;
+				res+=tg.countNonNull(shift-DIM_SPLIT_BITS);
+			} else {
+				res+=1<<(3*shift);
+			}
+		}
+		return res;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public T get(int x, int y, int z) {
@@ -119,42 +143,67 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	
 	@Override
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		setBlockLooped(x1, y1, z1, x2, y2, z2, value);
-		
-		// TODO: switch to smart version
-		//setBlock(x1, y1, z1, x2, y2, z2, value,TOP_SHIFT);
+		setBlock(x1, 
+				y1, 
+				z1, 
+				x2, 
+				y2, 
+				z2, 
+				value,
+				TOP_SHIFT);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
-		if (shift==0) {
-			setBlockLooped(x1, y1, z1, x2, y2, z2, value);
-			return;
-		}
 		int bmask=3<<shift;
 		int bstep=1<<shift;
-		int bx1=(x1)&(bmask);
-		int by1=(y1)&(bmask);
-		int bz1=(z1)&(bmask);
+		
+		// get coordinates of sub block containing point 1
+		// note masking to keep correct sign
+		int bx1=((x1)&(bmask))|(x1&(~SIGNIFICANT_MASK));
+		int by1=((y1)&(bmask))|(y1&(~SIGNIFICANT_MASK));
+		int bz1=((z1)&(bmask))|(z1&(~SIGNIFICANT_MASK));
 	
-		// TODO: finish code for setting complete blocks
-		for (int z=bz1; z<=z2; z+=bstep) {
-			for (int y=by1; y<=y2; y+=bstep) {
-				for (int x=bx1; x<=x2; x+=bstep) {
-					int li=index(x,y,z,shift);
+		// loop over sub blocks (lx,ly,lz)-(ux,uy,uz)
+		for (int lz=bz1; lz<=z2; lz+=bstep) {
+			for (int ly=by1; ly<=y2; ly+=bstep) {
+				for (int lx=bx1; lx<=x2; lx+=bstep) {
+					int li=index(lx,ly,lz,shift);
 					Object d=data[li];
 					if (Tools.equalsWithNulls(d, value)) continue;
 					
-					//int bx2=bx1+bstep-1;
-					//int by2=by1+bstep-1;
-					//int bz2=bz1+bstep-1;
-					
-					
-					setBlockLooped(x1, y1, z1, x2, y2, z2, value);
+					int ux=lx+bstep-1;
+					int uy=ly+bstep-1;
+					int uz=lz+bstep-1;
+					if ((shift<=0)||((z1<=lz)&&(z2>=uz)&&(y1<=ly)&&(y2>=uy)&&(x1<=lx)&&(x2>=ux))) {
+						// set entire sub block
+						data[li]=value;
+					} else {
+						if (d==null) {
+							d=new TreeGrid<T>();
+							data[li]=d;
+						} else if (!(d instanceof TreeGrid<?>)) {
+							d=new TreeGrid<T>((T)d);
+							data[li]=d;
+						}
+						TreeGrid<T> tg=(TreeGrid<T>)d;
+						tg.setBlock(
+								Maths.max(lx, x1)-lx,
+								Maths.max(ly, y1)-ly,
+								Maths.max(lz, z1)-lz,
+								Maths.min(x2, ux)-lx,
+								Maths.min(y2, uy)-ly,
+								Maths.min(z2, uz)-lz,
+								value,
+								shift-DIM_SPLIT_BITS);				
+					}
 				}
 			}
 		}
 	}
 	
+	/*
+	 * Old version of setBlock
 	private void setBlockLooped(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
 
 		for (int z=z1; z<=z2; z++) {
@@ -165,5 +214,6 @@ public class TreeGrid<T> extends BaseGrid<T> {
 			}		
 		}
 	}
+	*/
 
 }

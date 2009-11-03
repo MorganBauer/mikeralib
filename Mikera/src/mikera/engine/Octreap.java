@@ -644,6 +644,10 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 		return countArea(head);
 	}
 	
+	public int countNonNull() {
+		return countArea();
+	}
+	
 	private int countArea(ZNode a) {
 		if (a==null) return 0;
 		return 1+(int)(a.z2-a.z1)+countArea(a.left)+countArea(a.right);

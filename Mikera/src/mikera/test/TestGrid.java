@@ -31,7 +31,10 @@ public class TestGrid {
 	
 	public void testSet(Grid<Integer> g) {
 		g.set(10,10,10, 1);
+		assertEquals(1,g.countNonNull());
 		g.set(-1,-1,-1, 1);
+		assertEquals(2,g.countNonNull());
+
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(1,(int)g.get(-1, -1, -1));
 
@@ -40,7 +43,15 @@ public class TestGrid {
 	}
 	
 	public void testSetBlock(Grid<Integer> g) {
+		g.setBlock(0,0,0,0,0,1,1);
+		assertEquals(2,g.countNonNull());
+
+		g.setBlock(0,0,0,1,1,1,1);
+		assertEquals(8,g.countNonNull());
+
 		g.setBlock(0,0,0,10,10,10,1);
+		assertEquals(1331,g.countNonNull());
+		
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(null,g.get(-1, -1, -1));
 		assertEquals(1,(int)g.get(Rand.r(11), Rand.r(11), Rand.r(11)));
@@ -53,6 +64,7 @@ public class TestGrid {
 		g.setBlock(-2,-2,-2,2,2,2,null);
 		assertEquals(2,(int)g.get(-3, -3, -3));
 		assertEquals(null,g.get(-1, -1, -1));
+		assertEquals(2,(int)g.get(3, 2, 2));
 			
 		g.clear();
 	}

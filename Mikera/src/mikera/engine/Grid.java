@@ -7,5 +7,7 @@ public interface Grid<T> {
 	
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
 
+	public int countNonNull();
+	
 	public void clear();
 }
