@@ -21,6 +21,7 @@ public class TestIntSet {
 	@Test public void test2() {
 		int[] array=new int[] {1,2,3};
 		IntSet is1=IntSet.create(array);
+		assertEquals("{1, 2, 3}",is1.toString());
 		IntSet is2=null;
 		
 		IntSet is3=IntSet.create(104);

@@ -38,6 +38,7 @@ public class PerformanceTest {
 	 * Setup code here
 	 */
 	
+	static Octreap<Integer> o1=new Octreap<Integer>();
 	static Grid<Integer> g1;
 	static Grid<Integer> g2;
 	private static void setup() {
@@ -49,11 +50,15 @@ public class PerformanceTest {
 	 * Enter code to time here
 	 */
 	private static void a() {
-		testGrid(g1);
+		g1.set(0,0,0,1);
+		g1.get(0,0,0);
+		//testGrid(g1);
 	}
 	
 	private static void b() {
-		testGrid(g2);
+		o1.set(0,0,0,1);
+		o1.get(0,0,0);
+		//testGrid(g2);
 	}
 	
 	private static void testGrid(Grid<Integer> g) {

@@ -303,6 +303,18 @@ public final class IntSet extends BasePersistentCollection<Integer> {
 	public int size() {
 		return data.length;
 	}
+	
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		sb.append('{');
+		int s=size();
+		for (int i=0; i<s; i++) {
+			sb.append(data[i]);
+			if ((i+1)<s) sb.append(", ");
+		}		
+		sb.append('}');
+		return sb.toString();
+	}
 
 	public Object[] toArray() {
 		int s=size();
