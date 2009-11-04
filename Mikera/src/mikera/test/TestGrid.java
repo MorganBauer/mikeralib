@@ -68,4 +68,10 @@ public class TestGrid {
 			
 		g.clear();
 	}
+	
+	@Test public void testTreeGidBlockSet() {
+		TreeGrid<Integer> tg=new TreeGrid<Integer>();
+		
+		tg.set(0,0,0, 1);
+	}
 }

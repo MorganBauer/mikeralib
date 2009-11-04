@@ -107,11 +107,17 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	private boolean isSolid(T value) {
 		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
 			Object d=data[i];
-			if (!((d==value)||((d!=null)&&(d.equals(value))))) {
+			if (!(Tools.equalsWithNulls(value,d))) {
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean isSolid() {
+		Object d=data[0];
+		return (!(d instanceof TreeGrid<?>))&&isSolid((T)data[0]);
 	}
 	
 	private int index(int x, int y, int z, int shift) {
@@ -154,9 +160,10 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
+	protected Object setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
 		int bmask=3<<shift;
 		int bstep=1<<shift;
+		boolean setData=false;
 		
 		// get coordinates of sub block containing point 1
 		// note masking to keep correct sign
@@ -178,6 +185,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 					if ((shift<=0)||((z1<=lz)&&(z2>=uz)&&(y1<=ly)&&(y2>=uy)&&(x1<=lx)&&(x2>=ux))) {
 						// set entire sub block
 						data[li]=value;
+						setData=true;
 					} else {
 						if (d==null) {
 							d=new TreeGrid<T>();
@@ -187,7 +195,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 							data[li]=d;
 						}
 						TreeGrid<T> tg=(TreeGrid<T>)d;
-						tg.setBlock(
+						Object nd=tg.setBlock(
 								Maths.max(lx, x1)-lx,
 								Maths.max(ly, y1)-ly,
 								Maths.max(lz, z1)-lz,
@@ -195,11 +203,17 @@ public class TreeGrid<T> extends BaseGrid<T> {
 								Maths.min(y2, uy)-ly,
 								Maths.min(z2, uz)-lz,
 								value,
-								shift-DIM_SPLIT_BITS);				
+								shift-DIM_SPLIT_BITS);
+						if (nd!=d) {
+							setData=true;
+							data[li]=nd;
+						}
 					}
 				}
 			}
 		}
+		if (setData&&isSolid()) return data[0];
+		return this;
 	}
 	
 	/*
