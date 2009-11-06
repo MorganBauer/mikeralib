@@ -17,6 +17,7 @@ import mikera.util.Tools;
 public class TreeGrid<T> extends BaseGrid<T> {
 
 	private static final int DIM_SPLIT_BITS=2;
+	//private static final int DIM_SPLIT_SIZE=1<<DIM_SPLIT_BITS;
 	private static final int SIGNIFICANT_BITS=20;
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);
@@ -27,6 +28,20 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	
 	public int countNonNull() {
 		return countNonNull(TOP_SHIFT);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public int countNodes() {
+		int res=0;
+		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
+			Object d=data[i];
+			if (d==null) continue;
+			if (d instanceof TreeGrid<?>) {
+				TreeGrid<T> tg=(TreeGrid<T>)d;
+				res+=tg.countNodes();
+			}
+		}
+		return res+1;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,6 +77,33 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		}
 		throw new Error("This shouldn't happen!!");
 	}
+	
+	public void visitBlocks(BlockVisitor<T> bf) {
+		int base=(-1)<<(TOP_SHIFT+1);
+		visitBlocks(bf,base,base,base,TOP_SHIFT);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void visitBlocks(BlockVisitor<T> bf, int x, int y, int z,int shift) {
+		int li=0;
+		int bsize=1<<shift;
+		int tgsize=bsize<<2;
+		for (int lz=0; lz<tgsize; lz+=bsize) {
+			for (int ly=0; ly<tgsize; ly+=bsize) {
+				for (int lx=0; lx<tgsize; lx+=bsize) {
+					Object d=data[li++];
+					if (d==null) continue;
+					if (d instanceof TreeGrid<?>) {
+						TreeGrid<T> tg=(TreeGrid<T>)d;
+						tg.visitBlocks(bf, x+lx*bsize, y+lx*bsize, z+lx*bsize, shift-DIM_SPLIT_BITS);
+					} else {
+						bf.visit(x+lx, y+ly, z+lz, x+lx+bsize-1, y+ly+bsize-1, z+lz+bsize-1, (T)d);
+					}
+				}
+			}
+		}
+	}
+	
 	
 	public void clear() {
 		Arrays.fill(data, null);

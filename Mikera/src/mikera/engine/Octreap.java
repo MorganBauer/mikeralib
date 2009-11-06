@@ -96,11 +96,11 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 		
 	}
 	
-	public Octreap(Octreap<T> o) {
+	public Octreap(Grid<T> o) {
 		set(o);
 	}
 	
-	public void set(Octreap<T> o) {
+	public void set(Grid<T> o) {
 		clear();
 		paste(o);
 	}
@@ -173,7 +173,7 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 
 	
 	@SuppressWarnings("unchecked")
-	public void visitBlocks(ZNode node, BlockVisitor<T> bf) {
+	private void visitBlocks(ZNode node, BlockVisitor<T> bf) {
 		if (node==null) return;
 		visitBlocks(node.left,bf);
 		
@@ -193,7 +193,7 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 		visitCells(bf,x1,y1,z1,x2,y2,z2,dx,dy,dz,head);
 	}
 	
-	public void visitCells(BlockVisitor<T> bf, int x1, int y1, int z1, int x2, int y2, int z2, int dx, int dy, int dz, ZNode head) {
+	private void visitCells(BlockVisitor<T> bf, int x1, int y1, int z1, int x2, int y2, int z2, int dx, int dy, int dz, ZNode head) {
 		// TODO
 	}
 	
@@ -326,22 +326,6 @@ public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> 
 		o3.paste(o2, 0, 0,+1);
 		
 		return o3;
-	}
-
-	public void paste(Octreap<T> t) {
-		paste(t,0,0,0);
-	}
-	
-	public void paste(Octreap<T> t, final int dx, final int dy, final int dz) {
-		BlockVisitor<T> paster=new BlockVisitor<T>() {
-			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
-					T value) {
-				setBlock(x1+dx,y1+dy,z1+dz,
-						x2+dx, y2+dy, z2+dz, value);
-				return null;
-			}
-		};
-		t.visitBlocks(paster);
 	}
 	
 	@SuppressWarnings("unchecked")

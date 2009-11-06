@@ -56,10 +56,12 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 	@SuppressWarnings("unchecked")
 	public T get(int x, int y, int z) {
 		if (data==null) return null;
-		int i=dataIndexRelative(x-gx,y-gy,z-gz);
-		if (i<0) return null;
+		x-=gx;
+		y-=gy;
+		z-=gz;
+		if ((x<0)||(y<0)||(z<0)||(x>=gw)||(y>=gh)||(z>=gd)) return null;
+		int i=dataIndexRelative(x,y,z);
 		Object[] dt=data;
-		if (i>=dt.length) return null;
 		return (T)(dt[i]);
 	}
 	
@@ -93,6 +95,23 @@ public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
 			}
 		}	
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void visitBlocks(BlockVisitor<T> bf) {
+		if (data==null) return;
+		int si=0;
+		int tgw=gw; int tgh=gh; int tgd=gd; // make local copy to enable loop optimisation?
+		for (int z=0; z<tgd; z++) {
+			for (int y=0; y<tgh; y++) {
+				for (int x=0; x<tgw; x++) {
+					T bv=(T)(data[si++]);
+					bf.visit(x+gx,y+gy,z+gz,x+gx,y+gy,z+gz,bv);
+				}					
+			}
+		}			
+	}
+	
+
 	
 	@SuppressWarnings("unchecked")
 	public ArrayGrid<T> clone() {
