@@ -1,4 +1,4 @@
-package mikera.util;
+package mikera.stats;
 
 import java.util.*;
 
