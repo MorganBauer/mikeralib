@@ -22,6 +22,7 @@ public class TestGrid {
 		testEmptyGrid(g);
 		testSet(g);
 		testSetBlock(g);
+		testVisitBlock(g);
 	}
 	
 	public void testEmptyGrid(Grid<Integer> g) {
@@ -68,10 +69,37 @@ public class TestGrid {
 			
 		g.clear();
 	}
+
+	
+	public void testVisitBlock(Grid<Integer> g) {
+		BCounter bc=new BCounter();
+		
+		g.setBlock(-5,-5,-5,4,4,4,1);
+		g.visitBlocks(bc);
+		
+		assertEquals(1000,bc.size);
+		
+		g.clear();
+	}
+	
+	private static class BCounter implements BlockVisitor<Integer>  {
+		long count=0;
+		long size=0;
+		
+		public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+				Integer value) {
+			count+=1;
+			size+=((long)(x2-x1+1))*(y2-y1+1)*(z2-z1+1);
+			
+			return null;
+		}	
+	};
+
 	
 	@Test public void testTreeGidBlockSet() {
 		TreeGrid<Integer> tg=new TreeGrid<Integer>();
 		
 		tg.set(0,0,0, 1);
 	}
+
 }
