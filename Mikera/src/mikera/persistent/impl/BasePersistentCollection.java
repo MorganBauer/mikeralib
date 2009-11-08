@@ -11,11 +11,4 @@ import mikera.util.Tools;
 public abstract class BasePersistentCollection<T> extends PersistentCollection<T> {
 	private static final long serialVersionUID = -7947652969767900848L;
 
-
-
-
-	
-	public BasePersistentCollection<T> clone() {
-		return this;
-	}
 }

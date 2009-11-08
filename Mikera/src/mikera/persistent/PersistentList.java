@@ -6,7 +6,7 @@ import java.util.List;
 
 import mikera.persistent.impl.Singleton;
 
-public abstract class PersistentList<T> extends PersistentCollection<T> implements List<T>, Comparable<PersistentList<T>> {
+public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
 
 	public abstract T get(int i);
@@ -47,6 +47,10 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 	public PersistentList<T> append(PersistentList<T> values) {
 		return ListFactory.concat(this,values);
+	}
+	
+	public PersistentList<T> append(Collection<T> values) {
+		return ListFactory.concat(this,ListFactory.create(values));
 	}
 	
 	public int indexOf(Object o) {
@@ -102,7 +106,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 	public PersistentList<T> insert(int index, Collection<T> values) {
 		if (values instanceof PersistentList<?>) {
-			return subList(0,index).append((PersistentList<T>)values).append(subList(index,size()));
+			return subList(0,index).append(values).append(subList(index,size()));
 		}
 		PersistentList<T> pl=ListFactory.create(values);
 		return subList(0,index).append(pl).append(subList(index,size()));

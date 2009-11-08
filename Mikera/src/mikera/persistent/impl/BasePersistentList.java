@@ -14,10 +14,6 @@ import mikera.util.emptyobjects.NullList;
 @SuppressWarnings("serial")
 public abstract class BasePersistentList<T> extends PersistentList<T> {
 
-	public BasePersistentList<T> clone() {
-		return this;
-	}
-
 	public int end() {
 		throw new UnsupportedOperationException();
 	}

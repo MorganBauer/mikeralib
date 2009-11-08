@@ -6,7 +6,7 @@ import java.util.Set;
 
 import mikera.util.Tools;
 
-public abstract class PersistentMap<K,V> extends PersistentObject implements Map<K, V> {
+public abstract class PersistentMap<K,V> extends PersistentObject implements IPersistentMap<K,V> {
 	private static final long serialVersionUID = 2304218229796144868L;
 
 	public void clear() {

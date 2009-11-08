@@ -8,7 +8,7 @@ import mikera.persistent.impl.FilteredIterator;
 import mikera.util.Tools;
 
 @SuppressWarnings("unchecked")
-public abstract class PersistentCollection<T> extends PersistentObject implements Collection<T> {
+public abstract class PersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
 	private static final long serialVersionUID = -962303316004942025L;
 
 	public abstract int size();

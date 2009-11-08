@@ -20,7 +20,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike
  *
  */
-public final class Text extends PersistentObject implements CharSequence, Comparable<CharSequence>, Iterable<Character>, Cloneable, Serializable {
+public final class Text extends PersistentObject implements CharSequence, Comparable<CharSequence>, Iterable<Character> {
 	private static final long serialVersionUID = 5744895584967327995L;
 	public static final int BLOCK_SIZE_BITS=6;
 	public static final int BLOCK_SIZE=1<<BLOCK_SIZE_BITS;
@@ -326,7 +326,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	}
 	
 	public Text clone() {
-		return this;
+		return (Text)super.clone();
 	}
 	
 	public boolean equals(Object o) {
