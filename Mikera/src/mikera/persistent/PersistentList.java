@@ -2,7 +2,9 @@ package mikera.persistent;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import mikera.persistent.impl.Singleton;
 
@@ -19,6 +21,60 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		throw new UnsupportedOperationException();
 	}
 
+	
+	
+	private class BaseIterator implements ListIterator<T> {
+		int i=0;
+		
+		public void add(T e) {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean hasNext() {
+			return (i<size());
+		}
+
+		public boolean hasPrevious() {
+			return i>0;
+		}
+
+		public T next() {
+			return get(i++);
+		}
+
+		public int nextIndex() {
+			int s=size();
+			return (i<s)?i+1:s;
+		}
+
+		public T previous() {
+			return get(--i);
+		}
+
+		public int previousIndex() {
+			return i-1;
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+		public void set(T e) {
+			throw new UnsupportedOperationException();
+		}	
+	}
+
+	public ListIterator<T> listIterator() {
+		return new BaseIterator();
+	}
+
+	public ListIterator<T> listIterator(int index) {
+		return new BaseIterator();
+	}
+
+	public Iterator<T> iterator() {
+		return new BaseIterator();
+	}
 
 	
 	/**

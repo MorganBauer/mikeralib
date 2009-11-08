@@ -5,8 +5,8 @@ package mikera.math;
  * points.
  */
 public class BoundingBox {
-    private Point3 minimum;
-    private Point3 maximum;
+    private Vector3 minimum;
+    private Vector3 maximum;
 
     /**
      * Creates an empty box. The minimum point will have all components set to
@@ -14,8 +14,8 @@ public class BoundingBox {
      * negative infinity.
      */
     public BoundingBox() {
-        minimum = new Point3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-        maximum = new Point3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+        minimum = new Vector3(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+        maximum = new Vector3(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
     }
 
     /**
@@ -24,8 +24,8 @@ public class BoundingBox {
      * @param b bounding box to copy
      */
     public BoundingBox(BoundingBox b) {
-        minimum = new Point3(b.minimum);
-        maximum = new Point3(b.maximum);
+        minimum = new Vector3(b.minimum);
+        maximum = new Vector3(b.maximum);
     }
 
     /**
@@ -33,7 +33,7 @@ public class BoundingBox {
      * 
      * @param p point to include
      */
-    public BoundingBox(Point3 p) {
+    public BoundingBox(Vector3 p) {
         this(p.x, p.y, p.z);
     }
 
@@ -45,8 +45,8 @@ public class BoundingBox {
      * @param z z coordinate of the point to include
      */
     public BoundingBox(float x, float y, float z) {
-        minimum = new Point3(x, y, z);
-        maximum = new Point3(x, y, z);
+        minimum = new Vector3(x, y, z);
+        maximum = new Vector3(x, y, z);
     }
 
     /**
@@ -55,8 +55,8 @@ public class BoundingBox {
      * @param size half edge length of the bounding box
      */
     public BoundingBox(float size) {
-        minimum = new Point3(-size, -size, -size);
-        maximum = new Point3(size, size, size);
+        minimum = new Vector3(-size, -size, -size);
+        maximum = new Vector3(size, size, size);
     }
 
     /**
@@ -67,7 +67,7 @@ public class BoundingBox {
      * 
      * @return a reference to the minimum corner
      */
-    public final Point3 getMinimum() {
+    public final Vector3 getMinimum() {
         return minimum;
     }
 
@@ -79,7 +79,7 @@ public class BoundingBox {
      * 
      * @return a reference to the maximum corner
      */
-    public final Point3 getMaximum() {
+    public final Vector3 getMaximum() {
         return maximum;
     }
 
@@ -88,8 +88,8 @@ public class BoundingBox {
      * 
      * @return a reference to the center of the box
      */
-    public final Point3 getCenter() {
-        return Point3.mid(minimum, maximum, new Point3());
+    public final Vector3 getCenter() {
+        return Vector3.mid(minimum, maximum, new Vector3());
     }
 
     /**
@@ -100,11 +100,11 @@ public class BoundingBox {
      * @param i a corner index, from 0 to 7
      * @return the corresponding corner
      */
-    public final Point3 getCorner(int i) {
+    public final Vector3 getCorner(int i) {
         float x = (i & 1) == 0 ? minimum.x : maximum.x;
         float y = (i & 2) == 0 ? minimum.y : maximum.y;
         float z = (i & 4) == 0 ? minimum.z : maximum.z;
-        return new Point3(x, y, z);
+        return new Vector3(x, y, z);
     }
 
     /**
@@ -141,7 +141,7 @@ public class BoundingBox {
      * @see org.sunflow.math.Vector3#length()
      */
     public final Vector3 getExtents() {
-        return Point3.sub(maximum, minimum, new Vector3());
+        return Vector3.sub(maximum, minimum, new Vector3());
     }
 
     /**
@@ -220,7 +220,7 @@ public class BoundingBox {
      * @return <code>true</code> if the point is inside the box,
      *         <code>false</code> otherwise
      */
-    public final boolean contains(Point3 p) {
+    public final boolean contains(Vector3 p) {
         return ((p != null) && (p.x >= minimum.x) && (p.x <= maximum.x) && (p.y >= minimum.y) && (p.y <= maximum.y) && (p.z >= minimum.z) && (p.z <= maximum.z));
     }
 
@@ -238,14 +238,7 @@ public class BoundingBox {
         return ((x >= minimum.x) && (x <= maximum.x) && (y >= minimum.y) && (y <= maximum.y) && (z >= minimum.z) && (z <= maximum.z));
     }
 
-    /**
-     * Changes the extents of the box as needed to include the given
-     * {@link org.sunflow.math.Point3 point}into this box. Does nothing if the
-     * parameter is <code>null</code>.
-     * 
-     * @param p point to be included
-     */
-    public final void include(Point3 p) {
+    public final void include(Vector3 p) {
         if (p != null) {
             if (p.x < minimum.x)
                 minimum.x = p.x;

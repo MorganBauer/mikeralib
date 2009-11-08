@@ -2,6 +2,7 @@ package mikera.engine;
 
 import java.util.Arrays;
 
+import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.Tools;
 
@@ -79,25 +80,33 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	public void visitBlocks(BlockVisitor<T> bf) {
-		int base=(-1)<<(TOP_SHIFT+1);
-		visitBlocks(bf,base,base,base,TOP_SHIFT);
+		visitBlocks(bf,0,0,0,TOP_SHIFT);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void visitBlocks(BlockVisitor<T> bf, int x, int y, int z,int shift) {
 		int li=0;
-		int bsize=1<<shift;
-		int tgsize=bsize<<2;
-		for (int lz=0; lz<tgsize; lz+=bsize) {
-			for (int ly=0; ly<tgsize; ly+=bsize) {
-				for (int lx=0; lx<tgsize; lx+=bsize) {
+		int bsize=1<<shift; // size of sub blocks in this TreeGrid
+		
+		int max= (bsize<<2); // top limit of this whole TreeGrid
+		
+		// TODO: fix fact that x,y,z negative for top level
+		for (int lz=0; lz<max; lz+=bsize) {
+			for (int ly=0; ly<max; ly+=bsize) {
+				for (int lx=0; lx<max; lx+=bsize) {
 					Object d=data[li++];
 					if (d==null) continue;
 					if (d instanceof TreeGrid<?>) {
 						TreeGrid<T> tg=(TreeGrid<T>)d;
-						tg.visitBlocks(bf, x+lx*bsize, y+lx*bsize, z+lx*bsize, shift-DIM_SPLIT_BITS);
+						tg.visitBlocks(bf, x+lx, y+ly, z+lz, shift-DIM_SPLIT_BITS);
 					} else {
-						bf.visit(x+lx, y+ly, z+lz, x+lx+bsize-1, y+ly+bsize-1, z+lz+bsize-1, (T)d);
+						int p1=Bits.signExtend(x+lx,SIGNIFICANT_BITS);
+						int p2=Bits.signExtend(y+ly,SIGNIFICANT_BITS);
+						int p3=Bits.signExtend(z+lz,SIGNIFICANT_BITS);
+						int q1=Bits.signExtend(x+lx+bsize-1,SIGNIFICANT_BITS);
+						int q2=Bits.signExtend(y+ly+bsize-1,SIGNIFICANT_BITS);
+						int q3=Bits.signExtend(z+lz+bsize-1,SIGNIFICANT_BITS);
+						bf.visit(p1,p2,p3,q1,q2,q3, (T)d);
 					}
 				}
 			}

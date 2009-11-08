@@ -51,11 +51,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	
 	public boolean contains(Object o) {
 		for (T it: this) {
-			if (it!=null) {
-				if (it.equals(o)) return true;
-			} else {
-				if (o==null) return true;
-			}
+			if (Tools.equalsWithNulls(it, o)) return true;
 		}
 		return false;
 	}
@@ -112,5 +108,21 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 			}		
 		};
 		return ListFactory.create(it);
+	}
+	
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		sb.append('{');
+		boolean first=true;
+		for (T t: this) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(", ");
+			}
+			sb.append(t.toString());
+		}		
+		sb.append('}');
+		return sb.toString();
 	}
 }

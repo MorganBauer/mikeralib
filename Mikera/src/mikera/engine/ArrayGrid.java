@@ -46,6 +46,7 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 	
 	public int countNonNull() {
 		Object[] dt=data;
+		if (dt==null) return 0;
 		int result=0;
 		for (int i=0; i<dt.length; i++) {
 			if (dt[i]!=null) result++;

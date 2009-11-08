@@ -61,7 +61,7 @@ public class PerformanceTest {
 		//testGrid(g2);
 	}
 	
-	private static void testGrid(Grid<Integer> g) {
+	public static void testGrid(Grid<Integer> g) {
 		g.clear();
 		g.setBlock(0, 0, 0, 100, 100, 100, 1);
 		g.setBlock(0, 0, 0, 3, 3, 3, 2);

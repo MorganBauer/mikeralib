@@ -23,9 +23,6 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 		return indexOf((T)o)>=0;
 	}
 
-	public Iterator<T> iterator() {
-		return new BaseIterator();
-	}
 
 	public int lastIndexOf(Object o) {
 		int i=0;
@@ -40,56 +37,6 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 		}
 		return res;
 	}
-	
-	private class BaseIterator implements ListIterator<T> {
-		int i=0;
-		
-		public void add(T e) {
-			throw new UnsupportedOperationException();
-		}
-
-		public boolean hasNext() {
-			return (i<size());
-		}
-
-		public boolean hasPrevious() {
-			return i>0;
-		}
-
-		public T next() {
-			return get(i++);
-		}
-
-		public int nextIndex() {
-			int s=size();
-			return (i<s)?i+1:s;
-		}
-
-		public T previous() {
-			return get(--i);
-		}
-
-		public int previousIndex() {
-			return i-1;
-		}
-
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-
-		public void set(T e) {
-			throw new UnsupportedOperationException();
-		}	
-	}
-
-	public ListIterator<T> listIterator() {
-		return new BaseIterator();
-	}
-
-	public ListIterator<T> listIterator(int index) {
-		return new BaseIterator();
-	}
-
 
 	
 	public PersistentList<T> front() {

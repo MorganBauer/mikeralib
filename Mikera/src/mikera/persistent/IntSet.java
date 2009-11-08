@@ -2,7 +2,6 @@ package mikera.persistent;
 
 import java.util.*;
 
-import mikera.persistent.impl.BasePersistentCollection;
 import mikera.util.Arrays;
 import mikera.util.HashCache;
 
@@ -14,7 +13,7 @@ import mikera.util.HashCache;
  * @author Mike
  *
  */
-public final class IntSet extends BasePersistentCollection<Integer> {
+public final class IntSet extends PersistentSet<Integer> {
 
 	private static final long serialVersionUID = 2677550392326589873L;
 	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
@@ -304,18 +303,6 @@ public final class IntSet extends BasePersistentCollection<Integer> {
 		return data.length;
 	}
 	
-	public String toString() {
-		StringBuffer sb=new StringBuffer();
-		sb.append('{');
-		int s=size();
-		for (int i=0; i<s; i++) {
-			sb.append(data[i]);
-			if ((i+1)<s) sb.append(", ");
-		}		
-		sb.append('}');
-		return sb.toString();
-	}
-
 	public Object[] toArray() {
 		int s=size();
 		Integer[] ints= new Integer[s];

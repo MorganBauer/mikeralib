@@ -8,4 +8,10 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 	public PersistentCollection<T> deleteAll(final T value);
 	
 	public PersistentCollection<T> deleteAll(final Collection<T> values);
+	
+	// query methods
+	
+	public boolean contains(Object o);
+
+	public boolean containsAll(Collection<?> c);
 }

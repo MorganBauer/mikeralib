@@ -23,7 +23,7 @@ public final class Matrix4 {
     private float m32;
     private float m33;
 
-    // usefull constant matrices
+    // useful constant matrices
     public static final Matrix4 ZERO = new Matrix4();
     public static final Matrix4 IDENTITY = Matrix4.scale(1);
 
@@ -282,14 +282,14 @@ public final class Matrix4 {
      * Computes this*p and returns the result as a new Point3 object. This
      * method assumes the bottom row of the matrix is <code>[0,0,0,1]</code>.
      * 
-     * @param p point to multiply
+     * @param vector3 point to multiply
      * @return a new Point3 object equal to <code>this*v</code>
      */
-    public final Point3 transformP(Point3 p) {
-        Point3 rp = new Point3();
-        rp.x = m00 * p.x + m01 * p.y + m02 * p.z + m03;
-        rp.y = m10 * p.x + m11 * p.y + m12 * p.z + m13;
-        rp.z = m20 * p.x + m21 * p.y + m22 * p.z + m23;
+    public final Vector3 transformP(Vector3 vector3) {
+    	Vector3 rp = new Vector3();
+        rp.x = m00 * vector3.x + m01 * vector3.y + m02 * vector3.z + m03;
+        rp.y = m10 * vector3.x + m11 * vector3.y + m12 * vector3.z + m13;
+        rp.z = m20 * vector3.x + m21 * vector3.y + m22 * vector3.z + m23;
         return rp;
     }
 

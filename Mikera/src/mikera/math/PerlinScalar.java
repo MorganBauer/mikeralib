@@ -124,15 +124,15 @@ public final class PerlinScalar {
         return lerp(s, lerp(t, lerp(v, lerp(u, grad(p[AAA], x, y, z, w), grad(p[BAA], x - 1, y, z, w)), lerp(u, grad(p[ABA], x, y - 1, z, w), grad(p[BBA], x - 1, y - 1, z, w))), lerp(v, lerp(u, grad(p[AAB], x, y, z - 1, w), grad(p[BAB], x - 1, y, z - 1, w)), lerp(u, grad(p[ABB], x, y - 1, z - 1, w), grad(p[BBB], x - 1, y - 1, z - 1, w)))), lerp(t, lerp(v, lerp(u, grad(p[AAA + 1], x, y, z, w - 1), grad(p[BAA + 1], x - 1, y, z, w - 1)), lerp(u, grad(p[ABA + 1], x, y - 1, z, w - 1), grad(p[BBA + 1], x - 1, y - 1, z, w - 1))), lerp(v, lerp(u, grad(p[AAB + 1], x, y, z - 1, w - 1), grad(p[BAB + 1], x - 1, y, z - 1, w - 1)), lerp(u, grad(p[ABB + 1], x, y - 1, z - 1, w - 1), grad(p[BBB + 1], x - 1, y - 1, z - 1, w - 1)))));
     }
 
-    public static final float snoise(Point2 p) {
+    public static final float snoise(Vector2 p) {
         return snoise(p.x, p.y);
     }
 
-    public static final float snoise(Point3 p) {
+    public static final float snoise(Vector3 p) {
         return snoise(p.x, p.y, p.z);
     }
 
-    public static final float snoise(Point3 p, float t) {
+    public static final float snoise(Vector3 p, float t) {
         return snoise(p.x, p.y, p.z, t);
     }
 
@@ -152,15 +152,15 @@ public final class PerlinScalar {
         return 0.5f + 0.5f * snoise(x, y, z, t);
     }
 
-    public static final float noise(Point2 p) {
+    public static final float noise(Vector2 p) {
         return 0.5f + 0.5f * snoise(p.x, p.y);
     }
 
-    public static final float noise(Point3 p) {
+    public static final float noise(Vector3 p) {
         return 0.5f + 0.5f * snoise(p.x, p.y, p.z);
     }
 
-    public static final float noise(Point3 p, float t) {
+    public static final float noise(Vector3 p, float t) {
         return 0.5f + 0.5f * snoise(p.x, p.y, p.z, t);
     }
 
@@ -220,15 +220,15 @@ public final class PerlinScalar {
         return (noise(x, y, z, t) * (w_xXh_y) * d_zXp_t + noise(x_w, y, z, t) * (xXh_y) * d_zXp_t + noise(x_w, y_h, z, t) * (xy) * d_zXp_t + noise(x, y_h, z, t) * (w_xXy) * d_zXp_t + noise(x_w, y_h, z_d, t) * (xy) * (zXp_t) + noise(x, y, z_d, t) * (w_xXh_y) * (zXp_t) + noise(x, y_h, z_d, t) * (w_xXy) * (zXp_t) + noise(x_w, y, z_d, t) * (xXh_y) * (zXp_t) + noise(x, y, z, t_p) * (w_xXh_y) * (d_zXt) + noise(x_w, y, z, t_p) * (xXh_y) * (d_zXt) + noise(x_w, y_h, z, t_p) * (xy) * (d_zXt) + noise(x, y_h, z, t_p) * (w_xXy) * (d_zXt) + noise(x_w, y_h, z_d, t_p) * (xy) * (zXt) + noise(x, y, z_d, t_p) * (w_xXh_y) * (zXt) + noise(x, y_h, z_d, t_p) * (w_xXy) * (zXt) + noise(x_w, y, z_d, t_p) * (xXh_y) * (zXt)) / (w * h * d * t);
     }
 
-    public static final float pnoise(Point2 p, float periodx, float periody) {
+    public static final float pnoise(Vector2 p, float periodx, float periody) {
         return pnoise(p.x, p.y, periodx, periody);
     }
 
-    public static final float pnoise(Point3 p, Vector3 period) {
+    public static final float pnoise(Vector3 p, Vector3 period) {
         return pnoise(p.x, p.y, p.z, period.x, period.y, period.z);
     }
 
-    public static final float pnoise(Point3 p, float t, Vector3 pperiod, float tperiod) {
+    public static final float pnoise(Vector3 p, float t, Vector3 pperiod, float tperiod) {
         return pnoise(p.x, p.y, p.z, t, pperiod.x, pperiod.y, pperiod.z, tperiod);
     }
 
@@ -288,15 +288,15 @@ public final class PerlinScalar {
         return ((snoise(x, y, z, t) * (w_xXh_y) * d_zXp_t + snoise(x_w, y, z, t) * (xXh_y) * d_zXp_t + snoise(x_w, y_h, z, t) * (xy) * d_zXp_t + snoise(x, y_h, z, t) * (w_xXy) * d_zXp_t + snoise(x_w, y_h, z_d, t) * (xy) * (zXp_t) + snoise(x, y, z_d, t) * (w_xXh_y) * (zXp_t) + snoise(x, y_h, z_d, t) * (w_xXy) * (zXp_t) + snoise(x_w, y, z_d, t) * (xXh_y) * (zXp_t) + snoise(x, y, z, t_p) * (w_xXh_y) * (d_zXt) + snoise(x_w, y, z, t_p) * (xXh_y) * (d_zXt) + snoise(x_w, y_h, z, t_p) * (xy) * (d_zXt) + snoise(x, y_h, z, t_p) * (w_xXy) * (d_zXt) + snoise(x_w, y_h, z_d, t_p) * (xy) * (zXt) + snoise(x, y, z_d, t_p) * (w_xXh_y) * (zXt) + snoise(x, y_h, z_d, t_p) * (w_xXy) * (zXt) + snoise(x_w, y, z_d, t_p) * (xXh_y) * (zXt)) / (w * h * d * t));
     }
 
-    public static final float spnoise(Point2 p, float periodx, float periody) {
+    public static final float spnoise(Vector2 p, float periodx, float periody) {
         return spnoise(p.x, p.y, periodx, periody);
     }
 
-    public static final float spnoise(Point3 p, Vector3 period) {
+    public static final float spnoise(Vector3 p, Vector3 period) {
         return spnoise(p.x, p.y, p.z, period.x, period.y, period.z);
     }
 
-    public static final float spnoise(Point3 p, float t, Vector3 pperiod, float tperiod) {
+    public static final float spnoise(Vector3 p, float t, Vector3 pperiod, float tperiod) {
         return spnoise(p.x, p.y, p.z, t, pperiod.x, pperiod.y, pperiod.z, tperiod);
     }
 

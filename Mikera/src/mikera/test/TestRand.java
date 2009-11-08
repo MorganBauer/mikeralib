@@ -44,5 +44,7 @@ public class TestRand {
 	@Test public void testXORShoft() {
 		long l=Rand.xorShift64(1L);
 		assertTrue(l!=1);
+		
+		assertTrue(Rand.nextLong()!=0); // should never produce 0
 	}
 }

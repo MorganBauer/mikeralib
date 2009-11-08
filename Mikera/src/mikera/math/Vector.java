@@ -10,7 +10,7 @@ import mikera.util.*;
  * @author Mike
  *
  */
-public final class Vector implements Cloneable, Serializable {
+public final class Vector extends BaseVector {
 	private static final long serialVersionUID = -265007091119573847L;
 
 	public float[] data;
@@ -328,5 +328,9 @@ public final class Vector implements Cloneable, Serializable {
 		for (int i=0; i<l; i++) {
 			data[i]=v;
 		}
+	}
+
+	public float get(int i) {
+		return data[i];
 	}
 }

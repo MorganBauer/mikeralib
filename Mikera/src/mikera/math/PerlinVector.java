@@ -33,15 +33,15 @@ public class PerlinVector {
         return new Vector3(PerlinScalar.snoise(x + P1x, y + P1y, z + P1z, t), PerlinScalar.snoise(x + P2x, y + P2y, z + P2z, t), PerlinScalar.snoise(x + P3x, y + P3y, z + P3z, t));
     }
 
-    public static final Vector3 snoise(Point2 p) {
+    public static final Vector3 snoise(Vector2 p) {
         return snoise(p.x, p.y);
     }
 
-    public static final Vector3 snoise(Point3 p) {
+    public static final Vector3 snoise(Vector3 p) {
         return snoise(p.x, p.y, p.z);
     }
 
-    public static final Vector3 snoise(Point3 p, float t) {
+    public static final Vector3 snoise(Vector3 p, float t) {
         return snoise(p.x, p.y, p.z, t);
     }
 
@@ -61,15 +61,15 @@ public class PerlinVector {
         return new Vector3(PerlinScalar.noise(x + P1x, y + P1y, z + P1z, t), PerlinScalar.noise(x + P2x, y + P2y, z + P2z, t), PerlinScalar.noise(x + P3x, y + P3y, z + P3z, t));
     }
 
-    public static final Vector3 noise(Point2 p) {
+    public static final Vector3 noise(Vector2 p) {
         return noise(p.x, p.y);
     }
 
-    public static final Vector3 noise(Point3 p) {
+    public static final Vector3 noise(Vector3 p) {
         return noise(p.x, p.y, p.z);
     }
 
-    public static final Vector3 noise(Point3 p, float t) {
+    public static final Vector3 noise(Vector3 p, float t) {
         return noise(p.x, p.y, p.z, t);
     }
 
@@ -89,15 +89,15 @@ public class PerlinVector {
         return new Vector3(PerlinScalar.pnoise(x + P1x, y + P1y, z + P1z, t, w, h, d, p), PerlinScalar.pnoise(x + P2x, y + P2y, z + P2z, t, w, h, d, p), PerlinScalar.pnoise(x + P3x, y + P3y, z + P3z, t, w, h, d, p));
     }
 
-    public static final Vector3 pnoise(Point2 p, float periodx, float periody) {
+    public static final Vector3 pnoise(Vector2 p, float periodx, float periody) {
         return pnoise(p.x, p.y, periodx, periody);
     }
 
-    public static final Vector3 pnoise(Point3 p, Vector3 period) {
+    public static final Vector3 pnoise(Vector3 p, Vector3 period) {
         return pnoise(p.x, p.y, p.z, period.x, period.y, period.z);
     }
 
-    public static final Vector3 pnoise(Point3 p, float t, Vector3 pperiod, float tperiod) {
+    public static final Vector3 pnoise(Vector3 p, float t, Vector3 pperiod, float tperiod) {
         return pnoise(p.x, p.y, p.z, t, pperiod.x, pperiod.y, pperiod.z, tperiod);
     }
 
@@ -117,15 +117,15 @@ public class PerlinVector {
         return new Vector3(PerlinScalar.spnoise(x + P1x, y + P1y, z + P1z, t, w, h, d, p), PerlinScalar.spnoise(x + P2x, y + P2y, z + P2z, t, w, h, d, p), PerlinScalar.spnoise(x + P3x, y + P3y, z + P3z, t, w, h, d, p));
     }
 
-    public static final Vector3 spnoise(Point2 p, float periodx, float periody) {
+    public static final Vector3 spnoise(Vector2 p, float periodx, float periody) {
         return spnoise(p.x, p.y, periodx, periody);
     }
 
-    public static final Vector3 spnoise(Point3 p, Vector3 period) {
+    public static final Vector3 spnoise(Vector3 p, Vector3 period) {
         return spnoise(p.x, p.y, p.z, period.x, period.y, period.z);
     }
 
-    public static final Vector3 spnoise(Point3 p, float t, Vector3 pperiod, float tperiod) {
+    public static final Vector3 spnoise(Vector3 p, float t, Vector3 pperiod, float tperiod) {
         return spnoise(p.x, p.y, p.z, t, pperiod.x, pperiod.y, pperiod.z, tperiod);
     }
 }

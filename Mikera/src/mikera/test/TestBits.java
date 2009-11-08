@@ -34,6 +34,14 @@ public class TestBits {
 
 	}
 	
+	@Test public void testSignExtend() {
+		assertEquals(-1,Bits.signExtend(1,1));
+		assertEquals(1,Bits.signExtend(1,2));
+		assertEquals(-1,Bits.signExtend(3,2));
+		assertEquals(-2,Bits.signExtend(2,2));
+
+	}
+	
 	@Test public void testTrailingZeros() {
 		assertEquals(0,Bits.countTrailingZeros(0x1L));
 		assertEquals(1,Bits.countTrailingZeros(2));

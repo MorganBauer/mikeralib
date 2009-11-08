@@ -19,10 +19,15 @@ public class TestGrid {
 	}
 	
 	public void testGrid(Grid<Integer> g) {
+		testAllNull(g);
 		testEmptyGrid(g);
 		testSet(g);
 		testSetBlock(g);
 		testVisitBlock(g);
+		testPaste(g);
+		
+		// finally check all clear
+		testAllNull(g);
 	}
 	
 	public void testEmptyGrid(Grid<Integer> g) {
@@ -61,6 +66,7 @@ public class TestGrid {
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(2,(int)g.get(0, 0, 0));
 		assertEquals(2,(int)g.get(-1, -1, -1));
+		assertEquals(null,g.get(-6, -6, -6));
 
 		g.setBlock(-2,-2,-2,2,2,2,null);
 		assertEquals(2,(int)g.get(-3, -3, -3));
@@ -69,7 +75,40 @@ public class TestGrid {
 			
 		g.clear();
 	}
+	
+	public void testAllNull(Grid<Integer> g) {
+		assertEquals(0,g.countNonNull());
+		assertNull(g.get(0, 0, 0));
+		
+	}
 
+	
+	public void testPaste(Grid<Integer> g) {
+		ArrayGrid<Integer> ag=new ArrayGrid<Integer>();
+		ag.setBlock(0, 0, 0, 5,5, 5, 1);
+		assertEquals(216,ag.dataLength());
+		
+		g.paste(ag);	
+		g.paste(ag,-2,-2,-2);
+		
+		assertNull(g.get(-3, -3, 3));
+		assertEquals(1,(int)g.get(-2, -2, -2));
+		assertEquals(1,(int)g.get(5, 5, 5));
+		assertNull(g.get(6, 6, 6));
+		assertEquals(216+216-64,g.countNonNull());
+		
+		ag.clear();
+		ag.paste(g);
+		assertEquals(512,ag.dataLength());
+		assertNull(ag.get(-3, -3, 3));
+		assertEquals(1,(int)ag.get(-2, -2, -2));
+		assertEquals(1,(int)ag.get(5, 5, 5));
+		assertNull(ag.get(6, 6, 6));
+		assertEquals(216+216-64,ag.countNonNull());
+
+		
+		g.clear();
+	}
 	
 	public void testVisitBlock(Grid<Integer> g) {
 		BCounter bc=new BCounter();
