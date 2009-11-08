@@ -8,7 +8,7 @@ import mikera.util.*;
  * @author Mike
  *
  */
-public final class Matrix implements VectorFunction {
+public final class Matrix extends VectorFunction {
 	public float[] data;
 	private int rows=0;
 	private int columns=0;

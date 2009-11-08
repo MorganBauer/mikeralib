@@ -1,6 +1,6 @@
 package mikera.engine;
 
-public abstract class BaseGrid<T> implements Grid<T> {
+public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 	
 	public void set(Grid<T> o) {
 		clear();

@@ -25,7 +25,7 @@ public class PerformanceTest {
 		long atime=System.nanoTime()-astart;
 		
 		long bstart=System.nanoTime();
-		for (int i=0; i<PRERUNS; i++) {
+		for (int i=0; i<RUNS; i++) {
 			b();
 		}		
 		long btime=System.nanoTime()-bstart;
@@ -56,8 +56,8 @@ public class PerformanceTest {
 	}
 	
 	private static void b() {
-		o1.set(0,0,0,1);
-		o1.get(0,0,0);
+		g2.set(0,0,0,1);
+		g2.get(0,0,0);
 		//testGrid(g2);
 	}
 	

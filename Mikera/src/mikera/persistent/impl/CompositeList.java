@@ -65,8 +65,8 @@ public class CompositeList<T> extends BasePersistentList<T> {
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size)) return this;
 		int fs=front.size();
-		if (toIndex<=fs) return front.subList(fromIndex, toIndex);
-		if (fromIndex>=fs) return back.subList(fromIndex-fs, toIndex-fs);
+		if (toIndex<=fs) return (PersistentList<T>) front.subList(fromIndex, toIndex);
+		if (fromIndex>=fs) return (PersistentList<T>) back.subList(fromIndex-fs, toIndex-fs);
 		return concat(front.subList(fromIndex, fs),back.subList(0, toIndex-fs));
 	}
 	

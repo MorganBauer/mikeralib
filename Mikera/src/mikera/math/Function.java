@@ -1,5 +1,5 @@
 package mikera.math;
 
-public interface Function<A, B> {
-	public void calculate(A input, B output);
+public abstract class Function<A, B> {
+	public abstract void calculate(A input, B output);
 }

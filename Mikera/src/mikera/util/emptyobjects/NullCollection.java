@@ -4,7 +4,7 @@ import java.util.*;
 
 import mikera.persistent.*;
 
-public class NullCollection<T> implements Collection<T>, PersistentCollection<T> {
+public class NullCollection<T> extends PersistentCollection<T> {
 
 	private static final long serialVersionUID = 2925953822669265599L;
 

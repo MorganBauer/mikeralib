@@ -12,74 +12,20 @@ import mikera.util.Tools;
 import mikera.util.emptyobjects.NullList;
 
 @SuppressWarnings("serial")
-public abstract class BasePersistentList<T> extends BasePersistentCollection<T> implements PersistentList<T> {
+public abstract class BasePersistentList<T> extends PersistentList<T> {
 
 	public BasePersistentList<T> clone() {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public PersistentList<T> append(T value) {
-		return ListFactory.concat(this,Singleton.create(value));
-	}
-
-	public PersistentList<T> append(PersistentList<T> values) {
-		return ListFactory.concat(this,values);
-	}
-
 	public int end() {
 		throw new UnsupportedOperationException();
 	}
-
-
-
-	public void add(int index, T element) {
-		throw new UnsupportedOperationException();
-	}
-
-
-
-	public boolean addAll(int index, Collection<? extends T> c) {
-		throw new UnsupportedOperationException();
-	}
-
-
-
+	
+	@SuppressWarnings("unchecked")
 	public boolean contains(Object o) {
-		return indexOf(o)>=0;
+		return indexOf((T)o)>=0;
 	}
-
-
-	
-
-	public int indexOf(Object o) {
-		int i=0;
-		for (T it: this) {
-			if (it!=null) {
-				if (it.equals(o)) return i;
-			} else {
-				if (o==null) return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-	
-	public int indexOf(Object o, int start) {
-		int i=start;
-		while(i<size()) {
-			T it=get(i);
-			if (it!=null) {
-				if (it.equals(o)) return i;
-			} else {
-				if (o==null) return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-
-
 
 	public Iterator<T> iterator() {
 		return new BaseIterator();
@@ -149,14 +95,6 @@ public abstract class BasePersistentList<T> extends BasePersistentCollection<T> 
 	}
 
 
-
-	public T set(int index, T element) {
-		throw new UnsupportedOperationException();
-	}
-
-	public PersistentList<T> subList(int fromIndex, int toIndex) {
-		return ListFactory.create(this,fromIndex,toIndex);
-	}
 	
 	public PersistentList<T> front() {
 		return subList(0,size()/2);
@@ -201,20 +139,7 @@ public abstract class BasePersistentList<T> extends BasePersistentCollection<T> 
 		return true;
 	}
 
-	public PersistentList<T> delete(int index) {
-		return delete(index,index+1);
-	}
 
-	public PersistentList<T> delete(int start, int end) {
-		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
-		if (start>=end) {
-			if (start>end) throw new IllegalArgumentException();
-			return this;
-		}
-		if (start==0) return subList(end,size());
-		if (end==size()) return subList(0,start);
-		return subList(0,start).append(subList(end,size()));
-	}
 
 	public PersistentList<T> deleteFirst(T value) {
 		int i=indexOf(value);
@@ -251,19 +176,5 @@ public abstract class BasePersistentList<T> extends BasePersistentCollection<T> 
 		return 0;
 	}
 
-	public PersistentList<T> update(int index, T value) {
-		return subList(0,index).append(value).append(subList(index+1,size()));
-	}
 
-	public PersistentList<T> insert(int index, T value) {
-		return subList(0,index).append(value).append(subList(index,size()));
-	}
-
-	public PersistentList<T> insert(int index, Collection<T> values) {
-		if (values instanceof PersistentList<?>) {
-			return subList(0,index).append((PersistentList<T>)values).append(subList(index,size()));
-		}
-		PersistentList<T> pl=ListFactory.create(values);
-		return subList(0,index).append(pl).append(subList(index,size()));
-	}
 }

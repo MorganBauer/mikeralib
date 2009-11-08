@@ -1,6 +1,6 @@
 package mikera.math;
 
-public abstract class BaseVectorFunction implements VectorFunction {
+public abstract class BaseVectorFunction extends VectorFunction {
 	int inputDimensions=0;
 	int outputDimensions=1;
 	

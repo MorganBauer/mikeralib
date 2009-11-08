@@ -1,23 +1,23 @@
 package mikera.engine;
 
-public interface Grid<T> {
-	public void set(int x, int y, int z, T value);
+public abstract class Grid<T> {
+	public abstract void set(int x, int y, int z, T value);
 	
-	public T get(int x, int y, int z);
+	public abstract T get(int x, int y, int z);
 	
-	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
+	public abstract void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
 
-	public int countNodes();
+	public abstract int countNodes();
 	
-	public int countNonNull();
+	public abstract int countNonNull();
 	
-	public void visitBlocks(BlockVisitor<T> bf);
+	public abstract void visitBlocks(BlockVisitor<T> bf);
 	
-	public void clear();
+	public abstract void clear();
 	
-	public void paste(Grid<T> t);
+	public abstract void paste(Grid<T> t);
 	
-	public void paste(Grid<T> t, final int dx, final int dy, final int dz);
+	public abstract void paste(Grid<T> t, final int dx, final int dy, final int dz);
 	
-	public void set(Grid<T> o);
+	public abstract void set(Grid<T> o);
 }

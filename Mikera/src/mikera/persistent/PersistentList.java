@@ -4,47 +4,113 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-public interface PersistentList<T> extends PersistentCollection<T>, List<T>, Comparable<PersistentList<T>> {
-	public T get(int i);
+import mikera.persistent.impl.Singleton;
+
+public abstract class PersistentList<T> extends PersistentCollection<T> implements List<T>, Comparable<PersistentList<T>> {
+	private static final long serialVersionUID = -7221238938265002290L;
+
+	public abstract T get(int i);
 	
-	public int indexOf(Object value, int start);
-	
-	public PersistentList<T> append(T value);
+	public void add(int index, T element) {
+		throw new UnsupportedOperationException();
+	}
 
-	public PersistentList<T> append(PersistentList<T> values);
+	public boolean addAll(int index, Collection<? extends T> c) {
+		throw new UnsupportedOperationException();
+	}
 
-	public PersistentList<T> update(int index, T value);
 
-	public PersistentList<T> insert(int index, T value);
-
-	public PersistentList<T> insert(int index, Collection<T> values);
-
-	public PersistentList<T> delete(int index);
-	
-	public PersistentList<T> delete(int start, int end);
-
-	public PersistentList<T> deleteAll(Collection<T> values);
-	
-	public PersistentList<T> deleteFirst(T value);
-
-	public <V> V[] toArray(V[] a);
-
-	public <V> V[] toArray(V[] a, int offset);
-
-	public PersistentList<T> subList(int fromIndex, int toIndex);
 	
 	/**
 	 * Returns the front part of the list. Not guaranteed to be exactly half,
 	 * but intended to be as balanced as possible
 	 * @return
 	 */
-	public PersistentList<T> front();
+	public abstract PersistentList<T> front();
 
 	/**
 	 * Returns the back part of the list. Not guaranteed to be exactly half,
 	 * but intended to be as balanced as possible
 	 * @return
 	 */
-	public PersistentList<T> back();
+	public abstract PersistentList<T> back();
+
+
+	public T set(int index, T element) {
+		throw new UnsupportedOperationException();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> append(T value) {
+		return ListFactory.concat(this,Singleton.create(value));
+	}
+
+	public PersistentList<T> append(PersistentList<T> values) {
+		return ListFactory.concat(this,values);
+	}
+	
+	public int indexOf(Object o) {
+		int i=0;
+		for (T it: this) {
+			if (it!=null) {
+				if (it.equals(o)) return i;
+			} else {
+				if (o==null) return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	
+	public int indexOf(Object o, int start) {
+		int i=start;
+		while(i<size()) {
+			T it=get(i);
+			if (it!=null) {
+				if (it.equals(o)) return i;
+			} else {
+				if (o==null) return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	
+	public PersistentList<T> delete(int start, int end) {
+		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
+		if (start>=end) {
+			if (start>end) throw new IllegalArgumentException();
+			return this;
+		}
+		if (start==0) return subList(end,size());
+		if (end==size()) return subList(0,start);
+		return subList(0,start).append(subList(end,size()));
+	}
+
+
+	public PersistentList<T> subList(int fromIndex, int toIndex) {
+		return ListFactory.create(this,fromIndex,toIndex);
+	}
+
+	public PersistentList<T> update(int index, T value) {
+		return subList(0,index).append(value).append(subList(index+1,size()));
+	}
+
+	public PersistentList<T> insert(int index, T value) {
+		return subList(0,index).append(value).append(subList(index,size()));
+	}
+
+	public PersistentList<T> insert(int index, Collection<T> values) {
+		if (values instanceof PersistentList<?>) {
+			return subList(0,index).append((PersistentList<T>)values).append(subList(index,size()));
+		}
+		PersistentList<T> pl=ListFactory.create(values);
+		return subList(0,index).append(pl).append(subList(index,size()));
+	}
+	
+	public PersistentList<T> delete(int index) {
+		return delete(index,index+1);
+	}
+
 
 }

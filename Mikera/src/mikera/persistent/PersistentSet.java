@@ -2,6 +2,6 @@ package mikera.persistent;
 
 import java.util.Set;
 
-public interface PersistentSet<T> extends Set<T>, PersistentCollection<T> {
+public abstract class PersistentSet<T> extends PersistentCollection<T> implements Set<T> {
 
 }

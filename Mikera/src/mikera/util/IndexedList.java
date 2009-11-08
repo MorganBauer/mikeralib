@@ -26,7 +26,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	private K[] keys=(K[])new Comparable[INITIAL_SIZE];
 	
 	@SuppressWarnings("unchecked")
-	private V[] values=(V[])new Comparable[INITIAL_SIZE];
+	private V[] values=(V[])new Object[INITIAL_SIZE];
 	
 	private int count=0;
 	

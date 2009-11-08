@@ -12,7 +12,7 @@ import mikera.persistent.PersistentSet;
  *
  * @param <T>
  */
-public final class Singleton<T> extends BasePersistentList<T> implements PersistentSet<T>{
+public final class Singleton<T> extends BasePersistentList<T> {
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	

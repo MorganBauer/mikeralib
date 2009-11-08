@@ -6,7 +6,7 @@ import mikera.persistent.*;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.Singleton;
 
-public final class NullList<T> extends NullCollection<T> implements PersistentList<T> {
+public final class NullList<T> extends PersistentList<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 
@@ -136,6 +136,16 @@ public final class NullList<T> extends NullCollection<T> implements PersistentLi
 	public PersistentList<T> insert(int index, Collection<T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return ListFactory.create(values);
+	}
+
+	@Override
+	public int size() {
+		return 0;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Iterator<T> iterator() {
+		return (Iterator<T>) NullIterator.INSTANCE;
 	}
 
 }

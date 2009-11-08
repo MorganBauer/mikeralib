@@ -12,7 +12,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike Anderson
  *
  */
-public class ArrayGrid<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
+public class ArrayGrid<T> extends BaseGrid<T> {
 	// base coordinates
 	private int gx;
 	private int gy;

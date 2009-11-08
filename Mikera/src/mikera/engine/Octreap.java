@@ -18,7 +18,7 @@ import java.util.*;
  *
  * @param <T> type of object to store in each cell
  */
-public final class Octreap<T> extends BaseGrid<T> implements Cloneable, Grid<T> {
+public final class Octreap<T> extends BaseGrid<T> {
 	private static final int BITS=20;
 	private static final int BITS_POWER2=1<<BITS;
 	private static final int BITS_MASK=BITS_POWER2-1;

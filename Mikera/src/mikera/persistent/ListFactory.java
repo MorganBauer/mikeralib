@@ -58,7 +58,7 @@ public class ListFactory<T> {
 		// use sublist if possible
 		if (source instanceof PersistentList) {
 			if (n==maxSize) return (PersistentList)source;
-			return ((PersistentList)source).subList(fromIndex, toIndex);
+			return (PersistentList<T>) ((PersistentList<T>)source).subList(fromIndex, toIndex);
 		}
 		
 		if (n==1) return Singleton.create(source.get(fromIndex));

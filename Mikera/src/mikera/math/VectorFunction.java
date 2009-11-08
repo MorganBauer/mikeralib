@@ -1,7 +1,7 @@
 package mikera.math;
 
-public interface VectorFunction extends Function<Vector,Vector> {
-	public int inputDimensions();
+public abstract class VectorFunction extends Function<Vector,Vector> {
+	public abstract int inputDimensions();
 	
-	public int outputDimensions();
+	public abstract int outputDimensions();
 }
