@@ -73,6 +73,14 @@ public final class Rand {
 		}
 	}
 	
+	public static boolean chance(double d) {
+		return Rand.nextDouble()<=d;
+	}
+	
+	public static boolean chance(float d) {
+		return Rand.nextFloat()<=d;
+	}
+	
 	public static java.util.Random getGenerator() {
 		return new MikeraRandom();
 	}
