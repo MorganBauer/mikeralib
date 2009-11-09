@@ -1,8 +1,8 @@
 package mikera.persistent;
 
-import java.util.*;
-
+import mikera.persistent.impl.BasePersistentSet;
 import mikera.util.Arrays;
+import java.util.*;
 import mikera.util.HashCache;
 
 /**
@@ -13,7 +13,7 @@ import mikera.util.HashCache;
  * @author Mike
  *
  */
-public final class IntSet extends PersistentSet<Integer> {
+public final class IntSet extends BasePersistentSet<Integer> {
 
 	private static final long serialVersionUID = 2677550392326589873L;
 	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
@@ -89,11 +89,19 @@ public final class IntSet extends PersistentSet<Integer> {
 		if ((is!=null)&&(is.size()==1)&&(is.data[0]==value)) return is;
 		return createLocal(new int[] {value});
 	}
-	
-
 
 	public static IntSet create(int[] data) {
 		return create(data,0,data.length);
+	}
+	
+	public static IntSet create(Set<Integer> data) {
+		int[] idata=new int[data.size()];
+		int i=0;
+		for (Integer it: data) {
+			idata[i++]=it.intValue();
+		}
+		java.util.Arrays.sort(idata);
+		return new IntSet(idata);
 	}
 
 	public static IntSet createMerged(IntSet a, IntSet b) {
@@ -241,15 +249,15 @@ public final class IntSet extends PersistentSet<Integer> {
 	 * Set<Integer> methods
 	 */
 	public boolean add(Integer e) {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public boolean addAll(Collection<? extends Integer> c) {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public void clear() {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public boolean contains(Object o) {
@@ -282,21 +290,21 @@ public final class IntSet extends PersistentSet<Integer> {
 			}
 
 			public void remove() {
-				throw new Error("IntSet is Immutable");
+				throw new UnsupportedOperationException("IntSet is Immutable");
 			}
 		};
 	}
 
 	public boolean remove(Object o) {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public boolean removeAll(Collection<?> c) {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public boolean retainAll(Collection<?> c) {
-		throw new Error("IntSet is Immutable");
+		throw new UnsupportedOperationException("IntSet is Immutable");
 	}
 
 	public int size() {
@@ -314,6 +322,11 @@ public final class IntSet extends PersistentSet<Integer> {
 
 	public <T> T[] toArray(T[] a) {
 		throw new Error("Not supported");
+	}
+
+	@Override
+	public PersistentSet<Integer> include(Integer value) {
+		return createMerged(this,value.intValue());
 	}
 
 

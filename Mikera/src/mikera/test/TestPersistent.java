@@ -3,6 +3,7 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.RepeatList;
@@ -16,7 +17,7 @@ import java.util.*;
 public class TestPersistent {
 	
 	@SuppressWarnings("unchecked")
-	@Test public void testTypes() {
+	@Test public void testListTypes() {
 		
 		PersistentList<Integer> pl=ListFactory.create(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
@@ -28,7 +29,59 @@ public class TestPersistent {
 		testPersistentList(Singleton.create("Hello persistent lists!"));
 		testPersistentList(RepeatList.create("Hello", 1000));
 		testPersistentList(CompositeList.create(pl));
+	}
+	
+	@Test public void testCollectionTypes() {
+		testPersistentCollection(NullList.INSTANCE);
+		testPersistentCollection(NullCollection.INSTANCE);
+		testPersistentCollection(NullSet.INSTANCE);
+	}
+	
+	public <T> void testPersistentCollection(PersistentCollection<T> a) {
+		testDelete(a);
+		testInclude(a);
+		testClone(a);
+		testSizing(a);
 
+	}
+	
+	public <T> void testSizing(PersistentCollection<T> a) {
+		assertTrue(a.size()>=0);
+	}
+	
+	public <T> void testDelete(PersistentCollection<T> a) {
+		if (a==null) throw new Error("!!!");
+		PersistentCollection<T> da=a.deleteAll(a);
+		assertEquals(0,da.size());
+		assertTrue(da.isEmpty());
+		assertEquals(0,da.hashCode());
+	}
+	
+	public <T> void testClone(PersistentCollection<T> a) {
+		PersistentCollection<T> ca=a.clone();
+		assertTrue(ca.equals(a));
+		assertTrue(ca.hashCode()==a.hashCode());
+		assertTrue(ca.getClass()==a.getClass());
+		//assertTrue(ca!=a);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void testInclude(PersistentCollection<T> a) {
+		T[] ar=(T[])a.toArray();
+		if (ar.length>0) {
+			T v=ar[Rand.r(ar.length)];
+			assertTrue(a.contains(v));
+			
+			PersistentCollection<T> ad=a.deleteAll(v);
+			assertFalse(ad.contains(v));
+			
+			PersistentCollection<T> adi=ad.include(v);		
+			assertTrue(adi.contains(v));
+			assertTrue(adi.containsAll(a));
+
+			PersistentCollection<T> adii=adi.include(v);
+			assertEquals(adii,adi);
+		}
 	}
 	
 	public <T> void testPersistentList(PersistentList<T> a) {
@@ -40,6 +93,17 @@ public class TestPersistent {
 		testEquals(a);
 		testInserts(a);
 		testExceptions(a);
+		testPersistentCollection(a);
+		testFrontBack(a);
+
+	}
+
+	public <T> void testFrontBack(PersistentList<T> a) {
+		PersistentList<T> f=a.front();
+		PersistentList<T> b=a.back();
+		
+		assertEquals(a.size(),f.size()+b.size());
+		assertEquals(a,f.append(b));
 	}
 	
 	public <T> void testExceptions(PersistentList<T> a) {
@@ -76,6 +140,12 @@ public class TestPersistent {
 			a.delete(-4,-4);
 			fail();
 		} catch (Exception x) {/* OK */}
+
+		try {
+			// clear persistent object
+			a.clear();
+			if (a.size()>=0) fail();
+		} catch (UnsupportedOperationException x) {/* OK */}
 
 	}
 

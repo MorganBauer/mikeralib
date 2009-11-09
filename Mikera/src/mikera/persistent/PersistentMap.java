@@ -50,4 +50,39 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 
 	public abstract PersistentCollection<V> values();
 
+	@SuppressWarnings("unchecked")
+	public PersistentMap<K,V> clone() {
+		return (PersistentMap<K,V>)super.clone();
+	}
+	
+	
+	public PersistentMap<K, V> delete(K key) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
+
+	public PersistentMap<K, V> delete(Collection<K> key) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
+
+	public PersistentMap<K, V> delete(PersistentSet<K> key) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
+
+	public PersistentMap<K, V> include(K key, V value) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
+
+	public PersistentMap<K, V> include(Map<K, V> values) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
+
+	public PersistentMap<K, V> include(PersistentMap<K, V> values) {
+		// TODO Auto-generated method stub
+		throw new Error("Not yet implemented");
+	}
 }

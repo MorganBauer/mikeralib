@@ -3,6 +3,16 @@ package mikera.persistent.impl;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Implements an iterator that filters on a given predicate.
+ * 
+ * Concrete implementations should override the abstract 
+ * method filter()
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T>
+ */
 public abstract class FilteredIterator<T> implements Iterator<T> {
 	private Iterator<T> base; // belonging to us
 	private T next;

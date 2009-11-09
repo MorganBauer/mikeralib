@@ -14,6 +14,11 @@ public class ListFactory<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static <T> PersistentList<T> create(T value) {
+		return Singleton.create(value);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n==1) return Singleton.create(data[fromIndex]);
@@ -70,6 +75,10 @@ public class ListFactory<T> {
 
 		
 		return CompositeList.create(source, fromIndex, toIndex);
+	}
+
+	public static <T> PersistentList<T> concat(PersistentList<T> a, T v) {
+		return concat(a,ListFactory.create(v));
 	}
 	
 	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {

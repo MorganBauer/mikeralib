@@ -64,24 +64,6 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 		}
 		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public boolean equals(Object o) {
-		if (o instanceof List<?>) {
-			return equals((List<T>)o);
-		}
-		return super.equals(o);
-	}
-	
-	public boolean equals(List<T> pl) {
-		int size=size();
-		if (size!=pl.size()) return false;
-		for (int i=0; i<size; i++) {
-			if (!Tools.equalsWithNulls(get(i),pl.get(i))) return false;
-		}
-		return true;
-	}
-
 
 
 	public PersistentList<T> deleteFirst(T value) {

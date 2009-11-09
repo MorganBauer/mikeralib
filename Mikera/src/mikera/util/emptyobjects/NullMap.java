@@ -4,7 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public final class NullMap<K,V> implements Map<K, V>, Cloneable {
+import mikera.persistent.*;
+
+public final class NullMap<K,V> extends PersistentMap<K, V> {
+	private static final long serialVersionUID = 1717634837542733926L;
+
 	
 	@SuppressWarnings("unchecked")
 	public static final NullMap INSTANCE=new NullMap();
@@ -14,7 +18,6 @@ public final class NullMap<K,V> implements Map<K, V>, Cloneable {
 	}
 
 	public void clear() {
-		
 	}
 
 	public boolean containsKey(Object key) {
@@ -50,8 +53,8 @@ public final class NullMap<K,V> implements Map<K, V>, Cloneable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<V> values() {
-		return (Collection<V>) NullSet.INSTANCE;
+	public PersistentCollection<V> values() {
+		return (PersistentCollection<V>) NullSet.INSTANCE;
 	}
 
 	public void putAll(Map<? extends K, ? extends V> m) {
@@ -69,4 +72,6 @@ public final class NullMap<K,V> implements Map<K, V>, Cloneable {
 	public NullMap<K,V> clone() {
 		return this;
 	}
+
+
 }

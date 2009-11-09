@@ -22,26 +22,26 @@ public class Arrays {
 		data[b]=t;
 	}
 	
-	public static int[] deduplicate(int[] data) {
+	public static int[] deduplicate(int[] sortedData) {
 		int di=0;
 		int si=1;
-		while (si<data.length) {
-			int v=data[si];
-			if (data[di]==v) {
+		while (si<sortedData.length) {
+			int v=sortedData[si];
+			if (sortedData[di]==v) {
 				si++;
 			} else {
-				data[di+1]=v;
+				sortedData[di+1]=v;
 				di++;
 				si++;
 			}
 		}
 		di++;
-		if (di<data.length) {
+		if (di<sortedData.length) {
 			int[] ndata=new int[di];
-			System.arraycopy(data, 0, ndata, 0, di);
+			System.arraycopy(sortedData, 0, ndata, 0, di);
 			return ndata;
 		} else {
-			return data;
+			return sortedData;
 		}
 	}
 	

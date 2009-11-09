@@ -3,6 +3,7 @@ package mikera.util.emptyobjects;
 import java.util.*;
 
 import mikera.persistent.*;
+import mikera.persistent.impl.Singleton;
 
 public class NullCollection<T> extends PersistentCollection<T> {
 
@@ -80,5 +81,22 @@ public class NullCollection<T> extends PersistentCollection<T> {
 	
 	public PersistentCollection<T> clone() {
 		return this;
+	}
+
+	public PersistentCollection<T> include(T value) {
+		return ListFactory.create(value);
+	}
+	
+	public int hashCode() {
+		return 0;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object a) {
+		return ((a instanceof PersistentCollection<?>)&&((PersistentCollection<T>)a).isEmpty());
+	}
+	
+	public boolean equals(PersistentCollection<?> a) {
+		return (a!=null)&&a.isEmpty();
 	}
 }

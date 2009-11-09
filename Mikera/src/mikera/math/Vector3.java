@@ -3,7 +3,9 @@ package mikera.math;
 import mikera.util.Maths;
 
 public final class Vector3 extends BaseVector {
-    public float x;
+	private static final long serialVersionUID = 5710579313106988144L;
+
+	public float x;
     public float y;
     public float z;
 

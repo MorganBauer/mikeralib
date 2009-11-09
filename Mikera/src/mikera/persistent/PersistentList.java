@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import mikera.persistent.impl.Singleton;
+import mikera.util.Tools;
 
 public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
@@ -96,9 +97,8 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		throw new UnsupportedOperationException();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> append(T value) {
-		return ListFactory.concat(this,Singleton.create(value));
+		return ListFactory.concat(this,value);
 	}
 
 	public PersistentList<T> append(PersistentList<T> values) {
@@ -107,6 +107,18 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	
 	public PersistentList<T> append(Collection<T> values) {
 		return ListFactory.concat(this,ListFactory.create(values));
+	}
+	
+	public PersistentList<T> include(final T value) {
+		if (!contains(value)) {
+			return this.append(value);
+		} else {
+			return this;
+		}
+	}
+
+	public T remove(int index) {
+		throw new UnsupportedOperationException();
 	}
 	
 	public int indexOf(Object o) {
@@ -172,5 +184,24 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		return delete(index,index+1);
 	}
 
-
+	public PersistentList<T> clone() {
+		return (PersistentList<T>)super.clone();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof List<?>) {
+			return equals((List<T>)o);
+		}
+		return super.equals(o);
+	}
+	
+	public boolean equals(List<T> pl) {
+		int size=size();
+		if (size!=pl.size()) return false;
+		for (int i=0; i<size; i++) {
+			if (!Tools.equalsWithNulls(get(i),pl.get(i))) return false;
+		}
+		return true;
+	}
 }

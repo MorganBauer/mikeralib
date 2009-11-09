@@ -17,9 +17,8 @@ public final class NullList<T> extends PersistentList<T> {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> append(T value) {
-		return Singleton.create(value);
+		return ListFactory.create(value);
 	}
 
 	public PersistentList<T> append(PersistentList<T> value) {

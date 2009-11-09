@@ -13,11 +13,12 @@ import mikera.util.emptyobjects.NullList;
 
 
 public final class Tuple<T> extends BasePersistentList<T> {
-	
 	private static final long serialVersionUID = -3717695950215145009L;
 
 	private final T[] data;
 	
+	
+	// Empty Tuple for some special cases
 	@SuppressWarnings("unchecked")
 	static final Tuple EMPTY=new Tuple(new Object[0]);
 	
@@ -121,8 +122,11 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		if (fromIndex>=toIndex) {
-			if (fromIndex==toIndex) return EMPTY;
+			if (fromIndex==toIndex) return (PersistentList<T>) NullList.INSTANCE;
 			throw new IllegalArgumentException();
+		}
+		if (fromIndex+1==toIndex) {
+			return Singleton.create(data[fromIndex]);
 		}
 		return SubTuple.create(data, fromIndex, toIndex-fromIndex);
 	}

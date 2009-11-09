@@ -1,14 +1,22 @@
 package mikera.persistent.impl;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import mikera.persistent.PersistentCollection;
+import mikera.persistent.PersistentSet;
 import mikera.persistent.Text;
+import mikera.util.Tools;
 
 /**
- * Array based set implementation
+ * Array based immutable set implementation
+ * 
+ * Not great performance - since set membership testing requires
+ * full scan of array. Hence should only be used for small sets.
+ * 
  * 
  * @author Mike
  *
@@ -28,6 +36,13 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 			hs.add(source[i]);
 		}
 		return create(hs);
+	}
+	
+	@Override public boolean contains(Object o) {
+		for (T t : data) {
+			if (Tools.equalsWithNulls(t, o)) return true;
+		}
+		return false;
 	}
 	
 	private ArraySet(T[] newData) {
@@ -61,5 +76,17 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	}
 	
 	private static final long serialVersionUID = -3125683703717134995L;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public PersistentSet<T> include(T value) {
+		if (!contains(value)) {
+			T[] ndata=(T[])new Object[data.length+1];
+			ndata[data.length]=value;
+			return new ArraySet(ndata);
+		} else {
+			return this;
+		}
+	}
 
 }

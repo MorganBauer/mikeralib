@@ -18,11 +18,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 	
 	public boolean isEmpty() {
-		return size()>0;
-	}
-
-	public T remove(int index) {
-		throw new UnsupportedOperationException();
+		return size()==0;
 	}
 
 	public boolean removeAll(Collection<?> c) {
@@ -97,6 +93,16 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		};
 		return ListFactory.create(it);
 	}
+	
+	public PersistentCollection<T> deleteAll(final PersistentCollection<T> values) {
+		Iterator<T> it=new FilteredIterator<T>(iterator()) {
+			@Override
+			public boolean filter(Object value) {
+				return (!values.contains(value));
+			}		
+		};
+		return ListFactory.create(it);
+	}
 
 	public PersistentCollection<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
@@ -124,5 +130,15 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		}		
 		sb.append('}');
 		return sb.toString();
+	}
+	
+	public abstract PersistentCollection<T> include(final T value);
+	
+	public PersistentCollection<T> include(final Collection<T> values) {
+		PersistentCollection<T> ps=this;
+		for (T t: values) {
+			ps=ps.include(t);
+		}
+		return ps;
 	}
 }

@@ -2,6 +2,7 @@ package mikera.persistent.impl;
 
 import mikera.persistent.PersistentList;
 import mikera.persistent.PersistentSet;
+import mikera.util.emptyobjects.NullList;
 
 /**
  * Singleton instance
@@ -46,6 +47,6 @@ public final class Singleton<T> extends BasePersistentList<T> {
 
 	@SuppressWarnings("unchecked")
 	public PersistentList<T> back() {
-		return Tuple.EMPTY;
+		return (PersistentList<T>) NullList.INSTANCE;
 	}
 }

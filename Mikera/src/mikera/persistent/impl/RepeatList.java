@@ -1,6 +1,7 @@
 package mikera.persistent.impl;
 
 import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullList;
@@ -62,5 +63,14 @@ public class RepeatList<T> extends BasePersistentList<T> {
 			}
 		}
 		return super.append(values);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public PersistentList<T> deleteAll(final T v) {
+		if (Tools.equalsWithNulls(v,value)) {
+			return (PersistentList<T>) NullList.INSTANCE;
+		} else {
+			return this;
+		}
 	}
 }
