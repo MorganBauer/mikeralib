@@ -73,5 +73,14 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 		return this;
 	}
 
+	public PersistentMap<K, V> include(K key, V value) {
+		return PersistentHashMap.create(key,value);
+	}
+
+	@Override
+	public PersistentMap<K, V> delete(K key) {
+		return this;
+	}
+
 
 }

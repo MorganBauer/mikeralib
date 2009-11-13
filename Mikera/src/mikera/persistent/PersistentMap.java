@@ -56,33 +56,31 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 	
 	
-	public PersistentMap<K, V> delete(K key) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
+	public abstract PersistentMap<K, V> delete(K key);
+
+	public PersistentMap<K, V> delete(Collection<K> keys) {
+		PersistentMap<K, V> pm=this;
+		for (K k: keys) {
+			pm=pm.delete(k);
+		}
+		return pm;
 	}
 
-	public PersistentMap<K, V> delete(Collection<K> key) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
+	public PersistentMap<K, V> delete(PersistentSet<K> keys) {
+		return delete((Collection<K>) keys);
 	}
 
-	public PersistentMap<K, V> delete(PersistentSet<K> key) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
-	}
-
-	public PersistentMap<K, V> include(K key, V value) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
-	}
+	public abstract PersistentMap<K, V> include(K key, V value);
 
 	public PersistentMap<K, V> include(Map<K, V> values) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
+		PersistentMap<K, V> pm=this;
+		for (Map.Entry<K, V> entry:values.entrySet()) {
+			pm=pm.include(entry.getKey(),entry.getValue());
+		}
+		return pm;
 	}
 
 	public PersistentMap<K, V> include(PersistentMap<K, V> values) {
-		// TODO Auto-generated method stub
-		throw new Error("Not yet implemented");
+		return include((Map<K,V>) values);
 	}
 }
