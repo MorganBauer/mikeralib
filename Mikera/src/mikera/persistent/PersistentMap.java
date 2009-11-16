@@ -1,6 +1,7 @@
 package mikera.persistent;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,5 +83,17 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 
 	public PersistentMap<K, V> include(PersistentMap<K, V> values) {
 		return include((Map<K,V>) values);
+	}
+	
+	public HashMap<K,V> toHashMap() {
+		HashMap<K,V> hm=new HashMap<K,V>();
+		for (Map.Entry<K,V> ent: entrySet()) {
+			hm.put(ent.getKey(), ent.getValue());
+		}
+		return hm;
+	}
+
+	public void validate() {
+		
 	}
 }

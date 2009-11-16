@@ -17,8 +17,15 @@ import mikera.util.emptyobjects.*;
 import java.util.*;
 
 public class TestPersistentMap {
+	@Test public void testBitMap() {
+		assertEquals(2,PersistentHashMap.PHMBitMapNode.indexFromSlot(8, 0x00001111));
+		assertEquals(0,PersistentHashMap.PHMBitMapNode.indexFromSlot(8, 0x00001100));
+		
+		assertEquals(3,PersistentHashMap.PHMBitMapNode.slotFromHash(0x00170030,4));
+		assertEquals(1,PersistentHashMap.PHMBitMapNode.slotFromHash(0x00170030,20));
+	}
 	
-	@Test public void testMap() {
+	@Test public void testMaps() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		testMap(pm);
 	}
@@ -37,6 +44,8 @@ public class TestPersistentMap {
 		assertEquals(4,mm.size());
 	}
 	
+
+	
 	@Test public void testChanges() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		pm=pm.include(1, "Hello");
@@ -47,7 +56,9 @@ public class TestPersistentMap {
 		assertEquals("World",pm.get(2));
 		assertEquals(2,pm.size());
 		
+		pm.validate();
 		pm=pm.include(2, "Sonia");
+		pm.validate();
 		assertEquals("Hello",pm.get(1));
 		assertEquals("Sonia",pm.get(2));
 		assertEquals(2,pm.size());
@@ -64,6 +75,7 @@ public class TestPersistentMap {
 	}
 	
 	public void testMap(PersistentMap<Integer,String> pm) {
+		pm.validate();
 		testIterator(pm);
 		testRandomAdds(pm);
 	}
@@ -79,7 +91,7 @@ public class TestPersistentMap {
 	}
 	
 	public void testRandomAdds(PersistentMap<Integer,String> pm) {
-		pm=addRandomStuff(pm,100);
+		pm=addRandomStuff(pm,100,1000000);
 		int size=pm.size();
 		assertTrue(size>90);
 		assertEquals(size,pm.entrySet().size());
@@ -87,11 +99,18 @@ public class TestPersistentMap {
 		assertEquals(size,pm.values().size());	
 	}
 	
-	public PersistentMap<Integer,String> addRandomStuff(PersistentMap<Integer,String> pm, int n ) {
+	public PersistentMap<Integer,String> addRandomStuff(PersistentMap<Integer,String> pm, int n , int maxIndex ) {
 		for (int i=0; i<n; i++) {
-			pm=pm.include(Rand.nextInt(),Rand.nextString());
+			pm=pm.include(Rand.r(maxIndex),Rand.nextString());
 		}
 		return pm;
+	}
+	
+	@Test public void testManyChanges() {
+		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
+		pm=addRandomStuff(pm,1000,40);
+		assertEquals(40,pm.size());
+		testMap(pm);
 	}
 
 }

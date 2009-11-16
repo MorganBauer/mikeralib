@@ -8,6 +8,7 @@ import java.util.Set;
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
+import mikera.util.Bits;
 import mikera.util.Tools;
 
 /**
@@ -23,10 +24,16 @@ import mikera.util.Tools;
 public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private static final long serialVersionUID = -6862000512238861885L;
 
+	public static final int SHIFT_AMOUNT=4;
+	public static final int LOW_MASK=(1<<SHIFT_AMOUNT)-1;
+	public static final int DATA_SIZE=1<<SHIFT_AMOUNT;
+	
 	private PHMNode<K,V> root;
+	
+	
 
 	@SuppressWarnings("unchecked")
-	private static final PHMEntryList EMPTY_NODE_LIST=new PHMEntryList(new PHMEntry[0]);
+	private static final PHMNode EMPTY_NODE_LIST=new PHMNullList();
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashMap() {
@@ -50,7 +57,12 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}
 		return pm;
 	}
+
 	
+	protected static <K,V> int countEntries(PHMNode<K,V> node) {
+		if (node==null) return 0;
+		return node.size();
+	}
 	
 	private abstract static class PHMNode<K,V> extends PersistentObject {
 		/**
@@ -58,11 +70,15 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		 * @param key
 		 * @return Modified HashNode, or the same HashNode if key not found
 		 */
-		protected abstract PHMNode<K,V> delete(K key);
+		protected abstract PHMNode<K,V> delete(K key, int hash);
 
-		protected abstract PHMNode<K,V> include(K key, V value);
+		protected abstract PHMNode<K,V> include(K key, V value, int hash, int shift);
 		
-		protected abstract PHMEntry<K,V> getEntry(K key);
+		protected abstract PHMEntry<K,V> getEntry(K key, int hash);
+		
+		protected PHMEntry<K,V> getEntry(K key) {
+			return getEntry(key,key.hashCode());
+		}
 		
 		protected abstract PHMEntry<K,V> findNext(PHMEntrySetIterator<K,V> it);
 		
@@ -72,15 +88,362 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			return getEntry(key)!=null;
 		}
 
+		public abstract void validate();
 	}
+	
+	private static final class PHMFullNode<K,V> extends PHMNode<K,V> {
+		@SuppressWarnings("unchecked")
+		private PHMNode<K,V>[] data=new PHMNode[DATA_SIZE];
+		private int shift;
+		private int count;
+		
+		protected PHMFullNode(PHMNode<K,V>[] newData, int newShift) {
+			data=newData;
+			shift=newShift;
+			count=countEntries();
+		}
+		
+		private static final int slotFromHash(int hash, int shift) {
+			return (hash>>>shift)&LOW_MASK;
+		}
+
+		@Override
+		protected PHMNode<K, V> delete(K key, int hash) {
+			int slot=slotFromHash(hash,shift);
+			PHMNode<K,V> n=data[slot];
+			if (n==null) return this;
+			PHMNode<K,V> dn=n.delete(key, hash);
+			if (dn==n) return n;
+			return replace(slot,dn);
+		}
+		
+		protected PHMNode<K, V> replace(int i, PHMNode<K,V> node) {
+			// checks if rest of node is populated
+			for (int l=0; l<DATA_SIZE; l++) {
+				if ((l!=i)&&(data[l]!=null)) return replaceAsFullNode(i,node);
+			}
+			// otherwise just return the child node directly
+			return node;
+		}
+		
+		@SuppressWarnings("unchecked")
+		protected PHMNode<K, V> replaceAsFullNode(int i, PHMNode<K,V> node) {
+			PHMNode<K,V>[] newData=new PHMNode[DATA_SIZE];
+			System.arraycopy(data, 0, newData, 0, DATA_SIZE);
+			newData[i]=node;
+			return new PHMFullNode(newData,shift);
+		}
+		
+		@Override
+		protected PHMEntry<K, V> findNext(PHMEntrySetIterator<K, V> it) {
+			int i=slotFromHash(it.hash,shift);
+			PHMNode<K,V> n=data[i];
+			if (n!=null) {
+				PHMEntry<K, V> ent=n.findNext(it);
+				if (ent!=null) return ent;
+			}
+			i++;
+			while(i<DATA_SIZE) {
+				n=data[i];
+				if (n!=null) {
+					it.hash=(it.hash&((1<<shift)-1)) | ((i<<shift));
+					it.index=0;
+					return n.findNext(it);
+				}
+				i++;
+			}
+			return null;
+		}
+
+		@Override
+		protected PHMEntry<K, V> getEntry(K key, int hash) {
+			int i=slotFromHash(hash,shift);
+			PHMNode<K,V> n=data[i];
+			if (n!=null) return n.getEntry(key,hash);
+			return null;
+		}
+
+		@Override
+		protected PHMNode<K, V> include(K key, V value, int hash, int shift) {
+			int i=slotFromHash(hash,shift);
+			PHMNode<K,V> n=data[i];
+			if (n==null) return replaceAsFullNode(i,new PHMEntry<K,V>(key,value));
+			return replaceAsFullNode(i,n.include(key, value, hash, shift+SHIFT_AMOUNT));
+		}
+		
+		@SuppressWarnings("unchecked")
+		protected static <K,V> PHMFullNode<K,V> concat(PHMNode a, int ha, PHMNode b, int hb, int shift) {
+			PHMNode<K,V>[] nodes=new PHMNode[DATA_SIZE];
+			int ai=slotFromHash(ha,shift);
+			int bi=slotFromHash(hb,shift);
+			if (ai!=bi) {
+				nodes[ai]=a;
+				nodes[bi]=b;
+			} else {
+				nodes[ai]=concat(a,ha,b,hb,shift+SHIFT_AMOUNT);
+			}
+			PHMFullNode<K,V> fn=new PHMFullNode(nodes,shift);
+			return fn;
+		}
+
+		private int countEntries() {
+			int res=0;
+			for (int i=0; i<data.length; i++) {
+				PHMNode<K,V> n=data[i];
+				if (n!=null) res+=n.size();
+			}
+			return res;
+		}
+		
+		@Override
+		protected int size() {
+			return count;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public void validate() {
+			int count=0;
+			for (int i=0; i<DATA_SIZE; i++) {
+				PHMNode<K,V> n=data[i];
+				if (n!=null) {
+					count+=n.size();
+					if (n instanceof PHMFullNode<?,?>) {
+						PHMFullNode<K,V> pfn=(PHMFullNode)n;
+						if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
+					}
+					n.validate();
+				}
+			}
+			if (count!=size()) throw new Error();
+		}	
+	}
+	
+	public static final class PHMBitMapNode<K,V> extends PHMNode<K,V> {
+		private PHMNode<K,V>[] data;
+		private int shift;
+		private int count;
+		private int bitmap;
+		
+		protected PHMBitMapNode(PHMNode<K,V>[] newData, int newShift, int newBitmap) {
+			data=newData;
+			shift=newShift;
+			bitmap=newBitmap;
+			count=countEntries();
+		}
+		
+		public static final int indexFromSlot(int slot, int bm) {
+			int m=1<<slot;
+			return Integer.bitCount(bm&(m-1));
+		}
+		
+		public static final int slotFromHash(int hash, int shift) {
+			int slot=(hash>>>shift)&LOW_MASK;
+			return slot;
+		}
+		
+		private final int indexFromHash(int hash, int shift) {
+			return indexFromSlot(slotFromHash(hash,shift),bitmap);
+		}
+		
+		private final int slotFromIndex(int index) {
+			int v=bitmap;
+			int m=Bits.lowestSetBit(v);
+			while (index-->0) {
+				v=v&(~m);
+				m=Bits.lowestSetBit(v);
+			}
+			return Integer.bitCount(m-1);
+		}
+
+		@Override
+		protected PHMNode<K, V> delete(K key, int hash) {
+			int i=indexFromHash(hash,shift);
+			PHMNode<K,V> n=data[i];
+			PHMNode<K,V> dn=n.delete(key, hash);
+			if (dn==n) return n;
+			if (dn==null) {
+				return remove(i);
+			}
+			return replace(i,dn);
+		}
+		
+		@SuppressWarnings("unchecked")
+		protected PHMNode<K, V> remove(int i) {
+			if (data.length==2) {
+				return data[1-i];
+			}
+			PHMNode<K,V>[] newData=new PHMNode[data.length-1];
+			System.arraycopy(data, 0, newData, 0, i);
+			System.arraycopy(data, i+1, newData, i, data.length-i-1);
+			return new PHMBitMapNode(newData,shift,bitmap&(~slotFromIndex(i)));
+		}
+		
+		@SuppressWarnings("unchecked")
+		protected PHMNode<K, V> replace(int i, PHMNode<K,V> node) {
+			PHMNode<K,V>[] newData=new PHMNode[data.length];
+			System.arraycopy(data, 0, newData, 0, data.length);
+			newData[i]=node;
+			return new PHMBitMapNode(newData,shift,bitmap);
+		}
+		
+		@Override
+		protected PHMEntry<K, V> findNext(PHMEntrySetIterator<K, V> it) {
+			int slot=slotFromHash(it.hash,shift);
+			int i=indexFromSlot(slot,bitmap);
+			PHMNode<K,V> n=data[i];
+			PHMEntry<K, V> ent=n.findNext(it);
+			if (ent!=null) return ent;
+			i++;
+			if(i<data.length) {
+				n=data[i];
+				it.hash=(it.hash&((1<<shift)-1)) | ((slotFromIndex(i)<<shift));
+				it.index=0;
+				return n.findNext(it);
+			}
+			return null;
+		}
+
+		@Override
+		protected PHMEntry<K, V> getEntry(K key, int hash) {
+			int i=indexFromHash(hash,shift);
+			if (i>=data.length) return null;
+			PHMNode<K,V> n=data[i];
+			if (n!=null) return n.getEntry(key,hash);
+			return null;
+		}
+
+		@Override
+		protected PHMNode<K, V> include(K key, V value, int hash, int shift) {
+			int s=slotFromHash(hash,shift);
+			int i=indexFromSlot(s,bitmap);
+			if (((1<<s)&bitmap)==0) {
+				return insertSlot(i,s,new PHMEntry<K,V>(key,value));
+			}
+			PHMNode<K,V> n=data[i];
+			return replace(i,n.include(key, value, hash, shift+SHIFT_AMOUNT));
+		}
+		
+		@SuppressWarnings("unchecked")
+		protected PHMNode<K, V> insertSlot(int i, int s, PHMNode<K,V> node) {
+			PHMNode<K,V>[] newData=new PHMNode[data.length+1];
+			System.arraycopy(data, 0, newData, 0, i);
+			System.arraycopy(data, i, newData, i+1, data.length-i);
+			newData[i]=node;
+			if (data.length==31) {
+				return new PHMFullNode(newData,shift);
+			} else {
+				return new PHMBitMapNode(newData,shift,bitmap|(1<<s));				
+			}
+		}
+		
+		
+		@SuppressWarnings("unchecked")
+		protected static <K,V> PHMBitMapNode<K,V> concat(PHMNode a, int ha, PHMNode b, int hb, int shift) {
+			PHMNode<K,V>[] nodes;
+			int sa=slotFromHash(ha,shift);
+			int sb=slotFromHash(hb,shift);
+			int bitmap=(1<<sa)|(1<<sb);
+			if (sa!=sb) {
+				nodes=new PHMNode[2];
+				int ia=indexFromSlot(sa,bitmap);
+				nodes[ia]=a;
+				nodes[1-ia]=b;
+			} else {
+				nodes=new PHMNode[1];
+				nodes[0]=concat(a,ha,b,hb,shift+SHIFT_AMOUNT);
+			}
+			PHMBitMapNode<K,V> fn=new PHMBitMapNode(nodes,shift,bitmap);
+			return fn;
+		}
+
+		private int countEntries() {
+			int res=0;
+			for (int i=0; i<data.length; i++) {
+				PHMNode<K,V> n=data[i];
+				res+=n.size();
+			}
+			return res;
+		}
+		
+		@Override
+		protected int size() {
+			return count;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public void validate() {
+			if (data.length!=Integer.bitCount(bitmap)) throw new Error();
+			int count=0;
+			for (int i=0; i<data.length; i++) {
+				if (i!=indexFromSlot(slotFromIndex(i),bitmap)) throw new Error();
+				PHMNode<K,V> n=data[i];
+				count+=n.size();
+				if (n instanceof PHMFullNode<?,?>) {
+					PHMFullNode<K,V> pfn=(PHMFullNode)n;
+					if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
+				}
+				n.validate();
+			}
+			if (count!=size()) throw new Error();
+		}	
+	}
+
+	/**
+	 * Null list implementation for starting root nodes
+	 * @author Mike
+	 *
+	 * @param <K>
+	 * @param <V>
+	 */
+	private static final class PHMNullList<K,V> extends PHMNode<K,V> {
+		@Override
+		protected PHMNode<K, V> delete(K key, int hash) {
+			return this;
+		}
+
+		@Override
+		protected PHMEntry<K, V> findNext(PHMEntrySetIterator<K, V> it) {
+			return null;
+		}
+
+		@Override
+		protected PHMEntry<K, V> getEntry(K key, int hash) {
+			return null;
+		}
+
+		@Override
+		protected PHMNode<K, V> include(K key, V value, int hash, int shift) {
+			return new PHMEntry<K,V>(key,value);
+		}
+
+		@Override
+		protected int size() {
+			return 0;
+		}
+
+		@Override
+		public void validate() {
+		}
+	}
+	
 	
 	private static final class PHMEntryList<K,V> extends PHMNode<K,V> {
 		private final PHMEntry<K,V>[] entries;
+		private final int hashCode;
 		
-		public PHMEntryList(PHMEntry<K,V>[] list) {
+		public PHMEntryList(PHMEntry<K,V>[] list, int hash) {
 			entries=list;
+			hashCode=hash;
 		}
 
+		@Override
+		protected PHMEntry<K, V> getEntry(K key, int hash) {
+			if (hash!=hashCode) return null;
+			return getEntry(key);
+		}
+		
 		@Override
 		protected PHMEntry<K, V> getEntry(K key) {
 			for (PHMEntry<K,V> ent : entries) {
@@ -91,7 +454,12 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		protected PHMNode<K, V> include(K key, V value) {
+		protected PHMNode<K, V> include(K key, V value, int hash, int shift) {
+			if (hashCode!=hash) {
+				return PHMBitMapNode.concat(this,hashCode,new PHMEntry<K,V>(key,value),hash,shift);
+
+			}
+			
 			int pos=-1;
 			for (int i=0; i<entries.length; i++) {
 				PHMEntry<K,V> ent=entries[i];
@@ -110,12 +478,13 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			} else {
 				ndata[olen]=new PHMEntry<K,V>(key,value);
 			}
-			return new PHMEntryList(ndata);
+			return new PHMEntryList(ndata,hash);
 		}
-
+		
 		@SuppressWarnings("unchecked")
 		@Override
-		protected PHMNode<K, V> delete(K key) {
+		protected PHMNode<K, V> delete(K key, int hash) {
+			if (hash!=hashCode) return this;
 			int pos=-1;
 			int len=entries.length;
 			for (int i=0; i<len; i++) {
@@ -131,7 +500,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMEntry<K,V>[] ndata=new PHMEntry[len-1];
 			System.arraycopy(entries,0,ndata,0,pos);
 			System.arraycopy(entries,pos+1,ndata,pos,len-pos-1);
-			return new PHMEntryList<K,V>(ndata);
+			return new PHMEntryList<K,V>(ndata,hash);
 		}
 
 		@Override
@@ -147,10 +516,17 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 				return entries[it.index++];
 			}
 		}
+
+		@Override
+		public void validate() {
+			for (PHMEntry<K,V> e:entries) {
+				e.validate();
+				if (hashCode!=e.key.hashCode()) throw new Error();
+			}
+		}
 	}
 	
 	private static final class PHMEntry<K,V> extends PHMNode<K,V> implements Map.Entry<K, V> {
-		private int hashCode;
 		private final K key;
 		private final V value;
 		
@@ -162,9 +538,6 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			return value;
 		}
 		
-		public int getHashCode() {
-			return hashCode;
-		}
 		
 		public V setValue(V value) {
 			throw new UnsupportedOperationException();
@@ -174,7 +547,6 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		public PHMEntry(K k, V v) {
 			key=k;
 			value=v;
-			hashCode=k.hashCode();
 		}
 		
 		public boolean matches(K key) {
@@ -191,23 +563,32 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			return null;
 		}
 		
+		@Override
+		protected PHMEntry<K, V> getEntry(K key, int hash) {
+			return getEntry(key);
+		}
+		
 		@SuppressWarnings("unchecked")
 		@Override
-		protected PHMNode<K, V> include(K newkey, V value) {
+		protected PHMNode<K, V> include(K newkey, V value, int hash, int shift) {
 			if (newkey.equals(this.key)) {
 				// replacement case
 				if (!matchesValue(value)) return new PHMEntry<K,V>(newkey,value);
 				return this;
 			}
-			// TODO: return HashNode with two entries 
-			return new PHMEntryList<K,V>(
+
+			int hashCode=this.key.hashCode();
+			if (hash==hashCode) return new PHMEntryList<K,V>(
 					new PHMEntry[] {
 							this,
-							new PHMEntry<K,V>(newkey,value)});
+							new PHMEntry<K,V>(newkey,value)},
+							hash);
+			
+			return PHMBitMapNode.concat(this,hashCode,new PHMEntry<K,V>(newkey,value),hash,shift);
 		}
 		
 		@Override
-		protected PHMNode<K, V> delete(K key) {
+		protected PHMNode<K, V> delete(K key, int hash) {
 			if (key.equals(key)) return null;
 			return this;
 		}
@@ -225,6 +606,11 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 				it.index=1;
 				return this;
 			}
+		}
+
+		@Override
+		public void validate() {
+			if (key==null) throw new Error();
 		}
 	}
 	
@@ -265,13 +651,13 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * @param <V>
 	 */
 	private static class PHMEntrySetIterator<K,V> implements Iterator<Map.Entry<K,V>> {
-		public PersistentHashMap<K,V> hashMap;
+		public PHMNode<K,V> root;
 		public PHMEntry<K,V> next;
-		public int hash=Integer.MIN_VALUE;
+		public int hash=0;
 		public int index=0;
 		
 		private PHMEntrySetIterator(PersistentHashMap<K,V> phm) {
-			hashMap=phm;
+			root=phm.root;
 			findNext();
 		}
 
@@ -286,7 +672,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}
 		
 		private void findNext() {
-			next=hashMap.root.findNext(this);
+			next=root.findNext(this);
 		}
 
 		public void remove() {
@@ -341,7 +727,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentMap<K, V> include(K key, V value) {
-		PHMNode<K,V> newRoot=root.include(key, value);
+		PHMNode<K,V> newRoot=root.include(key, value,key.hashCode(),0);
 		if (root==newRoot) return this;
 		return new PersistentHashMap(newRoot);
 	}
@@ -359,9 +745,12 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentMap<K, V> delete(K key) {
-		PHMNode<K,V> newRoot=root.delete(key);
+		PHMNode<K,V> newRoot=root.delete(key,key.hashCode());
 		if (root==newRoot) return this;
 		return new PersistentHashMap(newRoot);
 	}
-
+	
+	public void validate() {
+		root.validate();
+	}
 }
