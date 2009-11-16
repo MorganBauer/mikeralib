@@ -59,6 +59,13 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		return true;
 	}
 	
+	public boolean containsAny(Collection<?> c) {
+		for (Object it: c) {
+			if (contains(it)) return true;
+		}
+		return false;
+	}
+	
 	public Object[] toArray() {
 		Object[] os=new Object[size()];
 		int i=0;
@@ -140,5 +147,9 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 			ps=ps.include(t);
 		}
 		return ps;
+	}
+	
+	public PersistentCollection<T> include(final PersistentCollection<T> values) {
+		return include((Collection<T>)values);
 	}
 }

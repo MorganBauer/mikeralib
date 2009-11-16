@@ -3,7 +3,7 @@ package mikera.util.emptyobjects;
 import java.util.*;
 
 import mikera.persistent.*;
-import mikera.persistent.impl.Singleton;
+import mikera.persistent.impl.SingletonList;
 
 public class NullCollection<T> extends PersistentCollection<T> {
 

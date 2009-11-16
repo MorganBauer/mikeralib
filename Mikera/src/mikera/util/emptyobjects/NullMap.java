@@ -29,8 +29,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return (Set<java.util.Map.Entry<K, V>>) NullSet.INSTANCE;
+	public PersistentSet<java.util.Map.Entry<K, V>> entrySet() {
+		return (PersistentSet<java.util.Map.Entry<K, V>>) NullSet.INSTANCE;
 	}
 
 	public boolean isEmpty() {
@@ -38,8 +38,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<K> keySet() {
-		return (Set<K>) NullSet.INSTANCE;
+	public PersistentSet<K> keySet() {
+		return (PersistentSet<K>) NullSet.INSTANCE;
 	}
 
 	public V put(K key, V value) {

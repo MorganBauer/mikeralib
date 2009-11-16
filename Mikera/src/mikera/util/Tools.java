@@ -34,6 +34,22 @@ public class Tools {
 		return a.equals(b);
 	}
 	
+	public static <T> ArrayList<T> buildArrayList(Iterator<T> iterator) {
+		ArrayList<T> al=new ArrayList<T>();
+		while (iterator.hasNext()) {
+			al.add(iterator.next());
+		}
+		return al;
+	}
+	
+	public static <T> HashSet<T> buildHashSet(Iterator<T> iterator) {
+		HashSet<T> hs=new HashSet<T>();
+		while (iterator.hasNext()) {
+			hs.add(iterator.next());
+		}
+		return hs;
+	}
+	
 	/**
 	 * Compares two Comparable values, considering null as the lowest possible value 
 	 * 

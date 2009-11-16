@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import mikera.persistent.impl.FilteredIterator;
+import mikera.persistent.impl.SingletonList;
 import mikera.util.Tools;
 
 public abstract class PersistentSet<T> extends PersistentCollection<T> implements IPersistentSet<T> {
@@ -21,12 +22,23 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 		}
 		return ps;
 	}
+	
+	/**
+	 * Default implementation for include
+	 * Note: should be overridden if faster implementation is possible
+	 * @param values
+	 * @return
+	 */
+	public PersistentSet<T> include(final PersistentSet<T> values) {
+		return include((Collection<T>)values);
+	}
 
 	public PersistentSet<T> clone() {
 		return (PersistentSet<T>)super.clone();
 	}
 	
 	public PersistentSet<T> deleteAll(final T value) {
+		if (!contains(value)) return this;
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object testvalue) {
@@ -46,5 +58,16 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 			}		
 		};
 		return SetFactory.create(it);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if ((o instanceof PersistentSet<?>)) return equals((PersistentSet<T>)o);
+		return false;
+	}
+	
+	public boolean equals(PersistentSet<T> s) {
+		if (size()!=s.size()) return false;
+		return s.containsAll(this)&&(this.containsAll(s));
 	}
 }

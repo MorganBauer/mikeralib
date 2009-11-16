@@ -4,7 +4,7 @@ import java.util.*;
 
 import mikera.persistent.*;
 import mikera.persistent.impl.CompositeList;
-import mikera.persistent.impl.Singleton;
+import mikera.persistent.impl.SingletonList;
 
 public final class NullList<T> extends PersistentList<T> {
 	
@@ -129,7 +129,7 @@ public final class NullList<T> extends PersistentList<T> {
 	@SuppressWarnings("unchecked")
 	public PersistentList<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return Singleton.create(value);
+		return SingletonList.create(value);
 	}
 
 	public PersistentList<T> insert(int index, Collection<T> values) {

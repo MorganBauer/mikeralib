@@ -126,7 +126,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 			throw new IllegalArgumentException();
 		}
 		if (fromIndex+1==toIndex) {
-			return Singleton.create(data[fromIndex]);
+			return SingletonList.create(data[fromIndex]);
 		}
 		return SubTuple.create(data, fromIndex, toIndex-fromIndex);
 	}

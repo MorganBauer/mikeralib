@@ -2,13 +2,8 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import mikera.persistent.ListFactory;
-import mikera.persistent.PersistentCollection;
-import mikera.persistent.PersistentList;
-import mikera.persistent.impl.CompositeList;
-import mikera.persistent.impl.RepeatList;
-import mikera.persistent.impl.Singleton;
-import mikera.persistent.impl.Tuple;
+import mikera.persistent.*;
+import mikera.persistent.impl.*;
 import mikera.util.*;
 import mikera.util.emptyobjects.*;
 
@@ -17,8 +12,7 @@ import java.util.*;
 public class TestPersistent {
 	
 	@SuppressWarnings("unchecked")
-	@Test public void testListTypes() {
-		
+	@Test public void testListTypes() {	
 		PersistentList<Integer> pl=ListFactory.create(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
 		
@@ -26,15 +20,27 @@ public class TestPersistent {
 		testPersistentList(pl.subList(1, 4));
 		testPersistentList(NullList.INSTANCE);
 		testPersistentList(Tuple.create(new Integer[] {1,2,3,4,5}));
-		testPersistentList(Singleton.create("Hello persistent lists!"));
+		testPersistentList(SingletonList.create("Hello persistent lists!"));
 		testPersistentList(RepeatList.create("Hello", 1000));
 		testPersistentList(CompositeList.create(pl));
 	}
 	
 	@Test public void testCollectionTypes() {
-		testPersistentCollection(NullList.INSTANCE);
 		testPersistentCollection(NullCollection.INSTANCE);
-		testPersistentCollection(NullSet.INSTANCE);
+		testPersistentCollection(MapFactory.create(1, "Sonia").values());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test public void testSetTypes() {
+		testPersistentSet(SetFactory.create(new String[] {"a","b","c"}));
+		testPersistentSet(NullSet.INSTANCE);
+		testPersistentSet(SingletonSet.create("Bob"));
+		testPersistentSet(MapFactory.create(2, "Benhamma").keySet());
+	}
+	
+	public <T> void testPersistentSet(PersistentSet<T> a) {
+		testSetInclude(a);
+		testPersistentCollection(a);
 	}
 	
 	public <T> void testPersistentCollection(PersistentCollection<T> a) {
@@ -42,11 +48,27 @@ public class TestPersistent {
 		testInclude(a);
 		testClone(a);
 		testSizing(a);
-
+		testIterator(a);
 	}
 	
+	public <T> void testIterator(PersistentCollection<T> a) {
+		int i=0;
+		for (T t : a) {
+			assertTrue(a.contains(t));
+			i++;
+		}
+		assertEquals(a.size(),i);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public <T> void testSizing(PersistentCollection<T> a) {
 		assertTrue(a.size()>=0);
+		T[] output=(T[]) a.toArray();
+		assertEquals(a.size(),output.length);
+		
+		if (a.size()>0) {
+			assertTrue(a.contains(Rand.pick(output)));
+		}
 	}
 	
 	public <T> void testDelete(PersistentCollection<T> a) {
@@ -55,6 +77,15 @@ public class TestPersistent {
 		assertEquals(0,da.size());
 		assertTrue(da.isEmpty());
 		assertEquals(0,da.hashCode());
+		
+		int size=a.size();
+		if (size>0) {
+			T t=a.iterator().next();
+			PersistentCollection<T> dd=a.deleteAll(t);
+			assertTrue(dd.size()<size);
+			assertTrue(!dd.contains(t));
+			assertTrue(a.contains(t));
+		}
 	}
 	
 	public <T> void testClone(PersistentCollection<T> a) {
@@ -81,6 +112,14 @@ public class TestPersistent {
 
 			PersistentCollection<T> adii=adi.include(v);
 			assertEquals(adii,adi);
+		}
+	}
+	
+	public <T> void testSetInclude(PersistentSet<T> a) {
+		if (a.size()>0) {
+			PersistentSet<T> b=a.include(a.iterator().next());
+			assertTrue(b.size()==a.size());
+			assertTrue(b.equals(a));
 		}
 	}
 	

@@ -24,7 +24,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		return false;
 	}
 
-	public abstract Set<java.util.Map.Entry<K, V>> entrySet();
+	public abstract PersistentSet<java.util.Map.Entry<K, V>> entrySet();
 
 	public abstract V get(Object key);
 
@@ -32,7 +32,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		return (size()>0);
 	}
 
-	public abstract Set<K> keySet();
+	public abstract PersistentSet<K> keySet();
 
 	public V put(K arg0, V arg1) {
 		throw new UnsupportedOperationException();

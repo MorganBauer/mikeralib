@@ -10,6 +10,7 @@ import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentSet;
 import mikera.persistent.Text;
 import mikera.util.Tools;
+import mikera.util.emptyobjects.NullSet;
 
 /**
  * Array based immutable set implementation
@@ -28,6 +29,17 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> ArraySet<T> create(Set<T> source) {
 		return new ArraySet<T>((T[])source.toArray());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> ArraySet<T> create(PersistentSet<T> source) {
+		if (source instanceof ArraySet<?>) return (ArraySet)source;
+		return new ArraySet<T>((T[])source.toArray());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> ArraySet<T> create(T source) {
+		return new ArraySet<T>((T[])new Object[]{source});
 	}
 	
 	public static <T> ArraySet<T> create(T[] source) {
@@ -57,6 +69,13 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 		return data.length;
 	}
 	
+	private int indexOf(T value) {
+		for (int i=0; i<data.length; i++) {
+			if (Tools.equalsWithNulls(value,data[i])) return i;
+		}
+		return -1;
+	}
+	
 	private class ArraySetIterator<K> implements Iterator<K> {
 		private int pos=0;
 		
@@ -82,11 +101,28 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	public PersistentSet<T> include(T value) {
 		if (!contains(value)) {
 			T[] ndata=(T[])new Object[data.length+1];
+			System.arraycopy(data, 0, ndata, 0, data.length);
 			ndata[data.length]=value;
 			return new ArraySet(ndata);
 		} else {
 			return this;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PersistentSet<T> deleteAll(T value) {
+		int pos=indexOf(value);
+		if (pos<0) return this;
+		int size=data.length;
+		if (size<=2) {
+			if (size==2) return SingletonSet.create(data[1-pos]);
+			return (PersistentSet<T>) NullSet.INSTANCE;
+		}
+		T[] ndata=(T[])new Object[size-1];
+		System.arraycopy(data, 0, ndata, 0, pos);
+		System.arraycopy(data, pos+1, ndata, pos, size-pos-1);
+		return create(ndata);
 	}
 
 }

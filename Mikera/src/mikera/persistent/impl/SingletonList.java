@@ -5,23 +5,21 @@ import mikera.persistent.PersistentSet;
 import mikera.util.emptyobjects.NullList;
 
 /**
- * Singleton instance
- * 
- * Note: can be considered either as a list or a set
+ * Singleton list instance
  * 
  * @author Mike Anderson
  *
  * @param <T>
  */
-public final class Singleton<T> extends BasePersistentList<T> {
+public final class SingletonList<T> extends BasePersistentList<T> {
 
 	private static final long serialVersionUID = 8273587747838774580L;
 	
 	final T value;
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Singleton create(T object) {
-		return new Singleton<T>(object);
+	public static <T> SingletonList create(T object) {
+		return new SingletonList<T>(object);
 	}
 	
 	public int size() {
@@ -37,7 +35,7 @@ public final class Singleton<T> extends BasePersistentList<T> {
 		throw new IndexOutOfBoundsException();
 	}
 	
-	private Singleton(T object) {
+	private SingletonList(T object) {
 		value=object;
 	}
 	

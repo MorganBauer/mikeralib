@@ -1,5 +1,8 @@
 package mikera.util;
 
+import java.util.Collection;
+import java.util.List;
+
 public final class Rand {
 	/**
 	 * State for random number generation
@@ -246,5 +249,30 @@ public final class Rand {
 		return x * radiusFactor;
 		// could save and use the other value?
 		// double anotherGaussian = y * radiusFactor;
+	}
+
+	public static String nextString() {
+		char[] cs=new char[Rand.po(4)];
+		for (int i=0; i<cs.length; i++) cs[i]=Rand.nextChar();
+		return String.valueOf(cs);
+	}
+	
+	
+	public static <T> T pick(T[] ts) {
+		return ts[Rand.r(ts.length)];
+	}
+	
+	public static <T> T pick(List<T> ts) {
+		return ts.get(Rand.r(ts.size()));
+	}
+	
+	public static <T> T pick(Collection<T> ts) {
+		int n=ts.size();
+		if (n==0) throw new Error("Empty collection!");
+		int p=Rand.r(n);
+		for (T t: ts) {
+			if (p--==0) return t;
+		}
+		throw new Error("Shouldn't get here!");
 	}
 }

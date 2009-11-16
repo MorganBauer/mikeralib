@@ -5,10 +5,15 @@ import java.util.Collection;
 
 public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Serializable {
 
+	// include methods
+	
 	public PersistentCollection<T> include(final T value);
 	
 	public PersistentCollection<T> include(final Collection<T> values);
 
+	public PersistentCollection<T> include(final PersistentCollection<T> values);
+
+	// delete methods
 	
 	public PersistentCollection<T> deleteAll(final T value);
 	
@@ -21,4 +26,8 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 	public boolean contains(Object o);
 
 	public boolean containsAll(Collection<?> c);
+	
+	public boolean containsAny(Collection<?> c);
+	
+	public boolean isEmpty();
 }
