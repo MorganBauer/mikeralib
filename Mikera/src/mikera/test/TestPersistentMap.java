@@ -3,10 +3,13 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.persistent.ListFactory;
+import mikera.persistent.MapFactory;
 import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentHashMap;
 import mikera.persistent.PersistentList;
 import mikera.persistent.PersistentMap;
+import mikera.persistent.PersistentSet;
+import mikera.persistent.SetFactory;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.RepeatList;
 import mikera.persistent.impl.SingletonList;
@@ -17,7 +20,7 @@ import mikera.util.emptyobjects.*;
 import java.util.*;
 
 public class TestPersistentMap {
-	@Test public void testBitMap() {
+	@Test public void testBitMapFunctions() {
 		assertEquals(2,PersistentHashMap.PHMBitMapNode.indexFromSlot(8, 0x00001111));
 		assertEquals(0,PersistentHashMap.PHMBitMapNode.indexFromSlot(8, 0x00001100));
 		
@@ -28,6 +31,41 @@ public class TestPersistentMap {
 	@Test public void testMaps() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		testMap(pm);
+	}
+	
+	@Test public void testConvert() {
+		PersistentMap<Integer,String> phm=new PersistentHashMap<Integer,String>();
+
+		HashMap<Integer,String> hm=new HashMap<Integer,String>();
+		for (int i=0; i<100; i++) {
+			int key=Rand.r(100);
+			String value=Rand.nextString();
+			hm.put(key, value);
+			phm=phm.include(key,value);
+			
+			int delKey=Rand.r(100);
+			hm.remove(delKey);
+			phm=phm.delete(delKey);
+		}
+		testMap(phm);
+		
+		PersistentMap<Integer,String> pm=MapFactory.create(hm);
+		testMap(pm);
+		
+		HashMap<Integer,String> hm2=pm.toHashMap();
+		assertEquals(hm,hm2);
+		
+		PersistentSet<Integer> ks=SetFactory.create(hm.keySet());
+		PersistentSet<Integer> ks2=pm.keySet();
+		PersistentSet<Integer> ks3=phm.keySet();
+		assertEquals(ks,ks2);
+		assertEquals(ks,ks3);
+		
+		PersistentList<String> vs=ListFactory.create(hm.values());
+		PersistentList<String> vs2=ListFactory.create(pm.values());
+		PersistentList<String> vs3=ListFactory.create(phm.values());
+		assertEquals(SetFactory.create(vs),SetFactory.create(vs2));
+		assertEquals(SetFactory.create(vs),SetFactory.create(vs3));
 	}
 	
 	@Test public void testMerge() {

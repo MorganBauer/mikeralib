@@ -9,19 +9,24 @@ import java.util.*;
 public class ListFactory<T> {
 	public static final int MAX_TUPLE_BUILD_SIZE=32;
 	
-	public static <T> PersistentList<T> create(T[] data) {
-		return create(data,0,data.length);
-	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(T value) {
 		return SingletonList.create(value);
 	}
 	
+	public static <T> PersistentList<T> create(T[] data) {
+		return create(data,0,data.length);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n==1) return SingletonList.create(data[fromIndex]);
+		if (n<2) {
+			if (n<0) throw new IllegalArgumentException(); 
+			if (n==0) return (PersistentList<T>) NullList.INSTANCE;
+			if (n==1) return SingletonList.create(data[fromIndex]);
+		}	
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
 			return (PersistentList<T>) Tuple.create(data,fromIndex,toIndex);

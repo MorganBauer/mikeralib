@@ -253,7 +253,7 @@ public final class Rand {
 
 	public static String nextString() {
 		char[] cs=new char[Rand.po(4)];
-		for (int i=0; i<cs.length; i++) cs[i]=Rand.nextChar();
+		for (int i=0; i<cs.length; i++) cs[i]=Rand.nextLetter();
 		return String.valueOf(cs);
 	}
 	

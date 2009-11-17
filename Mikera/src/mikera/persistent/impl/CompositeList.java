@@ -39,9 +39,19 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
-		int n=toIndex-fromIndex;
-		int midIndex=fromIndex+((n>>1)/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+		int midIndex=calcMidIndex(fromIndex, toIndex);
 		return new CompositeList(ListFactory.create(data,fromIndex,midIndex),ListFactory.create(data,midIndex,toIndex));
+	}
+	
+	public static final int calcMidIndex(int fromIndex, int toIndex) {
+		int n=toIndex-fromIndex;
+		if (n<0) throw new IllegalArgumentException();
+		int splitIndex=n>>1;
+		if (splitIndex>ListFactory.MAX_TUPLE_BUILD_SIZE) {
+			// round to a whole number of tuple blocks
+			splitIndex=(splitIndex/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+		}
+		return fromIndex+splitIndex;
 	}
 	
 	public static <T> CompositeList<T> create(List<T> source) {
@@ -50,8 +60,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
-		int n=toIndex-fromIndex;
-		int midIndex=fromIndex+((n>>1)/ListFactory.MAX_TUPLE_BUILD_SIZE)*ListFactory.MAX_TUPLE_BUILD_SIZE;
+		int midIndex=calcMidIndex(fromIndex, toIndex);
 		return new CompositeList(ListFactory.create(source,fromIndex,midIndex),ListFactory.create(source,midIndex,toIndex));
 	}
 	
