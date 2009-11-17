@@ -74,7 +74,7 @@ public class PerformanceTest {
 	
 	*/
 	
-	static HashMap<Integer,String> hm;
+	static Map<Integer,String> hm;
 	static PersistentMap<Integer,String> pm;
 	private static void setup() {
 		hm=new HashMap<Integer,String>();
@@ -98,7 +98,7 @@ public class PerformanceTest {
 			for (String s: hm.values()) {
 				if (s.equals("fvfieuvgfeoivboi")) throw new Error();
 			}
-			hm.clone();
+			((HashMap<Integer, String>)hm).clone();
 		}
 	}
 	

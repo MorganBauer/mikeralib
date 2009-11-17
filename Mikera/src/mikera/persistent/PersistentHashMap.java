@@ -29,7 +29,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * 
 	 * Valid values are 2 (x4) through to 5 bits (x32 branching). 4 seems to be about the sweet spot.
 	 */
-	public static final int SHIFT_AMOUNT=4;
+	public static final int SHIFT_AMOUNT=5;
 	public static final int LOW_MASK=(1<<SHIFT_AMOUNT)-1;
 	public static final int DATA_SIZE=1<<SHIFT_AMOUNT;
 	
