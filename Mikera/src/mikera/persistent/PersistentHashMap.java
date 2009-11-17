@@ -285,6 +285,16 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}	
 	}
 	
+	/**
+	 * Represents a bitmapped node with 1 to DATA_SIZE-1 branches
+	 * 
+	 * Inspired by Clojure's persistent data structures
+	 * 
+	 * @author Mike
+	 *
+	 * @param <K>
+	 * @param <V>
+	 */
 	public static final class PHMBitMapNode<K,V> extends PHMNode<K,V> {
 		private final PHMNode<K,V>[] data;
 		private final int shift;
@@ -315,7 +325,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		private final int slotFromIndex(int index) {
 			int v=bitmap;
 			int m=Bits.lowestSetBit(v);
-			while (index-->0) {
+			while ((index--)>0) {
 				v=v&(~m);
 				m=Bits.lowestSetBit(v);
 			}
@@ -614,6 +624,14 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}
 	}
 	
+	/**
+	 * Represents a single PersistentHashMap entry
+	 * 
+	 * @author Mike
+	 *
+	 * @param <K>
+	 * @param <V>
+	 */
 	private static final class PHMEntry<K,V> extends PHMNode<K,V> implements Map.Entry<K, V> {
 		private final K key;
 		private final V value;
@@ -625,12 +643,10 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		public V getValue() {
 			return value;
 		}
-		
-		
+				
 		public V setValue(V value) {
 			throw new UnsupportedOperationException();
-		}
-		
+		}	
 		
 		public PHMEntry(K k, V v) {
 			key=k;
@@ -803,7 +819,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentSet<K> keySet() {
-		return new KeySetWrapper((PersistentSet<?>) entrySet());
+		return new KeySetWrapper(entrySet());
 	}
 
 	@Override
@@ -814,7 +830,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentCollection<V> values() {
-		return new ValueCollectionWrapper((PersistentSet<?>) entrySet());
+		return new ValueCollectionWrapper(entrySet());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -839,7 +855,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 	
 	public PersistentMap<K, V> include(PersistentHashMap<K, V> values) {
-		// TODO: Consider fast node-level implementation
+		// TODO: Consider fast node-level merging implementation
 		PersistentHashMap<K, V> pm=this;
 		for (Map.Entry<K, V> entry:values.entrySet()) {
 			pm=pm.include(entry.getKey(),entry.getValue());
