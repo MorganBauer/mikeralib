@@ -39,12 +39,13 @@ public class TimeTest {
 		System.out.println("time = "+TextUtils.leftPad(Long.toString((atime-btime)/RUNS),12)+" ns");
 	}
 	
+	static Random rand=new Random();
 	private static void setup() {
 		
 	}
 	
 	private static void a() {
-		int l=Rand.xorShift32(5);
+		//long l=rand.nextLong();
 		count++;
 	}
 	

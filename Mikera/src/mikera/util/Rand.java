@@ -33,6 +33,14 @@ public final class Rand {
 		a ^= (a << 5);
 		return a;
 	}
+	
+	/**
+	 * Creates a random number generator
+	 * @return
+	 */
+	public static java.util.Random getGenerator() {
+		return new MikeraRandom();
+	}
 		
 	static class MikeraRandom extends java.util.Random {
 		private static final long serialVersionUID = 6868944865706425166L;
@@ -74,19 +82,30 @@ public final class Rand {
 		}
 	}
 	
+	/**
+	 * Returns true with a given probability
+	 * @param d
+	 * @return
+	 */
 	public static boolean chance(double d) {
 		return Rand.nextDouble()<=d;
 	}
 	
+	/**
+	 * Returns true with a given probability
+	 * @param d
+	 * @return
+	 */
 	public static boolean chance(float d) {
 		return Rand.nextFloat()<=d;
 	}
+
 	
-	public static java.util.Random getGenerator() {
-		return new MikeraRandom();
-	}
-	
-	// Poisson distribution
+	/**
+	 *  Poisson distribution
+	 * @param x
+	 * @return
+	 */
 	public static int po(double x) {
 		if (x<=0) return 0;
 		if (x>400) {
@@ -118,6 +137,29 @@ public final class Rand {
 		return po(((double) numerator) / denominator);
 	}
 
+	/*
+	 *  Exponential distribution
+	 *  Continuous distribution
+	 */
+	
+	public static double exp(double mean) {
+		return -Math.log(Rand.nextDouble())*mean;
+	}
+	
+	/*
+	 *  Geometric distribution
+	 *  Discrete distribution with decay rate p
+	 *  Mean = (1-p) / p
+	 *  Probability mass function for each integer output k = p.(1-p)^k
+	 */	
+	public static int geom(double p) {
+		return (int)Math.floor(Math.log(Rand.nextDouble()) / Math.log(1-p));
+	}
+	
+	
+	/*
+	 * Generators for standard Java types
+	 */
 	
 	public static final int nextInt() {
 		return (int)(nextLong()>>32);
@@ -183,7 +225,11 @@ public final class Rand {
         return n1+r(n2-n1+1);
      }
 	
-	// simulates a dice roll with the given number of sides
+	/**
+	 *  simulates a dice roll with the given number of sides
+	 * @param sides
+	 * @return
+	 */
 	public static final int d(int sides) {
 		return r(sides) + 1;
 	}
@@ -228,6 +274,13 @@ public final class Rand {
 		return total;
 	}
 	
+	/**
+	 * Generates a normal distributed number with the given mean and standard deviation
+	 * 
+	 * @param u Mean
+	 * @param sd Standard deviation
+	 * @return
+	 */
 	public static double n(double u, double sd) {
 		return nextGaussian()*sd+u;
 	}

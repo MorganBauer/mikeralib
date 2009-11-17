@@ -31,6 +31,28 @@ public class TestRand {
 		assertTrue(r<1100000);
 	}
 	
+	@Test public void testGeom() {
+		int[] hs=new int[100];
+		int samples=1000;
+		float p=0.4f;
+		float targetmean=(1-p)/p;
+		
+		for (int i=0; i<samples; i++) {
+			hs[Rand.geom(p)]++;
+		}
+		
+		float sx=0;
+		for (int i =0; i<hs.length; i++) {
+			sx+=i*hs[i];
+		}
+		float mean=sx/samples;
+		//System.out.println(mean);
+		
+		assertTrue(hs[0]>=hs[1]);
+		assertTrue(mean>(targetmean*0.8));
+		assertTrue(mean<(targetmean*1.2));
+	}
+	
 	@Test public void testIntegerRandom() {
 		assertTrue(1<=Rand.d6());
 		assertTrue(0<=Rand.r(6));
