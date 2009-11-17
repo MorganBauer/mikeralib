@@ -27,7 +27,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	/**
 	 * SHIFT_AMOUNT controls the maximum branching factor.
 	 * 
-	 * Valid values are 2 (x4) through to 5 bits (x32 branching)
+	 * Valid values are 2 (x4) through to 5 bits (x32 branching). 4 seems to be about the sweet spot.
 	 */
 	public static final int SHIFT_AMOUNT=4;
 	public static final int LOW_MASK=(1<<SHIFT_AMOUNT)-1;
@@ -197,7 +197,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		
 		@Override
 		protected PHMEntry<K, V> findNext(PHMEntrySetIterator<K, V> it) {
-			int i=slotFromHash(it.hash,shift);
+			int i=slotFromHash(it.position,shift);
 			PHMNode<K,V> n=data[i];
 			if (n!=null) {
 				PHMEntry<K, V> ent=n.findNext(it);
@@ -207,7 +207,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			while(i<DATA_SIZE) {
 				n=data[i];
 				if (n!=null) {
-					it.hash=(it.hash&((1<<shift)-1)) | ((i<<shift));
+					it.position=(it.position&((1<<shift)-1)) | ((i<<shift));
 					it.index=0;
 					return n.findNext(it);
 				}
@@ -369,15 +369,16 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		
 		@Override
 		protected PHMEntry<K, V> findNext(PHMEntrySetIterator<K, V> it) {
-			int slot=slotFromHash(it.hash,shift);
-			int i=indexFromSlot(slot,bitmap);
+			// note ugly but fast hack: we store index rather than slot in it.position for bitmap nodes
+			int i=slotFromHash(it.position,shift);
 			PHMNode<K,V> n=data[i];
 			PHMEntry<K, V> ent=n.findNext(it);
 			if (ent!=null) return ent;
 			i++;
 			if(i<data.length) {
 				n=data[i];
-				it.hash=(it.hash&((1<<shift)-1)) | ((slotFromIndex(i)<<shift));
+				// here again we store index rather than slot
+				it.position=(it.position&((1<<shift)-1)) | ((i<<shift));
 				it.index=0;
 				return n.findNext(it);
 			}
@@ -721,6 +722,11 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		protected boolean isLeaf() {
 			return true;
 		}
+		
+		// toString() consistent with java.util.AbstractMap
+		public String toString() {
+			return String.valueOf(key)+'='+String.valueOf(value);
+		}
 	}
 	
 	/**
@@ -762,7 +768,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private static class PHMEntrySetIterator<K,V> implements Iterator<Map.Entry<K,V>> {
 		public PHMNode<K,V> root;
 		public PHMEntry<K,V> next;
-		public int hash=0;
+		public int position=0;
 		public int index=0;
 		
 		private PHMEntrySetIterator(PersistentHashMap<K,V> phm) {
@@ -814,6 +820,11 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	
 	public PHMEntry<K,V> getEntry(K key) {
 		return root.getEntry(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map.Entry<K,V> getMapEntry(Object key) {
+		return (Map.Entry<K,V>)getEntry((K)key);
 	}
 
 	@SuppressWarnings("unchecked")

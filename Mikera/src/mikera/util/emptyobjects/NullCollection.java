@@ -95,8 +95,5 @@ public class NullCollection<T> extends PersistentCollection<T> {
 	public boolean equals(Object a) {
 		return ((a instanceof PersistentCollection<?>)&&((PersistentCollection<T>)a).isEmpty());
 	}
-	
-	public boolean equals(PersistentCollection<?> a) {
-		return (a!=null)&&a.isEmpty();
-	}
+
 }

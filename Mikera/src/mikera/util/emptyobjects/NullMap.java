@@ -82,5 +82,10 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 		return this;
 	}
 
+	@Override
+	public java.util.Map.Entry<K, V> getMapEntry(Object key) {
+		return null;
+	}
+
 
 }

@@ -31,7 +31,7 @@ public class MarkovGenerator {
 	}
 	
 	public String generate(int length) {
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 		for (int i=0; i<length; i++) {
 			String ss=sb.substring(Maths.max(0,i-chainLength),i);
 			Character c=chances.get(ss).pick();

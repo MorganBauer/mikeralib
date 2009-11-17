@@ -29,7 +29,7 @@ public class CommonTests {
 		testCommonData(Rand.getGenerator());
 	}
 	
-	public void testCommonData(Object o) {
+	public static void testCommonData(Object o) {
 		if (o instanceof Serializable) {
 			testSerialization((Serializable)o);
 		}
@@ -51,11 +51,9 @@ public class CommonTests {
 			Serializable s2=(Serializable)ois.readObject();
 
 			assertEquals(s,s2);
-			assertEquals(s.hashCode(),s2.hashCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
-		}
-		
+		}		
 	}
 }

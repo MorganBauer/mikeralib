@@ -342,7 +342,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	}
 	
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 		
 		int s=size();
 		for (int i=0; i<s; i++) {

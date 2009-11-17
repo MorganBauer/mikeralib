@@ -82,7 +82,16 @@ public class TestPersistentMap {
 		assertEquals(4,mm.size());
 	}
 	
-
+	@Test public void testToString() {
+		HashMap<Integer,String> hm=new HashMap<Integer, String>();
+		hm.put(1, "Hello");
+		hm.put(2, "World");
+		
+		PersistentMap<Integer,String> pm=PersistentHashMap.create(1,"Hello");
+		pm=pm.include(2,"World");
+		assertEquals(hm.toString(),pm.toString());
+		assertEquals("{1=Hello, 2=World}",pm.toString());
+	}
 	
 	@Test public void testChanges() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
@@ -116,6 +125,7 @@ public class TestPersistentMap {
 		pm.validate();
 		testIterator(pm);
 		testRandomAdds(pm);
+		CommonTests.testCommonData(pm);
 	}
 	
 	public void testIterator(PersistentMap<Integer,String> pm) {

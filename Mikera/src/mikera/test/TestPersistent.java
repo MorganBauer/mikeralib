@@ -49,6 +49,7 @@ public class TestPersistent {
 		testClone(a);
 		testSizing(a);
 		testIterator(a);
+		CommonTests.testCommonData(a);
 	}
 	
 	public <T> void testIterator(PersistentCollection<T> a) {

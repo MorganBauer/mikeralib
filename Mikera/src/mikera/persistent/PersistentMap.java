@@ -24,6 +24,14 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		}
 		return false;
 	}
+	
+	public boolean containsEntry(Map.Entry<K,V> entry) {
+		Map.Entry<K,V> e=getMapEntry(entry.getKey());
+		if (e==null) return false;
+		return Tools.equalsWithNulls(e.getValue(), entry.getValue());
+	}
+	
+	public abstract java.util.Map.Entry<K, V> getMapEntry(Object key);
 
 	public abstract PersistentSet<java.util.Map.Entry<K, V>> entrySet();
 
@@ -92,8 +100,43 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		}
 		return hm;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (o instanceof PersistentMap<?,?>) {
+			return equals((PersistentMap<K,V>)o);
+		}
+		return false;
+	}
+	
+	public boolean equals(PersistentMap<K,V> pm) {
+		return this.containsAll(pm)&&pm.containsAll(this);
+	}
+	
+	public boolean containsAll(PersistentMap<K,V> pm) {
+		for (Map.Entry<K, V> ent:pm.entrySet()) {
+			if (!containsEntry(ent)) return false;
+		}
+		return true;
+	}
 
 	public void validate() {
 		
+	}
+	
+	public String toString() {
+		StringBuilder sb=new StringBuilder();
+		sb.append('{');
+		boolean first=true;
+		for (Map.Entry<K, V> ent: entrySet()) {
+			if (first) {
+				first=false;
+			} else {
+				sb.append(", ");
+			}
+			sb.append(ent.toString());
+		}
+		sb.append('}');
+		return sb.toString();
 	}
 }

@@ -13,12 +13,12 @@ public abstract class BaseVector implements IVector {
 	}
 	
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 		sb.append('(');
 		int s=size();
 		for (int i=0; i<s; i++) {
+			if (i>0) sb.append(", ");
 			sb.append(get(i));
-			if ((i+1)<s) sb.append(", ");
 		}		
 		sb.append(')');
 		return sb.toString();

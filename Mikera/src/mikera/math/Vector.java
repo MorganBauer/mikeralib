@@ -174,13 +174,12 @@ public final class Vector extends BaseVector {
 	}
 	
 	public String toString() {
-		StringBuffer result=new StringBuffer("{");
-		int max=data.length-1;
+		StringBuilder result=new StringBuilder("{");
+		int max=data.length;
 		for (int i=0; i<max; i++) {
+			if(i>0) result.append(", ");
 			result.append(Float.toString(data[i]));
-			result.append(", ");
 		}
-		result.append(Float.toString(data[max]));
 		result.append("}");
 		return result.toString();
 	}

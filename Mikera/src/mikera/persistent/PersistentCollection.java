@@ -66,6 +66,17 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		return false;
 	}
 	
+	public boolean equals(Object o) {
+		if (o instanceof PersistentCollection<?>) {
+			return equals((PersistentCollection<T>)o);
+		}
+		return false;
+	}
+	
+	public boolean equals(PersistentCollection<T> pm) {
+		return this.containsAll(pm)&&pm.containsAll(this);
+	}
+	
 	public Object[] toArray() {
 		Object[] os=new Object[size()];
 		int i=0;
@@ -124,7 +135,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 	
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 		sb.append('{');
 		boolean first=true;
 		for (T t: this) {

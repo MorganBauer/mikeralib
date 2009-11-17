@@ -161,7 +161,7 @@ public class TextUtils {
 	}
 	
 	public static String arrayToString(float[] as) {
-		StringBuffer sb=new StringBuffer("{");
+		StringBuilder sb=new StringBuilder('{');
 		for (int i = 0; i < as.length; i++) {
 			if (i>0) sb.append(", ");
 			sb.append(Float.toString(as[i]));
@@ -224,13 +224,13 @@ public class TextUtils {
 		char c = s.charAt(0);
 		if (Character.isUpperCase(c))
 			return s;
-		StringBuffer sb = new StringBuffer(s);
+		StringBuilder sb = new StringBuilder(s);
 		sb.setCharAt(0, Character.toUpperCase(c));
 		return sb.toString();
 	}
 
 	public static String titleCase(String s) {
-		StringBuffer sb = new StringBuffer(s);
+		StringBuilder sb = new StringBuilder(s);
 		for (int i=0; i<s.length(); i++) {
 			if ((i==0)||(!Character.isLetterOrDigit(s.charAt(i-1)))) {
 				sb.setCharAt(i, Character.toUpperCase(s.charAt(i)));
@@ -261,7 +261,7 @@ public class TextUtils {
 	}
 
 	public static String loadFromFile(String name) {
-        StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 	    try {
 	    	InputStream in=String.class.getResourceAsStream(name);
 	    	BufferedReader br=new BufferedReader(new InputStreamReader(in));
@@ -350,7 +350,7 @@ public class TextUtils {
     */
     public static String camelizeString(String input) {
         StringTokenizer tokenizer = new StringTokenizer(input," ");
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
         String token = null;
         while (tokenizer.hasMoreElements()) {
             token = tokenizer.nextToken();
@@ -373,7 +373,7 @@ public class TextUtils {
     
     public static String properCase(String input) {
       StringTokenizer tokenizer = new StringTokenizer(input," ");
-      StringBuffer output = new StringBuffer();
+      StringBuilder output = new StringBuilder();
       String token = null;
       while (tokenizer.hasMoreElements()) {
           token = tokenizer.nextToken();

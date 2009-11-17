@@ -66,7 +66,7 @@ public class TestText {
 	
 	@Test public void testTextOps() {
 		Text t1=Text.create("");
-		StringBuffer sb=new StringBuffer();
+		StringBuilder sb=new StringBuilder();
 		
 		for (int i=0; i<200; i++) {
 			String s=Integer.toString(Rand.d(100));
@@ -76,7 +76,7 @@ public class TestText {
 			if (Rand.d(30)==1) {
 				int a=Rand.r(sb.length());
 				int b=Rand.range(a, sb.length()-1);
-				sb=new StringBuffer(sb.substring(a, b));
+				sb=new StringBuilder(sb.substring(a, b));
 				t1=t1.subText(a, b);
 			}
 		}
@@ -86,7 +86,7 @@ public class TestText {
 		assertEquals(t1.toString(),sb.toString());
 		assertEquals(t1.hashCode(),Text.create(sb.toString()).hashCode());
 		
-		StringBuffer sb2=new StringBuffer();
+		StringBuilder sb2=new StringBuilder();
 		for (Character ch: t1) {
 			sb2.append(ch);
 		}

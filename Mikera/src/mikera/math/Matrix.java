@@ -95,14 +95,14 @@ public final class Matrix extends VectorFunction {
 	}
 	
 	public String toString() {
-		StringBuffer result=new StringBuffer("{");
+		StringBuilder result=new StringBuilder('{');
 		int max=data.length-1;
 		for (int i=0; i<max; i++) {
 			result.append(Float.toString(data[i]));
 			result.append(", ");
 		}
 		result.append(Float.toString(data[max]));
-		result.append("}");
+		result.append('}');
 		return result.toString();
 	}
 		

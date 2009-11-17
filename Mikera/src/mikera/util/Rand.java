@@ -7,7 +7,7 @@ public final class Rand {
 	/**
 	 * State for random number generation
 	 */
-	private static volatile long state=System.nanoTime()|1;
+	private static volatile long state=xorShift64(System.nanoTime()|0xCAFEBABE);
 
 	/**
 	 * Gets a long random value
@@ -16,19 +16,18 @@ public final class Rand {
 	 */
 	public static long nextLong() {
 		long a=state;
-		a = xorShift64(a);
-		state=a;
+		state = xorShift64(a);
 		return a;
 	}
 	
-	public static long xorShift64(long a) {
+	public static final long xorShift64(long a) {
 		a ^= (a << 21);
 		a ^= (a >>> 35);
 		a ^= (a << 4);
 		return a;
 	}
 	
-	public static int xorShift32(int a) {
+	public static final int xorShift32(int a) {
 		a ^= (a << 13);
 		a ^= (a >>> 17);
 		a ^= (a << 5);
@@ -46,8 +45,7 @@ public final class Rand {
 		
 		public long nextLong() {
 			long a=state;
-			a=Rand.xorShift64(a);
-			state=a;
+			state=Rand.xorShift64(a);
 			return a;
 		}
 		
@@ -171,7 +169,7 @@ public final class Rand {
 	}
 	
 	public static final float nextFloat() {
-		return (float)(( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR);
+		return ( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR;
 	}
 
     /**
