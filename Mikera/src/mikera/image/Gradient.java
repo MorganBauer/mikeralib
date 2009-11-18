@@ -10,19 +10,19 @@ import mikera.math.VectorFunction;
 import mikera.util.Maths;
 
 public class Gradient {
-	public static final int SIZE=256;
+	private static final int DEFAULT_GRADIENT_SIZE=256;
 	
 	/**
 	 * Creates a new gradient array of default size (256)
 	 * @return
 	 */
 	public static int[] create() {
-		return new int[SIZE];
+		return new int[DEFAULT_GRADIENT_SIZE];
 	}
 	
 	public static int[] createInvertedMonoGradient() {
 		int[] gr=create();
-		for (int i=0; i<SIZE; i++) {
+		for (int i=0; i<DEFAULT_GRADIENT_SIZE; i++) {
 			int c=(255-i)*0x010101;
 			gr[i]=c|Colours.ALPHA_MASK;
 		}	
@@ -37,7 +37,7 @@ public class Gradient {
 	 * @param line
 	 */
 	public static void fillFromImage(int[] grad, BufferedImage b, int line) {
-		for (int i=0; i<SIZE; i++) {
+		for (int i=0; i<DEFAULT_GRADIENT_SIZE; i++) {
 			grad[i]=b.getRGB(i, line);
 		}
 	}
@@ -61,7 +61,7 @@ public class Gradient {
 	 */
 	public static int[] createRainbowGradient() {
 		int[] gr=create();
-		int size=SIZE;
+		int size=DEFAULT_GRADIENT_SIZE;
 		for (int i=0; i<size; i++) {
 			float h=((float)i)/size;
 			gr[i]=Color.HSBtoRGB(h, 1, 1)|Colours.ALPHA_MASK;

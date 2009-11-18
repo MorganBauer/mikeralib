@@ -152,4 +152,10 @@ public final class NullList<T> extends PersistentList<T> {
 		// needed for deserialisation to the correct static instance
 		return INSTANCE;
 	}
+
+	public PersistentList<T> copyFrom(int index, PersistentList<T> values,
+			int srcIndex, int length) {
+		if (length>0) throw new IndexOutOfBoundsException();
+		return this;
+	}
 }

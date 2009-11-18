@@ -163,4 +163,8 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	public PersistentCollection<T> include(final PersistentCollection<T> values) {
 		return include((Collection<T>)values);
 	}
+	
+	public void validate() {
+		
+	}
 }

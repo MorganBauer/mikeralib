@@ -45,6 +45,7 @@ public class TestPersistent {
 	}
 	
 	public <T> void testPersistentCollection(PersistentCollection<T> a) {
+		a.validate();
 		testDelete(a);
 		testInclude(a);
 		testClone(a);
@@ -183,6 +184,18 @@ public class TestPersistent {
 		} catch (Exception x) {/* OK */}
 
 		try {
+			// copy to negative posistion
+			a.copyFrom(-1, a, 10, 1);
+			fail();
+		} catch (Exception x) {/* OK */}
+		
+		try {
+			// copy from beyond length of source
+			a.copyFrom(0, a, 0, a.size()+1);
+			fail();
+		} catch (Exception x) {/* OK */}
+		
+		try {
 			// clear persistent object
 			a.clear();
 			if (a.size()>=0) fail();
@@ -284,12 +297,22 @@ public class TestPersistent {
 				assertEquals(sl.get(r),a.get(b+r));
 			}
 		}
+		
+		// zero length copyFrom
+		a.copyFrom(Rand.r(a.size()), a, Rand.r(a.size()), 0);
+
+		// safe length copyFrom
+		a.copyFrom(Rand.r(a.size()/2), a, Rand.r(a.size()/2), Rand.r(a.size()/2));
 	}
 	
 	@Test public void testRepeats() {
 		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,1,1,1,1}));
 		PersistentList<Integer> rl=(RepeatList.create(1, 5));
 		assertEquals(tl,rl);
+		
+		PersistentList<Integer> t2=(Tuple.create(new Integer[] {2,2,2,2,2}));
+		t2=rl.copyFrom(2, t2, 2, 2);
+		assertEquals(Tuple.create(new Integer[] {1,1,2,2,1}),t2);
 	}
 	
 	@Test public void testDeleting() {

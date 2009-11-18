@@ -174,10 +174,14 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 	public PersistentList<T> insert(int index, Collection<T> values) {
 		if (values instanceof PersistentList<?>) {
-			return subList(0,index).append(values).append(subList(index,size()));
+			return insert(index,(PersistentList<T>)values);
 		}
 		PersistentList<T> pl=ListFactory.create(values);
 		return subList(0,index).append(pl).append(subList(index,size()));
+	}
+	
+	public PersistentList<T> insert(int index, PersistentList<T> values) {
+		return subList(0,index).append(values).append(subList(index,size()));
 	}
 	
 	public PersistentList<T> delete(int index) {
@@ -203,5 +207,12 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 			if (!Tools.equalsWithNulls(get(i),pl.get(i))) return false;
 		}
 		return true;
+	}
+	
+	public PersistentList<T> copyFrom(int index, PersistentList<T> values,
+			int srcIndex, int length) {
+		if ((index<0)||((index+length)>size())) throw new IndexOutOfBoundsException();
+		if (length==0) return this;
+		return subList(0,index).append(values.subList(srcIndex, srcIndex+length)).append(subList(index+length,size()));
 	}
 }

@@ -15,7 +15,7 @@ public class TestIntSet {
 		assertEquals(true,is1.contains(-6));
 		assertEquals(false,is1.contains(-7));
 		
-		assertFalse(is1.hasDuplicates());
+		assertFalse(is1.hasProblem());
 	}
 	
 	@Test public void test2() {
@@ -33,10 +33,10 @@ public class TestIntSet {
 			assertTrue(is2.contains(is1));
 			assertTrue(is2.contains(v));
 			assertFalse(is2.contains(is3));
-			assertFalse(is2.hasDuplicates());
+			assertFalse(is2.hasProblem());
 			
 			IntSet ist=IntSet.createWithout(is2, v);
-			assertFalse(ist.hasDuplicates());
+			assertFalse(ist.hasProblem());
 			if (!contains) assertTrue(is1.equals(ist)); // must get back to where we were
 			
 			is1=is2;
@@ -82,7 +82,7 @@ public class TestIntSet {
 		IntSet rs4=IntSet.createMerged(is1, is1);
 		
 		assertTrue(is1.equals(rs1)); 
-		assertTrue(is2.equals(IntSet.EMPTY_SET)); 
+		assertTrue(is2.equals(IntSet.EMPTY_INTSET)); 
 		assertTrue(rs2.equals(rs3));
 		assertTrue(is1.equals(rs4)); 
 	}

@@ -16,16 +16,17 @@ import mikera.util.HashCache;
  *
  */
 public final class IntSet extends BasePersistentSet<Integer> {
-
 	private static final long serialVersionUID = 2677550392326589873L;
-	public static final IntSet EMPTY_SET=new IntSet(mikera.util.Arrays.NULL_INTS);
 	private static final HashCache<IntSet> cache=new HashCache<IntSet>(401);
+
+	public static final IntSet EMPTY_INTSET=intern(new IntSet(mikera.util.Arrays.NULL_INTS));
 
 	/**
 	 * data field contains an ordered list of unique integers
 	 */
 	private final int[] data;
 		
+	
 	private IntSet(int[] values) {
 		data =values;
 	}
@@ -52,9 +53,9 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	 * 
 	 * @return
 	 */
-	public boolean hasDuplicates() {
+	public boolean hasProblem() {
 		for (int i=0; i<data.length-1; i++) {
-			if (data[i]==data[i+1]) return true;
+			if (data[i]>=data[i+1]) return true;
 		}
 		return false;
 	}
@@ -103,7 +104,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 			idata[i++]=it.intValue();
 		}
 		java.util.Arrays.sort(idata);
-		return new IntSet(idata);
+		return createLocal(idata);
 	}
 
 	public static IntSet createMerged(IntSet a, IntSet b) {
@@ -175,7 +176,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 	
 	private static IntSet create(int[] data, int offset, int size) {
-		if (size==0) return EMPTY_SET;
+		if (size==0) return EMPTY_INTSET;
 		int[] ndata=new int[size];
 		System.arraycopy(data, offset, ndata, 0, size);
 		java.util.Arrays.sort(ndata);
@@ -333,6 +334,11 @@ public final class IntSet extends BasePersistentSet<Integer> {
 
 	private Object readResolve() throws ObjectStreamException {
 		// needed for deserialisation to the correct static instance
+		if (size()==0) return EMPTY_INTSET;
 		return intern(this);
+	}
+	
+	public void validate() {
+		if (hasProblem()) throw new Error();
 	}
 }

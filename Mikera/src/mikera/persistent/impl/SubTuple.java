@@ -12,7 +12,8 @@ import mikera.persistent.impl.*;
 import mikera.util.emptyobjects.NullList;
 
 /**
- * Implements a persistent list that is a subset of an existing tuple, utilising the same backing array
+ * Implements a persistent list that is a subset of an existing tuple
+ * utilising the same immutable backing array
  * 
  * @author Mike
  *

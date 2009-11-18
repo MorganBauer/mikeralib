@@ -30,4 +30,8 @@ public interface IPersistentCollection<T> extends Collection<T>, Cloneable, Seri
 	public boolean containsAny(Collection<?> c);
 	
 	public boolean isEmpty();
+	
+	// testing methods
+	
+	public void validate();
 }

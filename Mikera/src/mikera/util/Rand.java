@@ -11,8 +11,7 @@ public final class Rand {
 
 	/**
 	 * Gets a long random value
-	 * uses very fast "XORShift" algorithm
-	 * @return
+	 * @return Random long value based on static state
 	 */
 	public static long nextLong() {
 		long a=state;
@@ -20,6 +19,11 @@ public final class Rand {
 		return a;
 	}
 	
+	/**
+	 * XORShift algorithm - credit to George Marsaglia!
+	 * @param a initial state
+	 * @return new state
+	 */
 	public static final long xorShift64(long a) {
 		a ^= (a << 21);
 		a ^= (a >>> 35);

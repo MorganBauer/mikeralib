@@ -9,7 +9,7 @@ import mikera.util.Maths;
  * @author Mike Anderson
  *
  */
-public class BitGrid implements Cloneable {
+public final class BitGrid implements Cloneable {
 	private static final int XLOWBITS=2;
 	private static final int YLOWBITS=2;
 	private static final int ZLOWBITS=1;	
