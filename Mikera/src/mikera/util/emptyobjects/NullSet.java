@@ -1,5 +1,6 @@
 package mikera.util.emptyobjects;
 
+import java.io.ObjectStreamException;
 import java.util.*;
 
 import mikera.persistent.*;
@@ -51,5 +52,10 @@ public final class NullSet<T> extends PersistentSet<T> {
 	
 	public PersistentSet<T> include(final PersistentSet<T> values) {
 		return SetFactory.create(values);
+	}
+	
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		return INSTANCE;
 	}
 }

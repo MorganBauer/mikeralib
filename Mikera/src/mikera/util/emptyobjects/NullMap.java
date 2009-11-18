@@ -1,5 +1,6 @@
 package mikera.util.emptyobjects;
 
+import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -87,5 +88,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 		return null;
 	}
 
-
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		return INSTANCE;
+	}
 }

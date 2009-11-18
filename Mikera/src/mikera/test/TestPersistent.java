@@ -36,6 +36,7 @@ public class TestPersistent {
 		testPersistentSet(NullSet.INSTANCE);
 		testPersistentSet(SingletonSet.create("Bob"));
 		testPersistentSet(MapFactory.create(2, "Benhamma").keySet());
+		testPersistentSet(IntSet.create(3));
 	}
 	
 	public <T> void testPersistentSet(PersistentSet<T> a) {

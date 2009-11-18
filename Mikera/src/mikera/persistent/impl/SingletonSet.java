@@ -15,7 +15,11 @@ import mikera.util.emptyobjects.NullList;
  * @param <T>
  */
 public final class SingletonSet<T> extends BasePersistentSet<T> {
+	private static final long serialVersionUID = -8579831785484446664L;
+
+	
 	final T value;
+	
 	
 	@SuppressWarnings("unchecked")
 	public static <T> SingletonSet create(T object) {

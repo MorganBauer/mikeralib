@@ -1,5 +1,6 @@
 package mikera.persistent;
 
+import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -71,6 +72,8 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	}
 	
 	private abstract static class PHMNode<K,V> extends PersistentObject {
+		private static final long serialVersionUID = -4378011224932646278L;
+
 		/**
 		 * Removes key from PHMNode, returning a modified HashNode
 		 * 
@@ -155,9 +158,13 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * @param <V>
 	 */
 	private static final class PHMFullNode<K,V> extends PHMNode<K,V> {
+		private static final long serialVersionUID = 5910832730804486676L;
+		
+		
 		private final PHMNode<K,V>[] data;
 		private final int shift;
 		private final int count;
+		
 		
 		protected PHMFullNode(PHMNode<K,V>[] newData, int newShift) {
 			data=newData;
@@ -296,10 +303,14 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * @param <V>
 	 */
 	public static final class PHMBitMapNode<K,V> extends PHMNode<K,V> {
+		private static final long serialVersionUID = -4936128089990848344L;
+		
+		
 		private final PHMNode<K,V>[] data;
 		private final int shift;
 		private final int count;
 		private final int bitmap; // bitmap indicating which slots are present in data array
+		
 		
 		protected PHMBitMapNode(PHMNode<K,V>[] newData, int newShift, int newBitmap) {
 			data=newData;
@@ -484,6 +495,9 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * @param <V>
 	 */
 	private static final class PHMNullList<K,V> extends PHMNode<K,V> {
+		private static final long serialVersionUID = 1677618725079327002L;
+
+		
 		@Override
 		protected PHMNode<K, V> delete(K key, int hash) {
 			return this;
@@ -517,14 +531,22 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		protected boolean isLeaf() {
 			return true;
 		}	
+		
+		private Object readResolve() throws ObjectStreamException {
+			// needed for deserialisation to the correct static instance
+			return EMPTY_NODE_LIST;
+		}
 	}
 	
 	
-	private static final class PHMEntryList<K,V> extends PHMNode<K,V> {
+	private static final class PHMCollisionList<K,V> extends PHMNode<K,V> {
+		private static final long serialVersionUID = -2314559707707984910L;
+	
+		
 		private final PHMEntry<K,V>[] entries;
 		private final int hashCode;
 		
-		public PHMEntryList(PHMEntry<K,V>[] list, int hash) {
+		public PHMCollisionList(PHMEntry<K,V>[] list, int hash) {
 			entries=list;
 			hashCode=hash;
 		}
@@ -569,7 +591,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			} else {
 				ndata[olen]=new PHMEntry<K,V>(key,value);
 			}
-			return new PHMEntryList(ndata,hash);
+			return new PHMCollisionList(ndata,hash);
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -594,7 +616,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMEntry<K,V>[] ndata=new PHMEntry[len-1];
 			System.arraycopy(entries,0,ndata,0,pos);
 			System.arraycopy(entries,pos+1,ndata,pos,len-pos-1);
-			return new PHMEntryList<K,V>(ndata,hash);
+			return new PHMCollisionList<K,V>(ndata,hash);
 		}
 
 		@Override
@@ -634,8 +656,12 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * @param <V>
 	 */
 	private static final class PHMEntry<K,V> extends PHMNode<K,V> implements Map.Entry<K, V> {
+		private static final long serialVersionUID = -4668010646096033269L;
+		
+		
 		private final K key;
 		private final V value;
+		
 		
 		public K getKey() {
 			return key;
@@ -683,7 +709,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			}
 
 			int hashCode=this.key.hashCode();
-			if (hash==hashCode) return new PHMEntryList<K,V>(
+			if (hash==hashCode) return new PHMCollisionList<K,V>(
 					new PHMEntry[] {
 							this,
 							new PHMEntry<K,V>(newkey,value)},
@@ -733,6 +759,8 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 * EntrySet implementation
 	 */
 	protected final class PHMEntrySet extends PersistentSet<Map.Entry<K,V>> {
+		private static final long serialVersionUID = -3437346777467759443L;
+
 		@Override
 		public int size() {
 			return PersistentHashMap.this.size();

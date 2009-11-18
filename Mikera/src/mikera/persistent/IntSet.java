@@ -2,6 +2,8 @@ package mikera.persistent;
 
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.util.Arrays;
+
+import java.io.ObjectStreamException;
 import java.util.*;
 import mikera.util.HashCache;
 
@@ -329,5 +331,8 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createMerged(this,value.intValue());
 	}
 
-
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		return intern(this);
+	}
 }

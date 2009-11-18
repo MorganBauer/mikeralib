@@ -89,7 +89,7 @@ public class TestPersistentMap {
 		
 		PersistentMap<Integer,String> pm=PersistentHashMap.create(1,"Hello");
 		pm=pm.include(2,"World");
-		assertEquals(hm.toString(),pm.toString());
+		assertEquals(PersistentHashMap.create(hm).toString(),pm.toString());
 		assertEquals("{1=Hello, 2=World}",pm.toString());
 	}
 	

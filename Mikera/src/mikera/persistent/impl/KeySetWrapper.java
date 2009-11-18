@@ -8,7 +8,11 @@ import mikera.persistent.PersistentSet;
 import mikera.persistent.SetFactory;
 
 public class KeySetWrapper<K,V> extends PersistentSet<K> {
+	private static final long serialVersionUID = -3297453356838115646L;
+
+	
 	PersistentSet<Map.Entry<K,V>> source;
+	
 	
 	public KeySetWrapper(PersistentSet<Map.Entry<K, V>> base) {
 		source=base;

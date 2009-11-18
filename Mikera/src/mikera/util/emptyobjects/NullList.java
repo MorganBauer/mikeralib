@@ -1,5 +1,6 @@
 package mikera.util.emptyobjects;
 
+import java.io.ObjectStreamException;
 import java.util.*;
 
 import mikera.persistent.*;
@@ -146,5 +147,9 @@ public final class NullList<T> extends PersistentList<T> {
 	public Iterator<T> iterator() {
 		return (Iterator<T>) NullIterator.INSTANCE;
 	}
-
+	
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		return INSTANCE;
+	}
 }

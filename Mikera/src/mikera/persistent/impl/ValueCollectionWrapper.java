@@ -7,7 +7,11 @@ import java.util.Set;
 import mikera.persistent.*;
 
 public class ValueCollectionWrapper<K,V> extends PersistentCollection<V> {
+	private static final long serialVersionUID = 5958713253782492446L;
+
+	
 	PersistentSet<Map.Entry<K,V>> source;
+
 	
 	public ValueCollectionWrapper(PersistentSet<Map.Entry<K, V>> base) {
 		source=base;

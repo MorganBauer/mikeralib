@@ -1,5 +1,6 @@
 package mikera.util.emptyobjects;
 
+import java.io.ObjectStreamException;
 import java.util.*;
 
 public final class NullIterator<T> implements ListIterator<T> {
@@ -47,4 +48,8 @@ public final class NullIterator<T> implements ListIterator<T> {
 		throw new UnsupportedOperationException();
 	}
 
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		return INSTANCE;
+	}
 }
