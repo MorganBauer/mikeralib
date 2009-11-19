@@ -15,9 +15,7 @@ import mikera.util.Tools;
  * persistent hash Set data structures.
  * 
  * @author Mike Anderson
- *
- * @param <K> Key type
- * @param <V> Value type
+ * @param <T> Type of objects stored in the set
  */
 
 public final class PersistentHashSet<T> extends BasePersistentSet<T> {
@@ -95,7 +93,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		protected abstract PHSNode<T> delete(T key, int hash);
 
 		/**
-		 * Returns a new PHSNode including the given (key,value) pair
+		 * Returns a new PHSNode including the given key
 		 * 
 		 * @param key
 		 * @param localKey
@@ -106,7 +104,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		protected abstract PHSNode<T> include(T key, int hash, int shift);
 		
 		/**
-		 * Returns the entry for the given key value, or null if not found
+		 * Returns the entry for the given key, or null if not found
 		 * 
 		 * @param key
 		 * @param hash Hash of the key, must be provided
@@ -115,7 +113,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		protected abstract PHSEntry<T> getEntry(T key, int hash);
 		
 		/**
-		 * Returns the entry for the given key value, or null if not found
+		 * Returns the entry for the given key, or null if not found
 		 * 
 		 * @param key
 		 * @return
@@ -126,9 +124,9 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		
 		/**
 		 * Finds the next entry in the PHSNode Set, or null if not found
-		 * Updates the given PHSEntrySetIterator
+		 * Updates the given PHSIterator
 		 * 
-		 * @param it PHSEntrySetIterator to be updated
+		 * @param it PHSIterator to be updated
 		 * @return the next entry, or null if none remaining
 		 */
 		protected abstract PHSEntry<T> findNext(PHSIterator<T> it);
@@ -165,9 +163,6 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	/**
 	 * Represents a full node with DATA_SIZE non-null elements
 	 * @author Mike
-	 *
-	 * @param <K>
-	 * @param <V>
 	 */
 	private static final class PHSFullNode<T> extends PHSNode<T> {
 		private static final long serialVersionUID = 5910832730804486676L;
@@ -294,8 +289,6 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	 * 
 	 * @author Mike
 	 *
-	 * @param <K>
-	 * @param <V>
 	 */
 	public static final class PHSBitSetNode<T> extends PHSNode<T> {
 		private static final long serialVersionUID = -4936128089990848344L;
@@ -486,8 +479,6 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	 * Null list implementation for starting root nodes
 	 * @author Mike
 	 *
-	 * @param <K>
-	 * @param <V>
 	 */
 	private static final class PHSNullList<T> extends PHSNode<T> {
 		private static final long serialVersionUID = 1677618725079327002L;
@@ -644,9 +635,6 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	 * Represents a single PersistentHashSet entry
 	 * 
 	 * @author Mike
-	 *
-	 * @param <K>
-	 * @param <V>
 	 */
 	private static final class PHSEntry<T> extends PHSNode<T> {
 		private static final long serialVersionUID = -4668010646096033269L;
@@ -734,9 +722,6 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	/**
 	 * Set iterator
 	 * @author Mike
-	 *
-	 * @param <K>
-	 * @param <V>
 	 */
 	private static class PHSIterator<T> implements Iterator<T> {
 		public PHSNode<T> root;
