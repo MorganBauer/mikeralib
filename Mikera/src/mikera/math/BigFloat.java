@@ -70,7 +70,7 @@ public final class BigFloat extends Number {
 		return new BigFloat(d,e);
 	}
 	
-	public BigFloat exp(Number n) {
+	public static BigFloat exp(Number n) {
 		return new BigFloat(1,n.doubleValue());
 	}
 	

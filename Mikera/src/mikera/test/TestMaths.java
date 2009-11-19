@@ -2,7 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import mikera.math.PerlinNoise;
+import mikera.math.*;
 import mikera.util.*;
 import mikera.engine.*;
 
@@ -82,5 +82,18 @@ public class TestMaths {
 			float f=Maths.alternateSqrt(i);
 			assertEquals(f,f,0.01f);
 		}
+	}
+	
+	@Test public void testBigFloat() {
+		BigFloat bf=new BigFloat(2.0);
+		bf=bf.multiply(2);
+		bf=bf.subtract(1.5);
+		bf=bf.add(0.5);
+		bf=bf.divide(3);
+		assertEquals(1,bf.doubleValue(),0.000001);
+		
+		bf=BigFloat.exp(9);
+		bf=bf.multiply(bf);
+		assertEquals(18,bf.log(),0.000001);
 	}
 }
