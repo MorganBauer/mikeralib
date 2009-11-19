@@ -19,9 +19,11 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, C
 
 	public PersistentList<T> copyFrom(int index, PersistentList<T> values, int srcIndex, int length);
 	
-	public PersistentList<T> delete(int index);
+	public PersistentList<T> delete(T value);
 
-	public PersistentList<T> delete(int startIndex, int endIndex);
+	public PersistentList<T> deleteAt(int index);
+
+	public PersistentList<T> deleteRange(int startIndex, int endIndex);
 
 	public PersistentList<T> update(int index, T value);
 	

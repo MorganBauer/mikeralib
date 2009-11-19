@@ -2,6 +2,7 @@ package mikera.persistent;
 
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.util.Arrays;
+import mikera.util.Tools;
 
 import java.io.ObjectStreamException;
 import java.util.*;
@@ -87,7 +88,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 	
 	public static IntSet create(int value) {
-		int hc=hashCode(value);
+		int hc=Tools.hashCode(value);
 		IntSet is=cache.getCachedValueForHashCode(hc);
 		if ((is!=null)&&(is.size()==1)&&(is.data[0]==value)) return is;
 		return createLocal(new int[] {value});
@@ -194,35 +195,10 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 
 	public int hashCode() {
-		return hashCode(data);
+		return Tools.hashCode(data);
 	}
 	
-	/**
-	 * Hash code based on summed hash codes of individual integer values
-	 * 
-	 * Defined as XOR of hashcodes of all elements rotated right for each element, to be consistent with PersistentList<T>
-	 * 
-	 * @param data
-	 * @return
-	 */
-	public static int hashCode(int[] data) {
-		int result=0;
-		for(int i=0; i<data.length; i++) {
-			result^=hashCode(data[i]);
-			result=Integer.rotateRight(result, 1);
-		}
-		return result;
-	}
-	
-	/**
-	 * Hashcode for an int, defined as the value of the int itself for consistency with java.lang.Integer
-	 * 
-	 * @param value
-	 * @return
-	 */
-	private static int hashCode(int value) {
-		return value;
-	}
+
 	
 	/**
 	 * clone() returns the same IntSet, as it is defined to be immutable
@@ -341,4 +317,9 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	public void validate() {
 		if (hasProblem()) throw new Error();
 	}
+	
+	public boolean allowsNulls() {
+		return false;
+	}
+
 }

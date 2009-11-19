@@ -132,7 +132,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PersistentList<T> delete(int start, int end) {
+	public PersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
 		if (start>=end) {
 			if (start>end) throw new IllegalArgumentException();

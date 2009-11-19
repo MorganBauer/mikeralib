@@ -18,7 +18,7 @@ public class SetFactory {
 	}
 	
 	public static <T> PersistentSet<T> create(Set<T> source) {
-		return ArraySet.create(source);
+		return PersistentHashSet.createFromSet(source);
 	}
 	
 	public static <T> PersistentSet<T> create(Iterator<T> source) {
@@ -26,7 +26,7 @@ public class SetFactory {
 	}
 	
 	public static <T> PersistentSet<T> create(PersistentSet<T> source) {
-		return ArraySet.create(source);
+		return PersistentHashSet.createFromSet(source);
 	}
 	
 	public static <T> PersistentSet<T> create(Collection<T> value) {
@@ -34,14 +34,14 @@ public class SetFactory {
 	}
 	
 	public static <T> PersistentSet<T> create(T[] source) {
-		return ArraySet.create(source);
+		return ArraySet.createFromArray(source);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> concat(PersistentSet<T> a, T value) {
 		if (a.contains(value)) return a;
 		if (a.size()==0) return SingletonSet.create(value);
-		return ArraySet.create(a).include(value);
+		return PersistentHashSet.createFromSet(a).include(value);
 	}
 	
 }

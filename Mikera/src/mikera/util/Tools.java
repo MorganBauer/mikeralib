@@ -51,6 +51,48 @@ public class Tools {
 	}
 	
 	/**
+	 * Hash code based on summed hash codes of individual integer values
+	 * 
+	 * Defined as XOR of hashcodes of all elements rotated right for each element, to be consistent with PersistentList<T>
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static int hashCode(int[] data) {
+		int result=0;
+		for(int i=0; i<data.length; i++) {
+			result^=hashCode(data[i]);
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
+	public static<T> int hashCode(Iterator<T> data) {
+		int result=0;
+		
+		while(data.hasNext()) {
+			result^=hashCodeWithNulls(data.next());
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
+	/**
+	 * Hashcode for an int, defined as the value of the int itself for consistency with java.lang.Integer
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static int hashCode(int value) {
+		return value;
+	}
+	
+	public static int hashCodeWithNulls(Object value) {
+		if (value==null) return 0;
+		return value.hashCode();
+	}
+	
+	/**
 	 * Compares two Comparable values, considering null as the lowest possible value 
 	 * 
 	 * @param <T>

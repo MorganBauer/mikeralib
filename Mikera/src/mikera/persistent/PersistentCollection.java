@@ -102,7 +102,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		return a;
 	}
 
-	public PersistentCollection<T> deleteAll(final T value) {
+	public PersistentCollection<T> delete(final T value) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
 			public boolean filter(Object testvalue) {
@@ -152,7 +152,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	
 	public abstract PersistentCollection<T> include(final T value);
 	
-	public PersistentCollection<T> include(final Collection<T> values) {
+	public PersistentCollection<T> includeAll(final Collection<T> values) {
 		PersistentCollection<T> ps=this;
 		for (T t: values) {
 			ps=ps.include(t);
@@ -160,8 +160,8 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		return ps;
 	}
 	
-	public PersistentCollection<T> include(final PersistentCollection<T> values) {
-		return include((Collection<T>)values);
+	public PersistentCollection<T> includeAll(final PersistentCollection<T> values) {
+		return includeAll((Collection<T>)values);
 	}
 	
 	public void validate() {

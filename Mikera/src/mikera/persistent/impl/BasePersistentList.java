@@ -69,14 +69,14 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	public PersistentList<T> deleteFirst(T value) {
 		int i=indexOf(value);
 		if (i<0) return this;
-		return delete(i,i+1);
+		return deleteRange(i,i+1);
 	}
 	
-	public PersistentList<T> deleteAll(T value) {
+	public PersistentList<T> delete(T value) {
 		PersistentList<T> pl=this;
 		int i=pl.indexOf(value);
 		while (i>=0) {
-			pl=delete(i);
+			pl=deleteAt(i);
 			i=pl.indexOf(value,i);
 		}
 		return pl;
@@ -85,7 +85,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	public PersistentList<T> deleteAll(Collection<T> values) {
 		PersistentList<T> pl=this;
 		for (T t : values) { 
-			pl=(PersistentList<T>) pl.deleteAll(t);
+			pl=(PersistentList<T>) pl.delete(t);
 		}
 		return pl;
 	}

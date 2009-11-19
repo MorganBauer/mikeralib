@@ -65,8 +65,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		return pm;
 	}
 
-	
-	protected static <K,V> int countEntries(PHMNode<K,V> node) {
+	public static <K,V> int countEntries(PHMNode<K,V> node) {
 		if (node==null) return 0;
 		return node.size();
 	}
@@ -312,7 +311,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		private final int bitmap; // bitmap indicating which slots are present in data array
 		
 		
-		protected PHMBitMapNode(PHMNode<K,V>[] newData, int newShift, int newBitmap) {
+		private PHMBitMapNode(PHMNode<K,V>[] newData, int newShift, int newBitmap) {
 			data=newData;
 			shift=newShift;
 			bitmap=newBitmap;
@@ -357,7 +356,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		}
 		
 		@SuppressWarnings("unchecked")
-		protected PHMNode<K, V> remove(int i) {
+		private PHMNode<K, V> remove(int i) {
 			if (data.length==1) return null;
 			if (data.length==2) {
 				// only return the node if it is a leaf node (otherwise shift levels are disrupted....

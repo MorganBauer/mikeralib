@@ -37,6 +37,10 @@ public class TestPersistent {
 		testPersistentSet(SingletonSet.create("Bob"));
 		testPersistentSet(MapFactory.create(2, "Benhamma").keySet());
 		testPersistentSet(IntSet.create(3));
+		testPersistentSet(PersistentHashSet.createSingleValueSet(Integer.valueOf(5)));
+		testPersistentSet(PersistentHashSet.createFromSet(null));
+		testPersistentSet(SetFactory.create(new Integer[] {1}));
+		testPersistentSet(SetFactory.create(new Integer[] {1,null,3}));
 	}
 	
 	public <T> void testPersistentSet(PersistentSet<T> a) {
@@ -84,7 +88,7 @@ public class TestPersistent {
 		int size=a.size();
 		if (size>0) {
 			T t=a.iterator().next();
-			PersistentCollection<T> dd=a.deleteAll(t);
+			PersistentCollection<T> dd=a.delete(t);
 			assertTrue(dd.size()<size);
 			assertTrue(!dd.contains(t));
 			assertTrue(a.contains(t));
@@ -106,7 +110,7 @@ public class TestPersistent {
 			T v=ar[Rand.r(ar.length)];
 			assertTrue(a.contains(v));
 			
-			PersistentCollection<T> ad=a.deleteAll(v);
+			PersistentCollection<T> ad=a.delete(v);
 			assertFalse(ad.contains(v));
 			
 			PersistentCollection<T> adi=ad.include(v);		
@@ -123,6 +127,15 @@ public class TestPersistent {
 			PersistentSet<T> b=a.include(a.iterator().next());
 			assertTrue(b.size()==a.size());
 			assertTrue(b.equals(a));
+		}
+		
+		if (a.allowsNulls()) {
+			PersistentSet<T> an=a.include(null);
+			assertEquals(a.size()+(a.contains(null)?0:1),an.size());
+		
+			PersistentSet<T> n=a.deleteAll(a);
+			n=n.include(null);
+			assertEquals(1,n.size());
 		}
 	}
 	
@@ -161,25 +174,25 @@ public class TestPersistent {
 		
 		try {
 			// negative delete range
-			a.delete(2,0);
+			a.deleteRange(2,0);
 			fail();
 		} catch (Exception x) {/* OK */}
 		
 		try {
 			// negative delete position
-			a.delete(-3,2);
+			a.deleteRange(-3,2);
 			fail();
 		} catch (Exception x) {/* OK */}
 
 		try {
 			// out of range delete
-			a.delete(0,1000000000);
+			a.deleteRange(0,1000000000);
 			fail();
 		} catch (Exception x) {/* OK */}
 
 		try {
 			// negative delete position
-			a.delete(-4,-4);
+			a.deleteRange(-4,-4);
 			fail();
 		} catch (Exception x) {/* OK */}
 
@@ -208,7 +221,7 @@ public class TestPersistent {
 	public <T> void testEquals(PersistentList<T> a) {
 		assertEquals(a,a.clone());
 		assertEquals(a,a.append((PersistentList<T>)NullList.INSTANCE));
-		assertEquals(a,a.delete(0,0));
+		assertEquals(a,a.deleteRange(0,0));
 	}
 	
 	public <T> void testDeletes(PersistentList<T> a) {
@@ -217,7 +230,7 @@ public class TestPersistent {
 		
 		PersistentList<T> sl=a.subList(start,end);
 		
-		PersistentList<T> dl=a.delete(start, end);
+		PersistentList<T> dl=a.deleteRange(start, end);
 		if (start>0) {
 			assertEquals(a.get(start-1),dl.get(start-1));
 		}
@@ -319,10 +332,10 @@ public class TestPersistent {
 		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,2,3,4,5}));
 		PersistentList<Integer> ol=(Tuple.create(new Integer[] {1,3,5}));
 		PersistentList<Integer> pl=tl;
-		pl=(PersistentList<Integer>) pl.deleteAll(2);
-		pl=(PersistentList<Integer>) pl.deleteAll(4);
+		pl=(PersistentList<Integer>) pl.delete(2);
+		pl=(PersistentList<Integer>) pl.delete(4);
 		assertEquals(ol,pl);
-		assertEquals(ol,tl.delete(1).delete(2));
+		assertEquals(ol,tl.deleteAt(1).deleteAt(2));
 	}
 
 

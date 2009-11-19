@@ -25,6 +25,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		return false;
 	}
 	
+	
 	public boolean containsEntry(Map.Entry<K,V> entry) {
 		Map.Entry<K,V> e=getMapEntry(entry.getKey());
 		if (e==null) return false;

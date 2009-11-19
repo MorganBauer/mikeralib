@@ -1,5 +1,6 @@
 package mikera.persistent;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -24,7 +25,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	private static final long serialVersionUID = 5744895584967327995L;
 	public static final int BLOCK_SIZE_BITS=6;
 	public static final int BLOCK_SIZE=1<<BLOCK_SIZE_BITS;
-	public static final Text EMPTY=new Text(NullArrays.NULL_CHARS);
+	public static final Text EMPTY_TEXT=new Text(NullArrays.NULL_CHARS);
 	
 	private final char[] data;
 	private final Text front;
@@ -46,7 +47,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	 */
 	public static Text create(String s, int start, int end) {
 		int length=end-start;
-		if (length==0) return Text.EMPTY;
+		if (length==0) return Text.EMPTY_TEXT;
 		if (length<=BLOCK_SIZE) {
 			char[] chars=new char[length];
 			s.getChars(start, end, chars, 0);
@@ -76,7 +77,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	
 	public Text subText(int start, int end) {
 		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
-		if (start==end) return Text.EMPTY;
+		if (start==end) return Text.EMPTY_TEXT;
 		if ((start==0)&&(end==count)) return this;
 		if (data!=null) {
 			int len=end-start;
@@ -116,7 +117,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	 */
 	public Text deleteRange(int start, int end) {
 		if (start>=end) return this;
-		if ((start<=0)&&(end>=count)) return Text.EMPTY;
+		if ((start<=0)&&(end>=count)) return Text.EMPTY_TEXT;
 		if (start<=0) return subText(end,count);
 		if (end>=count) return subText(0,start);
 		return concat(subText(0,start),subText(end,count));
@@ -412,5 +413,11 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	
 	public Iterator<Character> iterator() {
 		return new TextIterator();
+	}
+	
+	private Object readResolve() throws ObjectStreamException {
+		// needed for deserialisation to the correct static instance
+		if (data.length==0) return EMPTY_TEXT;
+		return this;
 	}
 }

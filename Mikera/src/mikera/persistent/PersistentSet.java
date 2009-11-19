@@ -15,7 +15,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	public abstract PersistentSet<T> include(final T value);
 	
 	@Override
-	public PersistentSet<T> include(final Collection<T> values) {
+	public PersistentSet<T> includeAll(final Collection<T> values) {
 		PersistentSet<T> ps=this;
 		for (T t: values) {
 			ps=ps.include(t);
@@ -29,15 +29,15 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	 * @param values
 	 * @return
 	 */
-	public PersistentSet<T> include(final PersistentSet<T> values) {
-		return include((Collection<T>)values);
+	public PersistentSet<T> includeAll(final PersistentSet<T> values) {
+		return includeAll((Collection<T>)values);
 	}
 
 	public PersistentSet<T> clone() {
 		return (PersistentSet<T>)super.clone();
 	}
 	
-	public PersistentSet<T> deleteAll(final T value) {
+	public PersistentSet<T> delete(final T value) {
 		if (!contains(value)) return this;
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
 			@Override
@@ -60,6 +60,18 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 		return SetFactory.create(it);
 	}
 	
+	public PersistentSet<T> deleteAll(final PersistentCollection<T> values) {
+		if ( values==null) throw new Error();
+		Iterator<T> it=new FilteredIterator<T>(iterator()) {
+
+			@Override
+			public boolean filter(Object value) {
+				return (!values.contains(value));
+			}		
+		};
+		return SetFactory.create(it);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		if ((o instanceof PersistentSet<?>)) return equals((PersistentSet<T>)o);
@@ -69,5 +81,13 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 	public boolean equals(PersistentSet<T> s) {
 		if (size()!=s.size()) return false;
 		return s.containsAll(this)&&(this.containsAll(s));
+	}
+	
+	public boolean allowsNulls() {
+		return true;
+	}
+	
+	public int hashCode() {
+		return Tools.hashCode(iterator());
 	}
 }

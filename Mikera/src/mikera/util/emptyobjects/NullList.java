@@ -26,11 +26,11 @@ public final class NullList<T> extends PersistentList<T> {
 		return value;
 	}
 
-	public PersistentList<T> delete(int index) {
+	public PersistentList<T> deleteAt(int index) {
 		throw new IndexOutOfBoundsException();
 	}
 
-	public PersistentList<T> delete(int start, int end) {
+	public PersistentList<T> deleteRange(int start, int end) {
 		if ((start==0)&&(end==0)) return this;
 		throw new IndexOutOfBoundsException();
 	}

@@ -149,7 +149,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	}
 
 	public Set<K> keySet() {
-		return ArraySet.create(keys);
+		return ArraySet.createFromArray(keys);
 	}
 
 	public V put(K key, V value) {

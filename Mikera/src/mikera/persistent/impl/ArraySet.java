@@ -27,27 +27,27 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	private final T[] data;
 	
 	@SuppressWarnings("unchecked")
-	public static <T> ArraySet<T> create(Set<T> source) {
+	public static <T> ArraySet<T> createFromSet(Set<T> source) {
 		return new ArraySet<T>((T[])source.toArray());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> ArraySet<T> create(PersistentSet<T> source) {
+	public static <T> ArraySet<T> createFromSet(PersistentSet<T> source) {
 		if (source instanceof ArraySet<?>) return (ArraySet)source;
 		return new ArraySet<T>((T[])source.toArray());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> ArraySet<T> create(T source) {
+	public static <T> ArraySet<T> createFromValue(T source) {
 		return new ArraySet<T>((T[])new Object[]{source});
 	}
 	
-	public static <T> ArraySet<T> create(T[] source) {
+	public static <T> ArraySet<T> createFromArray(T[] source) {
 		HashSet<T> hs=new HashSet<T>();
 		for (int i=0; i<source.length; i++) {
 			hs.add(source[i]);
 		}
-		return create(hs);
+		return createFromSet(hs);
 	}
 	
 	@Override public boolean contains(Object o) {
@@ -111,7 +111,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentSet<T> deleteAll(T value) {
+	public PersistentSet<T> delete(T value) {
 		int pos=indexOf(value);
 		if (pos<0) return this;
 		int size=data.length;
@@ -122,7 +122,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 		T[] ndata=(T[])new Object[size-1];
 		System.arraycopy(data, 0, ndata, 0, pos);
 		System.arraycopy(data, pos+1, ndata, pos, size-pos-1);
-		return create(ndata);
+		return createFromArray(ndata);
 	}
 
 }

@@ -71,7 +71,7 @@ public class NullCollection<T> extends PersistentCollection<T> {
 		return (T[])toArray();
 	}
 
-	public PersistentCollection<T> deleteAll(T value) {
+	public PersistentCollection<T> delete(T value) {
 		return this;
 	}
 

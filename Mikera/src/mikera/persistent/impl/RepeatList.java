@@ -43,7 +43,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PersistentList<T> delete(int start, int end) {
+	public PersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
 		if (start>=end) {
 			if (start==end) return this;
@@ -66,7 +66,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PersistentList<T> deleteAll(final T v) {
+	public PersistentList<T> delete(final T v) {
 		if (Tools.equalsWithNulls(v,value)) {
 			return (PersistentList<T>) NullList.INSTANCE;
 		} else {

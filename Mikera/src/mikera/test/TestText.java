@@ -97,11 +97,11 @@ public class TestText {
 	
 	@Test public void testConcat() {
 		Text t1=Text.create("AB");
-		Text t2=Text.create("CD");
+		Text t2=Text.create("CD"); 
 		
 		assertEquals("ABCD",Text.concat(t1, t2).toString());
-		assertEquals(t1,Text.concat(t1, Text.EMPTY));
-		assertEquals(t1,Text.concat(Text.EMPTY,t1));
+		assertEquals(t1,Text.concat(t1, Text.EMPTY_TEXT));
+		assertEquals(t1,Text.concat(Text.EMPTY_TEXT,t1));
 		
 	}
 	

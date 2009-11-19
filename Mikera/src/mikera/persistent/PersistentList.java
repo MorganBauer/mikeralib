@@ -148,7 +148,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		return -1;
 	}
 	
-	public PersistentList<T> delete(int start, int end) {
+	public PersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
 		if (start>=end) {
 			if (start>end) throw new IllegalArgumentException();
@@ -184,8 +184,16 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		return subList(0,index).append(values).append(subList(index,size()));
 	}
 	
-	public PersistentList<T> delete(int index) {
-		return delete(index,index+1);
+	public PersistentList<T> delete(T value) {
+		PersistentList<T> pl=this;
+		for (int i = pl.indexOf(value); i>=0; i=pl.indexOf(value)) {
+			pl=pl.subList(0, i).append(pl.subList(i+1, pl.size()));
+		}
+		return pl;
+	}
+	
+	public PersistentList<T> deleteAt(int index) {
+		return deleteRange(index,index+1);
 	}
 
 	public PersistentList<T> clone() {

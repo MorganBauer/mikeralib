@@ -37,7 +37,7 @@ public final class NullSet<T> extends PersistentSet<T> {
 		return (Iterator<T>) NullIterator.INSTANCE;
 	}
 	
-	public PersistentSet<T> deleteAll(final T value) {
+	public PersistentSet<T> delete(final T value) {
 		return this;
 	}
 
@@ -46,7 +46,7 @@ public final class NullSet<T> extends PersistentSet<T> {
 	}
 	
 	@Override
-	public PersistentSet<T> include(final Collection<T> values) {
+	public PersistentSet<T> includeAll(final Collection<T> values) {
 		return SetFactory.create(values);
 	}
 	
@@ -57,5 +57,9 @@ public final class NullSet<T> extends PersistentSet<T> {
 	private Object readResolve() throws ObjectStreamException {
 		// needed for deserialisation to the correct static instance
 		return INSTANCE;
+	}
+	
+	public int hashCode() {
+		return 0;
 	}
 }
