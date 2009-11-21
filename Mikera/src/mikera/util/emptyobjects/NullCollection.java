@@ -6,7 +6,7 @@ import java.util.*;
 import mikera.persistent.*;
 import mikera.persistent.impl.SingletonList;
 
-public class NullCollection<T> extends PersistentCollection<T> {
+public final class NullCollection<T> extends PersistentCollection<T> {
 	private static final long serialVersionUID = 2925953822669265599L;
 
 	@SuppressWarnings("unchecked")
@@ -83,10 +83,6 @@ public class NullCollection<T> extends PersistentCollection<T> {
 		return this;
 	}
 
-	public PersistentCollection<T> include(T value) {
-		return ListFactory.create(value);
-	}
-	
 	public int hashCode() {
 		return 0;
 	}
@@ -99,5 +95,11 @@ public class NullCollection<T> extends PersistentCollection<T> {
 	private Object readResolve() throws ObjectStreamException {
 		// needed for deserialisation to the correct static instance
 		return INSTANCE;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public PersistentCollection<T> include(T value) {
+		return SingletonList.create(value);
 	}
 }

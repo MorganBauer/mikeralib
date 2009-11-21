@@ -133,9 +133,9 @@ public final class NullList<T> extends PersistentList<T> {
 		return SingletonList.create(value);
 	}
 
-	public PersistentList<T> insert(int index, Collection<T> values) {
+	public PersistentList<T> insertAll(int index, Collection<T> values) {
 		if (index!=0) throw new IndexOutOfBoundsException();
-		return ListFactory.create(values);
+		return ListFactory.createFromCollection(values);
 	}
 
 	@Override

@@ -13,9 +13,9 @@ public interface IPersistentList<T> extends IPersistentCollection<T>, List<T>, C
 
 	public PersistentList<T> insert(int index, T value);
 	
-	public PersistentList<T> insert(int index, Collection<T> values);
+	public PersistentList<T> insertAll(int index, Collection<T> values);
 
-	public PersistentList<T> insert(int index, PersistentList<T> values);
+	public PersistentList<T> insertAll(int index, PersistentList<T> values);
 
 	public PersistentList<T> copyFrom(int index, PersistentList<T> values, int srcIndex, int length);
 	

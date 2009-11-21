@@ -13,7 +13,7 @@ public class TestPersistent {
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testListTypes() {	
-		PersistentList<Integer> pl=ListFactory.create(new Integer[] {1,2,3,4,5});
+		PersistentList<Integer> pl=ListFactory.createFromArray(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
 		
 		testPersistentList(pl);
@@ -238,14 +238,14 @@ public class TestPersistent {
 			assertEquals(a.get(end),dl.get(start));
 		}
 		
-		PersistentList<T> nl=dl.insert(start, sl);
+		PersistentList<T> nl=dl.insertAll(start, sl);
 		
 		assertEquals(a,nl);
 	}
 	
 	public <T> void testInserts(PersistentList<T> a) {
 		int start=Rand.r(a.size());
-		PersistentList<T> pl=a.insert(start, a);
+		PersistentList<T> pl=a.insertAll(start, a);
 		if (a.size()>0) {
 			assertEquals(a.get(0),pl.get(start));
 		}

@@ -77,6 +77,15 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 		return this.containsAll(pm)&&pm.containsAll(this);
 	}
 	
+	public int hashCode() {
+		return Tools.hashCode(this.iterator());
+	}
+	
+	@Override
+	public boolean hasFastHashCode() {
+		return false;
+	}
+	
 	public Object[] toArray() {
 		Object[] os=new Object[size()];
 		int i=0;
@@ -109,7 +118,7 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 				return (!Tools.equalsWithNulls(value, testvalue));
 			}		
 		};
-		return ListFactory.create(it);
+		return ListFactory.createFromIterator(it);
 	}
 	
 	public PersistentCollection<T> deleteAll(final PersistentCollection<T> values) {
@@ -119,19 +128,19 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 				return (!values.contains(value));
 			}		
 		};
-		return ListFactory.create(it);
+		return ListFactory.createFromIterator(it);
 	}
 
 	public PersistentCollection<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			PersistentCollection<T> col=ListFactory.create(values);
+			PersistentCollection<T> col=ListFactory.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {
 				return (!col.contains(value));
 			}		
 		};
-		return ListFactory.create(it);
+		return ListFactory.createFromIterator(it);
 	}
 	
 	public String toString() {

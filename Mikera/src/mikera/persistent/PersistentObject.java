@@ -18,4 +18,8 @@ public abstract class PersistentObject implements IPersistentObject {
 	public PersistentObject clone() {
 		return this;
 	}
+	
+	public boolean hasFastHashCode() {
+		return false;
+	}
 }

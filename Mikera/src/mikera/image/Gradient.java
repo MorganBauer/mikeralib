@@ -9,8 +9,10 @@ import mikera.math.Vector;
 import mikera.math.VectorFunction;
 import mikera.util.Maths;
 
-public class Gradient {
+public final class Gradient {
 	private static final int DEFAULT_GRADIENT_SIZE=256;
+	
+	public int[] data;
 	
 	/**
 	 * Creates a new gradient array of default size (256)
@@ -20,13 +22,37 @@ public class Gradient {
 		return new int[DEFAULT_GRADIENT_SIZE];
 	}
 	
-	public static int[] createInvertedMonoGradient() {
+	public Gradient() {
+		this(DEFAULT_GRADIENT_SIZE);
+	}
+	
+	public Gradient(int size) {
+		data=new int[size];
+	}
+	
+	public Gradient(int[] grad) {
+		data=grad;
+	}
+	
+	public static int[] createDataArray(int size) {
+		return new int[size];
+	}
+	
+	public int size() {
+		return data.length;
+	}
+	
+	public int get(int i) {
+		return data[i];
+	}
+	
+	public static Gradient createInvertedMonoGradient() {
 		int[] gr=create();
 		for (int i=0; i<DEFAULT_GRADIENT_SIZE; i++) {
 			int c=(255-i)*0x010101;
 			gr[i]=c|Colours.ALPHA_MASK;
 		}	
-		return gr;
+		return new Gradient(gr);
 	}
 	
 	/**
@@ -36,22 +62,22 @@ public class Gradient {
 	 * @param b
 	 * @param line
 	 */
-	public static void fillFromImage(int[] grad, BufferedImage b, int line) {
-		for (int i=0; i<DEFAULT_GRADIENT_SIZE; i++) {
-			grad[i]=b.getRGB(i, line);
+	public void fillFromImage(BufferedImage b, int line) {
+		for (int i=0; i<size(); i++) {
+			data[i]=b.getRGB(i, line);
 		}
 	}
 	
-	public static void fillFromFunction(int[] grad, VectorFunction vf) {
+	public void fillFromFunction(VectorFunction vf) {
 		Vector col=new Vector(4);
 		Vector pos=new Vector(1);
 		col.data[3]=1.0f; // default to full alpha
 		
-		int s=grad.length;
+		int s=size();
 		for (int i=0; i<s; i++) {
 			col.data[0]=((float)i)/s;
 			vf.calculate(pos, col);
-			grad[i]=Colours.fromVector(col);
+			data[i]=Colours.fromVector(col);
 		}
 	}
 
@@ -59,15 +85,14 @@ public class Gradient {
 	 * Creates a rainbow coloured gradient
 	 * @return
 	 */
-	public static int[] createRainbowGradient() {
+	public static Gradient createRainbowGradient(int size) {
 		int[] gr=create();
-		int size=DEFAULT_GRADIENT_SIZE;
 		for (int i=0; i<size; i++) {
 			float h=((float)i)/size;
 			gr[i]=Color.HSBtoRGB(h, 1, 1)|Colours.ALPHA_MASK;
 		}
 		
-		return gr;
+		return new Gradient(gr);
 	}
 	
 	/**
@@ -75,8 +100,8 @@ public class Gradient {
 	 * fractal landscape, with sea level at midpoint
 	 * @return
 	 */
-	public static int[] createLandscapeGradient() {
-		int[] gr=create();
+	public static Gradient createLandscapeGradient() {
+		int[] gr=createDataArray(256);
 		fillLinearGradient(gr, 0, 0xFF000000, 110, 0xFF0000FF);
 		fillLinearGradient(gr, 111, 0xFF0000FF, 127, 0xFF0080FF);
 		fillLinearGradient(gr, 128, 0xFFFFFF00, 130, 0xFFFFFF00);
@@ -84,17 +109,17 @@ public class Gradient {
 		fillLinearGradient(gr, 161, 0xFF006000, 170, 0xFF808080);
 		fillLinearGradient(gr, 171, 0xFF808080, 190, 0xFF707070);
 		fillLinearGradient(gr, 191, 0xFFFFFFFF, 255, 0xFFB0FFFF);
-		return gr;
+		return new Gradient(gr);
 	}
 	
 	/**
 	 * Creates a monochrome gradient from black to white
 	 * @return
 	 */
-	public static int[] createMonoGradient() {
+	public static Gradient createMonoGradient() {
 		int[] gr=create();
 		fillLinearGradient(gr, 0, 0xFF000000, 255, 0xFFFFFFFF);
-		return gr;
+		return new Gradient(gr);
 	}
 	
 	/**

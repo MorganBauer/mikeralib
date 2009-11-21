@@ -40,7 +40,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> CompositeList<T> create(T[] data,  int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList(ListFactory.create(data,fromIndex,midIndex),ListFactory.create(data,midIndex,toIndex));
+		return new CompositeList(ListFactory.createFromArray(data,fromIndex,midIndex),ListFactory.createFromArray(data,midIndex,toIndex));
 	}
 	
 	public static final int calcMidIndex(int fromIndex, int toIndex) {
@@ -61,7 +61,7 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> CompositeList<T> create(List<T> source, int fromIndex, int toIndex) {
 		int midIndex=calcMidIndex(fromIndex, toIndex);
-		return new CompositeList(ListFactory.create(source,fromIndex,midIndex),ListFactory.create(source,midIndex,toIndex));
+		return new CompositeList(ListFactory.createFromList(source,fromIndex,midIndex),ListFactory.createFromList(source,midIndex,toIndex));
 	}
 	
 	private CompositeList(PersistentList<T> a, PersistentList<T> b ) {

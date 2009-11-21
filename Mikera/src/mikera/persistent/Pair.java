@@ -10,7 +10,7 @@ import mikera.util.Bits;
  * @param <A>
  * @param <B>
  */
-public class Pair<A,B> extends PersistentObject implements Comparable<Pair<A,B>> {
+public final class Pair<A,B> extends PersistentObject implements Comparable<Pair<A,B>> {
 	private static final long serialVersionUID = -7930545169533958038L;
 	public final A a;
 	public final B b;

@@ -2,14 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import mikera.persistent.ListFactory;
-import mikera.persistent.MapFactory;
-import mikera.persistent.PersistentCollection;
-import mikera.persistent.PersistentHashMap;
-import mikera.persistent.PersistentList;
-import mikera.persistent.PersistentMap;
-import mikera.persistent.PersistentSet;
-import mikera.persistent.SetFactory;
+import mikera.persistent.*;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.RepeatList;
 import mikera.persistent.impl.SingletonList;
@@ -28,9 +21,16 @@ public class TestPersistentMap {
 		assertEquals(1,PersistentHashMap.PHMBitMapNode.slotFromHash(0x00170030,20));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test public void testMaps() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		testMap(pm);
+		
+		IntMap<String> im=new IntMap<String>();
+		testMap(im);
+		
+		PersistentMap<Integer,String> nm=NullMap.INSTANCE;
+		testMap(nm);
 	}
 	
 	@Test public void testConvert() {
@@ -61,9 +61,9 @@ public class TestPersistentMap {
 		assertEquals(ks,ks2);
 		assertEquals(ks,ks3);
 		
-		PersistentList<String> vs=ListFactory.create(hm.values());
-		PersistentList<String> vs2=ListFactory.create(pm.values());
-		PersistentList<String> vs3=ListFactory.create(phm.values());
+		PersistentList<String> vs=ListFactory.createFromCollection(hm.values());
+		PersistentList<String> vs2=ListFactory.createFromCollection(pm.values());
+		PersistentList<String> vs3=ListFactory.createFromCollection(phm.values());
 		assertEquals(SetFactory.create(vs),SetFactory.create(vs2));
 		assertEquals(SetFactory.create(vs),SetFactory.create(vs3));
 	}

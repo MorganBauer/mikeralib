@@ -125,6 +125,10 @@ public final class Octreap<T> extends BaseGrid<T> {
 		return true;
 	}
 	
+	public int hashCode() {
+		return 0;
+	}
+	
 
 	private class NodeIterator implements Iterator<ZNode> {
 		private ZNode current=getFirstNode();

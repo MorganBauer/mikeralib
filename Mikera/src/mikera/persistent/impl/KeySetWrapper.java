@@ -7,7 +7,7 @@ import java.util.Set;
 import mikera.persistent.PersistentSet;
 import mikera.persistent.SetFactory;
 
-public class KeySetWrapper<K,V> extends PersistentSet<K> {
+public final class KeySetWrapper<K,V> extends PersistentSet<K> {
 	private static final long serialVersionUID = -3297453356838115646L;
 
 	

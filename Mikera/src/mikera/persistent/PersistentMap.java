@@ -110,6 +110,15 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 		return false;
 	}
 	
+	public int hashCode() {
+		return Tools.hashCode(entrySet().iterator());
+	}
+	
+	@Override
+	public boolean hasFastHashCode() {
+		return false;
+	}
+	
 	public boolean equals(PersistentMap<K,V> pm) {
 		return this.containsAll(pm)&&pm.containsAll(this);
 	}

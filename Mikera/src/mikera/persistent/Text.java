@@ -249,6 +249,11 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	public int hashCode() {
 		return hashCode;
 	}
+	
+	@Override
+	public boolean hasFastHashCode() {
+		return true;
+	}
 
 	public char charAt(int index) {
 		if ((index<0)||(index>count)) throw new IndexOutOfBoundsException();

@@ -86,7 +86,7 @@ public class Generator {
 		return b;
 	}
 	
-	public static BufferedImage createFunctionGradient(int w, int h, Function<Vector,Vector> f, int[] grad) {
+	public static BufferedImage createFunctionGradient(int w, int h, Function<Vector,Vector> f, Gradient grad) {
 		BufferedImage b=newImage(w,h);
 		Vector input=new Vector(2);
 		Vector output=new Vector(20);
@@ -96,9 +96,9 @@ public class Generator {
 				input.data[0]=x/(float)w;
 				input.data[1]=y/(float)h;
 				f.calculate(input, output);
-				int max=grad.length-1;
+				int max=grad.size()-1;
 				int i=Maths.clampToInteger(output.data[0]*max, 0, max);
-				int rgba=grad[i];
+				int rgba=grad.get(i);
 				b.setRGB(x, y, rgba);
 			}
 		}
@@ -117,27 +117,27 @@ public class Generator {
 		return b;
 	}
 	
-	public static BufferedImage createGradientImage(int[] gradient) {
-		int size=gradient.length;
+	public static BufferedImage createGradientImage(Gradient gradient) {
+		int size=gradient.size();
 		BufferedImage b=newImage(size,size);
 		
 		for (int y=0; y<size; y++) {
 			for (int x=0; x<size; x++) {
-				b.setRGB(x, y, gradient[x]);
+				b.setRGB(x, y, gradient.get(x));
 			}
 		}
 		return b;
 	}
 	
-	public static BufferedImage createGradientCircle(int[] gradient, int r) {
-		int size=gradient.length;
+	public static BufferedImage createGradientCircle(Gradient gradient, int r) {
+		int size=gradient.size();
 		BufferedImage b=newImage(r*2,r*2);
 		
 		for (int y=-r; y<r; y++) {
 			for (int x=-r; x<r; x++) {
 				int i=(int)(Maths.sqrt(x*x+y*y)*size/r);
 				if (i<size) {	
-					b.setRGB(r+x, r+y, gradient[i]);
+					b.setRGB(r+x, r+y, gradient.get(i));
 				}
 			}
 		}
@@ -167,8 +167,8 @@ public class Generator {
 			for (int x=0; x<w; x++) {
 				float cx=Maths.sin(x/20.f+10*Maths.sin(y/33.0f));
 				float cy=Maths.sin(y/30.f+15*Maths.sin(x/22.0f));
-				cx=Maths.sin(cy+Maths.sin((float)(cx+x/23)));
-				cy=Maths.sin(cx+Maths.sin((float)(cy-y/13)));
+				cx=Maths.sin(cy+Maths.sin((float)(cx+x/23.0f)));
+				cy=Maths.sin(cx+Maths.sin((float)(cy-y/13.0f)));
 
 				int a=(int)(128+127*Maths.sin(cx)*Maths.cos(cy));
 				b.setRGB(x, y, 0xFF000000+0x010101*a);
@@ -186,7 +186,7 @@ public class Generator {
 		
 		VectorFunction f = Functions.createLandscapeFunction(7);
 		
-		int[] grad=Gradient.createLandscapeGradient();
+		Gradient grad=Gradient.createLandscapeGradient();
 		//BufferedImage e=createFunction4(512,512,f);	
 		BufferedImage e=createFunctionGradient(512,512,f, grad);
 		

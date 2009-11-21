@@ -50,7 +50,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 
 	public PersistentSet<T> deleteAll(final Collection<T> values) {
 		Iterator<T> it=new FilteredIterator<T>(iterator()) {
-			PersistentCollection<T> col=ListFactory.create(values);
+			PersistentCollection<T> col=ListFactory.createFromCollection(values);
 			
 			@Override
 			public boolean filter(Object value) {

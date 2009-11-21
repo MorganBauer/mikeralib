@@ -15,12 +15,12 @@ public class ListFactory<T> {
 		return SingletonList.create(value);
 	}
 	
-	public static <T> PersistentList<T> create(T[] data) {
-		return create(data,0,data.length);
+	public static <T> PersistentList<T> createFromArray(T[] data) {
+		return createFromArray(data,0,data.length);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> create(T[] data,  int fromIndex, int toIndex) {
+	public static <T> PersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<2) {
 			if (n<0) throw new IllegalArgumentException(); 
@@ -35,27 +35,27 @@ public class ListFactory<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> create(Collection<T> source) {
+	public static <T> PersistentList<T> createFromCollection(Collection<T> source) {
 		if (source instanceof PersistentList<?>) {
 			return (PersistentList<T>)source;
 		} else if (source instanceof List<?>) {
-			return create((List<T>)source,0,source.size());
+			return createFromList((List<T>)source,0,source.size());
 		} 
 		
 		Object[] data=source.toArray();
-		return create((T[])data);
+		return createFromArray((T[])data);
 	}
 	
-	public static<T> PersistentList<T> create(Iterator<T> source) {
+	public static<T> PersistentList<T> createFromIterator(Iterator<T> source) {
 		ArrayList<T> al=new ArrayList<T>();
 		while(source.hasNext()) {
 			al.add(source.next());
 		}
-		return create(al);
+		return createFromCollection(al);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> PersistentList<T> create(List<T> source, int fromIndex, int toIndex) {
+	public static <T> PersistentList<T> createFromList(List<T> source, int fromIndex, int toIndex) {
 		int maxSize=source.size();
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {

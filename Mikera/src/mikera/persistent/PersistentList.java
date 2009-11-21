@@ -106,7 +106,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	public PersistentList<T> append(Collection<T> values) {
-		return ListFactory.concat(this,ListFactory.create(values));
+		return ListFactory.concat(this,ListFactory.createFromCollection(values));
 	}
 	
 	public PersistentList<T> include(final T value) {
@@ -161,7 +161,7 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 
 
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
-		return ListFactory.create(this,fromIndex,toIndex);
+		return ListFactory.createFromList(this,fromIndex,toIndex);
 	}
 
 	public PersistentList<T> update(int index, T value) {
@@ -172,15 +172,15 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		return subList(0,index).append(value).append(subList(index,size()));
 	}
 
-	public PersistentList<T> insert(int index, Collection<T> values) {
+	public PersistentList<T> insertAll(int index, Collection<T> values) {
 		if (values instanceof PersistentList<?>) {
-			return insert(index,(PersistentList<T>)values);
+			return insertAll(index,(PersistentList<T>)values);
 		}
-		PersistentList<T> pl=ListFactory.create(values);
+		PersistentList<T> pl=ListFactory.createFromCollection(values);
 		return subList(0,index).append(pl).append(subList(index,size()));
 	}
 	
-	public PersistentList<T> insert(int index, PersistentList<T> values) {
+	public PersistentList<T> insertAll(int index, PersistentList<T> values) {
 		return subList(0,index).append(values).append(subList(index,size()));
 	}
 	

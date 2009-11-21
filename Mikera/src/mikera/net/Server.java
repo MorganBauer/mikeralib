@@ -13,7 +13,6 @@ public class Server {
 	
 	private Thread serverThread;
 	boolean running=false;
-	double gameTime=0.0;
 	private int load_avg=0;
 	
 	private PlayerList playerList=new PlayerList();
@@ -47,7 +46,6 @@ public class Server {
 	}
 	
 	private void initServer() {
-		gameTime=0.0;
 		running=true;
 		Thread theThread=new Thread(new Runnable() {
 			
@@ -156,7 +154,7 @@ public class Server {
 		Player p=playerList.getPlayer(playerID);
 		p.connection=c;
 		
-		logMessage("Player connected: ID="+playerID+" name='"+name+"'");
+		logMessage("Player connected: ID="+playerID+" name='"+name+"' pass='"+p.password+"'");
 	}
 
 	// queues message for the relevant player

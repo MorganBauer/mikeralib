@@ -421,7 +421,7 @@ public class TextUtils {
      * @author Mike
      *
      */
-    public static class SourceSubSequence implements CharSequence,Cloneable {
+    public static final class SourceSubSequence implements CharSequence,Cloneable {
     	private CharSequence source;
     	private final int s_start;
     	private final int s_end;

@@ -656,11 +656,9 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 */
 	private static final class PHMEntry<K,V> extends PHMNode<K,V> implements Map.Entry<K, V> {
 		private static final long serialVersionUID = -4668010646096033269L;
-		
-		
+			
 		private final K key;
-		private final V value;
-		
+		private final V value;		
 		
 		public K getKey() {
 			return key;
