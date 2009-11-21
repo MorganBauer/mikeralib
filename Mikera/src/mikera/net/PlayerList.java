@@ -3,67 +3,55 @@ package mikera.net;
 import java.util.*;
 import java.nio.*;
 
+import mikera.persistent.IntMap;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
+
 
 public class PlayerList {
 	public int MAX_PLAYERS=50;
 	
-	private ArrayList<Player> players=new ArrayList<Player>();
-	private int playerCount=0;
+	private IntMap<Player> playerMap=new IntMap<Player>();
+	private PersistentList<Player> playerList=ListFactory.create();
+	private int next_id=0;
 	
 	public Integer addPlayer(String name, String pass) {
 		// find a free player id
-		int playerNum=playerCount;
-		for (int i=0; i<players.size(); i++) {
-			Player p=players.get(i);
-			if (p==null) {
-				playerNum=i;
-			} else {
-				if (name.equals(p.name)) {
-					throw new Error("Duplicate player name!!");
-				}
-			}
-		}
-		if (playerNum>=MAX_PLAYERS) throw new Error("Too many players!!");
+		if (playerCount()>=MAX_PLAYERS) throw new Error("Too many players!!");
+
+		int playerNum=next_id++;
 		
-		Player ps=new Player();
-		ps.name=name;
-		ps.password=pass;
-		ps.id=Integer.valueOf(playerNum);
+		Player player=new Player();
+		player.name=name;
+		player.password=pass;
+		player.id=Integer.valueOf(playerNum);
 		
-		if (playerNum>=players.size()) {
-			players.add(ps);
-		} else {
-			players.set(playerNum, ps);			
-		}
-		playerCount++;
+		playerMap=playerMap.include(playerNum, player);
+		playerList=playerList.append(player);
 		
-		return ps.id;
+		return player.id;
 	}
 	
 	public int playerCount() {
-		return playerCount;
+		return playerMap.size();
 	}
 	
-	public int listSize() {
-		return players.size();
+	public List<Player> getList() {
+		return playerList;
 	}
 	
 	public void removePlayer(int id) {
-		if (id==(players.size()-1)) {
-			players.remove(id);
-		} else {
-			players.set(id,null);
-		}
-		playerCount--;
+		Player p=playerMap.get(id);
+		playerMap=playerMap.delete(id);
+		playerList=playerList.delete(p);
 	}
 	
 	public Player getPlayer(int id) {
-		return players.get(id);
+		return playerMap.get(id);
 	}
 	
 	public Integer findPlayer(String name) {
-		for (int i=0; i<players.size(); i++) {
-			Player ps=players.get(i);
+		for (Player ps: playerList) {
 			if ((ps!=null)&&name.equals(ps.name)) {
 				return ps.id;
 			}

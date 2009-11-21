@@ -1,21 +1,42 @@
 package mikera.net;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 
 import mikera.net.*;
 
-public class Server {
+
+/**
+ * Standard game server implementation
+ * 
+ * Handles queueing of messages to / from each player
+ * 
+ * 
+ * @author Mike
+ *
+ */
+public abstract class Server {
 	public static final int SERVER_PORT=8080;
 	public static final int SERVER_TICK_MILLIS=150;
 	
 	private ServerConnector serverConnector;
 	
-	private Thread serverThread;
 	boolean running=false;
-	private int load_avg=0;
+	
+	//private Thread serverThread;
+	//private int load_avg=0;
 	
 	private PlayerList playerList=new PlayerList();
+	
+	
+	public List<Player> getPlayerList() {
+		return playerList.getList();
+	}
+	
+	public Player getPlayer(int id) {
+		return playerList.getPlayer(id);
+	}
 	
 	/*
 	 * ===============================================================
@@ -29,7 +50,7 @@ public class Server {
 		serverConnector.setMessageHandler(new Receiver());
 		serverConnector.startListening(SERVER_PORT);
 		
-		initServer();
+		// initServer();
 
 		System.err.println("Server started on port: "+SERVER_PORT);
 	}
@@ -45,6 +66,7 @@ public class Server {
 		
 	}
 	
+	/*
 	private void initServer() {
 		running=true;
 		Thread theThread=new Thread(new Runnable() {
@@ -78,7 +100,11 @@ public class Server {
 		serverThread=theThread;
 		serverThread.start();
 	}
-
+	
+	protected void doTick() {
+		
+	}
+*/
 	
 	/*
 	 * ===============================================================
@@ -86,7 +112,7 @@ public class Server {
 	 * ===============================================================
 	 */
 	
-	private void logMessage(String s) {
+	protected void logMessage(String s) {
 		System.err.println(s);
 	}
 
@@ -96,32 +122,12 @@ public class Server {
 	 * ===============================================================
 	 */
 	
-	public void sendMessage(Data data, int playerNo) {
-		Connection c=playerList.getPlayer(playerNo).connection;
-		c.write(data);
-	}
-	
-	
-	/*
-	 * ===============================================================
-	 * Server tick handling
-	 * ===============================================================
-	 */
-
-	private void doTick() {
-		processQueuedMessages();
-	}
-	
-	private void processQueuedMessages() {
-		int max=playerList.listSize();
-		for (int i=0; i<max; i++) {
-			Player p=playerList.getPlayer(i);
-			processQueuedMessages(p);
+	protected void transmitMessage(int playerNo, Data data) {
+		Player p=playerList.getPlayer(playerNo);
+		synchronized(p) {
+			Connection c=p.connection;
+			c.write(data);
 		}
-	}
-	
-	private void processQueuedMessages(Player p) {
-	
 	}
 	
 	/*
@@ -130,13 +136,15 @@ public class Server {
 	 * ===============================================================
 	 */
 	private class Receiver implements MessageHandler {
-		public boolean handleMessage(ByteBuffer data, Connection c) {
+		public boolean handleMessage(ByteBuffer buffer, Connection c) {
 			if (c.userTag==null) {
-				handleConnectRequest(data,c);
+				handleConnectRequest(buffer,c);
+				return true; // since message should be fully handled, can safely recycle
 			} else {
-				queueMessage(data,(Integer)c.userTag);
+				Data data=Data.create(buffer);
+				queueIncomingMessage(data,(Integer)c.userTag);
+				return false; // since we want to keep the ByteBuffer data.....
 			}
-			return false; // since we want to keep the ByteBuffer data.....
 		}
 	}
 	
@@ -155,15 +163,17 @@ public class Server {
 		p.connection=c;
 		
 		logMessage("Player connected: ID="+playerID+" name='"+name+"' pass='"+p.password+"'");
+		
+		
 	}
 
 	// queues message for the relevant player
-	private void queueMessage(ByteBuffer data, Integer playerID) {
+	private void queueIncomingMessage(Data data, Integer playerID) {
 		Player p=playerList.getPlayer(playerID);
 		if (p==null) {
 			System.err.println("Message received from non-existent player?!?!? ID="+playerID);
 			return;
 		}
-		p.messages.add(data);
+		p.queueIncomingMessage(data);
 	}
 }

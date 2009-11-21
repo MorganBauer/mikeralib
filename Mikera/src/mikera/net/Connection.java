@@ -125,6 +125,7 @@ public class Connection {
 
 				int receivedBytes = buffer.position();
 				if (receivedBytes < 4) {
+					// return and continue to wait for rest of header
 					return;
 				}
 			}
@@ -163,6 +164,7 @@ public class Connection {
 				// prepare to read
 				buffer.flip();
 				buffer.getInt(); // take away the message length
+				//System.err.println("Buffer recd: "+buffer.remaining());
 				boolean recycleBuffer=handleMessage(buffer);
 				clearReceiveBuffer(recycleBuffer);
 			} catch (Throwable t) {

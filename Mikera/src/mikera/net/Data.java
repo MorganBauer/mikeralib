@@ -47,6 +47,10 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		d.copyTo(0, this, 0, d.size());
 	}
 	
+	public Data(ByteBuffer bb) {
+		appendByteBuffer(bb);
+	}
+	
 	private Data(byte[] bytes) {
 		data=bytes;
 		size=bytes.length;
@@ -81,7 +85,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	public static Data create(ByteBuffer bb) {
 		int remaining=bb.remaining();
 		Data nd=new Data(remaining);
-		bb.get(nd.data, bb.position(), remaining);
+		bb.get(nd.data, 0, remaining);
 		nd.size=remaining;
 		return nd;
 	}
@@ -277,6 +281,10 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return data.length;
 	}
 	
+	public void writeToByteBuffer(ByteBuffer bb) {
+		bb.put(data,0,size);
+	}
+	
 	public ByteBuffer toFlippedByteBuffer() {
 		ByteBuffer bb=BufferCache.instance().getBuffer(size);
 		bb.put(data,0,size);
@@ -287,6 +295,13 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	public ByteBuffer toWrapByteBuffer() {
 		ByteBuffer bb=ByteBuffer.wrap(data);
 		bb.limit(size);
+		return bb;
+	}
+	
+	public ByteBuffer wrapAndClear() {
+		ByteBuffer bb=ByteBuffer.wrap(data);
+		bb.limit(size);
+		clear();
 		return bb;
 	}
 	

@@ -84,6 +84,8 @@ public class ClientConnector {
 			SelectionKey key = (SelectionKey) i.next();
 			i.remove();
 			
+			// System.err.println(key.readyOps());
+			
 			if (!key.isValid()) continue;
 
 			connection.handleEvent(key);

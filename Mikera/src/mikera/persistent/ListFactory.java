@@ -9,6 +9,10 @@ import java.util.*;
 public class ListFactory<T> {
 	public static final int MAX_TUPLE_BUILD_SIZE=32;
 	
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentList<T> create() {
+		return (PersistentList<T>) NullList.INSTANCE;
+	}	
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(T value) {
