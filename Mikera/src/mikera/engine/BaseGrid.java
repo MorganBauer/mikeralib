@@ -1,5 +1,7 @@
 package mikera.engine;
 
+import mikera.util.Maths;
+
 public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 	
 	public void set(Grid<T> o) {
@@ -14,6 +16,49 @@ public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 	public int countNodes() {
 		return 1;
 	}
+	
+	public void visitPoints(final PointVisitor<T> bf) {
+		BlockVisitor<T> bv=new BlockVisitor<T>() {
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					T value) {
+				for (int z=z1; z<=z2; z++) {
+					for (int y=y1; y<=y2; y++) {
+						for (int x=x1; x<=x2; x++) {
+							bf.visit(x, y, z, value);
+						}
+					}
+				}
+				return null;
+			}		
+		};
+		visitBlocks(bv);
+	}
+	
+	public void visitPoints(final PointVisitor<T> bf, final int xmin, final int xmax, final int ymin, final int ymax, final int zmin, final int zmax) {
+		BlockVisitor<T> bv=new BlockVisitor<T>() {
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					T value) {
+				x1=Maths.max(x1,xmin);
+				x2=Maths.min(x2,xmax);
+				y1=Maths.max(y1,xmin);
+				y2=Maths.min(y2,xmax);
+				z1=Maths.max(z1,xmin);
+				z2=Maths.min(z2,xmax);
+				
+				for (int z=z1; z<=z2; z++) {
+					for (int y=y1; y<=y2; y++) {
+						for (int x=x1; x<=x2; x++) {
+							bf.visit(x, y, z, value);
+						}
+					}
+				}
+				return null;
+			}		
+		};
+		visitBlocks(bv);
+	}
+
+
 	
 	public void changeAll(final T value) {
 		BlockVisitor<T> changer=new BlockVisitor<T>() {

@@ -12,6 +12,11 @@ public abstract class Grid<T> {
 	public abstract int countNonNull();
 	
 	public abstract void visitBlocks(BlockVisitor<T> bf);
+
+	public abstract void visitPoints(PointVisitor<T> bf);
+
+	public abstract void visitPoints(PointVisitor<T> bf, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
+
 	
 	public abstract void clear();
 	

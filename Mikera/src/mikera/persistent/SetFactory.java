@@ -8,6 +8,7 @@ import mikera.persistent.impl.ArraySet;
 import mikera.persistent.impl.SingletonSet;
 import mikera.util.TODOException;
 import mikera.util.Tools;
+import mikera.util.emptyobjects.NullSet;
 
 public class SetFactory {
 	// TODO: convert to hash implementations
@@ -15,6 +16,11 @@ public class SetFactory {
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> create(T value) {
 		return SingletonSet.create(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentSet<T> create() {
+		return (PersistentSet<T>) NullSet.INSTANCE;
 	}
 	
 	public static <T> PersistentSet<T> create(Set<T> source) {

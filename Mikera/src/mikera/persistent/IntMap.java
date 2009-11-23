@@ -22,6 +22,7 @@ import mikera.util.Tools;
  */
 
 public final class IntMap<V> extends PersistentMap<Integer,V> {
+	private static final long serialVersionUID = 2243997925850227720L;
 
 	/**
 	 * SHIFT_AMOUNT controls the maximum branching factor.
