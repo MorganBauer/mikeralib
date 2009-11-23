@@ -111,12 +111,22 @@ public class TestGrid {
 	}
 	
 	public void testVisitBlock(Grid<Integer> g) {
-		BCounter bc=new BCounter();
-		
+		BCounter bc=new BCounter();	
 		g.setBlock(-5,-5,-5,4,4,4,1);
 		g.visitBlocks(bc);
-		
 		assertEquals(1000,bc.size);
+		
+		bc=new BCounter();
+		g.visitBlocks(bc,0,0,0,9,9,9);
+		assertEquals(125,bc.size);
+		
+		bc=new BCounter();
+		g.visitBlocks(bc,-9,-9,-9,0,0,0);
+		assertEquals(216,bc.size);
+		
+		bc=new BCounter();
+		g.visitBlocks(bc,-1,-1,-1,1,1,1);
+		assertEquals(27,bc.size);
 		
 		g.clear();
 	}

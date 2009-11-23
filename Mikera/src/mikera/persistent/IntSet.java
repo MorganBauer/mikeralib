@@ -86,6 +86,10 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		} 
 		return -1;
 	}
+
+	public static IntSet create() {
+		return EMPTY_INTSET;
+	}
 	
 	public static IntSet create(int value) {
 		int hc=Tools.hashCode(value);
@@ -304,8 +308,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 
 	@Override
-	public PersistentSet<Integer> include(Integer value) {
+	public IntSet include(Integer value) {
 		return createMerged(this,value.intValue());
+	}
+	
+	public IntSet include(int value) {
+		return createMerged(this,value);
 	}
 
 	private Object readResolve() throws ObjectStreamException {

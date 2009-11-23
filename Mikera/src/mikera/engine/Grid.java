@@ -17,6 +17,8 @@ public abstract class Grid<T> {
 
 	public abstract void visitPoints(PointVisitor<T> bf, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
 
+	public abstract void visitBlocks(BlockVisitor<T> bf, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
+
 	
 	public abstract void clear();
 	

@@ -63,6 +63,15 @@ public class TestText {
 		assertEquals(true,t1.isPacked());
 		assertEquals(true,t4.isPacked());
 	}
+
+	@Test public void testTextCompare() {
+		Text t1=Text.create("ABC");
+		assertTrue(t1.compareTo("ABC")==0);
+		assertTrue(t1.compareTo("ABCD")<0);
+		assertTrue(t1.compareTo("AB")>0);
+		assertTrue(t1.compareTo("ABJ")<0);
+		assertTrue(t1.compareTo("ABA")>0);
+	}
 	
 	@Test public void testTextOps() {
 		Text t1=Text.create("");

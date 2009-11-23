@@ -525,6 +525,9 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		private final int key;
 		private final V value;
 		
+		public int key() {
+			return key;
+		}
 		
 		public Integer getKey() {
 			return Integer.valueOf(key);
@@ -732,12 +735,17 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return new ValueCollectionWrapper(entrySet());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public IntMap<V> include(Integer key, V value) {
 		IMNode<V> newRoot=root.include(key, value,0);
 		if (root==newRoot) return this;
-		return new IntMap(newRoot);
+		return new IntMap<V>(newRoot);
+	}
+	
+	public IntMap<V> include(int key, V value) {
+		IMNode<V> newRoot=root.include(key, value,0);
+		if (root==newRoot) return this;
+		return new IntMap<V>(newRoot);
 	}
 	
 	@Override
@@ -753,11 +761,13 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return pm;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public IntMap<V> include(IntMap<V> values) {
 		// TODO: Consider fast node-level merging implementation
 		IntMap<V> pm=this;
-		for (Map.Entry<Integer,V> entry:values.entrySet()) {
-			pm=pm.include(entry.getKey(),entry.getValue());
+		PersistentSet<IMEntry<V>> entries=(PersistentSet)values.entrySet();
+		for (IMEntry<V> entry:entries) {
+			pm=pm.include(entry.key(),entry.getValue());
 		}
 		return pm;
 	}

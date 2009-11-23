@@ -350,10 +350,10 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 		}
 		int size=Maths.min(length(), cs.length());
 		for (int i=0; i<size; i++) {
-			// TODO
+			int c=(int)(charAt(i)-cs.charAt(i));
+			if (c!=0) return c;
 		}
-		// TODO
-		return 0;
+		return Maths.sign(length()-cs.length());
 	}
 	
 	public int compareTo(Text t) {

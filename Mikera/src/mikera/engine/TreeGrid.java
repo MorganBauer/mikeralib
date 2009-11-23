@@ -9,6 +9,8 @@ import mikera.util.Tools;
 /**
  * Grid implemented as a hierarchy of 4*4*4 grids
  * 
+ * Top level is offset to centre at (0,0,0)
+ * 
  * Very fast!!
  * 
  * @author Mike Anderson
@@ -23,6 +25,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);
 	private static final int SIGNIFICANT_MASK=(1<<SIGNIFICANT_BITS)-1;
+	private static final int TOP_OFFSET=(1<<(SIGNIFICANT_BITS-1));
+	private static final int TOP_MAX=SIGNIFICANT_MASK;
 	
 	// each cell contains either object of type T or a sub-grid
 	private final Object[] data=new Object[DATA_ARRAY_SIZE];
@@ -62,8 +66,12 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		return res;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public T get(int x, int y, int z) {
+		return getLocal(x+TOP_OFFSET,y+TOP_OFFSET,z+TOP_OFFSET);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T getLocal(int x, int y, int z) {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
@@ -80,33 +88,78 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	public void visitBlocks(BlockVisitor<T> bf) {
-		visitBlocks(bf,0,0,0,TOP_SHIFT);
+		visitBlocksLocal(bf,
+				0,0,0,
+				0,0,0,
+				TOP_MAX,TOP_MAX,TOP_MAX,
+				TOP_SHIFT);
+	}
+	
+	public void visitBlocks(BlockVisitor<T> bf,int x1, int y1, int z1,int x2, int y2, int z2) {
+		visitBlocksLocal(bf,
+				0,0,0,
+				x1+TOP_OFFSET,y1+TOP_OFFSET,z1+TOP_OFFSET,
+				x2+TOP_OFFSET,y2+TOP_OFFSET,z2+TOP_OFFSET,
+				TOP_SHIFT);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void visitBlocks(BlockVisitor<T> bf, int x, int y, int z,int shift) {
+	// cx,cy,cz are offset to bottom left of grid
+	// x1,y1,z1,x2,y2,z2 relative to bottom left
+	private void visitBlocksLocal(BlockVisitor<T> bf, int cx, int cy, int cz,int x1, int y1, int z1,int x2, int y2, int z2,int shift) {
 		int li=0;
 		int bsize=1<<shift; // size of sub blocks in this TreeGrid
 		
 		int max= (bsize<<2); // top limit of this whole TreeGrid
 		
-		// TODO: fix fact that x,y,z negative for top level
 		for (int lz=0; lz<max; lz+=bsize) {
+			if ((lz>z2)||((lz+bsize)<=z1)) {
+				li+=16;
+				continue;
+			}
 			for (int ly=0; ly<max; ly+=bsize) {
+				if ((ly>y2)||((ly+bsize)<=y1)) {
+					li+=4;
+					continue;
+				}
 				for (int lx=0; lx<max; lx+=bsize) {
+					if ((lx>x2)||((lx+bsize)<=x1)) {
+						li++;
+						continue;
+					}
+					
+					// start of inner loop
 					Object d=data[li++];
 					if (d==null) continue;
 					if (d instanceof TreeGrid<?>) {
 						TreeGrid<T> tg=(TreeGrid<T>)d;
-						tg.visitBlocks(bf, x+lx, y+ly, z+lz, shift-DIM_SPLIT_BITS);
+						tg.visitBlocksLocal(
+								bf, 
+								cx+lx, 
+								cy+ly, 
+								cz+lz, 
+								x1-lx,
+								y1-ly,
+								z1-lz,
+								x2-lx,
+								y2-ly,
+								z2-lz,
+								shift-DIM_SPLIT_BITS);
 					} else {
-						int p1=Bits.signExtend(x+lx,SIGNIFICANT_BITS);
-						int p2=Bits.signExtend(y+ly,SIGNIFICANT_BITS);
-						int p3=Bits.signExtend(z+lz,SIGNIFICANT_BITS);
-						int q1=Bits.signExtend(x+lx+bsize-1,SIGNIFICANT_BITS);
-						int q2=Bits.signExtend(y+ly+bsize-1,SIGNIFICANT_BITS);
-						int q3=Bits.signExtend(z+lz+bsize-1,SIGNIFICANT_BITS);
-						bf.visit(p1,p2,p3,q1,q2,q3, (T)d);
+						int p1=cx+Math.max(lx,x1);
+						int p2=cy+Math.max(ly,y1);
+						int p3=cz+Math.max(lz,z1);
+						int q1=cx+Math.min(lx+bsize-1,x2);
+						int q2=cy+Math.min(ly+bsize-1,y2);
+						int q3=cz+Math.min(lz+bsize-1,z2);
+						bf.visit(
+								p1-TOP_OFFSET,
+								p2-TOP_OFFSET,
+								p3-TOP_OFFSET,
+								q1-TOP_OFFSET,
+								q2-TOP_OFFSET,
+								q3-TOP_OFFSET,
+								(T)d);
 					}
 				}
 			}
@@ -128,8 +181,12 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void set(int x, int y, int z, T value) {
+		setLocal(x+TOP_OFFSET,y+TOP_OFFSET,z+TOP_OFFSET,value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void setLocal(int x, int y, int z, T value) {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
@@ -200,12 +257,12 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	
 	@Override
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		setBlock(x1, 
-				y1, 
-				z1, 
-				x2, 
-				y2, 
-				z2, 
+		setBlock(x1+TOP_OFFSET, 
+				y1+TOP_OFFSET, 
+				z1+TOP_OFFSET, 
+				x2+TOP_OFFSET, 
+				y2+TOP_OFFSET, 
+				z2+TOP_OFFSET, 
 				value,
 				TOP_SHIFT);
 	}
@@ -218,9 +275,9 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		
 		// get coordinates of sub block containing point 1
 		// note masking to keep correct sign
-		int bx1=((x1)&(bmask))|(x1&(~SIGNIFICANT_MASK));
-		int by1=((y1)&(bmask))|(y1&(~SIGNIFICANT_MASK));
-		int bz1=((z1)&(bmask))|(z1&(~SIGNIFICANT_MASK));
+		int bx1=((x1)&(bmask));
+		int by1=((y1)&(bmask));
+		int bz1=((z1)&(bmask));
 	
 		// loop over sub blocks (lx,ly,lz)-(ux,uy,uz)
 		for (int lz=bz1; lz<=z2; lz+=bstep) {
