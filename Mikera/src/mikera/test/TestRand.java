@@ -2,8 +2,6 @@ package mikera.test;
 
 import org.junit.*;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import static org.junit.Assert.*;
 import mikera.util.*;
 import mikera.engine.*;
