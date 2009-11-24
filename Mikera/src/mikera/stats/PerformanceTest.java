@@ -81,7 +81,7 @@ public class PerformanceTest {
 		pm=new PersistentHashMap<Integer,String>();
 	}
 	
-	private static void a() {
+	public static void a1() {
 		hm.clear();
 		for (int i=0; i<100; i++) {
 			int key=Rand.r(100);
@@ -102,7 +102,7 @@ public class PerformanceTest {
 		}
 	}
 	
-	private static void b() {
+	public static void b1() {
 		pm=new PersistentHashMap<Integer,String>();
 		for (int i=0; i<100; i++) {
 			int key=Rand.r(100);
@@ -121,5 +121,14 @@ public class PerformanceTest {
 			}
 			pm.clone();
 		}
+	}
+	
+	public static void a() {
+		Bits.countSetBits(0xCAFEBABE);
+	}
+	
+	public static void b() {
+		Integer.bitCount(0xCAFEBABE);
+
 	}
 }

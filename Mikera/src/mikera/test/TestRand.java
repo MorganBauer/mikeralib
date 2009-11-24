@@ -1,6 +1,9 @@
 package mikera.test;
 
 import org.junit.*;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import static org.junit.Assert.*;
 import mikera.util.*;
 import mikera.engine.*;
@@ -61,6 +64,20 @@ public class TestRand {
 		assertTrue(5>=Rand.r(6));
 		assertTrue(1>=Rand.r(2));
 
+	}
+	
+	@Test public void testShuffle() {
+		Integer[] is=new Integer[52];
+		for (int i=0; i<52; i++) is[i]=i+1;
+		
+		// shuffle
+		Integer[] is2=is.clone();
+		Rand.shuffle(is2);
+		assertFalse(Arrays.isSorted(is2, 0, 51));
+		
+		// resort
+		java.util.Arrays.sort(is2);
+		for (int i=0; i<52; i++) assertTrue(is2[i]==i+1);
 	}
 	
 	@Test public void testXORShoft() {

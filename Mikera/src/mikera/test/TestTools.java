@@ -13,7 +13,7 @@ public class TestTools {
 			a[i]=Rand.d(100);
 		}
 		
-		Tools.mergeSort(a, b, 0, 99);
+		Arrays.mergeSort(a, b, 0, 99);
 		
 		assertTrue(Arrays.isSorted(a, 0, 99));
 	}

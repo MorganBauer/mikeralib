@@ -11,7 +11,7 @@ import mikera.util.Maths;
  * @author Mike Anderson
  *
  */
-public class IntGrid implements Cloneable {
+public final class IntGrid  implements Cloneable {
 	// base coordinates
 	private int gx;
 	private int gy;
@@ -167,6 +167,10 @@ public class IntGrid implements Cloneable {
 		gd=ngd;
 	}
 	
+	public void set(int x, int y, int z, Integer v) {
+		set(x,y,z,v.intValue());
+	}
+
 	public void set(int x, int y, int z, int v) {
 		if (data==null) {
 			init(x,y,z);
@@ -215,4 +219,5 @@ public class IntGrid implements Cloneable {
 	private int dataIndexRelative(int rx, int ry, int rz) {
 		return rx+gw*(ry+gh*rz);
 	}
+
 }

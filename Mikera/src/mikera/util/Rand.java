@@ -317,6 +317,15 @@ public final class Rand {
 		return ts[Rand.r(ts.length)];
 	}
 	
+	public static <T> void shuffle(T[] ts) {
+		for (int i=0; i<(ts.length-1); i++) {
+			int j=Rand.r(ts.length-i);
+			if (i!=j) {
+				Arrays.swap(ts,i,j);
+			}
+		}
+	}
+	
 	public static <T> T pick(List<T> ts) {
 		return ts.get(Rand.r(ts.size()));
 	}
