@@ -47,7 +47,7 @@ public final class NullSet<T> extends PersistentSet<T> {
 	
 	@Override
 	public PersistentSet<T> includeAll(final Collection<T> values) {
-		return SetFactory.create(values);
+		return SetFactory.createFrom(values);
 	}
 	
 	public PersistentSet<T> include(final PersistentSet<T> values) {

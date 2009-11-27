@@ -58,5 +58,4 @@ public final class SubTuple<T> extends BasePersistentList<T>   {
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		return SubTuple.create(data, offset+fromIndex, toIndex-fromIndex);
 	}
-
 }

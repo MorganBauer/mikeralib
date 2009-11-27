@@ -23,23 +23,23 @@ public class SetFactory {
 		return (PersistentSet<T>) NullSet.INSTANCE;
 	}
 	
-	public static <T> PersistentSet<T> create(Set<T> source) {
+	public static <T> PersistentSet<T> createFrom(Set<T> source) {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> PersistentSet<T> create(Iterator<T> source) {
-		return create(Tools.buildHashSet(source));
+	public static <T> PersistentSet<T> createFrom(Iterator<T> source) {
+		return createFrom(Tools.buildHashSet(source));
 	}
 	
 	public static <T> PersistentSet<T> create(PersistentSet<T> source) {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> PersistentSet<T> create(Collection<T> value) {
-		return create(value.iterator());
+	public static <T> PersistentSet<T> createFrom(Collection<T> value) {
+		return createFrom(value.iterator());
 	}
 	
-	public static <T> PersistentSet<T> create(T[] source) {
+	public static <T> PersistentSet<T> createFrom(T[] source) {
 		return ArraySet.createFromArray(source);
 	}
 	

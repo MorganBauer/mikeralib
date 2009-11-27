@@ -57,7 +57,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Tuple<T> create(Collection<T> values) {
+	public static <T> Tuple<T> createFrom(Collection<T> values) {
 		int n=values.size();
 		T[] ndata=(T[]) new Object[n];
 		int i=0;
@@ -67,13 +67,13 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		return new Tuple(ndata);
 	}
 
-	public static <T> Tuple<T> create(List<T> values) {
-		return create(values,0,values.size());
+	public static <T> Tuple<T> createFrom(List<T> values) {
+		return createFrom(values,0,values.size());
 	}
 
 	
 	@SuppressWarnings("unchecked")
-	public static <T> Tuple<T> create(List<T> values, int fromIndex, int toIndex) {
+	public static <T> Tuple<T> createFrom(List<T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=0) {
 			if (n==0) return EMPTY;

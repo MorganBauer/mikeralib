@@ -32,15 +32,15 @@ public class TestPersistent {
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testSetTypes() {
-		testPersistentSet(SetFactory.create(new String[] {"a","b","c"}));
+		testPersistentSet(SetFactory.createFrom(new String[] {"a","b","c"}));
 		testPersistentSet(NullSet.INSTANCE);
 		testPersistentSet(SingletonSet.create("Bob"));
 		testPersistentSet(MapFactory.create(2, "Benhamma").keySet());
 		testPersistentSet(IntSet.create(3));
 		testPersistentSet(PersistentHashSet.createSingleValueSet(Integer.valueOf(5)));
 		testPersistentSet(PersistentHashSet.createFromSet(null));
-		testPersistentSet(SetFactory.create(new Integer[] {1}));
-		testPersistentSet(SetFactory.create(new Integer[] {1,null,3}));
+		testPersistentSet(SetFactory.createFrom(new Integer[] {1}));
+		testPersistentSet(SetFactory.createFrom(new Integer[] {1,null,3}));
 	}
 	
 	public <T> void testPersistentSet(PersistentSet<T> a) {
@@ -49,12 +49,16 @@ public class TestPersistent {
 	}
 	
 	public <T> void testPersistentCollection(PersistentCollection<T> a) {
-		a.validate();
 		testDelete(a);
 		testInclude(a);
 		testClone(a);
 		testSizing(a);
 		testIterator(a);
+		testPersistentObject(a);
+	}
+	
+	public <T> void testPersistentObject(PersistentCollection<T> a) {
+		a.validate();
 		CommonTests.testCommonData(a);
 	}
 	
@@ -134,8 +138,10 @@ public class TestPersistent {
 			assertEquals(a.size()+(a.contains(null)?0:1),an.size());
 		
 			PersistentSet<T> n=a.deleteAll(a);
+			assertTrue(!n.contains(null));
 			n=n.include(null);
 			assertEquals(1,n.size());
+			assertTrue(n.contains(null));
 		}
 	}
 	
@@ -293,7 +299,7 @@ public class TestPersistent {
 		}
 		
 		// check hash code equivalence
-		PersistentList<T> cp=Tuple.create(al);		
+		PersistentList<T> cp=Tuple.createFrom(al);		
 		assertEquals(cp.hashCode(),a.hashCode());
 	}
 	

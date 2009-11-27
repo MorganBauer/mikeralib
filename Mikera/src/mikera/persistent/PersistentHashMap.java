@@ -158,12 +158,10 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	 */
 	private static final class PHMFullNode<K,V> extends PHMNode<K,V> {
 		private static final long serialVersionUID = 5910832730804486676L;
-		
-		
+				
 		private final PHMNode<K,V>[] data;
 		private final int shift;
-		private final int count;
-		
+		private final int count;	
 		
 		protected PHMFullNode(PHMNode<K,V>[] newData, int newShift) {
 			data=newData;

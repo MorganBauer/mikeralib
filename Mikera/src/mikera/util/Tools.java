@@ -18,7 +18,15 @@ public class Tools {
 		public int compare(T o1, T o2) {
 			return o2.hashCode()-o1.hashCode();
 		}
-		
+	}
+	
+	public static class DefaultComparator<T> implements Comparator<T>, Serializable {
+		private static final long serialVersionUID = 1695713461396657889L;
+
+		@SuppressWarnings("unchecked")
+		public int compare(T o1, T o2) {
+			return ((Comparable<T>)o1).compareTo(o2);
+		}
 	}
 	
 	public static int compareWithNulls(Object a, Object b) {

@@ -681,7 +681,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 
 	@Override
 	public boolean containsKey(Object key) {
-		return root.containsKey((Integer)key);
+		return root.containsKey(((Integer)key).intValue());
 	}
 	
 	public boolean containsKey(int key) {

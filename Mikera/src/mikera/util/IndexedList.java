@@ -1,6 +1,7 @@
 package mikera.util;
 import java.util.*;
 
+import mikera.annotations.Mutable;
 import mikera.persistent.impl.ArraySet;
 import mikera.persistent.impl.Tuple;
 
@@ -15,6 +16,7 @@ import mikera.persistent.impl.Tuple;
  * @param <K>
  * @param <V>
  */
+@Mutable
 public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 
 	private Comparator<K> comparator=null;

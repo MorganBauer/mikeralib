@@ -55,7 +55,7 @@ public class TestPersistentMap {
 		HashMap<Integer,String> hm2=pm.toHashMap();
 		assertEquals(hm,hm2);
 		
-		PersistentSet<Integer> ks=SetFactory.create(hm.keySet());
+		PersistentSet<Integer> ks=SetFactory.createFrom(hm.keySet());
 		PersistentSet<Integer> ks2=pm.keySet();
 		PersistentSet<Integer> ks3=phm.keySet();
 		assertEquals(ks,ks2);
@@ -64,8 +64,8 @@ public class TestPersistentMap {
 		PersistentList<String> vs=ListFactory.createFromCollection(hm.values());
 		PersistentList<String> vs2=ListFactory.createFromCollection(pm.values());
 		PersistentList<String> vs3=ListFactory.createFromCollection(phm.values());
-		assertEquals(SetFactory.create(vs),SetFactory.create(vs2));
-		assertEquals(SetFactory.create(vs),SetFactory.create(vs3));
+		assertEquals(SetFactory.createFrom(vs),SetFactory.createFrom(vs2));
+		assertEquals(SetFactory.createFrom(vs),SetFactory.createFrom(vs3));
 	}
 	
 	@Test public void testMerge() {

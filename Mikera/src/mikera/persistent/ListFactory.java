@@ -78,7 +78,7 @@ public class ListFactory<T> {
 		if (n==1) return SingletonList.create(source.get(fromIndex));
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
-			return Tuple.create(source,fromIndex,toIndex);
+			return Tuple.createFrom(source,fromIndex,toIndex);
 		}
 		
 

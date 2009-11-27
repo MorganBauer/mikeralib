@@ -45,7 +45,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 				return (!Tools.equalsWithNulls(value, testvalue));
 			}		
 		};
-		return SetFactory.create(it);
+		return SetFactory.createFrom(it);
 	}
 
 	public PersistentSet<T> deleteAll(final Collection<T> values) {
@@ -57,7 +57,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 				return (!col.contains(value));
 			}		
 		};
-		return SetFactory.create(it);
+		return SetFactory.createFrom(it);
 	}
 	
 	public PersistentSet<T> deleteAll(final PersistentCollection<T> values) {
@@ -69,7 +69,7 @@ public abstract class PersistentSet<T> extends PersistentCollection<T> implement
 				return (!values.contains(value));
 			}		
 		};
-		return SetFactory.create(it);
+		return SetFactory.createFrom(it);
 	}
 	
 	@SuppressWarnings("unchecked")
