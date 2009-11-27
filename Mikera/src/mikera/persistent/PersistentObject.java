@@ -1,12 +1,15 @@
 package mikera.persistent;
 import java.io.Serializable;
 
+import mikera.annotations.Immutable;
+
 /**
  * Base for all mikera.persistent classes
  * 
  * @author Mike Anderson
  *
  */
+@Immutable
 public abstract class PersistentObject implements IPersistentObject {
 	private static final long serialVersionUID = -4077880416849448410L;
 
@@ -21,5 +24,11 @@ public abstract class PersistentObject implements IPersistentObject {
 	
 	public boolean hasFastHashCode() {
 		return false;
+	}
+	
+	public void validate() {
+		if (!this.clone().equals(this)) {
+			throw new Error("Clone problem!");
+		}
 	}
 }

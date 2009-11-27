@@ -910,4 +910,8 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	public void validate() {
 		root.validate();
 	}
+	
+	public boolean allowsNullKey() {
+		return false;
+	}
 }

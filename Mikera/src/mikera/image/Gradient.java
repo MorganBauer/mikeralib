@@ -4,15 +4,20 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
+import java.io.Serializable;
 
+import mikera.annotations.Mutable;
 import mikera.math.Vector;
 import mikera.math.VectorFunction;
 import mikera.util.Maths;
 
-public final class Gradient {
+@Mutable
+public final class Gradient implements Cloneable, Serializable {
+	private static final long serialVersionUID = -1324286985827948661L;
+
 	private static final int DEFAULT_GRADIENT_SIZE=256;
 	
-	public int[] data;
+	public final int[] data;
 	
 	/**
 	 * Creates a new gradient array of default size (256)
@@ -197,5 +202,9 @@ public final class Gradient {
 		ImageFilter filter=new IntensityRGBGradientFilter(g);
 		BufferedImage result=Op.apply(b, filter);
 		return result;
+	}
+	
+	public Gradient clone() {
+		return new Gradient(data.clone());
 	}
 }

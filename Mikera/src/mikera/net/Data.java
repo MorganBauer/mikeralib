@@ -15,7 +15,7 @@ import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;
 
 /**
- * Class representing a chunk of data as a 
+ * Class representing a chunk of data as a mutable
  * variable length block of bytes
  * 
  * Note: big-endian format used for numbers, this allows for 
@@ -250,6 +250,14 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 	
 	public void copyTo(int pos, Data dest, int destoffset, int len) {
 		dest.put(destoffset,data,pos,len);	
+	}
+	
+	public Data subset(int start, int end) {
+		if ((start<0)||(end>size)) throw new IllegalArgumentException();
+		int len=end-start;
+		Data d=new Data(len);
+		copyTo(start,d,0,len);
+		return d;
 	}
 	
 	public int size() {

@@ -3,6 +3,9 @@ package mikera.util.emptyobjects;
 import java.io.ObjectStreamException;
 import java.util.*;
 
+import mikera.annotations.Immutable;
+
+@Immutable
 public final class NullIterator<T> implements ListIterator<T> {
 	
 	@SuppressWarnings("unchecked")

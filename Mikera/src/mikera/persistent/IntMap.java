@@ -785,6 +785,10 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return new IntMap<V>(newRoot);
 	}
 	
+	public boolean allowsNullKey() {
+		return false;
+	}
+	
 	public void validate() {
 		root.validate();
 	}

@@ -19,7 +19,7 @@ public class LineTracer {
 		int y=(int)Math.floor(y1);
 		int z=(int)Math.floor(z1);
 
-		if (func.visit(x,y,z,null)) return 0.0f;
+		if (func.visit(x,y,z,null)!=null) return 0.0f;
 
 		float dx=x2-x1;
 		float dy=y2-y1;
@@ -86,7 +86,7 @@ public class LineTracer {
 				z+=step_z;
 			}
 			
-			if (func.visit(x,y,z,null)) return currentDist;
+			if (func.visit(x,y,z,null)!=null) return currentDist;
 			
 			// update location
 			x1+=dx*distanceIncrement;

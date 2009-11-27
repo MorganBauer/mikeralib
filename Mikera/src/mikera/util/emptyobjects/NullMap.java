@@ -92,4 +92,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 		// needed for deserialisation to the correct static instance
 		return INSTANCE;
 	}
+	
+	public boolean allowsNullKey() {
+		return false;
+	}
 }

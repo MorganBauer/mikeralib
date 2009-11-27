@@ -131,10 +131,10 @@ public class TestBits {
 		int count=0;
 		int tcount=0;
 		@Override
-		public boolean visit(int x, int y, int z, Integer value) {
+		public Object visit(int x, int y, int z, Integer value) {
 			count+=value;
 			tcount++;
-			return false;
+			return null;
 		}		
 	}
 	

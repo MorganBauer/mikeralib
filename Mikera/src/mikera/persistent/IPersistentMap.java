@@ -19,4 +19,8 @@ public interface IPersistentMap<K,V> extends Map<K,V>, IPersistentObject {
 	public PersistentMap<K,V> delete(Collection<K> key);
 
 	public PersistentMap<K,V> delete(PersistentSet<K> key);
+	
+	// query methods
+	
+	public boolean allowsNullKey();
 }

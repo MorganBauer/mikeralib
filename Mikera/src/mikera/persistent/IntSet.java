@@ -1,5 +1,6 @@
 package mikera.persistent;
 
+import mikera.annotations.Immutable;
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.util.Arrays;
 import mikera.util.Tools;
@@ -10,12 +11,14 @@ import mikera.util.HashCache;
 
 /**
  * Immutable small set of integers, stored as a sorted array
+ * Stored hashcode designed to enable fast hashtable lookups
  * 
  * Should never contain duplicates
  * 
  * @author Mike
  *
  */
+@Immutable
 public final class IntSet extends BasePersistentSet<Integer> {
 	private static final long serialVersionUID = 2677550392326589873L;
 	private static final HashCache<IntSet> cache=new HashCache<IntSet>(401);
@@ -26,10 +29,11 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	 * data field contains an ordered list of unique integers
 	 */
 	private final int[] data;
-		
+	private final int hash;	
 	
 	private IntSet(int[] values) {
 		data =values;
+		hash=calcHashCode();
 	}
 	
 	public boolean contains(IntSet a) {
@@ -199,10 +203,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 
 	public int hashCode() {
-		return Tools.hashCode(data);
+		return hash;
 	}
 	
-
+	private int calcHashCode() {
+		return Tools.hashCode(data);	
+	}
 	
 	/**
 	 * clone() returns the same IntSet, as it is defined to be immutable
@@ -326,6 +332,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		if (hasProblem()) throw new Error();
 	}
 	
+	@Override
 	public boolean allowsNulls() {
 		return false;
 	}

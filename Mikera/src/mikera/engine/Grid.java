@@ -1,5 +1,8 @@
 package mikera.engine;
 
+import mikera.annotations.Mutable;
+
+@Mutable
 public abstract class Grid<T> {
 	public abstract void set(int x, int y, int z, T value);
 	
