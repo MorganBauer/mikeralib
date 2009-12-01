@@ -129,11 +129,11 @@ public abstract class Server {
 	 * ===============================================================
 	 */
 	
-	protected void transmitMessage(int playerNo, Data data) {
+	protected int transmitMessage(int playerNo, Data data) {
 		Player p=playerList.getPlayer(playerNo);
 		synchronized(p) {
 			Connection c=p.connection;
-			c.write(data);
+			return c.write(data);
 		}
 	}
 	

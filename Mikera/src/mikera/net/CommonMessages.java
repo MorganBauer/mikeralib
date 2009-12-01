@@ -16,7 +16,7 @@ public class CommonMessages {
 	}
 	
 	public static void addConfirmJoinMessage(Data dest) {
-		dest.append(CommonMessages.JOIN_GAME);
+		dest.appendByte(CommonMessages.JOIN_GAME);
 
 	}
 	

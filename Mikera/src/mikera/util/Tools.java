@@ -3,6 +3,9 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
 
+import mikera.persistent.IntMap;
+import mikera.persistent.MapFactory;
+
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;
@@ -128,5 +131,9 @@ public class Tools {
 		} catch (Throwable t) {
 			throw new Error(t);
 		}
+	}
+
+	public static <K,V> boolean equalsMap(Map<K,V> a, Map<K,V> b) {
+		return MapFactory.create(a).equals(MapFactory.create(b));
 	}
 }

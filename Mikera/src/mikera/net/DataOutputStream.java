@@ -16,7 +16,7 @@ public class DataOutputStream extends OutputStream {
 	
 	@Override
 	public void write(int arg0) {
-		data.append((byte)arg0);
+		data.appendByte((byte)arg0);
 	}
 	
 	@Override

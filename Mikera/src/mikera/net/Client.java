@@ -11,14 +11,13 @@ public class Client {
 	private ArrayList<Data> incomingMessages=new ArrayList<Data>();
 	
 	public void connectLocal() {
-		clientConnector.setMessageHandler(new Receiver());
 		connect("127.0.0.1", Server.SERVER_PORT);
 	}
 	
 	public void connect(String address, int port) {
+		clientConnector.setMessageHandler(new Receiver());
 		closeConnection();
-		connection=clientConnector.connect(address, port);
-		
+		connection=clientConnector.connect(address, port);		
 	}
 	
 	private void closeConnection() {
@@ -59,7 +58,7 @@ public class Client {
 	private void queueIncomingMessage(Data data) {
 		synchronized (incomingMessages) {
 			incomingMessages.add(data);
-			// System.err.print("Message received by client! Length = " + data.size()+ "\n");
+			//System.err.print("Message received by client! Length = " + data.size()+ "\n");
 		}
 	}
 }

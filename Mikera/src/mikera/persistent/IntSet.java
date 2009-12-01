@@ -100,6 +100,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	public static IntSet create() {
 		return EMPTY_INTSET;
 	}
+
 	
 	public static IntSet create(int value) {
 		int hc=Tools.hashCode(value);
@@ -190,6 +191,64 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createLocal(ndata);
 	}
 	
+	public static IntSet createWithout(IntSet source, IntSet values) {
+		if ((source.size()==0)||source.equals(values)) return IntSet.EMPTY_INTSET;
+		if (values.size()==0) return source;
+		int sourceLength=source.data.length;
+		int valuesLength=values.data.length;
+		int[] td=new int[sourceLength];
+		int tdi=0;
+		int vi=0;
+		for (int i=0; i<sourceLength; i++) {
+			int s=source.data[i];
+			if (vi<valuesLength) {
+				int v=values.data[vi];
+				while (v<s) {
+					vi++;
+					if (vi<valuesLength) {
+						v=values.data[vi];
+					} else {
+						break;
+					}
+				}
+				if (s==v) continue;	
+			}
+			td[tdi++]=s;
+		}
+		if (tdi==sourceLength) return source;
+		int[] ndata=new int[tdi];
+		System.arraycopy(td, 0, ndata, 0, tdi);
+		return createLocal(ndata);
+	}
+	
+	public static IntSet createIntersection(IntSet a, IntSet b) {
+		if (a.equals(b)) return a;
+		int alen=a.size(); if (alen==0) return IntSet.EMPTY_INTSET;
+		int blen=b.size(); if (blen==0) return IntSet.EMPTY_INTSET;
+		
+		int[] td=new int[Math.min(alen, blen)];
+		int ii=0;
+		int ai=0;
+		int bi=0;
+		while ((ai<alen)&&(bi<blen)) {
+			int av=a.data[ai];
+			int bv=b.data[bi];
+			if (av==bv) {
+				td[ii++]=av;
+				ai++;
+				bi++;
+			} else if (av<bv){
+				ai++;
+			} else {
+				bi++;
+			}
+		}
+		
+		int[] ndata=new int[ii];
+		System.arraycopy(td, 0, ndata, 0, ii);
+		return createLocal(ndata);		
+	}
+	
 	private static IntSet create(int[] data, int offset, int size) {
 		if (size==0) return EMPTY_INTSET;
 		int[] ndata=new int[size];
@@ -199,6 +258,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createLocal(ndata);
 	}
 		
+	// creates using a given local int array
 	private static IntSet createLocal(int[] sortedData) {
 		return intern(new IntSet(sortedData));
 	}
@@ -331,6 +391,18 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	public IntSet delete(Integer value) {
 		return createWithout(this,value.intValue());
 	}
+	
+	public IntSet deleteAll(IntSet values) {
+		return createWithout(this,values);
+	}
+	
+	public IntSet intersection(IntSet values) {
+		return createIntersection(this,values);
+	}
+
+
+
+
 
 	private Object readResolve() throws ObjectStreamException {
 		// needed for deserialisation to the correct static instance

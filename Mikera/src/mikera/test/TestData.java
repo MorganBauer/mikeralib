@@ -19,8 +19,8 @@ public class TestData {
 	@Test public void testData1() {
 		Data d=new Data();
 		
-		d.append((byte) 1);
-		d.append((byte) 2);
+		d.appendByte((byte) 1);
+		d.appendByte((byte) 2);
 		assertEquals(1,d.getByte(0));
 		assertEquals(2,d.getByte(1));
 		assertEquals(2,d.size());

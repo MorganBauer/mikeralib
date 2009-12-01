@@ -71,6 +71,32 @@ public class TestIntSet {
 		assertTrue(is1.equals(is3));
 	}
 	
+	@Test public void testWithout() {
+		IntSet is1=IntSet.create(new int[] {1,2,3});
+		IntSet is2=IntSet.create(new int[] {1,3,5});
+		IntSet is3=IntSet.create(new int[] {1,2,3,4});
+		IntSet is4=IntSet.create(new int[] {2,3});
+
+		assertEquals(IntSet.createWithout(is1, is2),IntSet.create(new int[] {2}));
+		assertEquals(IntSet.createWithout(is1, is3),IntSet.create(new int[] {}));
+		assertEquals(IntSet.createWithout(is3, is1),IntSet.create(new int[] {4}));
+		assertEquals(IntSet.createWithout(is3, is4),IntSet.create(new int[] {1,4}));
+	}
+	
+	@Test public void testIntersect() {
+		IntSet is1=IntSet.create(new int[] {1,2,3});
+		IntSet is2=IntSet.create(new int[] {1,3,5});
+		IntSet is3=IntSet.create(new int[] {1,2,3,4});
+		IntSet is4=IntSet.create(new int[] {2,3});
+		IntSet is5=IntSet.create(new int[] {});
+
+		assertEquals(IntSet.createIntersection(is1, is2),IntSet.create(new int[] {1,3}));
+		assertEquals(IntSet.createIntersection(is1, is3),IntSet.create(new int[] {1,2,3}));
+		assertEquals(IntSet.createIntersection(is3, is1),IntSet.create(new int[] {1,2,3}));
+		assertEquals(IntSet.createIntersection(is3, is4),IntSet.create(new int[] {2,3}));
+		assertEquals(IntSet.createIntersection(is3, is5),IntSet.create(new int[] {}));
+	}
+	
 	@Test public void test4() {
 		IntSet is1=IntSet.create(new int[] {1,2,3});
 		IntSet is2=IntSet.create(new int[] {});

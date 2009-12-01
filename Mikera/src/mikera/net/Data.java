@@ -150,7 +150,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return getByte(pos);
 	}
 	
-	public void append(byte b) {
+	public void appendByte(byte b) {
 		put(size,b);
 	}
 	

@@ -24,11 +24,11 @@ public class Util {
 		int i=0;
 		while ((((b&64)==0)&&(a!=0))||(((b&64)!=0)&&(a!=-1))) {
 			b|=128;
-			data.append(b); i++;
+			data.appendByte(b); i++;
 			b=(byte)(a&127);
 			a>>=7;
 		}
-		data.append(b); i++;
+		data.appendByte(b); i++;
 		return i;
 	}
 	
@@ -111,7 +111,7 @@ public class Util {
 			int len=src.length();
 			int hlen=writeCompacted(data,len);			
 			for (int i=0; i<len; i++) {
-				data.append((byte)(src.charAt(i)));
+				data.appendByte((byte)(src.charAt(i)));
 			}
 			return hlen+len;
 		} else {

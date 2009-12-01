@@ -1,6 +1,8 @@
 package mikera.engine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import mikera.util.Bits;
 import mikera.util.Maths;
@@ -323,19 +325,22 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		if (setData&&isSolid()) return data[0];
 		return this;
 	}
-	
-	/*
-	 * Old version of setBlock
-	private void setBlockLooped(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
 
-		for (int z=z1; z<=z2; z++) {
-			for (int y=y1; y<=y2; y++) {
-				for (int x=x1; x<=x2; x++) {
-					set(x,y,z,value);
-				}	
-			}		
-		}
+	public ArrayList<T> getObjectList(int x1, int y1, int z1, int x2, int y2, int z2) {
+		final ArrayList<T> al=new ArrayList<T>();
+		BlockVisitor<T> bv=new BlockVisitor<T>() {
+
+			@Override
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					T value) {
+				al.add(value);
+				return null;
+			}
+			
+		};
+		visitBlocks(bv,x1,y1,z1,x2,y2,z2);
+		return al;
 	}
-	*/
+	
 
 }
