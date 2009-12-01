@@ -222,10 +222,7 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		return new String(cs);	
 	}
 	
-	public int lengthOfString(String s) {
-		return 4+2*s.length();
-	}
-	
+
 	public void append(Data d) {
 		put(size,d,0,d.size());
 	}
@@ -416,4 +413,41 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		oo.writeInt(size);
 		oo.write(data, 0, size);
 	}
+
+	public static int sizeOfBoolean(boolean b) {
+		return 1;
+	}
+	
+	public static int sizeOfByte(byte b) {
+		return 1;
+	}
+	
+	public static int sizeOfShort(short b) {
+		return 2;
+	}
+	
+	public static int sizeOfChar(char b) {
+		return 2;
+	}
+	
+	public static int sizeOfInt(int b) {
+		return 4;
+	}
+	
+	public static int sizeOfFloat(float b) {
+		return 4;
+	}
+	
+	public static int sizeOfDouble(double b) {
+		return 8;
+	}
+	
+	public static int sizeOfLong(long b) {
+		return 8;
+	}
+	
+	public static int sizeOfString(String s) {
+		return 4+2*s.length();
+	}
+	
 }
