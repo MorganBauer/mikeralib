@@ -2,6 +2,7 @@ package mikera.engine;
 
 public enum DataType {
 	STRING,
+	LONG,
 	INTEGER,
 	SHORT,
 	CHAR,
@@ -9,7 +10,7 @@ public enum DataType {
 	BOOLEAN,
 	FLOAT,
 	DOUBLE,
-	OBJECT
+	OBJECT, 
 	
 	
 }

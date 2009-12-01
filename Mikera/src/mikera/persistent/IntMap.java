@@ -10,6 +10,7 @@ import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
 import mikera.util.Bits;
+import mikera.util.TODOException;
 import mikera.util.Tools;
 
 /**
@@ -715,6 +716,10 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	
 	public IMEntry<V> getEntry(int key) {
 		return root.getEntry(key);
+	}
+	
+	public IMEntry<V> getEntryByPosition(int index) {
+		throw new TODOException();
 	}
 	
 	public java.util.Map.Entry<Integer,V> getMapEntry(Object key) {
