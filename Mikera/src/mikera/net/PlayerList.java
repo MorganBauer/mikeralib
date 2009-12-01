@@ -11,7 +11,9 @@ import mikera.persistent.PersistentList;
 public class PlayerList {
 	public int MAX_PLAYERS=50;
 	
-	private IntMap<Player> playerMap=new IntMap<Player>();
+	@SuppressWarnings("unchecked")
+	private IntMap<Player> playerMap=IntMap.EMPTY;
+	
 	private PersistentList<Player> playerList=ListFactory.create();
 	private int next_id=0;
 	

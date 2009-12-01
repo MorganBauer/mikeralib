@@ -11,7 +11,7 @@ public class Connection {
 	// header uses one int for message length, can be zero
 	private static final int HEADER_LENGTH=4;
 
-	public int MAX_MESSAGE_SIZE=10000;
+	public int MAX_MESSAGE_SIZE=10000000;
 	
 	private SocketChannel channel;
 	private Selector selector;
@@ -24,6 +24,7 @@ public class Connection {
 	
 	/**
 	 * Tag that can be freely assigned by application using this connection
+	 * Typically ID of player / connection
 	 */
 	public Object userTag=null;
 

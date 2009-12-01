@@ -204,7 +204,27 @@ public final class Data extends AbstractList<Byte> implements Cloneable, Seriali
 		appendInt((int)(lv));
 	}
 	
+	public void appendString(String s) {
+		int len=s.length();
+		appendInt(len);
+		for (int i=0; i<len; i++) {
+			appendChar(s.charAt(i));
+		}
+	}
 	
+	public String getString(int pos) {
+		int len=getInt(pos);
+		pos+=4;
+		char[] cs=new char[len];
+		for (int i=0; i<len; i++) {
+			cs[i]=getChar(pos+i*2);
+		}
+		return new String(cs);	
+	}
+	
+	public int lengthOfString(String s) {
+		return 4+2*s.length();
+	}
 	
 	public void append(Data d) {
 		put(size,d,0,d.size());

@@ -103,23 +103,24 @@ public class TestBits {
 		assertEquals(4,bg.width());
 		assertEquals(4,bg.height());
 		assertEquals(2,bg.depth());
-		assertEquals(21,bg.bitPos(1, 1, 1));
 		assertEquals(1,bg.dataLength());
 		
 		bg.set(1,1,1,1);
-		assertEquals(0,bg.get(0, 0, 0));
+		assertEquals(false,bg.get(0, 0, 0));
 		bg.set(0,0,0,1);
-		assertEquals(1,bg.get(0, 0, 0));
+		assertEquals(true,bg.get(0, 0, 0));
 		bg.set(0,0,0,0);
-		assertEquals(0,bg.get(0, 0, 0));
-		assertEquals(1,bg.get(1, 1, 1));
+		assertEquals(32,bg.volume());
+		assertEquals(false,bg.get(0, 0, 0));
+		assertEquals(true,bg.get(1, 1, 1));
 		assertEquals(1,bg.countSetBits());
 		
 		bg.set(-10,-10,-10,1);
-		assertEquals(0,bg.get(0, 0, 0));
-		assertEquals(1,bg.get(-10, -10, -10));
-		assertEquals(1,bg.get(1, 1, 1));
+		assertEquals(false,bg.get(0, 0, 0));
+		assertEquals(true,bg.get(-10, -10, -10));
+		assertEquals(true,bg.get(1, 1, 1));
 		assertEquals(2,bg.countSetBits());
+		bg.validate();
 		
 		bg.clear();
 		assertEquals(0,bg.dataLength());
@@ -127,12 +128,147 @@ public class TestBits {
 		assertEquals(1,bg.dataLength());
 	}
 	
-	public static class TestVisitor extends PointVisitor<Integer> {
+	@Test public void testBitGrid2() {
+		BitGrid bg=new BitGrid();
+	
+		bg.set(-5,-5,-5,true);
+		bg.set(6,6,6,true);
+		bg.validate();
+		assertEquals(2,bg.countSetBits());
+		
+
+		bg.set(-30,30,16,true);
+		bg.validate();
+		assertEquals(true,bg.get(6, 6, 6));
+		assertEquals(true,bg.get(-5, -5, -5));
+		assertEquals(3,bg.countSetBits());
+		
+		final int[] bitcount={0,0};
+		bg.visitSetBits(new BlockVisitor<Boolean>() {
+			@Override
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					Boolean value) {
+				bitcount[0]++;
+				bitcount[1]+=Math.abs(x1);
+				return null;
+			}		
+		});
+		
+		assertEquals(3,bitcount[0]);
+		assertEquals(41,bitcount[1]);
+	}
+	
+	@Test public void testBitGrid3() {
+		BitGrid bg=new BitGrid();
+	
+		bg.setBlock(-4,-4,-2,3,3,1,true);
+		assertEquals(256,bg.volume());
+		assertEquals(256,bg.countSetBits());
+		bg.setBlock(-2,-2,-1,1,1,0,false);
+		assertEquals(256,bg.volume()); // middle one eighth
+		assertEquals(224,bg.countSetBits());
+		
+		assertEquals(8,bg.countSetBits(-5,-5,-3,-3,-3,-1));
+		assertEquals(8,bg.countSetBits(2,2,0,4,4,2));
+		assertEquals(224,bg.countSetBits(-5,-5,-3,4,4,2));
+		assertEquals(0,bg.countSetBits(-2,-2,-1,1,1,0));
+		
+		// column around z axis
+		assertEquals(8,bg.countSetBits(-1,-1,-10,0,0,10));
+	}
+	
+	@Test public void testBitGrid4() {
+		final BitGrid bg=new BitGrid();
+		final TreeGrid<Boolean> tg=new TreeGrid<Boolean>();
+		
+		for (int i=0; i<10; i++) {
+			int x=Rand.r(20)-10;
+			int y=Rand.r(20)-10;
+			int z=Rand.r(20)-10;
+			bg.set(x,y,z,true);
+			bg.validate();
+			tg.set(x,y,z,true);
+		}
+		int setNum=tg.countNonNull();
+		
+		final int[] counter={0};
+		bg.visitSetBits(new BlockVisitor<Boolean>() {
+			@Override
+			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
+					Boolean value) {
+				assertTrue(tg.get(x1,y1,z1).equals(value));
+				assertTrue(bg.get(x1,y1,z1).equals(value));
+				tg.set(x1,y1,z1,null);
+				counter[0]++;
+				return null;
+			}		
+		});
+		
+		assertEquals(0,tg.countNonNull());
+		assertEquals(setNum,counter[0]);
+		assertEquals(setNum,bg.countSetBits());
+	}
+	
+	@Test public void testBitGrid5() {
+		BitGrid bg=new BitGrid();
+	
+		bg.setBlock(0,0,0,0,0,0,true);
+		bg.setBlock(-1,-1,-1,1,1,-1,true);
+		
+		assertEquals(10,bg.countSetBits());
+		bg.validate();
+		
+		bg.setBlock(-5,-5,-1,-5,-5,-1,true);
+		
+		assertEquals(11,bg.countSetBits());
+		bg.validate();
+		
+		bg.setBlock(5,5,-1,5,5,-1,true);
+		
+		assertEquals(12,bg.countSetBits());
+		bg.validate();
+
+		bg.setBlock(0,0,1,0,0,3,true);
+		
+		assertEquals(15,bg.countSetBits());
+		bg.validate();
+
+		
+		bg.setBlock(-10,-10,-1,-10,-10,1,true);
+		assertEquals(18,bg.countSetBits());
+		
+		bg.setBlock(-5,-5,-2,-5,-5,-2,true);
+		assertEquals(19,bg.countSetBits());
+
+		bg.setBlock(5,5,-2,5,5,-2,true);
+		assertEquals(20,bg.countSetBits());
+		
+		bg.validate();
+	}
+	
+	@Test public void testBitGridBitOffsets() {
+		int[] vs=new int[32];
+		
+		for (int i=0; i<32; i++) {
+			int x=BitGrid.bitXOffset(i);
+			int y=BitGrid.bitYOffset(i);
+			int z=BitGrid.bitZOffset(i);
+			int index=BitGrid.bitPos(x, y, z);
+			assertEquals(i,index);
+			vs[i]=index;
+		}		
+		
+		for (int i=0; i<32; i++) {
+			assertEquals(i,vs[i]);
+		}
+	}
+	
+	public static class TestVisitor extends PointVisitor<Boolean> {
 		int count=0;
 		int tcount=0;
 		@Override
-		public Object visit(int x, int y, int z, Integer value) {
-			count+=value;
+		public Object visit(int x, int y, int z, Boolean value) {
+			count+=value?1:0;
 			tcount++;
 			return null;
 		}		

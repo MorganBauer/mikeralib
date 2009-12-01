@@ -55,15 +55,19 @@ public class Dir {
 	
 	public static final byte getDir(int dx, int dy, int dz) {
 		byte d=0;
+		
 		if (dx<0) d+=W;
-		if (dx>0) d+=E;
+		else if (dx>0) d+=E;
+		
 		if (dy<0) d+=S;
-		if (dy>0) d+=N;
+		else if (dy>0) d+=N;
+		
 		if (dz<0) d+=D;
-		if (dz>0) d+=U;
+		else if (dz>0) d+=U;
+		
 		return d;
 	}
-	
+	 
 	static {
 		for (int i=0; i<DIST.length; i++) {
 			DIST[i]=Maths.sqrt(Maths.square(DX[i])+Maths.square(DY[i])+Maths.square(DZ[i]));

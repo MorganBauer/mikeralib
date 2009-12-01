@@ -2,11 +2,13 @@ package mikera.persistent;
 
 import mikera.annotations.Immutable;
 import mikera.persistent.impl.BasePersistentSet;
+import mikera.persistent.impl.FilteredIterator;
 import mikera.util.Arrays;
 import mikera.util.Tools;
 
 import java.io.ObjectStreamException;
 import java.util.*;
+
 import mikera.util.HashCache;
 
 /**
@@ -75,6 +77,10 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	
 	public int findIndex(int v) {
 		return findIndex(v,0,data.length);
+	}
+	
+	public int getIndex(int i) {
+		return data[i];
 	}
 
 	public int findIndex(int v, int lo, int hi) {
@@ -320,6 +326,10 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	
 	public IntSet include(int value) {
 		return createMerged(this,value);
+	}
+	
+	public IntSet delete(Integer value) {
+		return createWithout(this,value.intValue());
 	}
 
 	private Object readResolve() throws ObjectStreamException {

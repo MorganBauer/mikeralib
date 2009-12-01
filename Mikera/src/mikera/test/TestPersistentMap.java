@@ -26,7 +26,7 @@ public class TestPersistentMap {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		testMap(pm);
 		
-		IntMap<String> im=new IntMap<String>();
+		IntMap<String> im=IntMap.EMPTY;
 		testMap(im);
 		
 		PersistentMap<Integer,String> nm=NullMap.INSTANCE;

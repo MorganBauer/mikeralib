@@ -131,7 +131,7 @@ public class TestGrid {
 		g.clear();
 	}
 	
-	private static class BCounter implements BlockVisitor<Integer>  {
+	private static class BCounter extends BlockVisitor<Integer>  {
 		long count=0;
 		long size=0;
 		

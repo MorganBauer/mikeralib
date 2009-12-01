@@ -5,8 +5,8 @@ import java.nio.*;
 import java.util.ArrayList;
 
 public class Client {
-	private ClientConnector clientConnector=new ClientConnector();
-	private Connection connection=null;
+	protected ClientConnector clientConnector=new ClientConnector();
+	protected Connection connection=null;
 	
 	private ArrayList<Data> incomingMessages=new ArrayList<Data>();
 	
@@ -59,7 +59,7 @@ public class Client {
 	private void queueIncomingMessage(Data data) {
 		synchronized (incomingMessages) {
 			incomingMessages.add(data);
-			System.err.print("Message received by client! Length = " + data.size()+ "\n");
+			// System.err.print("Message received by client! Length = " + data.size()+ "\n");
 		}
 	}
 }

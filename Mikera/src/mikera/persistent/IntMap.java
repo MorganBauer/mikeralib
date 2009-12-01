@@ -34,13 +34,16 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	public static final int DATA_SIZE=1<<SHIFT_AMOUNT;
 	
 	private final IMNode<V> root;
-	
 
 	@SuppressWarnings("unchecked")
 	private static final IMNullList EMPTY_NODE_LIST=new IMNullList();
 	
 	@SuppressWarnings("unchecked")
-	public IntMap() {
+	public static final IntMap EMPTY=new IntMap();
+
+	
+	@SuppressWarnings("unchecked")
+	private IntMap() {
 		this(EMPTY_NODE_LIST);
 	}
 	

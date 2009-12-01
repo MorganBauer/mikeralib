@@ -1,8 +1,8 @@
 package mikera.net;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
-
 
 import mikera.net.*;
 
@@ -111,9 +111,16 @@ public abstract class Server {
 	 * Server logging
 	 * ===============================================================
 	 */
+	private static final boolean DEBUG_LOG=false;
 	
 	protected void logMessage(String s) {
 		System.err.println(s);
+	}
+	
+	private void debugMessage(String s) {
+		if (DEBUG_LOG) {
+			System.out.println(s);
+		}
 	}
 
 	/*
@@ -148,6 +155,8 @@ public abstract class Server {
 		}
 	}
 	
+
+	
 	private void handleConnectRequest(ByteBuffer data, Connection c) {
 		// TODO: security! validate name / pass
 		byte m=data.get();
@@ -161,9 +170,14 @@ public abstract class Server {
 		Integer playerID=playerList.addPlayer(name, pass);
 		Player p=playerList.getPlayer(playerID);
 		p.connection=c;
+		c.userTag=playerID;
 		
 		logMessage("Player connected: ID="+playerID+" name='"+name+"' pass='"+p.password+"'");
 		
+		onPlayerConnected(p);
+	}
+	
+	protected void onPlayerConnected(Player p) {
 		
 	}
 
@@ -171,7 +185,7 @@ public abstract class Server {
 	private void queueIncomingMessage(Data data, Integer playerID) {
 		Player p=playerList.getPlayer(playerID);
 		if (p==null) {
-			System.err.println("Message received from non-existent player?!?!? ID="+playerID);
+			debugMessage("Message received from non-existent player?!?!? ID="+playerID);
 			return;
 		}
 		p.queueIncomingMessage(data);
