@@ -1,5 +1,6 @@
 package mikera.persistent;
 
+import mikera.persistent.impl.BlockList;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.SingletonList;
 import mikera.persistent.impl.Tuple;
@@ -7,7 +8,11 @@ import mikera.util.emptyobjects.NullList;
 import java.util.*;
 
 public class ListFactory<T> {
-	public static final int MAX_TUPLE_BUILD_SIZE=32;
+	public static final int TUPLE_BUILD_BITS=5;
+	public static final int MAX_TUPLE_BUILD_SIZE=1<<TUPLE_BUILD_BITS;
+	
+	@SuppressWarnings("unchecked")
+	public static PersistentList[] NULL_PERSISTENT_LIST_ARRAY=new PersistentList[0];
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create() {
@@ -58,32 +63,42 @@ public class ListFactory<T> {
 		return createFromCollection(al);
 	}
 	
+	public static<T> PersistentList<T> subList(List<T> list, int fromIndex, int toIndex) {
+		return createFromList(list,fromIndex,toIndex);
+	}
+
+	public static <T> PersistentList<T> createFromList(List<T> source) {
+		return createFromList(source,0,source.size());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> createFromList(List<T> source, int fromIndex, int toIndex) {
 		int maxSize=source.size();
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
-		if (fromIndex>=toIndex) {
+		int newSize=toIndex-fromIndex;
+		if (newSize<=0) {
 			if (fromIndex==toIndex) return (PersistentList<T>)NullList.INSTANCE;
 			throw new IllegalArgumentException();
 		}
 			
-		int n=toIndex-fromIndex;
-		
 		// use sublist if possible
 		if (source instanceof PersistentList) {
-			if (n==maxSize) return (PersistentList)source;
-			return (PersistentList<T>) ((PersistentList<T>)source).subList(fromIndex, toIndex);
+			if (newSize==maxSize) return (PersistentList)source;
+			return createFromList((PersistentList<T>)source,fromIndex, toIndex);
 		}
 		
-		if (n==1) return SingletonList.create(source.get(fromIndex));
-		if (n<=MAX_TUPLE_BUILD_SIZE) {
+		if (newSize==1) return SingletonList.create(source.get(fromIndex));
+		if (newSize<=MAX_TUPLE_BUILD_SIZE) {
 			// note this covers negative length case
 			return Tuple.createFrom(source,fromIndex,toIndex);
 		}
 		
-
-		
-		return CompositeList.create(source, fromIndex, toIndex);
+		// TODO: change to BlockList
+		return BlockList.create(source, fromIndex, toIndex);
+	}
+	
+	public static <T> PersistentList<T> createFromList(PersistentList<T> source, int fromIndex, int toIndex) {
+		return source.subList(fromIndex, toIndex);
 	}
 
 	public static <T> PersistentList<T> concat(PersistentList<T> a, T v) {

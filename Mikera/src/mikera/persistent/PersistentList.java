@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import mikera.persistent.impl.SingletonList;
+import mikera.persistent.impl.*;
 import mikera.util.Tools;
+import mikera.util.emptyobjects.NullList;
 
 public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {
 	private static final long serialVersionUID = -7221238938265002290L;
@@ -160,8 +161,11 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
-		return ListFactory.createFromList(this,fromIndex,toIndex);
+		if ((fromIndex==0)&&(toIndex==size())) return this;
+		if (fromIndex==toIndex) return (PersistentList<T>) NullList.INSTANCE;
+		return SubList.create(this, fromIndex, toIndex);
 	}
 
 	public PersistentList<T> update(int index, T value) {

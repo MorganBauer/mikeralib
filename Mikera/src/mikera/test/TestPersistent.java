@@ -23,6 +23,10 @@ public class TestPersistent {
 		testPersistentList(SingletonList.create("Hello persistent lists!"));
 		testPersistentList(RepeatList.create("Hello", 1000));
 		testPersistentList(CompositeList.create(pl));
+		testPersistentList(BlockList.create(pl));
+		testPersistentList(BlockList.create(RepeatList.create("MM", 1000)));
+		testPersistentList(SubList.create(pl,2,3));
+
 	}
 	
 	@Test public void testCollectionTypes() {
@@ -169,11 +173,13 @@ public class TestPersistent {
 	
 	public <T> void testExceptions(PersistentList<T> a) {
 		try {
+			// just before start
 			a.get(-1);
 			fail();
 		} catch (IndexOutOfBoundsException x) {/* OK */}
 		
 		try {
+			// just after end
 			a.get(a.size());
 			fail();
 		} catch (IndexOutOfBoundsException x) {/* OK */}
@@ -196,6 +202,18 @@ public class TestPersistent {
 			fail();
 		} catch (Exception x) {/* OK */}
 
+		try {
+			// out of range sublist - before start
+			a.subList(-1,Rand.r(a.size()));
+			fail();
+		} catch (Exception x) {/* OK */}
+		
+		try {
+			// out of range sublist - over limit
+			a.subList(Rand.r(a.size()),a.size()+Rand.d(100));
+			fail();
+		} catch (Exception x) {/* OK */}
+		
 		try {
 			// negative delete position
 			a.deleteRange(-4,-4);
@@ -322,6 +340,22 @@ public class TestPersistent {
 
 		// safe length copyFrom
 		a.copyFrom(Rand.r(a.size()/2), a, Rand.r(a.size()/2), Rand.r(a.size()/2));
+	
+		completelyTestRandomProperSublist(a);
+	}
+	
+	public <T> void completelyTestRandomProperSublist(PersistentList<T> a) {
+		int size=a.size();
+		if (size<=1) return;
+		
+		int b=Rand.r(size-1);
+		int c=Rand.range(b+1,(b==0)?(size-1):size);
+		
+		PersistentList<T> sl=a.subList(b,c);
+		int n=Rand.r(sl.size());
+		assertEquals(a.get(b+n),sl.get(n));
+		
+		completelyTestRandomProperSublist(sl);
 	}
 	
 	@Test public void testRepeats() {

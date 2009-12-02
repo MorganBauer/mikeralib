@@ -76,7 +76,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 		PersistentList<T> pl=this;
 		int i=pl.indexOf(value);
 		while (i>=0) {
-			pl=deleteAt(i);
+			pl=pl.deleteAt(i);
 			i=pl.indexOf(value,i);
 		}
 		return pl;

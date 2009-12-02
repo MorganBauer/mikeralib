@@ -82,6 +82,7 @@ public final class NullList<T> extends PersistentList<T> {
 	}
 
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
+		if ((fromIndex!=0)||(toIndex!=0)) throw new IllegalArgumentException();
 		return this;
 	}
 
