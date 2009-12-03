@@ -20,11 +20,12 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	
 	// Empty Tuple for some special cases
 	@SuppressWarnings("unchecked")
-	static final Tuple EMPTY=new Tuple(new Object[0]);
+	static final Tuple EMPTY_TUPLE=new Tuple(new Object[0]);
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values) {
 		int n=values.length;
+		if (n==0) return EMPTY_TUPLE;
 		T[] ndata=(T[]) new Object[n];
 		System.arraycopy(values,0,ndata,0,n);
 		return new Tuple(ndata);
@@ -48,7 +49,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n<=0) return EMPTY;
+		if (n<=0) return EMPTY_TUPLE;
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values[i+fromIndex];
@@ -76,7 +77,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	public static <T> Tuple<T> createFrom(List<T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=0) {
-			if (n==0) return EMPTY;
+			if (n==0) return EMPTY_TUPLE;
 			throw new IllegalArgumentException("Negative range in Tuple.create: ("+fromIndex+","+toIndex+")");
 		}
 		T[] ndata=(T[]) new Object[n];
@@ -122,7 +123,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		if (fromIndex>=toIndex) {
-			if (fromIndex==toIndex) return (PersistentList<T>) NullList.INSTANCE;
+			if (fromIndex==toIndex) return ListFactory.emptyList();
 			throw new IllegalArgumentException();
 		}
 		if (fromIndex+1==toIndex) {
@@ -138,7 +139,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 			if (start>end) throw new IllegalArgumentException();
 			return this;
 		}
-		if ((start==0)&&(end==size())) return (PersistentList<T>) NullList.INSTANCE;
+		if ((start==0)&&(end==size())) return ListFactory.emptyList();
 		if (start==end) return this;
 		int ns=size()-(end-start);
 		T[] ndata=(T[]) new Object[ns];

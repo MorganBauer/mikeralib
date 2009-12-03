@@ -10,20 +10,33 @@ import mikera.util.TODOException;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullSet;
 
+/**
+ * Factory class for persistent sets
+ * 
+ * @author Mike Anderson
+ *
+ */
 public class SetFactory {
-	// TODO: convert to hash implementations
-	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> create(T value) {
 		return SingletonSet.create(value);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> create() {
+		return emptySet();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentSet<T> emptySet() {
 		return (PersistentSet<T>) NullSet.INSTANCE;
 	}
 	
 	public static <T> PersistentSet<T> createFrom(Set<T> source) {
+		if (source instanceof PersistentSet<?>) {
+			return create((PersistentSet<T>)source);
+		}
+		int size=source.size();
+		if (size==0) return emptySet();
 		return PersistentHashSet.createFromSet(source);
 	}
 	
@@ -35,8 +48,11 @@ public class SetFactory {
 		return PersistentHashSet.createFromSet(source);
 	}
 	
-	public static <T> PersistentSet<T> createFrom(Collection<T> value) {
-		return createFrom(value.iterator());
+	public static <T> PersistentSet<T> createFrom(Collection<T> source) {
+		if (source instanceof Set<?>) {
+			return createFrom((Set<T>)source);
+		}
+		return createFrom(source.iterator());
 	}
 	
 	public static <T> PersistentSet<T> createFrom(T[] source) {

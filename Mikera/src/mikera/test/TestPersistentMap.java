@@ -25,14 +25,24 @@ public class TestPersistentMap {
 	@Test public void testMaps() {
 		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
 		testMap(pm);
+		testMap(addRandomMaps(pm));
 		
 		IntMap<String> im=IntMap.EMPTY;
 		testMap(im);
+		testMap(addRandomMaps(im));
 		
 		PersistentMap<Integer,String> nm=NullMap.INSTANCE;
 		testMap(nm);
+		testMap(addRandomMaps(nm));
 	}
 	
+	private PersistentMap<Integer, String> addRandomMaps(PersistentMap<Integer,String> im) {
+		for (int i=0; i<Rand.d(50); i++) {
+			im=im.include(Rand.r(50),Rand.nextString());
+		}
+		return im;
+	}
+
 	@Test public void testConvert() {
 		PersistentMap<Integer,String> phm=new PersistentHashMap<Integer,String>();
 

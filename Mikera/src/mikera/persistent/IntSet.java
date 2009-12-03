@@ -285,9 +285,9 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	
 	public boolean equals(IntSet is) {
 		if (is==this) return true;
-		int s=size();
-		if (is.size()!=s) return false;
-		for (int i=0; i<s; i++) {
+		int size=size();
+		if (is.size()!=size) return false;
+		for (int i=0; i<size; i++) {
 			if (data[i]!=is.data[i]) return false;
 		}
 		return true;

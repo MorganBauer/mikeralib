@@ -25,7 +25,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike
  *
  */
-public final class Data extends AbstractList<Byte> implements Cloneable, Serializable, Comparable<Data>, Externalizable {
+public final class Data extends AbstractList<Byte> implements List<Byte>, Cloneable, Serializable, Comparable<Data>, Externalizable {
 	private static final long serialVersionUID = 293989965333996558L;
 	private static final int DEFAULT_DATA_INCREMENT=50;
 	

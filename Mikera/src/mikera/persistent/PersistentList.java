@@ -23,10 +23,16 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		throw new UnsupportedOperationException();
 	}
 
-	
-	
-	private class BaseIterator implements ListIterator<T> {
-		int i=0;
+	private class PersistentListIterator implements ListIterator<T> {
+		int i;
+		
+		public PersistentListIterator() {
+			i=0;
+		}
+		
+		public PersistentListIterator(int index) {
+			i=index;
+		}
 		
 		public void add(T e) {
 			throw new UnsupportedOperationException();
@@ -67,32 +73,16 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 
 	public ListIterator<T> listIterator() {
-		return new BaseIterator();
+		return new PersistentListIterator();
 	}
 
 	public ListIterator<T> listIterator(int index) {
-		return new BaseIterator();
+		return new PersistentListIterator(index);
 	}
 
 	public Iterator<T> iterator() {
-		return new BaseIterator();
+		return new PersistentListIterator();
 	}
-
-	
-	/**
-	 * Returns the front part of the list. Not guaranteed to be exactly half,
-	 * but intended to be as balanced as possible
-	 * @return
-	 */
-	public abstract PersistentList<T> front();
-
-	/**
-	 * Returns the back part of the list. Not guaranteed to be exactly half,
-	 * but intended to be as balanced as possible
-	 * @return
-	 */
-	public abstract PersistentList<T> back();
-
 
 	public T set(int index, T element) {
 		throw new UnsupportedOperationException();
@@ -123,27 +113,15 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	public int indexOf(Object o) {
-		int i=0;
-		for (T it: this) {
-			if (it!=null) {
-				if (it.equals(o)) return i;
-			} else {
-				if (o==null) return i;
-			}
-			i++;
-		}
-		return -1;
+		return indexOf(o,0);
 	}
 	
 	public int indexOf(Object o, int start) {
 		int i=start;
-		while(i<size()) {
+		int size=size();
+		while(i<size) {
 			T it=get(i);
-			if (it!=null) {
-				if (it.equals(o)) return i;
-			} else {
-				if (o==null) return i;
-			}
+			if (Tools.equalsWithNulls(o, it)) return i;
 			i++;
 		}
 		return -1;
@@ -159,21 +137,45 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 		if (end==size()) return subList(0,start);
 		return subList(0,start).append(subList(end,size()));
 	}
+	
+	public T head() {
+		return get(0);
+	}
+	
+	public PersistentList<T> tail() {
+		return subList(1,size());
+	}
+	
+	public PersistentList<T> front() {
+		int size=size();
+		return subList(0,size/2);
+	}
 
+	public PersistentList<T> back() {
+		int size=size();
+		return subList(size/2,size);
+	}
 
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
+		// checks that return known lists
 		if ((fromIndex==0)&&(toIndex==size())) return this;
-		if (fromIndex==toIndex) return (PersistentList<T>) NullList.INSTANCE;
+		if (fromIndex==toIndex) return ListFactory.emptyList();
+		
+		// otherwise generate a SubList
+		// this also handles exception cases
 		return SubList.create(this, fromIndex, toIndex);
 	}
 
 	public PersistentList<T> update(int index, T value) {
-		return subList(0,index).append(value).append(subList(index+1,size()));
+		PersistentList<T> firstPart=subList(0,index);
+		PersistentList<T> lastPart=subList(index+1,size());
+		return firstPart.append(value).append(lastPart);
 	}
 
 	public PersistentList<T> insert(int index, T value) {
-		return subList(0,index).append(value).append(subList(index,size()));
+		PersistentList<T> firstPart=subList(0,index);
+		PersistentList<T> lastPart=subList(index,size());
+		return firstPart.append(value).append(lastPart);
 	}
 
 	public PersistentList<T> insertAll(int index, Collection<T> values) {
@@ -185,7 +187,9 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	public PersistentList<T> insertAll(int index, PersistentList<T> values) {
-		return subList(0,index).append(values).append(subList(index,size()));
+		PersistentList<T> firstPart=subList(0,index);
+		PersistentList<T> lastPart=subList(index,size());
+		return firstPart.append(values).append(lastPart);
 	}
 	
 	public PersistentList<T> delete(T value) {

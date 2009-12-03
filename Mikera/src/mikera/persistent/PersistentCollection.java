@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import mikera.annotations.Immutable;
 import mikera.persistent.impl.FilteredIterator;
 import mikera.util.Tools;
 
 @SuppressWarnings("unchecked")
+@Immutable
 public abstract class PersistentCollection<T> extends PersistentObject implements IPersistentCollection<T> {
 	private static final long serialVersionUID = -962303316004942025L;
 

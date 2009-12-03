@@ -133,6 +133,16 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		return subBlockList(fromIndex,toIndex);
 	}
 	
+	public int hashCode() {
+		if (blocks.length==0) return 0;
+		int r=blocks[0].hashCode();
+		for (int i=1; i<blocks.length; i++) {
+			r=Integer.rotateRight(r,blocks[i].size());
+			r^=blocks[i].hashCode();
+		}
+		return r;
+	}
+	
 	/**
 	 * Gets a subList as a BlockList with the same shift
 	 * @param fromIndex
@@ -140,7 +150,6 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	 * @return
 	 */
 	private BlockList<T> subBlockList(int fromIndex, int toIndex) {
-
 		return new BlockList<T>(blocks,shift,(toIndex-fromIndex),fromIndex+offset);	
 	}
 }

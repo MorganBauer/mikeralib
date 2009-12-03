@@ -17,11 +17,6 @@ public final class Pair<A,B> extends PersistentObject implements Comparable<Pair
 	public final A a;
 	public final B b;
 	
-	public Pair() {
-		a=null;
-		b=null;
-	}
-	
 	public Pair(A a, B b) {
 		this.a=a;
 		this.b=b;

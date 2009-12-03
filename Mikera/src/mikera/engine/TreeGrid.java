@@ -22,7 +22,6 @@ import mikera.util.Tools;
 public class TreeGrid<T> extends BaseGrid<T> {
 
 	private static final int DIM_SPLIT_BITS=2;
-	//private static final int DIM_SPLIT_SIZE=1<<DIM_SPLIT_BITS;
 	private static final int SIGNIFICANT_BITS=20;
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);

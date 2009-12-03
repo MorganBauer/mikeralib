@@ -93,8 +93,10 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		 * @return
 		 */
 		protected abstract IMNode<V> include(int key, V value, int shift);
-		
-		
+
+		protected abstract IMNode<V> include(IMEntry<V> entry, int shift);
+
+	
 		/**
 		 * Returns the entry for the given key value, or null if not found
 		 * 
@@ -229,6 +231,17 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			if (dn==n) return this;
 			return replace(i,dn);
 		}
+		
+		@Override
+		protected IMNode<V> include(IMEntry<V> entry, int shift) {
+			int key=entry.key();
+			int i=slotFromKey(key,shift);
+			IMNode<V> n=data[i];
+			IMNode<V> dn=n.include(entry, shift+SHIFT_AMOUNT);
+			if (dn==n) return this;
+			return replace(i,dn);
+		}
+
 		
 
 		private int countEntries() {
@@ -391,6 +404,18 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			return replace(i,n.include(key, value, shift+SHIFT_AMOUNT));
 		}
 		
+		@Override
+		protected IMNode<V> include(IMEntry<V> entry, int shift) {
+			int key=entry.key();
+			int s=slotFromHash(key,shift);
+			int i=indexFromSlot(s,bitmap);
+			if (((1<<s)&bitmap)==0) {
+				return insertSlot(i,s,entry);
+			}
+			IMNode<V> n=data[i];
+			return replace(i,n.include(entry, shift+SHIFT_AMOUNT));
+		}
+		
 		@SuppressWarnings("unchecked")
 		protected IMNode<V> insertSlot(int i, int s, IMNode<V> node) {
 			IMNode<V>[] newData=new IMNode[data.length+1];
@@ -492,6 +517,10 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		protected IMNode<V> include(int key, V value, int shift) {
 			return new IMEntry<V>(key,value);
 		}
+		
+		protected IMNode<V> include(IMEntry<V> entry, int shift) {
+			return entry;
+		}
 
 		@Override
 		protected int size() {
@@ -573,6 +602,18 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			}
 			
 			return IMBitMapNode.concat(this,key,new IMEntry<V>(newkey,value),newkey,shift);
+		}
+		
+		@Override
+		protected IMNode<V> include(IMEntry<V> entry, int shift) {
+			int newkey=entry.key();
+			if (newkey==this.key) {
+				// replacement case
+				if (!matchesValue(entry.getValue())) return entry;
+				return this;
+			}
+			
+			return IMBitMapNode.concat(this,key,entry,newkey,shift);
 		}
 		
 		@Override
@@ -745,7 +786,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 
 	@Override
 	public IntMap<V> include(Integer key, V value) {
-		IMNode<V> newRoot=root.include(key, value,0);
+		IMNode<V> newRoot=root.include(key.intValue(), value,0);
 		if (root==newRoot) return this;
 		return new IntMap<V>(newRoot);
 	}

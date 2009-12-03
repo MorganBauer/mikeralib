@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import mikera.annotations.Immutable;
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
@@ -21,7 +22,7 @@ import mikera.util.Tools;
  * @param <K> Key type
  * @param <V> Value type
  */
-
+@Immutable
 public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private static final long serialVersionUID = -6862000512238861885L;
 

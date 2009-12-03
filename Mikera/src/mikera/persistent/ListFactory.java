@@ -37,7 +37,7 @@ public class ListFactory<T> {
 		int n=toIndex-fromIndex;
 		if (n<2) {
 			if (n<0) throw new IllegalArgumentException(); 
-			if (n==0) return (PersistentList<T>) NullList.INSTANCE;
+			if (n==0) return emptyList();
 			if (n==1) return SingletonList.create(data[fromIndex]);
 		}	
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
@@ -81,7 +81,7 @@ public class ListFactory<T> {
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (fromIndex==toIndex) return (PersistentList<T>)NullList.INSTANCE;
+			if (newSize==0) return emptyList();
 			throw new IllegalArgumentException();
 		}
 			
@@ -97,7 +97,7 @@ public class ListFactory<T> {
 			return Tuple.createFrom(source,fromIndex,toIndex);
 		}
 		
-		// TODO: change to BlockList
+		// create blocklist for larger lists
 		return BlockList.create(source, fromIndex, toIndex);
 	}
 	
@@ -109,15 +109,11 @@ public class ListFactory<T> {
 		return concat(a,ListFactory.create(v));
 	}
 	
+	public static <T> PersistentList<T> concat(T v, PersistentList<T> a) {
+		return concat(ListFactory.create(v),a);
+	}
+	
 	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
-		int as=a.size();
-		if (as==0) return b;
-		int bs=b.size();
-		if (bs==0) return a;
-		if ((as+bs)<=MAX_TUPLE_BUILD_SIZE) {
-			return Tuple.concat(a,b);
-		}
-		
 		return CompositeList.concat(a, b);
 	}
 }

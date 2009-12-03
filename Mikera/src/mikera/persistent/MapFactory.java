@@ -17,4 +17,10 @@ public class MapFactory {
 	public static <K,V> PersistentMap<K,V> create(Map<K,V> values) {
 		return PersistentHashMap.create(values);
 	}
+	
+	public static <V> PersistentMap<Integer,V> create(int key, V value) {
+		return (PersistentMap<Integer, V>) IntMap.create(key, value);
+	}
+	
+
 }

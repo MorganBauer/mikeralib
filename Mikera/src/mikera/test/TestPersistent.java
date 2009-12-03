@@ -150,6 +150,7 @@ public class TestPersistent {
 	
 	public <T> void testPersistentList(PersistentList<T> a) {
 		testSubLists(a);
+		testHeadTail(a);
 		testAppends(a);
 		testConcats(a);
 		testCuts(a);
@@ -243,7 +244,7 @@ public class TestPersistent {
 	@SuppressWarnings("unchecked")
 	public <T> void testEquals(PersistentList<T> a) {
 		assertEquals(a,a.clone());
-		assertEquals(a,a.append((PersistentList<T>)NullList.INSTANCE));
+		assertTrue(a==a.append((PersistentList<T>)ListFactory.emptyList()));
 		assertEquals(a,a.deleteRange(0,0));
 	}
 	
@@ -318,6 +319,19 @@ public class TestPersistent {
 		// check hash code equivalence
 		PersistentList<T> cp=Tuple.createFrom(al);		
 		assertEquals(cp.hashCode(),a.hashCode());
+	}
+
+	public <T> void testHeadTail(PersistentList<T> a) {
+		if (a.size()>=1) {
+			T head=a.head();
+			PersistentList<T> tail=a.tail();
+			
+			assertEquals(head,a.get(0));
+			assertEquals(a.size()-1,tail.size());
+			
+			PersistentList<T> aa=ListFactory.concat(head, tail);
+			assertEquals(a,aa);
+		}
 	}
 	
 	public <T> void testSubLists(PersistentList<T> a) {

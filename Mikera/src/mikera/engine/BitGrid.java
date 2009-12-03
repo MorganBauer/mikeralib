@@ -12,6 +12,8 @@ import mikera.util.Maths;
  */
 @Mutable
 public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
+	private static final int GROW_BORDER=1;
+	
 	private static final int XLOWBITS=2;
 	private static final int YLOWBITS=2;
 	private static final int ZLOWBITS=1;	
@@ -236,22 +238,28 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 		if (data==null) {init(x,y,z); return;}
 		
 		// check if array needs resizing
-		if ((x<gx)||(y<gy)||(z<gz)) { growToIncludeLocal(x,y,z); return; }
-		
-		// ok providing we don't need
-		if (x>=((gx+width())|XLOWMASK)) {growToIncludeLocal(x,y,z); return; }
-		if (y>=((gy+height())|YLOWMASK)) {growToIncludeLocal(x,y,z); return; }
-		if (z>=((gz+depth())|ZLOWMASK)) {growToIncludeLocal(x,y,z); return; }	
+		if (
+				( (x<gx) || (y<gy) || (z<gz) ) ||
+				( x>= ((gx+width())|XLOWMASK) ) ||
+				( y>= ((gy+height())|YLOWMASK) ) ||
+				( z>= ((gz+depth())|ZLOWMASK) )
+		) 
+		{
+			growToIncludeLocal(x-GROW_BORDER,y-GROW_BORDER,z-GROW_BORDER,x+GROW_BORDER,y+GROW_BORDER,z+GROW_BORDER); return; 	
+		}	
 	}
 	
-	private void growToIncludeLocal(int x, int y, int z) {	
+	/**
+	 * Grow BitGrid to ensure a given volume is included
+	 */
+	private void growToIncludeLocal(int x1, int y1, int z1, int x2, int y2, int z2) {	
 		// assumes a change in size
-		int ngx=Maths.min(gx,x)&(XHIGHMASK);
-		int ngy=Maths.min(gy,y)&(YHIGHMASK);
-		int ngz=Maths.min(gz,z)&(ZHIGHMASK);
-		int ngw=(Maths.max(gx+width(), x+XBLOCKSIZE)-ngx)>>XLOWBITS;
-		int ngh=(Maths.max(gy+height(),y+YBLOCKSIZE)-ngy)>>YLOWBITS;
-		int ngd=(Maths.max(gz+depth(), z+ZBLOCKSIZE)-ngz)>>ZLOWBITS;
+		int ngx=Maths.min(gx,x1)&(XHIGHMASK);
+		int ngy=Maths.min(gy,y1)&(YHIGHMASK);
+		int ngz=Maths.min(gz,z1)&(ZHIGHMASK);
+		int ngw=(Maths.max(gx+width(), x2+XBLOCKSIZE)-ngx)>>XLOWBITS;
+		int ngh=(Maths.max(gy+height(),y2+YBLOCKSIZE)-ngy)>>YLOWBITS;
+		int ngd=(Maths.max(gz+depth(), z2+ZBLOCKSIZE)-ngz)>>ZLOWBITS;
 		resize(ngx,ngy,ngz,ngw,ngh,ngd);
 	} 
 		
@@ -300,7 +308,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 			int ry=y-gy;
 			int rz=z-gz;
 			if ((rx<0)||(ry<0)||(rz<0)||(rx>=width())||(ry>=height())||(rz>=depth())) {
-				growToIncludeLocal(x,y,z);
+				growToIncludeLocal(x,y,z,x,y,z);
 				// update (rx,ry,rz) because (gx,gy,gz) may have changed
 				rx=x-gx;
 				ry=y-gy;

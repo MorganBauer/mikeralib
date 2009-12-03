@@ -30,11 +30,10 @@ public class RepeatList<T> extends BasePersistentList<T> {
 		return value;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int start, int end) {
 		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
 		if (start>=end) {
-			if (start==end) return (PersistentList<T>)NullList.INSTANCE;
+			if (start==end) return ListFactory.emptyList();
 			throw new IllegalArgumentException();
 		}
 		int num=end-start;
@@ -42,7 +41,6 @@ public class RepeatList<T> extends BasePersistentList<T> {
 		return create(value,num);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> deleteRange(int start, int end) {
 		if ((start<0)||(end>count)) throw new IndexOutOfBoundsException();
 		if (start>=end) {
@@ -50,7 +48,7 @@ public class RepeatList<T> extends BasePersistentList<T> {
 			throw new IllegalArgumentException();
 		}
 		int numDeleted=end-start;
-		if (numDeleted==count) return (PersistentList<T>)NullList.INSTANCE;
+		if (numDeleted==count) return ListFactory.emptyList();
 		if (numDeleted==0) return this;
 		return create(value,count-numDeleted);
 	}
@@ -65,10 +63,9 @@ public class RepeatList<T> extends BasePersistentList<T> {
 		return super.append(values);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> delete(final T v) {
 		if (Tools.equalsWithNulls(v,value)) {
-			return (PersistentList<T>) NullList.INSTANCE;
+			return ListFactory.emptyList();
 		} else {
 			return this;
 		}

@@ -13,27 +13,20 @@ public class CompositeList<T> extends BasePersistentList<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> concat(PersistentList<T> a, PersistentList<T> b) {
-		int as=a.size();
-		int bs=b.size();
+		int as=a.size(); if (as==0) return b;
+		int bs=b.size(); if (bs==0) return a;
 		if ((as+bs)<=ListFactory.MAX_TUPLE_BUILD_SIZE) {
 			return Tuple.concat(a, b);
 		}
 		
 		if (a.size()<(b.size()>>1)) {
-			if (b instanceof CompositeList<?>) {
-				CompositeList<T> cb=(CompositeList<T>)b;
-				return new CompositeList(concat(a,cb.front()),cb.back());
-			}
+			return new CompositeList(concat(a,b.front()),b.back());
 		}
 		
 		if (b.size()<(a.size()>>1)) {
-			if (a instanceof CompositeList<?>) {
-				CompositeList<T> ca=(CompositeList<T>)a;
-				return new CompositeList(ca.front(),concat(ca.back(),b));
-			}
+			return new CompositeList(a.front(),concat(a.back(),b));
 		}
 		
-		// TODO: balance!!
 		return new CompositeList(a,b);
 	}
 	

@@ -24,7 +24,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	private static final long serialVersionUID = 3559316900529560364L;
 
 	@SuppressWarnings("unchecked")
-	public static final SubList EMPTY_SUBLIST = new SubList(NullList.INSTANCE,0,0);
+	public static final SubList EMPTY_SUBLIST = new SubList(ListFactory.emptyList(),0,0);
 
 	private final PersistentList<T> data;
 	private final int offset;
@@ -38,7 +38,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 			if (newSize==0) return SubList.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
-		return create(ListFactory.createFromList(source),fromIndex,toIndex);
+		return createLocal(ListFactory.createFromList(source),fromIndex,toIndex);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -75,6 +75,28 @@ public final class SubList<T> extends BasePersistentList<T>   {
 		return this;
 	}
 	
+	/**
+	 * Special append version for SubList 
+	 * Attempts to merge adjacent sublists
+	 */
+	public PersistentList<T> append(PersistentList<T> values) {
+		if (values instanceof SubList<?>) {
+			SubList<T> sl=(SubList<T>)values;
+			return append(sl);
+		}
+		return super.append(values);
+	}
+	
+	
+	public PersistentList<T> append(SubList<T> sl) {
+		if ((data==sl.data)&&((offset+length)==sl.offset)) {
+			int newLength=length+sl.length;
+			if (newLength==data.size()) return data;
+			return new SubList<T>(data,offset,newLength);
+		}
+		return super.append(sl);
+	}
+	
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if (fromIndex>=toIndex) {
@@ -82,6 +104,6 @@ public final class SubList<T> extends BasePersistentList<T>   {
 			throw new IllegalArgumentException();
 		}
 		if ((fromIndex==0)&&(toIndex==size())) return this;
-		return data.subList(offset+fromIndex, toIndex-fromIndex);
+		return data.subList(offset+fromIndex, offset+toIndex);
 	}
 }

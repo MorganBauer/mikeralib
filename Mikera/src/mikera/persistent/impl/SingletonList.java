@@ -1,5 +1,6 @@
 package mikera.persistent.impl;
 
+import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
 import mikera.persistent.PersistentSet;
 import mikera.util.emptyobjects.NullList;
@@ -42,9 +43,16 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 	public PersistentList<T> front() {
 		return this;
 	}
+	
+	public T head() {
+		return value;
+	}
 
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> back() {
-		return (PersistentList<T>) NullList.INSTANCE;
+		return ListFactory.emptyList();
+	}
+	
+	public PersistentList<T> tail() {
+		return ListFactory.emptyList();
 	}
 }

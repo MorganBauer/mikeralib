@@ -39,14 +39,6 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	}
 
 	
-	public PersistentList<T> front() {
-		return subList(0,size()/2);
-	}
-
-	public PersistentList<T> back() {
-		return subList(size()/2,size());
-	}
-
 
 	
 	/**
