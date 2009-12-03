@@ -51,10 +51,12 @@ public final class SubTuple<T> extends BasePersistentList<T>   {
 		return this;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
-		if (fromIndex>=toIndex) return Tuple.EMPTY;
+		if (fromIndex>=toIndex) {
+			if (fromIndex>toIndex) throw new IllegalArgumentException();
+			return ListFactory.emptyList();
+		}
 		if ((fromIndex==0)&&(toIndex==size())) return this;
 		return SubTuple.create(data, offset+fromIndex, toIndex-fromIndex);
 	}

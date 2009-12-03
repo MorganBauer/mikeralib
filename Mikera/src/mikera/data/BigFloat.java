@@ -1,4 +1,4 @@
-package mikera.math;
+package mikera.data;
 
 import mikera.util.Maths;
 

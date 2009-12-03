@@ -1,4 +1,4 @@
-package mikera.engine;
+package mikera.data;
 
 public enum DataType {
 	STRING,

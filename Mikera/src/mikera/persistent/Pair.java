@@ -2,6 +2,7 @@ package mikera.persistent;
 
 import java.io.Serializable;
 
+import mikera.annotations.Immutable;
 import mikera.util.Bits;
 
 /**
@@ -10,6 +11,7 @@ import mikera.util.Bits;
  * @param <A>
  * @param <B>
  */
+@Immutable
 public final class Pair<A,B> extends PersistentObject implements Comparable<Pair<A,B>> {
 	private static final long serialVersionUID = -7930545169533958038L;
 	public final A a;

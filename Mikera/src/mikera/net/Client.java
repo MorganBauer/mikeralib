@@ -1,5 +1,6 @@
 package mikera.net;
 
+import mikera.data.Data;
 import mikera.net.*;
 import java.nio.*;
 import java.util.ArrayList;

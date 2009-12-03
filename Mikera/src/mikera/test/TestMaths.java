@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.math.*;
 import mikera.util.*;
+import mikera.data.BigFloat;
 import mikera.engine.*;
 
 public class TestMaths {

@@ -1,6 +1,6 @@
 package mikera.math;
 
-public abstract class BaseVector implements IVector {
+public abstract class BaseVector {
 	private static final long serialVersionUID = 4591459378854897907L;
 
 	public BaseVector clone() {
@@ -8,9 +8,12 @@ public abstract class BaseVector implements IVector {
 			return (BaseVector)super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new Error(e);
-		}
-		
+		}	
 	}
+	
+	public abstract int size();
+	
+	public abstract float get(int i);
 	
 	public String toString() {
 		StringBuilder sb=new StringBuilder();

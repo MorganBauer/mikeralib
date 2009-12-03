@@ -5,6 +5,8 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
+import mikera.data.Data;
+
 public class Connection {
 	private static final boolean DEBUG = false;
 	

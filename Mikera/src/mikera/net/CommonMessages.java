@@ -2,6 +2,8 @@ package mikera.net;
 
 import java.nio.*;
 
+import mikera.data.Data;
+
 public class CommonMessages {
 	public static final byte JOIN_GAME=0;
 	

@@ -2,6 +2,7 @@ package mikera.engine;
 
 import java.util.Arrays;
 
+import mikera.annotations.Mutable;
 import mikera.util.Bits;
 import mikera.util.Maths;
 /**
@@ -11,6 +12,7 @@ import mikera.util.Maths;
  * @author Mike Anderson
  *
  */
+@Mutable
 public final class IntGrid  implements Cloneable {
 	// base coordinates
 	private int gx;

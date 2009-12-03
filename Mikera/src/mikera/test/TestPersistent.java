@@ -26,7 +26,6 @@ public class TestPersistent {
 		testPersistentList(BlockList.create(pl));
 		testPersistentList(BlockList.create(RepeatList.create("MM", 1000)));
 		testPersistentList(SubList.create(pl,2,3));
-
 	}
 	
 	@Test public void testCollectionTypes() {
@@ -334,6 +333,10 @@ public class TestPersistent {
 				assertEquals(sl.get(r),a.get(b+r));
 			}
 		}
+		
+		assertTrue(a==a.subList(0,a.size()));
+		int rp=Rand.r(a.size());
+		assertTrue(NullList.INSTANCE==a.subList(rp,rp));
 		
 		// zero length copyFrom
 		a.copyFrom(Rand.r(a.size()), a, Rand.r(a.size()), 0);

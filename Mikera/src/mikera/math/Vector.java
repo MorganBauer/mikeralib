@@ -2,6 +2,7 @@ package mikera.math;
 
 import java.io.Serializable;
 
+import mikera.annotations.Mutable;
 import mikera.util.*;
 
 /**
@@ -10,6 +11,7 @@ import mikera.util.*;
  * @author Mike
  *
  */
+@Mutable
 public final class Vector extends BaseVector {
 	private static final long serialVersionUID = -265007091119573847L;
 

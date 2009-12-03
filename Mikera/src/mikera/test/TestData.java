@@ -2,7 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-import mikera.net.Data;
+import mikera.data.Data;
 import mikera.net.DataOutputStream;
 import mikera.util.*;
 

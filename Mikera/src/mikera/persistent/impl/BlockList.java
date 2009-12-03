@@ -6,6 +6,7 @@ import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
 import mikera.util.TODOException;
 import mikera.util.emptyobjects.NullArrays;
+import mikera.util.emptyobjects.NullList;
 
 public final class BlockList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 7210896608719053578L;
@@ -112,12 +113,11 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		return blockIndex<<shift;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size)) throw new IndexOutOfBoundsException();
 		if ((fromIndex>=toIndex)) {
-			if (toIndex==fromIndex) return EMPTY_BLOCKLIST;
+			if (toIndex==fromIndex) return ListFactory.emptyList();
 			throw new IllegalArgumentException();
 		}
 		if ((fromIndex==0)&&(toIndex==size)) return this;

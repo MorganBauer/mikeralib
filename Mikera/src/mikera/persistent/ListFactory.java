@@ -14,8 +14,12 @@ public class ListFactory<T> {
 	@SuppressWarnings("unchecked")
 	public static PersistentList[] NULL_PERSISTENT_LIST_ARRAY=new PersistentList[0];
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create() {
+		return emptyList();
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public static <T> PersistentList<T> emptyList() {
 		return (PersistentList<T>) NullList.INSTANCE;
 	}	
 	

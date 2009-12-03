@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import mikera.data.Data;
+
 
 public class Player {
 	String name=null;

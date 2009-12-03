@@ -2,10 +2,11 @@ package mikera.net;
 
 import java.io.*;
 
+import mikera.data.Data;
 import mikera.util.Maths;
 
 public class DataInputStream extends InputStream {
-	private Data data;
+	private final Data data;
 	private int pos=0;
 	
 	public DataInputStream() {

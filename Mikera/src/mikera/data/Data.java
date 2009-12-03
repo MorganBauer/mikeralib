@@ -1,4 +1,4 @@
-package mikera.net;
+package mikera.data;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
+import mikera.net.BufferCache;
 import mikera.util.Maths;
 import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;

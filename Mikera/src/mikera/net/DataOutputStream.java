@@ -3,8 +3,10 @@ package mikera.net;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import mikera.data.Data;
+
 public class DataOutputStream extends OutputStream {
-	private Data data;
+	private final Data data;
 	
 	public DataOutputStream() {
 		this(new Data());

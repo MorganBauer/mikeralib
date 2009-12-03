@@ -3,6 +3,8 @@ package mikera.net;
 import java.nio.*;
 import java.nio.charset.*;
 
+import mikera.data.Data;
+
 public class Util {
 	public static int writeCompacted(ByteBuffer bb, long a) {
 		byte b=(byte)(a&127); // get bottom 7 bits

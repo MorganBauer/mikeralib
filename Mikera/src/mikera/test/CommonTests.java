@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.io.*;
 
+import mikera.data.Data;
 import mikera.math.*;
 import mikera.net.*;
 import mikera.net.DataInputStream;

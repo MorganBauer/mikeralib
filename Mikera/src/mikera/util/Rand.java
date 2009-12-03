@@ -46,7 +46,7 @@ public final class Rand {
 		return new MikeraRandom();
 	}
 		
-	static class MikeraRandom extends java.util.Random {
+	static final class MikeraRandom extends java.util.Random {
 		private static final long serialVersionUID = 6868944865706425166L;
 
 		private volatile long state=System.nanoTime()|1;

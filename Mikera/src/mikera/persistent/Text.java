@@ -4,6 +4,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import mikera.annotations.Immutable;
 import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.TextUtils;
@@ -21,6 +22,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike
  *
  */
+@Immutable
 public final class Text extends PersistentObject implements CharSequence, Comparable<CharSequence>, Iterable<Character> {
 	private static final long serialVersionUID = 5744895584967327995L;
 	public static final int BLOCK_SIZE_BITS=6;
