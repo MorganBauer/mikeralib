@@ -128,14 +128,15 @@ public abstract class PersistentList<T> extends PersistentCollection<T> implemen
 	}
 	
 	public PersistentList<T> deleteRange(int start, int end) {
-		if ((start<0)||(end>size())) throw new IndexOutOfBoundsException();
+		int size=size();
+		if ((start<0)||(end>size)) throw new IndexOutOfBoundsException();
 		if (start>=end) {
 			if (start>end) throw new IllegalArgumentException();
 			return this;
 		}
-		if (start==0) return subList(end,size());
-		if (end==size()) return subList(0,start);
-		return subList(0,start).append(subList(end,size()));
+		if (start==0) return subList(end,size);
+		if (end==size) return subList(0,start);
+		return subList(0,start).append(subList(end,size));
 	}
 	
 	public T head() {

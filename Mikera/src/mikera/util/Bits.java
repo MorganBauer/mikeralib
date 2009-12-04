@@ -1,6 +1,10 @@
 package mikera.util;
 
 public class Bits {
+	public static int countSetBits2(int i) {
+		return Integer.bitCount(i);
+	}
+	
 	public static int countSetBits(int i) {
 		i=(i&(0x55555555))+((i>>>1)&0x55555555);
 		i=(i&(0x33333333))+((i>>>2)&0x33333333);

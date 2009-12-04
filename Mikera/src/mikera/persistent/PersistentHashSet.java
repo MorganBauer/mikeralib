@@ -910,7 +910,9 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		return new PersistentHashSet(newRoot);
 	}
 	
+	@Override
 	public void validate() {
+		super.validate();
 		root.validate();
 	}
 

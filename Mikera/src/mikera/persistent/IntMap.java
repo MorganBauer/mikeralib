@@ -838,7 +838,9 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return false;
 	}
 	
+	@Override
 	public void validate() {
+		super.validate();
 		root.validate();
 	}
 }

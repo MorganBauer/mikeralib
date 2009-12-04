@@ -906,7 +906,9 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		return new PersistentHashMap(newRoot);
 	}
 	
+	@Override
 	public void validate() {
+		super.validate();
 		root.validate();
 	}
 	

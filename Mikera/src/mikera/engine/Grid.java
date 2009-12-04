@@ -38,4 +38,8 @@ public abstract class Grid<T> {
 	public static boolean areaIntersect(int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, int x4, int y4, int z4) {
 		return ((x4>=x1)&&(x3<=x2)&&(y4>=y1)&&(y3<=y2)&&(z4>=z1)&&(z3<=z2));
 	}
+	
+	public void validate() {
+		
+	}
 }

@@ -341,5 +341,21 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		return al;
 	}
 	
-
+	@Override
+	public void validate() {
+		super.validate();
+		validateLocal(TOP_SHIFT);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void validateLocal(int shift) {	
+		if (shift!=TOP_SHIFT&&isSolid()) throw new Error("Failed to solidify");
+		for (int i=0; i<data.length; i++) {
+			Object o=data[i];
+			if (o instanceof TreeGrid<?>) {
+				TreeGrid<T> tg=(TreeGrid<T>)o;
+				tg.validateLocal(shift-DIM_SPLIT_BITS);
+			}
+		}
+	}
 }

@@ -33,6 +33,7 @@ public class TestGrid {
 	public void testEmptyGrid(Grid<Integer> g) {
 		assertEquals(null,g.get(0, 0, 0));
 		assertEquals(null,g.get(-10, -10, -10));
+		g.validate();
 	}
 	
 	public void testSet(Grid<Integer> g) {
@@ -73,6 +74,7 @@ public class TestGrid {
 		assertEquals(null,g.get(-1, -1, -1));
 		assertEquals(2,(int)g.get(3, 2, 2));
 			
+		g.validate();
 		g.clear();
 	}
 	
@@ -106,7 +108,7 @@ public class TestGrid {
 		assertNull(ag.get(6, 6, 6));
 		assertEquals(216+216-64,ag.countNonNull());
 
-		
+		g.validate();
 		g.clear();
 	}
 	

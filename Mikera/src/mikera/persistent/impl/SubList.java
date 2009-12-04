@@ -49,7 +49,12 @@ public final class SubList<T> extends BasePersistentList<T>   {
 			if (newSize==0) return SubList.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
-		return createLocal(source,fromIndex,toIndex);
+		if (source instanceof SubList<?>) {
+			SubList<T> sl=(SubList<T>)source;
+			return createLocal(sl.data,fromIndex+sl.offset,toIndex+sl.offset);
+		} else {
+			return createLocal(source,fromIndex,toIndex);
+		}
 	}
 	
 	private static <T> SubList<T> createLocal(PersistentList<T> source, int fromIndex, int toIndex) {
