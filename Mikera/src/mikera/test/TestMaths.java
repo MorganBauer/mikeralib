@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import mikera.math.*;
 import mikera.util.*;
 import mikera.data.BigFloat;
+import mikera.data.BigRational;
 import mikera.engine.*;
 
 public class TestMaths {
@@ -96,5 +97,16 @@ public class TestMaths {
 		bf=BigFloat.exp(9);
 		bf=bf.multiply(bf);
 		assertEquals(18,bf.log(),0.000001);
+	}
+	
+	@Test public void testBigRational() {
+		BigRational br=new BigRational(10,2);
+		assertEquals("5",br.toString());
+		
+		BigRational br2=new BigRational(1,-2);
+		assertEquals("-1/2",br2.toString());
+		assertEquals(-0.5,br2.doubleValue(),0.0001);
+		
+		assertEquals("9/2",br.add(br2).toString());
 	}
 }

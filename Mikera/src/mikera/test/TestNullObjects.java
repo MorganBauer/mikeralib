@@ -2,6 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import mikera.data.DataType;
 import mikera.util.emptyobjects.*;
 import java.util.*;
 
@@ -14,5 +15,10 @@ public class TestNullObjects {
 		
 	}
 	
-
+	@Test public void testNullArrays() {
+		for (DataType dt: DataType.values()) {
+			Object test=NullArrays.getNullArray(dt);
+			assertNotNull(test);
+		}
+	}
 }
