@@ -160,7 +160,7 @@ public class TestPersistent {
 		testExceptions(a);
 		testPersistentCollection(a);
 		testFrontBack(a);
-
+		testHashCode(a);
 	}
 
 	public <T> void testFrontBack(PersistentList<T> a) {
@@ -169,6 +169,18 @@ public class TestPersistent {
 		
 		assertEquals(a.size(),f.size()+b.size());
 		assertEquals(a,f.append(b));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void testHashCode(PersistentList<T> a) {
+		int ah=a.hashCode();
+		
+		int ih=Tools.hashCode(a.iterator());
+		assertEquals(ah,ih);
+		
+		T[] ar=(T[])a.toArray();
+		int arh=Tools.hashCode(ar);
+		assertEquals(arh,ah);
 	}
 	
 	public <T> void testExceptions(PersistentList<T> a) {

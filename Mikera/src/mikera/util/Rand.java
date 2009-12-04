@@ -46,6 +46,12 @@ public final class Rand {
 		return new MikeraRandom();
 	}
 		
+	/**
+	 * Implementation of Random class using XORShift RNG
+	 * 
+	 * @author Mike Anderson
+	 *
+	 */
 	static final class MikeraRandom extends java.util.Random {
 		private static final long serialVersionUID = 6868944865706425166L;
 
@@ -111,7 +117,10 @@ public final class Rand {
 	 * @return
 	 */
 	public static int po(double x) {
-		if (x<=0) return 0;
+		if (x<=0) {
+			if (x<0) throw new IllegalArgumentException();
+			return 0;
+		}
 		if (x>400) {
 			return poLarge(x);
 		}
@@ -196,7 +205,7 @@ public final class Rand {
 	 * @return
 	 */
 	public static final int r(int s) {
-		if (s<=0) return 0;
+		if (s<0) throw new IllegalArgumentException();
 		long result=((nextLong()>>>32)*s)>>32;
 		return (int) result;
 	}

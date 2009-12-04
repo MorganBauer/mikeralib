@@ -123,12 +123,21 @@ public class PerformanceTest {
 		}
 	}
 	
-	public static void a() {
+	public static void a2() {
 		Bits.countSetBits(0xCAFEBABE);
 	}
 	
-	public static void b() {
+	public static void b2() {
 		Integer.bitCount(0xCAFEBABE);
+
+	}
+	
+	public static void a() {
+		Integer.bitCount(0xCAFEBABE);
+	}
+	
+	public static void b() {
+		Bits.countSetBits(0xCAFEBABE);
 
 	}
 }

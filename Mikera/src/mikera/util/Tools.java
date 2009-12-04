@@ -78,6 +78,15 @@ public class Tools {
 		return result;
 	}
 	
+	public static <T> int hashCode(T[] data) {
+		int result=0;
+		for(int i=0; i<data.length; i++) {
+			result^=data[i].hashCode();
+			result=Integer.rotateRight(result, 1);
+		}
+		return result;
+	}
+	
 	public static<T> int hashCode(Iterator<T> data) {
 		int result=0;
 		

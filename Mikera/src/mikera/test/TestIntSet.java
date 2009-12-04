@@ -30,9 +30,9 @@ public class TestIntSet {
 			int v=Rand.r(50);
 			boolean contains=is1.contains(v);
 			is2=IntSet.createMerged(is1, v);
-			assertTrue(is2.contains(is1));
+			assertTrue(is2.containsAll(is1));
 			assertTrue(is2.contains(v));
-			assertFalse(is2.contains(is3));
+			assertFalse(is2.containsAll(is3));
 			assertFalse(is2.hasProblem());
 			
 			IntSet ist=IntSet.createWithout(is2, v);

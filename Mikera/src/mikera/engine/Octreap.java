@@ -83,6 +83,13 @@ public final class Octreap<T> extends BaseGrid<T> {
 		public int hashCode() {
 			return object.hashCode()+(int)(z1*7+z2*1234567);
 		}
+		
+		public void validate() {
+			if (z1>z2) throw new Error();
+			if (object==null) throw new Error();
+			if (left!=null) left.validate();
+			if (right!=null) right.validate();
+		}
 	}
 	
 	public ZNode head;
@@ -875,4 +882,10 @@ public final class Octreap<T> extends BaseGrid<T> {
 	
 	private static final int LOWBITS=1023; // bottom 10 bits
 	private static final int HIGHBITS=1024* 1023; // top 10 bits
+
+	@Override
+	public void validate() {
+		super.validate();
+		if (head!=null) head.validate();
+	}
 }

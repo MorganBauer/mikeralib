@@ -1,6 +1,6 @@
 package mikera.util;
 
-public class Bits {
+public final class Bits {
 	public static int countSetBits2(int i) {
 		return Integer.bitCount(i);
 	}
@@ -87,6 +87,10 @@ public class Bits {
 		if ((a&0x2)==0) {r+=1;} else {a>>>=1;}
 		if ((a&0x1)==0) {r+=1;}
 		return r;
+	}
+	
+	public static int countLeadingZeros2(int a) {
+		return 32-Integer.bitCount(fillBitsRight(a));
 	}
 	
 	public static int signExtend(int a, int bits) {

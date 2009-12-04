@@ -38,7 +38,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		hash=calcHashCode();
 	}
 	
-	public boolean contains(IntSet a) {
+	public boolean containsAll(IntSet a) {
 		int[] adata=a.data;
 		int[] sdata=data;
 		int ai=0;
@@ -367,16 +367,24 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 	
 	public Object[] toArray() {
-		int s=size();
-		Integer[] ints= new Integer[s];
-		for (int i=0; i<s; i++) {
-			ints[i]=Integer.valueOf(data[i]);
-		}
-		return ints;
+		return toArrayLocal(new Integer[size()]);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
-		throw new Error("Not supported");
+		int size=data.length;
+		if (a.length<size) {
+			a=(T[])new Integer[size];
+		}
+		return toArrayLocal(a);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> T[] toArrayLocal(T[] a) {
+		for (int i=0; i<a.length; i++) {
+			a[i]=(T)Integer.valueOf(data[i]);
+		}
+		return a;
 	}
 
 	@Override
@@ -386,6 +394,10 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	
 	public IntSet include(int value) {
 		return createMerged(this,value);
+	}
+	
+	public IntSet include(IntSet values) {
+		return createMerged(this,values);
 	}
 	
 	public IntSet delete(Integer value) {

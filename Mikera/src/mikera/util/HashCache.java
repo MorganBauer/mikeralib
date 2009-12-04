@@ -34,7 +34,12 @@ public class HashCache<T> {
 	public T getCachedValueForHashCode(int hc) {
 		int i=getIndex(hc);	
 		SoftReference<T> sr= data[i];
-		T result=(sr==null)?null:sr.get();
+		if (sr==null) return null;
+		
+		T result=sr.get();
+		if (result==null) {
+			data[i]=null;
+		}
 		return result;
 	}
 	
