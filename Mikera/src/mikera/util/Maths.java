@@ -15,6 +15,7 @@ public final class Maths {
 	public static final float PI=(float)Math.PI;
 	public static final float TWO_PI=2.0f*PI;
 	public static final float HALF_PI=0.5f*PI;
+	public static final float QUARTER_PI=0.25f*PI;
 	
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
@@ -161,6 +162,11 @@ public final class Maths {
 		return result;
 	}
 	
+	// branchless version of abs()
+	public static int abs2(int a) {
+		return (a^(a>>31))-(a>>31);
+	}
+	
 	public static int abs(int a) {
 		if (a<0) return -a;
 		return a;
@@ -202,18 +208,22 @@ public final class Maths {
 	}
 	
 	public static float sin(double a) {
+		a = a % Maths.TWO_PI;
 		return (float)Math.sin(a);
 	}
 	
 	public static float cos(double a) {
+		a = a % Maths.TWO_PI;
 		return (float)Math.cos(a);
 	}
-	
+
 	public static float sin(float a) {
+		a = a % Maths.TWO_PI;
 		return (float)Math.sin(a);
 	}
 	
 	public static float cos(float a) {
+		a = a % Maths.TWO_PI;
 		return (float)Math.cos(a);
 	}
 	

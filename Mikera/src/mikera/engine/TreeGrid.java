@@ -72,7 +72,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T getLocal(int x, int y, int z) {
+	private T getLocal(int x, int y, int z) {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {

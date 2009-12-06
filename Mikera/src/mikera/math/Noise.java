@@ -236,6 +236,10 @@ public class Noise {
 	}
 	
 
+	//*******************************************************
+	// grid value functions
+	//
+	// return float between -1 and 1 for each grid coordinate
 	
 	public float gridValue(int ix) {
 		ix*=0x12345678;

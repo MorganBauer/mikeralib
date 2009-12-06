@@ -133,11 +133,11 @@ public class PerformanceTest {
 	}
 	
 	public static void a() {
-		Integer.bitCount(0xCAFEBABE);
+		Math.abs(Rand.r(40)-20);
 	}
 	
 	public static void b() {
-		Bits.countSetBits(0xCAFEBABE);
+		Maths.abs(Rand.r(40)-20);
 
 	}
 }

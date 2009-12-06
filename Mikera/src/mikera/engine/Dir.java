@@ -1,6 +1,7 @@
 package mikera.engine;
 
 import mikera.util.Maths;
+import mikera.util.Rand;
 
 public class Dir {
 	public static final byte C=0;
@@ -93,5 +94,9 @@ public class Dir {
 		for (int i=0; i<MAX_DIR; i++) {
 			REVERSE_DIRECTIONS[i]=getDir(-DX[i],-DY[i],-DZ[i]);
 		}
+	}
+
+	public static byte random() {
+		return (byte) Rand.r(MAX_DIR);
 	}
 }
