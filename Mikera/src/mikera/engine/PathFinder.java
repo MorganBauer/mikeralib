@@ -33,7 +33,7 @@ public class PathFinder {
 		int dy=Maths.abs(ty-y);
 		int dz=Maths.abs(tz-z);
 		
-		return Maths.max(dx,dy,dz);
+		return dx+dy+dz;
 	}
 	
 	//protected PriorityQueue<PathNode> nodes=new PriorityQueue<PathNode>();
@@ -50,6 +50,7 @@ public class PathFinder {
 		pn.x=x;
 		pn.y=y;
 		pn.z=z;
+		pn.travelledDist=0;
 		pn.remainingDist=estimate(x,y,z,tx,ty,tz);
 		
 	}

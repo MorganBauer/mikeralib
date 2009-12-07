@@ -240,7 +240,7 @@ public final class Maths {
 	}
 
 	public static int square(byte b) {
-		return b*b;
+		return b*(int)b;
 	}
 	
 	public static int square(int a) {
