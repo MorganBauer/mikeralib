@@ -3,25 +3,27 @@ package mikera.engine;
 import java.util.*;
 
 import mikera.util.Maths;
+import mikera.util.RankedQueue;
 
 public class PathFinder {
+	
+	
 	public static class PathNode  {
-		public float h=0;
-		public float g=0;
-		public byte lastDir=0;
+		public int x;
+		public int y;
+		public int z;
+		public float remainingDist=0;
+		public float travelledDist=0;
+		public PathNode last=null;
 		public byte triedDirs=-1;
 		
-		public float total() {
-			return h+g;
+		public float estimatedDist() {
+			return remainingDist+travelledDist;
 		}
-		
-		//public int compareTo(PathNode arg0) {
-		//	return Maths.sign(total()-arg0.total());
-		//}
 	}
 	
-	public static interface PathFunction {
-		public float moveCost(int x, int y, int z, byte dir);
+	public abstract static class PathFunction {
+		public abstract float moveCost(int x, int y, int z, byte dir);
 		
 		
 	}
@@ -34,14 +36,21 @@ public class PathFinder {
 		return Maths.max(dx,dy,dz);
 	}
 	
-	protected PriorityQueue<PathNode> nodes=new PriorityQueue<PathNode>();
+	//protected PriorityQueue<PathNode> nodes=new PriorityQueue<PathNode>();
+	protected RankedQueue<PathNode> nodes=new RankedQueue<PathNode>();
 	
 	public void clear() {
 		
 	}
 	
 	public void pathFind(int x,int y, int z, int tx, int ty, int tz, PathFunction pf) {
-		//PathNode pn=new PathNode();
+		nodes.clear();
+		
+		PathNode pn=new PathNode();
+		pn.x=x;
+		pn.y=y;
+		pn.z=z;
+		pn.remainingDist=estimate(x,y,z,tx,ty,tz);
 		
 	}
 }

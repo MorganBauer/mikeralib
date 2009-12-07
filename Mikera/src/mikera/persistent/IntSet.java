@@ -422,7 +422,9 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return intern(this);
 	}
 	
+	@Override
 	public void validate() {
+		super.validate();
 		if (hasProblem()) throw new Error();
 	}
 	
