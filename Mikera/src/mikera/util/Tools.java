@@ -145,4 +145,12 @@ public class Tools {
 	public static <K,V> boolean equalsMap(Map<K,V> a, Map<K,V> b) {
 		return MapFactory.create(a).equals(MapFactory.create(b));
 	}
+	
+	public Integer integer(int i) {
+		
+		// TODO: Consider larger cache
+		return Integer.valueOf(i);
+		
+		
+	}
 }

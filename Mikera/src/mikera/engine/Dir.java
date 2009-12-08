@@ -66,6 +66,11 @@ public class Dir {
 			mask<<=1;
 		}	
 	}
+
+	public static final byte getDir(int x, int y, int z, int tx, int ty, int tz) {
+		return getDir(tx-x, ty-y, tz-z);
+	}
+
 	
 	public static final byte getDir(int dx, int dy, int dz) {
 		byte d=0;

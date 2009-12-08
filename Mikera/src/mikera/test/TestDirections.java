@@ -54,4 +54,27 @@ public class TestDirections {
 			assertEquals(d,dcalc);
 		}
 	}
+	
+	@Test public void testPathFinding() {
+		PathFinder pf=new PathFinder();
+		
+		final TreeGrid<Float> costs=new TreeGrid<Float>();
+		pf.setCostFunction(new PathFinder.CostFunction() {
+			@Override
+			public float moveCost(int x, int y, int z, int tx, int ty, int tz) {
+				Float f=costs.get(tx, ty, tz);
+				if (f==null) return -1;
+				return f.floatValue();
+			}
+		});
+		costs.setBlock(0,0,0,10,10,0, 1.0f); // area
+		costs.setBlock(5,0,0,5,9,0, -1.0f); // wall 1
+		costs.setBlock(7,1,0,7,10,0, -1.0f); // wall 2
+		pf.setHeuristicFunction(pf.targetFunction(10,10,0));
+		pf.pathFind(0, 0, 0);
+		//System.out.println("Nodes: "+pf.nodeCount);
+		//System.out.println("Costs: "+pf.costCount);
+		assertTrue(pf.isFound());
+		assertEquals(30,pf.foundNode().travelled,0.01f);
+	}
 }
