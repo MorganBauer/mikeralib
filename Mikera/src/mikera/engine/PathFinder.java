@@ -169,12 +169,8 @@ public final class PathFinder {
 		PathNode target=map.get(tx, ty, tz);
 		
 		if (target==null) {
-			PathNode pn=createPathNode();
-			pn.x=tx;
-			pn.y=ty;
-			pn.z=tz;
+			PathNode pn=createPathNode(tx,ty,tz);
 			pn.last=node;
-			pn.nextDir=0;
 			float heuristic=getHeuristicFunction().calcHeuristic(tx, ty, tz);
 			pn.heuristic=heuristic;
 			if (heuristic<=0) {
@@ -214,20 +210,19 @@ public final class PathFinder {
 	}
 
 	private void setupPathFind(int x,int y, int z) {
-		PathNode pn=createPathNode();
-		pn.x=x;
-		pn.y=y;
-		pn.z=z;
-		pn.travelled=0;
-		pn.last=null;
-		pn.nextDir=0;
+		PathNode pn=createPathNode(x,y,z);
 		pn.heuristic=getHeuristicFunction().calcHeuristic(x, y, z);
 		addNode(pn);
 	}
 
 
-	private PathNode createPathNode() {
-		return new PathNode();
+	private PathNode createPathNode(int x, int y, int z) {
+		PathNode pn= new PathNode();
+		pn.x=x;
+		pn.y=y;
+		pn.z=z;
+		return pn;
+		
 	}
 
 	public void setHeuristicFunction(HeuristicFunction heuristicFunction) {
