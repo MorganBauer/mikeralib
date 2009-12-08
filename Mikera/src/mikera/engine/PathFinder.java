@@ -144,12 +144,15 @@ public final class PathFinder {
 				PathNode tn=tryDir(node,dir);
 				if ((OPTIMISTIC_SEARCH)&&(tn!=null)) {
 					// TODO: consider fast path?
-					//if (tn.estimatedDist()<=node.estimatedDist()) {
-					//	node.nextDir=(byte) (dir+1);
-					//	// requeue node
-					//	addNode(node);
-					//	break;
-					//}
+					if (tn.estimatedDist()<=node.estimatedDist()) {
+						int nextDir=dir+1;
+						// requeue node
+						if (nextDir<Dir.MAX_DIR) {
+							node.nextDir=(byte) nextDir;
+							addNode(node);
+						}
+						break;
+					}
 				}
 			}
 			

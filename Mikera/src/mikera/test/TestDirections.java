@@ -70,11 +70,17 @@ public class TestDirections {
 		costs.setBlock(0,0,0,10,10,0, 1.0f); // area
 		costs.setBlock(5,0,0,5,9,0, -1.0f); // wall 1
 		costs.setBlock(7,1,0,7,10,0, -1.0f); // wall 2
-		pf.setHeuristicFunction(pf.targetFunction(10,10,0));
-		pf.pathFind(0, 0, 0);
+		pf.pathFind(0, 0, 0, 10,10,0);
 		//System.out.println("Nodes: "+pf.nodeCount);
 		//System.out.println("Costs: "+pf.costCount);
 		assertTrue(pf.isFound());
 		assertEquals(30,pf.foundNode().travelled,0.01f);
+		
+		costs.setBlock(5,0,0,5,10,0, -1.0f); // full wall
+		pf.pathFind(0, 0, 0, 10,10,0);
+		assertTrue(!pf.isFound());
+		//System.out.println("Nodes: "+pf.nodeCount);
+		//System.out.println("Costs: "+pf.costCount);
+		
 	}
 }
