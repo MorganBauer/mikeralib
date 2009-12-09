@@ -33,12 +33,8 @@ public class TestDirections {
 		}
 		assertEquals(27,o.countArea());
 		
-		// check distances are ordered
-		for (int i=0; i<Dir.DISTORDER_DIRECTIONS.length; i++) {
-			if (i>0) assertTrue(Dir.DIST[Dir.DISTORDER_DIRECTIONS[i]]>=Dir.DIST[Dir.DISTORDER_DIRECTIONS[i-1]]);
-		}
 		
-
+		Dir.validate();
 		
 	}
 	

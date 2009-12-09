@@ -7,6 +7,13 @@ import mikera.persistent.impl.Tuple;
 import mikera.util.emptyobjects.NullList;
 import java.util.*;
 
+/**
+ * Factory class for persistent list types
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T>
+ */
 public class ListFactory<T> {
 	public static final int TUPLE_BUILD_BITS=5;
 	public static final int MAX_TUPLE_BUILD_SIZE=1<<TUPLE_BUILD_BITS;
@@ -35,16 +42,20 @@ public class ListFactory<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n<2) {
-			if (n<0) throw new IllegalArgumentException(); 
-			if (n==0) return emptyList();
-			if (n==1) return SingletonList.create(data[fromIndex]);
-		}	
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
+			// very small cases
+			if (n<2) {
+				if (n<0) throw new IllegalArgumentException(); 
+				if (n==0) return emptyList();
+				return SingletonList.create(data[fromIndex]);
+			}	
+			
 			// note this covers negative length case
 			return (PersistentList<T>) Tuple.create(data,fromIndex,toIndex);
 		}	
-		return CompositeList.create(data,fromIndex,toIndex);
+		
+		// otherwise create a block list
+		return BlockList.create(data,fromIndex,toIndex);
 	}
 
 	@SuppressWarnings("unchecked")

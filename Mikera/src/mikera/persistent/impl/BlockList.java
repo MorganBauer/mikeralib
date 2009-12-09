@@ -35,29 +35,66 @@ public final class BlockList<T> extends BasePersistentList<T> {
 		while ((1<<(shift+SHIFT_STEP))<size) {
 			shift+=SHIFT_STEP;
 		}
-		return create(list,fromIndex,toIndex,shift);
+		return createLocal(list,fromIndex,toIndex,shift);
 	}
+	
+	public static <T> BlockList<T> create(T[] list, int fromIndex, int toIndex) {
+		int size=toIndex-fromIndex;
+		if (size<0) throw new IllegalArgumentException();
 		
+		int shift=DEFAULT_SHIFT;
+		while ((1<<(shift+SHIFT_STEP))<size) {
+			shift+=SHIFT_STEP;
+		}
+		return createLocal(list,fromIndex,toIndex,shift);
+	}
+	
 	@SuppressWarnings("unchecked")
-	private static <T> BlockList<T> create(List<T> list, int fromIndex, int toIndex, int shift) {
+	private static <T> BlockList<T> createLocal(T[] list, int fromIndex, int toIndex, int shift) {
 		if (shift>DEFAULT_SHIFT) {
 			int size=toIndex-fromIndex;
 			int numBlocks=numBlocks(size,shift);
 		
 			PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
 			for (int i=0; i<(numBlocks-1); i++) {
-				bs[i]=create(
+				bs[i]=createLocal(
 						list,
 						fromIndex+(i<<shift), 
 						fromIndex+((i+1)<<shift),
 						shift-SHIFT_STEP);
 			}
-			bs[numBlocks-1]=create(
+			bs[numBlocks-1]=createLocal(
 					list,
 					fromIndex+((numBlocks-1)<<shift), 
 					fromIndex+size,
 					shift-SHIFT_STEP);
+			
+			return new BlockList<T>(bs,shift,size,0);			
+		} else {
+			return createLowestLevel(list,fromIndex, toIndex,DEFAULT_SHIFT);
+		}
+	}
 		
+	@SuppressWarnings("unchecked")
+	private static <T> BlockList<T> createLocal(List<T> list, int fromIndex, int toIndex, int shift) {
+		if (shift>DEFAULT_SHIFT) {
+			int size=toIndex-fromIndex;
+			int numBlocks=numBlocks(size,shift);
+		
+			PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+			for (int i=0; i<(numBlocks-1); i++) {
+				bs[i]=createLocal(
+						list,
+						fromIndex+(i<<shift), 
+						fromIndex+((i+1)<<shift),
+						shift-SHIFT_STEP);
+			}
+			bs[numBlocks-1]=createLocal(
+					list,
+					fromIndex+((numBlocks-1)<<shift), 
+					fromIndex+size,
+					shift-SHIFT_STEP);
+			
 			return new BlockList<T>(bs,shift,size,0);			
 		} else {
 			return createLowestLevel(list,fromIndex, toIndex,DEFAULT_SHIFT);
@@ -77,6 +114,26 @@ public final class BlockList<T> extends BasePersistentList<T> {
 					fromIndex+((i+1)<<shift));
 		}
 		bs[numBlocks-1]=ListFactory.subList(
+				list,
+				fromIndex+((numBlocks-1)<<shift), 
+				fromIndex+size);
+	
+		return new BlockList(bs,shift,size,0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> BlockList<T> createLowestLevel(T[] list, int fromIndex, int toIndex,int shift) {
+		int size=toIndex-fromIndex;
+		int numBlocks=numBlocks(size,shift);
+	
+		PersistentList<T>[] bs=(PersistentList<T>[]) new PersistentList<?>[numBlocks];
+		for (int i=0; i<(numBlocks-1); i++) {
+			bs[i]=ListFactory.createFromArray(
+					list,
+					fromIndex+(i<<shift), 
+					fromIndex+((i+1)<<shift));
+		}
+		bs[numBlocks-1]=ListFactory.createFromArray(
 				list,
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);

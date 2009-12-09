@@ -133,11 +133,16 @@ public class PerformanceTest {
 	}
 	
 	public static void a() {
-		Math.abs(Rand.r(40)-20);
+		int r=0;
+		for (byte i=0; i<27; i++) {
+			r+=Dir.DX[Maths.abs(i)];
+		}
 	}
 	
 	public static void b() {
-		Maths.abs(Rand.r(40)-20);
-
+		int r=0;
+		for (byte i=0; i<27; i++) {
+			r+=Dir.dx((byte)Maths.abs(i));
+		}
 	}
 }

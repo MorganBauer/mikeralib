@@ -118,41 +118,96 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 		if (size==0) return null;
 		T result=objects[0];
 		
-		if (size==1) {
-			size=0;
-		} else {
-			// get the object to place
-			T to=objects[size-1];
-			double tr=ranks[size-1];
-			size--;
-			
-			int i=0;
-			int ch=child1(i);
-			int cc=size-ch; // number of child elements to consider
-			while (cc>0) {
-				// advance if needed to point at lowest ranked child
-				if ((cc>1)&(ranks[ch]>ranks[ch+1])) ch++;
-				
-				// check if we are correctly ranked at position i
-				if (tr<ranks[ch]) break;
-				
-				// move child down
-				objects[i]=objects[ch];
-				ranks[i]=ranks[ch];
-				
-				// update indexes
-				i=ch;
-				ch=child1(i);
-				cc=size-ch;
-			}
-			objects[i]=to;
-			ranks[i]=tr;
-		}
+		deleteObjectAtIndex(0);
 		
 		return result;
 	}
 	
+	public void deleteAll(T object) {
+		while (delete(object)!=null) {
+			// loop
+		}
+	}
+	
+	public T delete(T object) {
+		int n=size();
+		for (int i=0; i<n; i++) {
+			if (Tools.equalsWithNulls(object, objects[i])) {
+				T obj=objects[i];
+				deleteObjectAtIndex(i);
+				return obj;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean contains(Object object) {
+		int n=size();
+		for (int i=0; i<n; i++) {
+			if (Tools.equalsWithNulls(object, objects[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public double getFirstRank(T object) {
+		int n=size();
+		for (int i=0; i<n; i++) {
+			if (Tools.equalsWithNulls(object, objects[i])) {
+				return ranks[i];
+			}
+		}
+		return Double.NaN;
+	}
+	
+	public int getFirstIndex(T object) {
+		int n=size();
+		for (int i=0; i<n; i++) {
+			if (Tools.equalsWithNulls(object, objects[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
 
+	
+	public void deleteObjectAtIndex(int i) {
+		if (size==1) {
+			if (i==0) {
+				size=0; return;
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+		
+		// get the object to place from end of list
+		T to=objects[size-1];
+		double tr=ranks[size-1];
+		size--;
+		
+		int ch=child1(i);
+		int cc=size-ch; // number of child elements to consider
+		while (cc>0) {
+			// advance if needed to point at lowest ranked child
+			if ((cc>1)&(ranks[ch]>ranks[ch+1])) ch++;
+			
+			// check if we are correctly ranked at position i
+			if (tr<ranks[ch]) break;
+			
+			// move child down
+			objects[i]=objects[ch];
+			ranks[i]=ranks[ch];
+			
+			// update indexes
+			i=ch;
+			ch=child1(i);
+			cc=size-ch;
+		}
+		objects[i]=to;
+		ranks[i]=tr;		
+	}
 
 	@Override
 	public boolean add(T o) {
@@ -171,7 +226,14 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 		
 	}
 	
-	public void percolate(int i) {
+	/**
+	 * Promotes an entry up towards the front (highest priority)
+	 * from its current position until in right place in heap
+	 * 
+	 * 
+	 * @param i
+	 */
+	private void percolate(int i) {
 		T o=objects[i];
 		double rank=ranks[i];
 		while (i!=0) {
@@ -186,6 +248,11 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 		ranks[i]=rank;
 	}
 	
+	/**
+	 * Adds an object with a given priority
+	 * @param o Object to add
+	 * @param d Priority to assign
+	 */
 	public void add(T o, double d) {
 		ensureCapacity(size+1);
 		objects[size]=o;

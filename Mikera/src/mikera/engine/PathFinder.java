@@ -7,11 +7,13 @@ import mikera.util.RankedQueue;
 
 public final class PathFinder {
 	protected static final boolean OPTIMISTIC_SEARCH=true;
+	protected static final boolean CACHE_PATHNODES=true;
 	
 	// priority queue of nodes to search
 	// sorted by estimated total distance (cost + heuristic)
 	protected RankedQueue<PathNode> nodes=new RankedQueue<PathNode>();
 	protected TreeGrid<PathNode> map=new TreeGrid<PathNode>();
+	protected ArrayList<PathNode> cache=null;
 	
 	private HeuristicFunction heuristicFunction=null;
 	private CostFunction costFunction=null;
@@ -20,9 +22,13 @@ public final class PathFinder {
 	public int nodeCount=0;
 	public int costCount=0;
 	
+	public PathFinder() {
+		if (CACHE_PATHNODES) {
+			cache=new ArrayList<PathNode>();
+		}
+	}
 	
-	// TODO: Implement caching of PathNodes?
-	
+
 	public static class PathNode  {
 		public int x;
 		public int y;
@@ -30,7 +36,8 @@ public final class PathFinder {
 		public float heuristic;
 		public float travelled;
 		public PathNode last;
-		public byte nextDir;
+		public byte baseDir;
+		public byte checkedDirCount;
 		
 		public PathNode() {
 			init();
@@ -44,7 +51,8 @@ public final class PathFinder {
 			heuristic=0;
 			travelled=0;
 			last=null;
-			nextDir=0;
+			baseDir=0;
+			checkedDirCount=0;
 		}
 	}
 	
@@ -74,6 +82,10 @@ public final class PathFinder {
 		 *     Estimated distance to target otherwise
 		 */
 		public abstract float calcHeuristic(int x, int y, int z);
+		
+		public byte defaultDirection(int x, int y, int z) {
+			return 0;
+		}
 	}
 	
 	public static class StandardHeuristic extends HeuristicFunction {
@@ -84,10 +96,16 @@ public final class PathFinder {
 			tz=targetZ;
 		}
 		
+		@Override
 		public float calcHeuristic(int x, int y, int z) {
 			return estimate(x,y,z,tx,ty,tz);
 			
 		}	
+		
+		@Override
+		public byte defaultDirection(int x, int y, int z) {
+			return Dir.getDir(tx-x,ty-y,tz-z);
+		}
 	}
 	
 	public HeuristicFunction targetFunction(int tx, int ty, int tz) {
@@ -109,17 +127,31 @@ public final class PathFinder {
 		return found;
 	}
 	
-	private void clear() {
+	public void clear() {
 		nodes.clear();
+		if (CACHE_PATHNODES) {
+			map.visitPoints(new PointVisitor<PathNode>() {
+				@Override
+				public Object visit(int x, int y, int z, PathNode value) {
+					reclaim(value);
+					return null;
+				}		
+			});
+		}
 		map.clear();
 		found=null;
 		costCount=0;
 		nodeCount=0;
 	}
 	
+	private void reclaim(PathNode pn) {
+		pn.init();
+		cache.add(pn);
+	}
+	
 	public void pathFind(int x, int y, int z, int tx, int ty, int tz) {
-		setHeuristicFunction(targetFunction(tx,ty,tz));
-		pathFind(x,y,z,heuristicFunction,costFunction);
+		HeuristicFunction tf=targetFunction(tx,ty,tz);
+		pathFind(x,y,z,tf,costFunction);
 	}
 
 	
@@ -140,22 +172,27 @@ public final class PathFinder {
 			PathNode node=nodes.poll();
 			if (node==null) return;
 			
-			for (byte dir=node.nextDir; dir<Dir.MAX_DIR; dir++) {
-				PathNode tn=tryDir(node,dir);
+			for (byte i=node.checkedDirCount; i<Dir.MAX_DIR; i++) {
+				// get direction to check in sequence
+				// based on default direction of heuristic function
+				byte checkDir=Dir.getClosestDir(node.baseDir, i);
+				
+				// check the given direction
+				PathNode tn=tryDir(node,checkDir);
+						
 				if ((OPTIMISTIC_SEARCH)&&(tn!=null)) {
-					// TODO: consider fast path?
+					// fast path search
 					if (tn.estimatedDist()<=node.estimatedDist()) {
-						int nextDir=dir+1;
+						int nextIndex=i+1;
 						// requeue node
-						if (nextDir<Dir.MAX_DIR) {
-							node.nextDir=(byte) nextDir;
+						if (nextIndex<Dir.MAX_DIR) {
+							node.checkedDirCount=(byte) nextIndex;
 							addNode(node);
 						}
 						break;
 					}
 				}
-			}
-			
+			}		
 		}
 	}
 	
@@ -190,7 +227,7 @@ public final class PathFinder {
 			// we have found a shorter path to target
 			target.last=node;
 			target.travelled=cost+travelled;
-			target.nextDir=0;
+			target.checkedDirCount=0;
 			
 			// ensure place on search list
 			addNode(target);
@@ -220,12 +257,22 @@ public final class PathFinder {
 
 
 	private PathNode createPathNode(int x, int y, int z) {
-		PathNode pn= new PathNode();
+		PathNode pn;
+		if (CACHE_PATHNODES) {
+			int cs=cache.size();
+			if (cs>0) {
+				pn=cache.remove(cs-1);
+			} else {
+				pn=new PathNode();
+			}
+		} else {
+			pn= new PathNode();
+		}
+		pn.baseDir=heuristicFunction.defaultDirection(x,y,z);
 		pn.x=x;
 		pn.y=y;
 		pn.z=z;
 		return pn;
-		
 	}
 
 	public void setHeuristicFunction(HeuristicFunction heuristicFunction) {

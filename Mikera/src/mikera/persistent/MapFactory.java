@@ -4,6 +4,12 @@ import java.util.Map;
 
 import mikera.util.emptyobjects.NullMap;
 
+/**
+ * Factory class for persistent map types
+ * 
+ * @author Mike Anderson
+ *
+ */
 public class MapFactory {
 	@SuppressWarnings("unchecked")
 	public static <K,V> PersistentMap<K,V> create() {
