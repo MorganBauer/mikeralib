@@ -133,8 +133,9 @@ public class RayCaster {
 	}
 	
 	static {
+		// TODO: figure out how to make a nice pattern
 		for (int i=1; i<splitPoints.length; i++) {
-			splitPoints[i]=Maths.mod(Rand.xorShift32(i),i);
+			splitPoints[i]=Maths.mod(Rand.xorShift32(Rand.xorShift32(Rand.xorShift32(i+137))),i);
 		}
 	}
 }
