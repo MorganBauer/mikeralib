@@ -56,6 +56,36 @@ public class TestMaths {
 		assertEquals(0.0f,Maths.abs(0.0f),0.00001f);
 	}
 	
+	@Test public void testIntAbs() {
+		for (int i=-100; i<100; i++) {
+			assertEquals(Math.abs(i),Maths.abs(i));
+			assertEquals(Math.abs(i),Maths.abs2(i));
+			assertEquals(Math.abs(i),Maths.abs3(i));
+		}
+	}
+	
+	@Test public void testSign() {
+		for (int i=-100; i<100; i++) {
+			assertEquals((int)Math.signum(i),Maths.sign(i));
+			assertEquals((int)Math.signum(i),Maths.sign2(i));
+		}
+		assertEquals((int)Math.signum(Integer.MIN_VALUE),Maths.sign(Integer.MIN_VALUE));	
+		assertEquals((int)Math.signum(Integer.MIN_VALUE),Maths.sign2(Integer.MIN_VALUE));
+		
+	}
+	
+	@Test public void testMinMax() {
+		for (int i=-100; i<100; i++) {
+			int a=Rand.xorShift32(i);
+			int b=Rand.xorShift32(a);
+			
+			assertEquals(Math.min(a,b),Maths.min(a,b));
+			assertEquals(Math.max(a,b),Maths.max(a,b));
+			assertEquals(Math.min(a,b),Maths.min2(a,b));
+			assertEquals(Math.max(a,b),Maths.max2(a,b));
+		}
+	}
+	
 	@Test public void testFastSqrt() {
 		assertEquals(0.5,Maths.fastInverseSqrt(4),0.01f);
 		

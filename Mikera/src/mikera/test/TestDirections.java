@@ -9,11 +9,11 @@ public class TestDirections {
 	@Test public void testDirArrays() {
 		byte[] td=new byte[27];
 		
-		for (int i=0; i<Dir.ALL_DIRECTIONS_3D.length; i++) {
-			td[Dir.ALL_DIRECTIONS_3D[i]]++;
+		for (int i=0; i<Dir.MAX_DIR; i++) {
+			td[i]++;
 		}
-		for (int i=0; i<Dir.DISTORDER_DIRECTIONS.length; i++) {
-			td[Dir.DISTORDER_DIRECTIONS[i]]++;
+		for (int i=0; i<Dir.MAX_DIR; i++) {
+			td[Dir.distanceOrderedDirection(i)]++;
 		}
 		
 		for (int i=0; i<td.length; i++) {
@@ -24,8 +24,8 @@ public class TestDirections {
 	@Test public void testDirDirections() {
 		Octreap<Integer> o=new Octreap<Integer>();
 		
-		for (int i=0; i<Dir.ALL_DIRECTIONS_3D.length; i++) {
-			int d=Dir.ALL_DIRECTIONS_3D[i];
+		for (int i=0; i<Dir.MAX_DIR; i++) {
+			int d=i;
 			int dx=Dir.DX[d];
 			int dy=Dir.DY[d];
 			int dz=Dir.DZ[d];
@@ -33,9 +33,7 @@ public class TestDirections {
 		}
 		assertEquals(27,o.countArea());
 		
-		
 		Dir.validate();
-		
 	}
 	
 	@Test public void testDirCalcs() {

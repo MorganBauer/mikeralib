@@ -17,14 +17,14 @@ public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 		return 1;
 	}
 	
-	public void visitPoints(final PointVisitor<T> bf) {
+	public void visitPoints(final PointVisitor<T> pointVisitor) {
 		BlockVisitor<T> bv=new BlockVisitor<T>() {
 			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
 					T value) {
 				for (int z=z1; z<=z2; z++) {
 					for (int y=y1; y<=y2; y++) {
 						for (int x=x1; x<=x2; x++) {
-							bf.visit(x, y, z, value);
+							pointVisitor.visit(x, y, z, value);
 						}
 					}
 				}

@@ -46,11 +46,11 @@ public class Dir {
 	
 	protected static final float[] DIST=new float[MAX_DIR];
 	
-	public static final byte[] OTHOGONAL_DIRECTIONS={N,S,E,W,U,D};
-	public static final byte[] DISTORDER_DIRECTIONS={C,N,S,E,W,U,D,NE,NW,SE,SW,UN,US,DN,DS,UE,UW,DE,DW,UNE,UNW,DNE,DNW,USE,USW,DSE,DSW};
 	public static final byte[] ALL_DIRECTIONS_3D   ={C,N,S,E,NE,SE,W,NW,SW,U,UN,US,UE,UNE,USE,UW,UNW,USW,D,DN,DS,DE,DNE,DSE,DW,DNW,DSW};
 	public static final byte[] ALL_DIRECTIONS_2D   ={C,N,S,E,NE,SE,W,NW,SW};
 	
+	protected static final byte[] DISTORDER_DIRECTIONS={C,N,S,E,W,U,D,NE,NW,SE,SW,UN,US,DN,DS,UE,UW,DE,DW,UNE,UNW,DNE,DNW,USE,USW,DSE,DSW};
+	protected static final byte[] ORTHOGONAL_DIRECTIONS={N,S,E,W,U,D};
 	protected static final byte[] REVERSE_DIRECTIONS  =new byte[MAX_DIR];
 	protected static final Integer[] ALL_DIRECTIONS_INTEGER =new Integer[MAX_DIR];
 	protected static final byte[] CLOSEST_DIRECTIONS =new byte[MAX_DIR*MAX_DIR];
@@ -61,6 +61,18 @@ public class Dir {
 	
 	public static int dirMask(int dir) {
 		return 1<<dir;
+	}
+	
+	public static byte orthogonalDirection(int i) {
+		return ORTHOGONAL_DIRECTIONS[i];
+	}
+	
+	public static byte reverse(int dir) {
+		return REVERSE_DIRECTIONS[dir];
+	}
+	
+	public static byte distanceOrderedDirection(int i) {
+		return DISTORDER_DIRECTIONS[i];
 	}
 	
 	public static void visitDirections(int dirSet, PointVisitor<Integer> p, int x, int y, int z) {

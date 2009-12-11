@@ -2,6 +2,7 @@ package mikera.test;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import mikera.data.ByteArrayCache;
 import mikera.data.Data;
 import mikera.net.DataOutputStream;
 import mikera.util.*;
@@ -173,4 +174,18 @@ public class TestData {
 		assertEquals(0,bb2.remaining());
 
 	}
+	
+	@Test public void testByteArrayCache() {
+		for (int i=0; i<100; i++) {
+			int len=Rand.r(100);
+			byte[] ba=ByteArrayCache.getByteArray(len);
+			assertTrue(ba.length>=len);
+			assertTrue(ba.length<=(len*4));
+			ByteArrayCache.recycleByteArray(ba);
+			
+		}
+		assertTrue(ByteArrayCache.countCachedArrays()>0);
+
+	}
+
 }

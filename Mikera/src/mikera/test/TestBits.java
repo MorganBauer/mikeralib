@@ -21,6 +21,8 @@ public class TestBits {
 		assertEquals(2,Bits.roundDownToPowerOfTwo(2));
 		assertEquals(1,Bits.roundDownToPowerOfTwo(1));
 		assertEquals(0,Bits.roundDownToPowerOfTwo(0));
+		
+		// not sure what should happen in negative case?
 	}
 	
 	@Test public void testSigBits() {
@@ -74,12 +76,27 @@ public class TestBits {
 		assertEquals(2,Bits.lowestSetBit(6));
 	}
 	
+	@Test public void testHighestSetBit() {
+		assertEquals(0,Bits.highestSetBit(0));
+		assertEquals(0x1000,Bits.highestSetBit(0x1FFF));
+		assertEquals(0x80000000,Bits.highestSetBit(0x80000000));
+	}
+	
 	@Test public void testGetNthSetBit() {
 		assertEquals(1,Bits.getNthSetBit(0xFF, 1));
 		assertEquals(0x80,Bits.getNthSetBit(0xFF, 8));
 		assertEquals(0,Bits.getNthSetBit(0xFF, 32));
 		assertEquals(0x80000000,Bits.getNthSetBit(0xFFFFFFFF, 32));
 		assertEquals(0,Bits.getNthSetBit(0xFFFFFFFF, 33));
+	}
+	
+	@Test public void testGetNthSetBitIndex() {
+		assertEquals(0,Bits.getNthSetBitIndex(0xFF, 1));
+		assertEquals(7,Bits.getNthSetBitIndex(0xFF, 8));
+		
+		int r=Rand.nextInt();
+		int bn=Rand.d(Integer.bitCount(r));
+		assertEquals(Bits.getNthSetBit(r, bn),1<<Bits.getNthSetBitIndex(r, bn));
 	}
 	
 	@Test public void testReverse() {

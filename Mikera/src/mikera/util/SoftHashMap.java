@@ -23,9 +23,10 @@ public class SoftHashMap<K,V> extends AbstractMap<K,V> {
 	 * Contains most recently added items
 	 */
 	private final CircularBuffer<V> hardReferenceBuffer;
+	private static final int DEFAULT_RETAINED=10; 
 
 	public SoftHashMap() {
-		this(10);
+		this(DEFAULT_RETAINED);
 	}
 
 	public SoftHashMap(int minSizeRetained) {
@@ -43,7 +44,7 @@ public class SoftHashMap<K,V> extends AbstractMap<K,V> {
 			if (value==null) {
 				// remove the key as well
 				data.remove(key);
-				maybeCleanUp(); // possibly more to clean up?
+				cleanUpNow(); // probably more to clean up?
 				return null;
 			} 
 			return value;
@@ -57,7 +58,7 @@ public class SoftHashMap<K,V> extends AbstractMap<K,V> {
 	 */
 	private void maybeCleanUp() {
 		// do this quite rarely
-		if (Rand.r(data.size())>0) return;
+		if (Rand.r(data.size()+10)>0) return;
 		cleanUpNow();
 	}
 	

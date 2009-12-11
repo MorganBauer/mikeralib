@@ -3,7 +3,10 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.engine.*;
+import mikera.engine.RayCaster.CastFunction;
 import mikera.math.*;
+import mikera.util.Maths;
+
 import java.util.*;
 
 public class TestRayCaster {
@@ -21,14 +24,43 @@ public class TestRayCaster {
 		assertEquals(new Point3i(1,1,1),new Point3i(1,1,1));
 	}
 	
-	@Test public void testInit() {
+	@Test public void testCast() {
+		final TreeGrid<Integer> tg=new TreeGrid<Integer>();
+		final int RANGE=5;
+		int D=(RANGE*2)+1;
+		
 		RayCaster rc=new RayCaster();
+		final int[] is=new int[RANGE];
 		
-		RayCaster.CastNode cn=rc.generatePaths(1);
-		assertEquals(6,cn.countDistinctPaths());
-		assertEquals(22,cn.countCache());
+		rc.setCastFunction(new CastFunction() {
+			@Override
+			public boolean visit(int x, int y, int z) {
+				Integer i=tg.get(x, y, z);
+				if (i==null) i=Integer.valueOf(0);
+				is[0]++;
+				tg.set(x,y,z,i+1);
+				return (Maths.abs(x)<RANGE)&&(Maths.abs(y)<RANGE)&&(Maths.abs(z)<RANGE);
+			}	
+		});
 		
-		cn=rc.generatePaths(2);
-		assertEquals(26,cn.countDistinctPaths());
+		rc.cast(0, 0, 0);
+		
+		for (int z=-RANGE; z<=RANGE; z++) {
+			for (int y=-RANGE; y<=RANGE; y++) {
+				for (int x=-RANGE; x<=RANGE; x++) {
+					Integer i=tg.get(x,y,z);
+					if (i==null) {
+						System.out.println(x+","+y+","+z+" missed");
+					} else {
+						if (i>1) {
+							System.out.println(x+","+y+","+z+" visited "+i+ " times");
+						}
+					}
+				}		
+			}		
+		}
+		
+		assertEquals(D*D*D,tg.countNonNull());
+		assertEquals(D*D*D,is[0]);
 	}
 }

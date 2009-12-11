@@ -1,6 +1,8 @@
 package mikera.stats;
 
 import java.util.*;
+
+import mikera.data.ByteArrayCache;
 import mikera.engine.*;
 import mikera.persistent.*;
 import mikera.util.*;
@@ -132,17 +134,17 @@ public class PerformanceTest {
 
 	}
 	
+	static int z=0;
+	
 	public static void a() {
-		int r=0;
-		for (byte i=0; i<27; i++) {
-			r+=Dir.DX[Maths.abs(i)];
+		for (int i=-500; i<500; i++) {
+			z=Maths.sign2(z);
 		}
 	}
 	
 	public static void b() {
-		int r=0;
-		for (byte i=0; i<27; i++) {
-			r+=Dir.dx((byte)Maths.abs(i));
+		for (int i=-500; i<500; i++) {
+			z=Maths.sign2fast(z);
 		}
 	}
 }

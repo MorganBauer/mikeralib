@@ -1,141 +1,95 @@
 package mikera.engine;
 
 import mikera.math.*;
+import mikera.util.Bits;
 import mikera.util.Maths;
 
 import java.util.*;
 
 public class RayCaster {
-	public static class CastNode implements Cloneable {
-		private Point3i pos=new Point3i();
-		private HashMap<Point3i,CastNode> children=new HashMap<Point3i,CastNode>();
+	private CastFunction castFunction;
 	
-		@Override
-		public boolean equals(Object o) {
-			if (o==this) return true;
-			if (o instanceof CastNode) {
-				CastNode cn=(CastNode)o;
-				if (!cn.pos.equals(pos)) return false;
-				if (!cn.children.equals(children)) return false;
-				return true;
-			}
-			return false;
-		}
-		
-		private boolean hasHashCode=false;
-		private int hashCode=-1;
-		
-		@Override
-		public int hashCode() {
-			if (hasHashCode) return hashCode;
-			int result=1+pos.hashCode();
-			for (Point3i p:children.keySet()) {
-				result+=children.get(p).hashCode();
-			}
-			hashCode=result;
-			hasHashCode=true;
-			return result;			
-		}
-		
-		public int countCache() {
-			return cache.size();
-		}
-		
-		public int countDistinctPaths() {
-			if (children.size()==0) return 1;
-			int result=0;
-			for (Point3i p:children.keySet()) {
-				result+=children.get(p).countDistinctPaths();
-			}
-			return result;
-		}
-		
-		public CastNode firstChild() {
-			return children.entrySet().iterator().next().getValue();
-			
-		}
-		
-		public CastNode mergePath(CastNode cn) {
-			if (cn.children.size()==0) return this;
-			if (cn.children.size()>1) throw new Error("Not a single path!");
-			CastNode child=cn.firstChild();
-			CastNode current=children.get(child.pos);
-			if (current!=null) {
-				if(current.equals(child)) {
-					return this;
-				}
-				child=current.mergePath(child);
-			} 
-			
-			// copy on write
-			CastNode nn=this.clone();
-			nn.children.put(child.pos,intern(child));
-			return intern(nn);
-		}
-		
-		@SuppressWarnings("unchecked")
-		public CastNode clone() {
-			try {
-				CastNode cn= (CastNode)super.clone();
-				cn.children=(HashMap<Point3i, CastNode>) cn.children.clone();
-				return cn;
-			} catch (CloneNotSupportedException e) {
-				throw new Error(e);
-			}
-		}
-		
-		protected boolean isInternedVersion() {
-			CastNode icn=cache.get(this);
-			return icn==this;
-		}
-		
-		private static final HashMap<CastNode,CastNode> cache=new HashMap<CastNode,CastNode>();
-		public static CastNode intern(CastNode cn) {
-			if (cn==null) throw new Error("Can't intern null!");
-					
-			CastNode n=cache.get(cn);
-			if (n==null) {
-				for (Point3i p:cn.children.keySet()) {
-					cn.children.put(p,intern(cn.children.get(p)));
-				}
+	public static abstract class CastFunction {
+		public abstract boolean visit(int x, int y, int z);
+	}
+	
+	public void setCastFunction(CastFunction castFunction) {
+		this.castFunction = castFunction;
+	}
 
-				cache.put(cn,cn);
-				return cn;
-			} else {
-				return n;
+	public CastFunction getCastFunction() {
+		return castFunction;
+	}	
+	
+	
+	
+	public void cast(int cx, int cy, int cz) {
+		castLocal(cx,cy,cy,0,0,0);
+	}
+	
+	private void castLocal(int cx, int cy, int cz, int dx, int dy, int dz) {
+		boolean shouldContinue=castFunction.visit(cx+dx, cy+dy, cz+dz);
+		
+		if (!shouldContinue) return;
+		
+		int ax=Maths.abs(dx);
+		int ay=Maths.abs(dy);
+		int az=Maths.abs(dz);
+		byte dirx=((dx>=0)?Dir.E:Dir.W);
+		byte diry=((dy>=0)?Dir.N:Dir.S);
+		byte dirz=((dz>=0)?Dir.U:Dir.D);
+		
+		int dirs=0;
+		if ((dx==0)&&(dy==0)&&(dz==0)) {
+			dirs=Dir.ALL_DIRS_MASK;
+		} else {
+			if ((ax>=ay)&&(ax>=az)) dirs|=getDir(ax,ay,az,dirx,diry,dirz);
+			
+			if ((ay>=ax)&&(ay>=az)) dirs|=getDir(ay,ax,az,diry,dirx,dirz);
+			if ((az>=ax)&&(az>=ay)) dirs|=getDir(az,ax,ay,dirz,dirx,diry);
+		}
+		
+		for (byte dir=1; dir<=Dir.MAX_DIR; dir++) {
+			dirs=dirs>>1;
+			if ((dirs&1)!=0) {
+				castLocal(cx,cy,cz,dx+Dir.dx(dir),dy+Dir.dy(dir),dz+Dir.dz(dir));
 			}
 		}
 	}
-	
-	public CastNode generatePath(float dx, float dy, float dz, int len) {
-		CastNode head=new CastNode();
-		head.pos=new Point3i(0,0,0);
-		CastNode cur=head;
-		for (float d=0; d<len; d+=0.01f) {
-			int x=Maths.floor(dx*d+0.5f);
-			int y=Maths.floor(dy*d+0.5f);
-			int z=Maths.floor(dz*d+0.5f);
-			if (((cur.pos.x)==x)&&((cur.pos.y)==y)&&((cur.pos.z)==z)) continue;
-			CastNode next=new CastNode();
-			Point3i p=new Point3i(x,y,z);
-			next.pos=p;
-			cur.children.put(p, next);
-			cur=next;
+
+	private int getDir(int a1, int a2, int a3, byte d1, byte d2, byte d3) {
+		int dirs=0;
+		dirs|=getDir2(a1,a2,a3,d1,d2,d3);
+		if (a2==0) {
+			dirs|=getDir2(a1,a2,a3,d1,Dir.reverse(d2),d3);
 		}
-		return head;
+		if (a3==0) {
+			dirs|=getDir2(a1,a2,a3,d1,d2,Dir.reverse(d3));
+		}
+		if ((a3==0)&&(a2==0)) {
+			dirs|=getDir2(a1,a2,a3,d1,Dir.reverse(d2),Dir.reverse(d3));
+		}
+
+
+		return dirs;
 	}
 	
-	public CastNode generatePaths(int d) {
-		CastNode base=new CastNode();
-		base.pos.set(0,0,0);
+	private int getDir2(int a1, int a2, int a3, byte d1, byte d2, byte d3) {
+		// point at which split occurs (distance from a1 axis)
+		int splitPoint=Bits.roundUpToPowerOfTwo(a1+2)-2-a1;
+		int dirs=0;
 		
-		float shift=0.01f;
-		for (float y=shift/2; y<1; y+=shift) {
-			for (float z=shift/2; z<1; z+=shift) {
-				CastNode path=generatePath(1,y,z,d);
-				base=base.mergePath(path);
-			}			
-		}
-		return base;
+		// straight ahead
+		if (a2<=splitPoint) dirs|=Dir.dirMask(d1);
+		if (a3<=splitPoint) dirs|=Dir.dirMask(d1);
+		
+		// fan out
+		if (a2>=splitPoint) dirs|=Dir.dirMask(d1+d2);
+		if (a3>=splitPoint) dirs|=Dir.dirMask(d1+d3);
+	
+		// diagonal
+		if ((a3>=splitPoint)&&(a2>=splitPoint)) dirs|=Dir.dirMask(d1+d2+d3);
+		
+		return dirs;
 	}
 }

@@ -1,9 +1,6 @@
 package mikera.util;
 
 public final class Bits {
-	public static int countSetBits2(int i) {
-		return Integer.bitCount(i);
-	}
 	
 	public static int countSetBits(int i) {
 		i=(i&(0x55555555))+((i>>>1)&0x55555555);
@@ -13,6 +10,13 @@ public final class Bits {
 		i=((i+(i>>16)));
 		return i&0x3F;
 	}
+	
+	// alternative count set bits operation
+	// currently seems slightly slower
+	public static int countSetBits2(int i) {
+		return Integer.bitCount(i);
+	}
+
 	
 	public static int roundUpToPowerOfTwo(int n) {
 		n = n - 1;
@@ -27,6 +31,15 @@ public final class Bits {
 		n = n + 1;
 		return n;
 	}
+	
+	public static int roundDownToPowerOfTwo(int n) {
+		return n & (~(fillBitsRight(n>>>1)));	
+	}
+	
+	public static long roundDownToPowerOfTwo(long n) {
+		return n & (~(fillBitsRight(n>>>1)));
+	}
+	
 	
 	/** 
 	 * Returns the number of bits required to fully represent the signed number (including sign)
@@ -103,12 +116,46 @@ public final class Bits {
 		return (a & (-a));
 	}
 	
+	public static int lowestSetBitIndex(int a) {
+		return countTrailingZeros(a);
+	}
+	
+	public static int highestSetBit(int a) {
+		return a&(~fillBitsRight(a>>>1));
+	}
+	
+	public static int highestSetBitIndex(int a) {
+		return 31-countLeadingZeros(a);
+	}
+	
+	/**
+	 * Gets the n'th set bit 
+	 * 
+	 * @param a integer containing bits to search
+	 * @param bitno position of bit from 1 to 32
+	 * @return integer containing just the n'th set bit
+	 */
 	public static int getNthSetBit(int a, int bitno) {
 		if (bitno<=0) return 0;
 		for (int i=1; i<bitno; i++) {
 			a^=(a & (-a));
 		}
 		return (a&(-a));
+	}
+	
+	/**
+	 * Gets the position (index) of the n'th set bit 
+	 * 
+	 * @param a integer containing bits to search
+	 * @param bitno position of bit from 1 to 32
+	 * @return integer containing just the n'th set bit
+	 */
+	public static int getNthSetBitIndex(int a, int bitno) {
+		if (bitno<=0) return 0;
+		for (int i=1; i<bitno; i++) {
+			a^=(a & (-a));
+		}
+		return Bits.countTrailingZeros(a);
 	}
 	
 	public static int reverseBits(int a) {
@@ -124,14 +171,7 @@ public final class Bits {
 		return (((0xFFFFFFFFL&reverseBits((int)a)))<<32)^(0xFFFFFFFFL&reverseBits((int)(a>>>32)));
 	}
 	
-	public static int roundDownToPowerOfTwo(int n) {
-		return n & (~(fillBitsRight(n)>>1));	
-	}
-	
-	public static long roundDownToPowerOfTwo(long n) {
-		return n & (~(fillBitsRight(n)>>1));
-	}
-	
+
 	public static long fillBitsRight(long n) {
 		n = n | (n >> 1);
 		n = n | (n >> 2);
@@ -163,5 +203,13 @@ public final class Bits {
 		//count&=31;
 		//v=(v<<count)|(v>>>(32-count));
 		//return v;
+	}
+	
+	public int parity(int v) {
+		v ^= v >> 16;
+		v ^= v >> 8;
+		v ^= v >> 4;
+		v &= 0xf;
+		return (0x6996 >> v) & 1;
 	}
 }

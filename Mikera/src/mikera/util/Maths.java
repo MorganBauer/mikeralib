@@ -121,10 +121,27 @@ public final class Maths {
 		return (a>0)?1:-1;
 	}
 	
-	public static int sign(int a) {
-		if (a==0) return 0;
-		return (a>0)?1:-1;
+
+
+	
+	public static final int sign(int a) {
+		return (a==0) ? 0 : ( (a>0)?1:-1 );
 	}
+	
+	/**
+	 * Mike's fast integer sign algorithm
+	 * @param a
+	 * @return Sign of the given number (-1, 0 or 1)
+	 */
+	public static final int sign2(int a) {
+		return (a>>31)+((a>0)?1:0);
+	}
+	
+	// branchless integer sign - however incorrect for MIN_INTEGER
+	public static int sign2fast(int a) {
+		return 1+(a>>31)+((a-1)>>31);
+	}
+	
 	
 	public static int sign(long a) {
 		if (a==0) return 0;
@@ -163,11 +180,17 @@ public final class Maths {
 	}
 	
 	// branchless version of abs()
-	public static int abs2(int a) {
+	public static int abs(int a) {
 		return (a^(a>>31))-(a>>31);
 	}
 	
-	public static int abs(int a) {
+	// another branchless version of abs()
+	public static int abs2(int a) {
+		int mask=(a>>31);
+		return (a^mask)-mask;
+	}
+	
+	public static int abs3(int a) {
 		if (a<0) return -a;
 		return a;
 	}
@@ -183,6 +206,16 @@ public final class Maths {
 	
 	public static int max(int a, int b) {
 		return (a>b)?a:b;
+	}
+	
+	// branchless min
+	public static int min2(int a, int b) {
+		return a^((a^b) & ((b-a)>>31));
+	}
+	
+	// branchless max
+	public static int max2(int a, int b) {
+		return a^((a^b) & ((a-b)>>31));
 	}
 	
 	public static float min(float a, float b) {
@@ -232,6 +265,7 @@ public final class Maths {
 		int x=(int)a;
 		return (a==x)?x:x-1;
 	}
+	
 	
 	public static int floor(double a) {
 		if (a>=0) return (int)a;

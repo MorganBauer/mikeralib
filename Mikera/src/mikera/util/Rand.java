@@ -21,7 +21,7 @@ public final class Rand {
 	
 	/**
 	 * XORShift algorithm - credit to George Marsaglia!
-	 * @param a initial state
+	 * @param a Initial state
 	 * @return new state
 	 */
 	public static final long xorShift64(long a) {
