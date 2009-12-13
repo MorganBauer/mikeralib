@@ -2,6 +2,7 @@
 package mikera.util;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /** 
@@ -454,6 +455,12 @@ public class TextUtils {
 			return this;
 		}
     }
+
+    private static DecimalFormat df=new DecimalFormat("#,#00.00");
+    
+	public static String decimalFormat(double number) {
+		return df.format(number);
+	}
 
 
 }

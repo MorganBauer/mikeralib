@@ -43,7 +43,7 @@ public class RayCaster {
 	
 	
 	public void cast(int startX, int startY, int startZ) {
-		castLocal(startX,startY,startY,0,0,0);
+		castLocal(startX,startY,startZ,0,0,0);
 	}
 	
 	private void castLocal(int cx, int cy, int cz, int dx, int dy, int dz) {
@@ -98,8 +98,6 @@ public class RayCaster {
 		return dirs;
 	}
 	
-	private static final int[] splitPoints=new int[TOTAL_MAX_RANGE];
-	
 	private int getDir2(int a1, int a2, int a3, byte d1, byte d2, byte d3) {
 		// point at which split occurs (distance from a1 axis)
 		// note this can be at any point in range 0 to a1
@@ -132,10 +130,14 @@ public class RayCaster {
 		return maxRange;
 	}
 	
+	
+	private static final int[] splitPoints=new int[TOTAL_MAX_RANGE];
+
+	
 	static {
 		// TODO: figure out how to make a nice pattern
 		for (int i=1; i<splitPoints.length; i++) {
-			splitPoints[i]=Maths.mod(Rand.xorShift32(Rand.xorShift32(Rand.xorShift32(i+137))),i);
+			splitPoints[i]=Maths.mod(Rand.xorShift32(Rand.xorShift32(Rand.xorShift32(i+137))),i+1);
 		}
 	}
 }

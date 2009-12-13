@@ -161,7 +161,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	
 	public void appendInt(int v) {
 		int pos=size;
-		ensureCapacity(size+4);
+		ensureCapacity(pos+4);
 		data[pos+3]=(byte)(v);
 		data[pos+2]=(byte)(v>>>8);
 		data[pos+1]=(byte)(v>>>16);
@@ -170,15 +170,16 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public void appendByteBuffer(ByteBuffer bb) {
+		int pos=size;
 		int rem=bb.remaining();
-		ensureCapacity(size+rem);
-		bb.get(data, size, rem);
+		ensureCapacity(pos+rem);
+		bb.get(data, pos, rem);
 		size+=rem;
 	}
 	
 	public void appendChar(char v) {
 		int pos=size;
-		ensureCapacity(size+2);
+		ensureCapacity(pos+2);
 		data[pos+1]=(byte)(v);
 		data[pos]=(byte)(v>>>8);
 		size+=2;
@@ -186,7 +187,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	
 	public void appendShort(short v) {
 		int pos=size;
-		ensureCapacity(size+2);
+		ensureCapacity(pos+2);
 		data[pos+1]=(byte)(v);
 		data[pos]=(byte)(v>>>8);
 		size+=2;

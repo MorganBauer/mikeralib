@@ -39,6 +39,11 @@ public abstract class Server {
 		return playerList.getPlayer(id);
 	}
 	
+	public int getPort() {
+		return SERVER_PORT;
+	}
+
+	
 	/*
 	 * ===============================================================
 	 * Server startup and shutdown

@@ -6,6 +6,8 @@ import mikera.util.Maths;
 import mikera.util.RankedQueue;
 
 public final class PathFinder {
+	public int MAX_STEPS=10000;
+	
 	protected static final boolean OPTIMISTIC_SEARCH=true;
 	protected static final boolean CACHE_PATHNODES=true;
 	
@@ -168,11 +170,14 @@ public final class PathFinder {
 	}
 	
 	private void findPath() {
+		int steps=0;
 		while (!isFound()) {
 			PathNode node=nodes.poll();
 			if (node==null) return;
 			
 			for (byte i=node.checkedDirCount; i<Dir.MAX_DIR; i++) {
+				if ((steps++)>=MAX_STEPS) return;
+					
 				// get direction to check in sequence
 				// based on default direction of heuristic function
 				byte checkDir=Dir.getClosestDir(node.baseDir, i);

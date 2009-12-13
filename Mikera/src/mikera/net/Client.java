@@ -10,6 +10,7 @@ public class Client {
 	protected Connection connection=null;
 	
 	private ArrayList<Data> incomingMessages=new ArrayList<Data>();
+	private ArrayList<Data> requeueMessages=new ArrayList<Data>();
 	
 	public void connectLocal() {
 		connect("127.0.0.1", Server.SERVER_PORT);
@@ -40,6 +41,18 @@ public class Client {
 		synchronized (incomingMessages) {
 			dest.addAll(incomingMessages);
 			incomingMessages.clear();
+		}
+	}
+	
+	public void requeueIncomingMessages(ArrayList<Data> src) {
+		synchronized (incomingMessages) {
+			requeueMessages.addAll(src);
+			requeueMessages.addAll(incomingMessages);
+			ArrayList<Data> t=incomingMessages;
+			incomingMessages=requeueMessages;
+			
+			t.clear();
+			requeueMessages=t;
 		}
 	}
 	
