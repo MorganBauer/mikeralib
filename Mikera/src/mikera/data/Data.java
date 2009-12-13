@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mikera.net.BufferCache;
+import mikera.net.Util;
 import mikera.util.Maths;
 import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;
@@ -30,7 +31,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	private static final int DEFAULT_DATA_INCREMENT=50;
 	
 	private byte[] data=NullArrays.NULL_BYTES;
-	private int size=0;
+	private int count=0;
 	
 	public Data() {
 	}
@@ -54,7 +55,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	
 	private Data(byte[] bytes) {
 		data=bytes;
-		size=bytes.length;
+		count=bytes.length;
 	}
 	
 	private class DataIterator implements Iterator<Byte> {
@@ -87,7 +88,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		int remaining=bb.remaining();
 		Data nd=new Data(remaining);
 		bb.get(nd.data, 0, remaining);
-		nd.size=remaining;
+		nd.count=remaining;
 		return nd;
 	}
 	
@@ -102,17 +103,21 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public byte getByte(int pos) {
-		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
+		if ((pos<0)||(pos>=count)) throw new IndexOutOfBoundsException();
 		return data[pos];
 	}
 	
 	public boolean getBoolean(int pos) {
-		if ((pos<0)||(pos>=size)) throw new IndexOutOfBoundsException();
+		if ((pos<0)||(pos>=count)) throw new IndexOutOfBoundsException();
 		return data[pos]!=0;
 	}
 	
 	public int getInt(int pos) {
-		if ((pos<0)||((pos+3)>=size)) throw new IndexOutOfBoundsException();
+		return getVarInt(pos);		
+	}
+	
+	public int getFullInt(int pos) {
+		if ((pos<0)||((pos+3)>=count)) throw new IndexOutOfBoundsException();
 		return ((int)data[pos+3]&255)
 	      |(((int)data[pos+2]&255)<<8)		
 	      |(((int)data[pos+1]&255)<<16)		
@@ -120,24 +125,34 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public char getChar(int pos) {
-		if ((pos<0)||((pos+1)>=size)) throw new IndexOutOfBoundsException();
+		if ((pos<0)||((pos+1)>=count)) throw new IndexOutOfBoundsException();
 		int res= ((data[pos+1])&(255))
 	      |(((data[pos])&(255))<<8);
 		return (char)res;
 	}
 	
 	public short getShort(int pos) {
-		if ((pos<0)||((pos+1)>=size)) throw new IndexOutOfBoundsException();
+		if ((pos<0)||((pos+1)>=count)) throw new IndexOutOfBoundsException();
 		int res= ((data[pos+1])&(255))
 	      |(((data[pos])&(255))<<8);
 		return (short)res;
 	}
 	
 	public float getFloat(int pos) {
-		return Float.intBitsToFloat(getInt(pos));
+		return Float.intBitsToFloat(getFullInt(pos));
 	}
 	
 	public long getLong(int pos) {
+		int hi=getInt(pos);
+		pos+=sizeOfInt(hi);
+		int lo=getInt(pos);
+		
+		long lv=((long)lo)&0xFFFFFFFFl;
+		lv^=((long)hi)<<32;
+		return lv;
+	}
+	
+	public long getFullLong(int pos) {
 		long lv=((long)getInt(pos+4))&0xFFFFFFFFl;
 		lv^=((long)getInt(pos))<<32;
 		return lv;
@@ -151,92 +166,123 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return getByte(pos);
 	}
 	
-	public void appendByte(byte b) {
-		put(size,b);
+	public int appendByte(byte b) {
+		put(count,b);
+		return 1;
 	}
 	
-	public void appendBoolean(boolean b) {
-		put(size,(byte)(b?1:0));
+	public int appendBoolean(boolean b) {
+		put(count,(byte)(b?1:0));
+		return 1;
 	}
 	
-	public void appendInt(int v) {
-		int pos=size;
+	public int appendInt(int v) {
+		return appendVarInt(v);
+	}
+	
+	public int appendFullInt(int v) {
+		int pos=count;
 		ensureCapacity(pos+4);
 		data[pos+3]=(byte)(v);
 		data[pos+2]=(byte)(v>>>8);
 		data[pos+1]=(byte)(v>>>16);
 		data[pos]=(byte)(v>>>24);
-		size+=4;
+		count+=4;
+		
+		return 4;
 	}
 	
-	public void appendByteBuffer(ByteBuffer bb) {
-		int pos=size;
+	public int appendByteBuffer(ByteBuffer bb) {
+		int pos=count;
 		int rem=bb.remaining();
 		ensureCapacity(pos+rem);
 		bb.get(data, pos, rem);
-		size+=rem;
+		count+=rem;
+		
+		return rem;
 	}
 	
-	public void appendChar(char v) {
-		int pos=size;
+	public int appendChar(char v) {
+		int pos=count;
 		ensureCapacity(pos+2);
 		data[pos+1]=(byte)(v);
 		data[pos]=(byte)(v>>>8);
-		size+=2;
+		count+=2;
+		
+		return 2;
 	}
 	
-	public void appendShort(short v) {
-		int pos=size;
+	public int appendShort(short v) {
+		int pos=count;
 		ensureCapacity(pos+2);
 		data[pos+1]=(byte)(v);
 		data[pos]=(byte)(v>>>8);
-		size+=2;
+		count+=2;
+		
+		return 2;
 	}
 	
-	public void appendFloat(float v) {
-		appendInt(Float.floatToIntBits(v));
+	public int appendFloat(float v) {
+		return appendFullInt(Float.floatToIntBits(v));
 	}
 	
-	public void appendDouble(double v) {
-		appendLong(Double.doubleToLongBits(v));
+	public int appendDouble(double v) {
+		return appendLong(Double.doubleToLongBits(v));
 	}
 	
-	public void appendLong(long lv) {
-		appendInt((int)(lv>>32));
-		appendInt((int)(lv));
+	public int appendLong(long lv) {
+		int sizeResult=0;
+		sizeResult+=appendInt((int)(lv>>32));
+		sizeResult+=appendInt((int)(lv));
+		return sizeResult;
 	}
 	
-	public void appendString(String s) {
+	public int appendFullLong(long lv) {
+		int sizeResult=0;
+		sizeResult+=appendFullInt((int)(lv>>32));
+		sizeResult+=appendFullInt((int)(lv));
+		return sizeResult;
+	}
+	
+	public int appendString(String s) {
+		int size=0;
 		int len=s.length();
-		appendInt(len);
+		size+=appendInt(len);
 		for (int i=0; i<len; i++) {
-			appendChar(s.charAt(i));
+			size+=appendChar(s.charAt(i));
 		}
+		return size;
 	}
 	
 	public String getString(int pos) {
 		int len=getInt(pos);
-		pos+=4;
+		pos+=sizeOfInt(len);
+		
 		char[] cs=new char[len];
 		for (int i=0; i<len; i++) {
-			cs[i]=getChar(pos+i*2);
+			char c=getChar(pos);
+			pos+=sizeOfChar(c);
+			cs[i]=c;
 		}
 		return new String(cs);	
 	}
 	
 
-	public void append(Data d) {
-		put(size,d,0,d.size());
+	public int append(Data d) {
+		int size=d.size();
+		put(count,d,0,size);
+		return size;
 	}
 	
-	public void append(byte[] bs, int offset, int len) {
-		put(size,bs,offset,len);
+	public int append(byte[] bs, int offset, int len) {
+		put(count,bs,offset,len);
+		return len;
 	}
 	
 	public void put(int pos, byte b) {
-		if (pos+1>size) {
+		if (pos+1>count) {
 			ensureCapacity(pos+1);
-			size=pos+1;
+			count=pos+1;
 		}		
 		data[pos]=b;
 	}
@@ -248,17 +294,17 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public void put(int pos, byte[] bs, int offset, int len) {
-		if (pos+len>size) {
+		if (pos+len>count) {
 			ensureCapacity(pos+len);
-			size=pos+len;
+			count=pos+len;
 		}
 		System.arraycopy(bs, offset, data, pos, len);
 	}
 	
 	public void put(int pos, Data d, int offset, int len) {
-		if (pos+len>size) {
+		if (pos+len>count) {
 			ensureCapacity(pos+len);
-			size=pos+len;
+			count=pos+len;
 		}
 		System.arraycopy(d.data, offset, data, pos, len);
 	}
@@ -272,7 +318,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public Data subset(int start, int end) {
-		if ((start<0)||(end>size)) throw new IllegalArgumentException();
+		if ((start<0)||(end>count)) throw new IllegalArgumentException();
 		int len=end-start;
 		Data d=new Data(len);
 		copyTo(start,d,0,len);
@@ -280,11 +326,11 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int size() {
-		return size;
+		return count;
 	}
 	
 	public void clear() {
-		size=0;
+		count=0;
 		data=NullArrays.NULL_BYTES;
 	}
 	
@@ -299,7 +345,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		if (dlen<len) {
 			int nlen=Maths.max(len,dlen*2,dlen+DEFAULT_DATA_INCREMENT);
 			byte[] ndata=new byte[nlen];
-			System.arraycopy(data, 0, ndata,0, size);
+			System.arraycopy(data, 0, ndata,0, count);
 			data=ndata;
 		}
 	}
@@ -309,38 +355,38 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public void writeToByteBuffer(ByteBuffer bb) {
-		bb.put(data,0,size);
+		bb.put(data,0,count);
 	}
 	
 	public ByteBuffer toFlippedByteBuffer() {
-		ByteBuffer bb=BufferCache.instance().getBuffer(size);
-		bb.put(data,0,size);
+		ByteBuffer bb=BufferCache.instance().getBuffer(count);
+		bb.put(data,0,count);
 		bb.flip();
 		return bb;
 	}
 	
 	public ByteBuffer toWrapByteBuffer() {
 		ByteBuffer bb=ByteBuffer.wrap(data);
-		bb.limit(size);
+		bb.limit(count);
 		return bb;
 	}
 	
 	public ByteBuffer wrapAndClear() {
 		ByteBuffer bb=ByteBuffer.wrap(data);
-		bb.limit(size);
+		bb.limit(count);
 		clear();
 		return bb;
 	}
 	
 	public byte[] toNewByteArray() {
-		byte[] bs=new byte[size];
-		System.arraycopy(data, 0, bs,0, size);
+		byte[] bs=new byte[count];
+		System.arraycopy(data, 0, bs,0, count);
 		return bs;
 	}
 	
 	public int hashCode() {
 		int result=0;
-		for(int i=0; i<size; i++) {
+		for(int i=0; i<count; i++) {
 			result^=data[i];
 			result=Integer.rotateRight(result, 1);
 		}
@@ -349,8 +395,8 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	
 	@Override
 	public Data clone() {
-		Data nd=new Data(size);
-		copyTo(0,nd,0,size);
+		Data nd=new Data(count);
+		copyTo(0,nd,0,count);
 		return nd;
 	}
 	
@@ -408,12 +454,12 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		data=new byte[len];
 		int res=oi.read(data, 0, len);
 		if (res!=len) throw new IOException("Error: "+res+" bytes read out of length "+len+" expected");
-		size=len;
+		count=len;
 	}
 
 	public void writeExternal(ObjectOutput oo) throws IOException {
-		oo.writeInt(size);
-		oo.write(data, 0, size);
+		oo.writeInt(count);
+		oo.write(data, 0, count);
 	}
 
 	public static int sizeOfBoolean(boolean b) {
@@ -433,23 +479,110 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfInt(int b) {
+		return sizeOfVarInt(b);
+	}
+	
+	public static int sizeOfFullInt(int b) {
 		return 4;
+	}
+	
+	public static int sizeOfFullLong(long b) {
+		return 8;
 	}
 	
 	public static int sizeOfFloat(float b) {
-		return 4;
+		return sizeOfFullInt(Float.floatToIntBits(b));
 	}
 	
 	public static int sizeOfDouble(double b) {
-		return 8;
+		return sizeOfLong(Double.doubleToLongBits(b));
 	}
 	
 	public static int sizeOfLong(long b) {
-		return 8;
+		return sizeOfInt((int)b)+sizeOfInt((int)(b>>>32));
 	}
 	
 	public static int sizeOfString(String s) {
-		return 4+2*s.length();
+		int stringLength=s.length();
+		
+		int size=Data.sizeOfInt(stringLength);
+		
+		for (int i=0; i<stringLength; i++) {
+			size+=Data.sizeOfChar(s.charAt(i));
+		}
+		
+		return size;
 	}
 	
+	/*****************************************************
+	 * Variable length integer handling
+	 * 
+	 * Inspired by Google's protocol buffers
+	 * 
+	 * Byte format:
+	 *   most significant bit = {1: more bytes coming / 0: last byte of varint }
+	 *   lowest seven bits    = 7 bits of encoded integer (little-endian sequencing)
+	 */
+	
+	public int appendVarInt(final int i) {
+		int enc=Util.zigzagEncodeInt(i);
+		int size=sizeOfEncodedVarInt(enc);
+		int pos=count;
+		ensureCapacity(pos+size);
+		
+		while ((enc&(~0x7F))!=0) {
+			data[pos++]=(byte)( enc |0x80);
+			enc>>>=7;
+		}		
+		data[pos++]=(byte)( (enc&0x7F));
+		
+		count+=size;
+		return size;
+	}
+	
+	public int getVarInt(int pos) {
+		int enc=0;
+		byte b=data[pos++];
+		int shift=0;
+		while ((b&0x80)!=0) {
+			enc|=(b&0x7F)<<shift;
+			b=data[pos++];
+			shift+=7;
+		}
+		enc|=b<<shift;
+		return Util.zigzagDecodeInt(enc);
+	}
+	
+	
+	public static int sizeOfVarInt(int a) {
+		int enc=Util.zigzagEncodeInt(a);
+		return sizeOfEncodedVarInt(enc);
+	}
+	
+	private static int sizeOfEncodedVarInt(int enc) {
+	    if ((enc & (0xffffffff <<  7)) == 0) return 1;
+	    if ((enc & (0xffffffff << 14)) == 0) return 2;
+	    if ((enc & (0xffffffff << 21)) == 0) return 3;
+	    if ((enc & (0xffffffff << 28)) == 0) return 4;
+	    return 5;
+	}
+	
+	public static int sizeOfVarInt(long a) {
+		long enc=Util.zigzagEncodeLong(a);
+		return sizeOfEncodedVarint(enc);
+	}
+	
+	private static int sizeOfEncodedVarint(long enc) {
+	    if ((enc & (0xffffffffffffffffL <<  7)) == 0) return 1;
+	    if ((enc & (0xffffffffffffffffL << 14)) == 0) return 2;
+	    if ((enc & (0xffffffffffffffffL << 21)) == 0) return 3;
+	    if ((enc & (0xffffffffffffffffL << 28)) == 0) return 4;
+	    if ((enc & (0xffffffffffffffffL << 35)) == 0) return 5;
+	    if ((enc & (0xffffffffffffffffL << 42)) == 0) return 6;
+	    if ((enc & (0xffffffffffffffffL << 49)) == 0) return 7;
+	    if ((enc & (0xffffffffffffffffL << 56)) == 0) return 8;
+	    if ((enc & (0xffffffffffffffffL << 63)) == 0) return 9;
+	    return 10;
+	
+	}
 }

@@ -139,8 +139,15 @@ public abstract class Server {
 		Player p=playerList.getPlayer(playerNo);
 		synchronized(p) {
 			Connection c=p.connection;
-			return c.write(data);
+			
+			try {
+				if (c!=null) return c.write(data);
+			} catch (Throwable t) {
+				t.printStackTrace();
+				p.connection=null;
+			}
 		}
+		return 0;
 	}
 	
 	/*

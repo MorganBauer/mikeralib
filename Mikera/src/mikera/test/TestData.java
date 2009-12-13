@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import mikera.data.ByteArrayCache;
 import mikera.data.Data;
 import mikera.net.DataOutputStream;
+import mikera.net.Util;
 import mikera.util.*;
 
 import mikera.net.DataInputStream;
@@ -63,36 +64,46 @@ public class TestData {
 	
 	@Test public void testData2() {
 		Data d=new Data();
-		d.appendInt(1000);
-		d.appendInt(-2000);
-
-		assertEquals(1000,d.getInt(0));
-		assertEquals(-2000,d.getInt(4));
+		int pos=0;
+		int size=0;
+		
+		
+		size=d.appendInt(1000);
+		assertEquals(1000,d.getInt(pos));
+		pos+=size;
+		
+		size=d.appendInt(-2000);
+		assertEquals(-2000,d.getInt(pos));
+		pos+=size;
 		
 		long lv=Rand.nextLong();
-		d.appendLong(lv);
-		assertEquals(lv,d.getLong(8));
+		size=d.appendLong(lv);
+		assertEquals(lv,d.getLong(pos));
+		pos+=size;
 		
 		float fv=Rand.nextFloat();
-		d.appendFloat(fv);
-		assertEquals(fv,d.getFloat(16),0);
+		size=d.appendFloat(fv);
+		assertEquals(fv,d.getFloat(pos),0);
+		pos+=size;
 		
 		double dv=Rand.nextDouble();
-		d.appendDouble(dv);
-		assertEquals(dv,d.getDouble(20),0);
+		size=d.appendDouble(dv);
+		assertEquals(dv,d.getDouble(pos),0);
+		pos+=size;
 
 		char cv=(char)Rand.nextInt();
-		d.appendChar(cv);
-		assertEquals(cv,d.getChar(28),0);
-	
-		assertEquals(30,d.size());
+		size=d.appendChar(cv);
+		assertEquals(cv,d.getChar(pos),0);
+		pos+=size;
+		
+		assertEquals(pos,d.size());
 	}
 	
 	@Test public void testData3() {
 		Data d=new Data();
 		assertEquals("",d.toString());
-		d.appendInt(1000);
-		d.appendInt(-2000);
+		d.appendFullInt(1000);
+		d.appendFullInt(-2000);
 		assertEquals("00 00 03 E8 FF FF F8 30",d.toString());
 		
 		byte[] bs=d.toNewByteArray();	
@@ -185,7 +196,92 @@ public class TestData {
 			
 		}
 		assertTrue(ByteArrayCache.countCachedArrays()>0);
+	}
+	
+	@Test public void testZigZag() {
+		for (int i=-200; i<200; i++) {
+			int a=Rand.nextInt();
+			assertEquals(a,Util.zigzagEncodeInt(Util.zigzagDecodeInt(a)));
+			assertEquals(a,Util.zigzagDecodeInt(Util.zigzagEncodeInt(a)));
+			
+			long b=Rand.nextLong();
+			assertEquals(b,Util.zigzagEncodeLong(Util.zigzagDecodeLong(b)));
+			assertEquals(b,Util.zigzagDecodeLong(Util.zigzagEncodeLong(b)));
+			
+			// should all be short unsigned integers
+			assertTrue((Util.zigzagEncodeInt(i)&(~0xFFF))==0);
+			assertTrue((Util.zigzagEncodeLong(i)&(~0xFFF))==0);
+		}
+	}
+	
+	@Test public void testVarIntData() {
+		Data d=new Data();
+		for (int i=-200; i<200; i++) {
+			d.clear();
+			int a = ((i&1)==1) ? Rand.nextInt() : i;
+		
+			int l=d.appendVarInt(a);
+			assertEquals(l,Data.sizeOfVarInt(a));
+			assertEquals(l,d.size());
+			
+			int b=d.getVarInt(0);
+			assertEquals(a,b);
+			assertEquals(l,Data.sizeOfVarInt(b));
+		}
+	}
+	
+	@Test public void testDataSize() {
+		Data d=new Data();
+		int total=0;
+		
+		for (int i=0; i<10; i++) {
+			int a=Rand.nextInt();
+			int len=d.appendInt(a);
+			assertEquals(len,Data.sizeOfInt(a));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+		
+		for (int i=0; i<10; i++) {
+			String a=Rand.nextString();
+			int len=d.appendString(a);
+			assertEquals(len,Data.sizeOfString(a));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+		
+		for (int i=0; i<10; i++) {
+			long a=Rand.nextLong();
+			int len=d.appendLong(a);
+			assertEquals(len,Data.sizeOfLong(a));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+		
+		for (int i=0; i<10; i++) {
+			char c=Rand.nextChar();
+			int len=d.appendChar(c);
+			assertEquals(len,Data.sizeOfChar(c));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
 
+		
+		for (int i=0; i<10; i++) {
+			byte b=Rand.nextByte();
+			int len=d.appendByte(b);
+			assertEquals(len,Data.sizeOfByte(b));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+		
+		for (int i=0; i<10; i++) {
+			double db=Rand.nextDouble();
+			int len=d.appendDouble(db);
+			assertEquals(len,Data.sizeOfDouble(db));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
 	}
 
 }

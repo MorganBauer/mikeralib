@@ -176,6 +176,8 @@ public class Connection {
 			}
 
 		} catch (Exception e) {
+			// close the connection
+			close();
 			e.printStackTrace();
 			return;
 		}
@@ -218,7 +220,7 @@ public class Connection {
 				tryWrite(bb);
 
 				return fullMessageLength - HEADER_LENGTH;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				debugMessage("Error writing data to connection");
 				e.printStackTrace();
 				throw new Error(e);

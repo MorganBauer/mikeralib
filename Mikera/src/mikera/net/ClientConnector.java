@@ -50,8 +50,7 @@ public class ClientConnector {
 			new Thread(listener).start();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new Error(e);
 		}
 		return connection;
 	}

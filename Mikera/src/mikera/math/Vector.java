@@ -334,4 +334,13 @@ public final class Vector extends BaseVector {
 	public float get(int i) {
 		return data[i];
 	}
+
+	public static float distanceBetween(Vector targetPos, Vector cameraPos) {
+		float res=0;
+		for (int i=0; i<targetPos.data.length; i++) {
+			float diff=targetPos.data[i]-cameraPos.data[i];
+			res+=diff*diff;
+		}
+		return Maths.sqrt(res);
+	}
 }
