@@ -13,8 +13,6 @@ import mikera.util.Tools;
  * 
  * Top level is offset to centre at (0,0,0)
  * 
- * Very fast!!
- * 
  * @author Mike Anderson
  *
  * @param <T>

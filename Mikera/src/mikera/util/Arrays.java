@@ -1,5 +1,6 @@
 package mikera.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mikera.util.emptyobjects.NullArrays;
@@ -73,6 +74,12 @@ public class Arrays {
 	}
 
 	public static <T> void swap(List<T> a, int x, int y) {
+		T t=a.get(x);
+		a.set(x,a.get(y));
+		a.set(y,t);
+	}
+	
+	public static <T> void swap(ArrayList<T> a, int x, int y) {
 		T t=a.get(x);
 		a.set(x,a.get(y));
 		a.set(y,t);

@@ -3,6 +3,7 @@ import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
 
+import mikera.engine.PathFinder.PathNode;
 import mikera.persistent.IntMap;
 import mikera.persistent.MapFactory;
 
@@ -146,11 +147,16 @@ public class Tools {
 		return MapFactory.create(a).equals(MapFactory.create(b));
 	}
 	
-	public Integer integer(int i) {
-		
+	public static Integer integer(int i) {	
 		// TODO: Consider larger cache
-		return Integer.valueOf(i);
-		
-		
+		return Integer.valueOf(i);	
+	}
+
+	public static <T> void reverse(ArrayList<T> al) {
+		int size=al.size();
+		int lastIndex=size-1;
+		for (int i=0; i<(size>>1); i++) {
+			Arrays.swap(al, i, lastIndex-i);
+		}
 	}
 }

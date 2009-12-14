@@ -4,6 +4,7 @@ import java.util.*;
 
 import mikera.util.Maths;
 import mikera.util.RankedQueue;
+import mikera.util.Tools;
 
 public final class PathFinder {
 	public int MAX_STEPS=10000;
@@ -123,6 +124,21 @@ public final class PathFinder {
 	
 	public boolean isFound() {
 		return (found!=null);
+	}
+	
+	public ArrayList<PathNode> getPathNodes() {
+		ArrayList<PathNode> al=new ArrayList<PathNode>();
+		return getPathNodes(al);
+	}
+	
+	public ArrayList<PathNode> getPathNodes(ArrayList<PathNode> al) {
+		PathNode last=found;	
+		while (last!=null) {
+			al.add(last);
+			last=last.last;
+		}	
+		Tools.reverse(al);	
+		return al;
 	}
 	
 	public PathNode foundNode() {

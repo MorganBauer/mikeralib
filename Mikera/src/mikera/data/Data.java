@@ -143,23 +143,17 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public long getLong(int pos) {
-		int hi=getInt(pos);
-		pos+=sizeOfInt(hi);
-		int lo=getInt(pos);
-		
-		long lv=((long)lo)&0xFFFFFFFFl;
-		lv^=((long)hi)<<32;
-		return lv;
+		return getVarLong(pos);
 	}
 	
 	public long getFullLong(int pos) {
-		long lv=((long)getInt(pos+4))&0xFFFFFFFFl;
-		lv^=((long)getInt(pos))<<32;
+		long lv=((long)getFullInt(pos+4))&0xFFFFFFFFl;
+		lv^=((long)getFullInt(pos))<<32;
 		return lv;
 	}
 	
 	public double getDouble(int pos) {
-		return Double.longBitsToDouble(getLong(pos));
+		return Double.longBitsToDouble(getFullLong(pos));
 	}
 
 	public Byte get(int pos) {
@@ -227,14 +221,11 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int appendDouble(double v) {
-		return appendLong(Double.doubleToLongBits(v));
+		return appendFullLong(Double.doubleToLongBits(v));
 	}
 	
 	public int appendLong(long lv) {
-		int sizeResult=0;
-		sizeResult+=appendInt((int)(lv>>32));
-		sizeResult+=appendInt((int)(lv));
-		return sizeResult;
+		return appendVarLong(lv);
 	}
 	
 	public int appendFullLong(long lv) {
@@ -491,15 +482,15 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfFloat(float b) {
-		return sizeOfFullInt(Float.floatToIntBits(b));
+		return 4;
 	}
 	
 	public static int sizeOfDouble(double b) {
-		return sizeOfLong(Double.doubleToLongBits(b));
+		return 8;
 	}
 	
 	public static int sizeOfLong(long b) {
-		return sizeOfInt((int)b)+sizeOfInt((int)(b>>>32));
+		return sizeOfVarLong(b);
 	}
 	
 	public static int sizeOfString(String s) {
@@ -540,17 +531,46 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return size;
 	}
 	
+	public int appendVarLong(final long i) {
+		long enc=Util.zigzagEncodeLong(i);
+		int size=sizeOfEncodedVarLong(enc);
+		int pos=count;
+		ensureCapacity(pos+size);
+		
+		while ((enc&(~0x7FL))!=0) {
+			data[pos++]=(byte)( enc |0x80);
+			enc>>>=7;
+		}		
+		data[pos++]=(byte)( (enc&0x7F));
+		
+		count+=size;
+		return size;
+	}
+	
 	public int getVarInt(int pos) {
 		int enc=0;
 		byte b=data[pos++];
 		int shift=0;
 		while ((b&0x80)!=0) {
-			enc|=(b&0x7F)<<shift;
+			enc|=((int)(b&0x7F))<<shift;
 			b=data[pos++];
 			shift+=7;
 		}
-		enc|=b<<shift;
+		enc|=((int)b)<<shift;
 		return Util.zigzagDecodeInt(enc);
+	}
+	
+	public long getVarLong(int pos) {
+		long enc=0;
+		byte b=data[pos++];
+		int shift=0;
+		while ((b&0x80)!=0) {
+			enc|=((long)(b&0x7F))<<shift;
+			b=data[pos++];
+			shift+=7;
+		}
+		enc|=((long)b)<<shift;
+		return Util.zigzagDecodeLong(enc);
 	}
 	
 	
@@ -567,12 +587,12 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	    return 5;
 	}
 	
-	public static int sizeOfVarInt(long a) {
+	public static int sizeOfVarLong(long a) {
 		long enc=Util.zigzagEncodeLong(a);
-		return sizeOfEncodedVarint(enc);
+		return sizeOfEncodedVarLong(enc);
 	}
 	
-	private static int sizeOfEncodedVarint(long enc) {
+	private static int sizeOfEncodedVarLong(long enc) {
 	    if ((enc & (0xffffffffffffffffL <<  7)) == 0) return 1;
 	    if ((enc & (0xffffffffffffffffL << 14)) == 0) return 2;
 	    if ((enc & (0xffffffffffffffffL << 21)) == 0) return 3;

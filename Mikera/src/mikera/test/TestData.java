@@ -75,11 +75,24 @@ public class TestData {
 		size=d.appendInt(-2000);
 		assertEquals(-2000,d.getInt(pos));
 		pos+=size;
+
+		long lv2=Rand.nextLong();
+		size=d.appendFullLong(lv2);
+		assertEquals(lv2,d.getFullLong(pos));
+		pos+=size;
+
+		long lvb=Rand.d(40)-20;
+		size=d.appendLong(lvb);
+		assertEquals(1,size);
+		assertEquals(lvb,d.getLong(pos));
+		pos+=size;
+
 		
 		long lv=Rand.nextLong();
 		size=d.appendLong(lv);
 		assertEquals(lv,d.getLong(pos));
 		pos+=size;
+		
 		
 		float fv=Rand.nextFloat();
 		size=d.appendFloat(fv);

@@ -276,6 +276,11 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return Tools.hashCode(data);	
 	}
 	
+	@Override 
+	public boolean hasFastHashCode() {
+		return true;
+	}
+	
 	/**
 	 * clone() returns the same IntSet, as it is defined to be immutable
 	 */

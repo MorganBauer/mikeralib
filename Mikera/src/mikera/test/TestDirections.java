@@ -1,9 +1,12 @@
 package mikera.test;
 
+import java.util.ArrayList;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.util.*;
 import mikera.engine.*;
+import mikera.engine.PathFinder.PathNode;
 
 public class TestDirections {
 	@Test public void testDirArrays() {
@@ -70,11 +73,16 @@ public class TestDirections {
 		assertTrue(pf.isFound());
 		assertEquals(30,pf.foundNode().travelled,0.01f);
 		
+		
+		ArrayList<PathNode> al=pf.getPathNodes();
+		assertEquals(31,al.size());
+		assertEquals(pf.foundNode(),al.get(al.size()-1));
+		assertTrue(al.get(0).last==null); // first node
+		
 		costs.setBlock(5,0,0,5,10,0, -1.0f); // full wall
 		pf.pathFind(0, 0, 0, 10,10,0);
 		assertTrue(!pf.isFound());
 		//System.out.println("Nodes: "+pf.nodeCount);
 		//System.out.println("Costs: "+pf.costCount);
-		
 	}
 }
