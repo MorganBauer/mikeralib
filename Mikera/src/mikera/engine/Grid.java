@@ -31,7 +31,9 @@ public abstract class Grid<T> {
 	public abstract void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
 
 	public abstract void clear();
-	
+
+	public abstract void clearContents();
+
 	public abstract void paste(Grid<T> t);
 	
 	public abstract void paste(Grid<T> t, final int dx, final int dy, final int dz);

@@ -6,6 +6,18 @@ import mikera.util.Maths;
 import mikera.util.RankedQueue;
 import mikera.util.Tools;
 
+/**
+ * Pathfinding system based on A* algorithm
+ * 
+ * PathFinder must be provided with two functions that 
+ * together define the pathfinding problem to be solved:
+ * 
+ * a) A movement cost function for the 3D space
+ * b) A heuristic function that returns <=0 when target found
+ * 
+ * @author Mike Anderson
+ *
+ */
 public final class PathFinder {
 	public int MAX_STEPS=10000;
 	
@@ -22,8 +34,15 @@ public final class PathFinder {
 	private CostFunction costFunction=null;
 	protected PathNode found=null;
 	
+	/**
+	 * Defines set of movement directions to consider
+	 */
+	public int directionMask=Dir.ALL_DIRS_MASK-Dir.dirMask(Dir.C);
+	
 	public int nodeCount=0;
 	public int costCount=0;
+	
+	
 	
 	public PathFinder() {
 		if (CACHE_PATHNODES) {
@@ -61,6 +80,7 @@ public final class PathFinder {
 	
 	/**
 	 * Class to override to provide a cost function
+	 * 
 	 */
 	public abstract static class CostFunction {
 		public float moveCost(int x, int y, int z, byte dir) {
@@ -69,7 +89,12 @@ public final class PathFinder {
 			int tz=z+Dir.DZ[dir];
 			return moveCost(x,y,z,tx,ty,tz);
 		}
-
+		
+		/**
+		 * Returns the cost for a specific move
+		 *
+		 * @return Cost of move, or negative if move is impossible
+		 */
 		public abstract float moveCost(int x, int y, int z, int tx, int ty, int tz) ;
 
 	}
@@ -167,22 +192,24 @@ public final class PathFinder {
 		cache.add(pn);
 	}
 	
-	public void pathFind(int x, int y, int z, int tx, int ty, int tz) {
+	public boolean pathFind(int x, int y, int z, int tx, int ty, int tz) {
 		HeuristicFunction tf=targetFunction(tx,ty,tz);
-		pathFind(x,y,z,tf,costFunction);
+		return pathFind(x,y,z,tf,costFunction);
 	}
 
 	
-	public void pathFind(int x, int y, int z) {
-		pathFind(x,y,z,heuristicFunction,costFunction);
+	public boolean pathFind(int x, int y, int z) {
+		return pathFind(x,y,z,heuristicFunction,costFunction);
 	}
 	
-	public void pathFind(int x,int y, int z, HeuristicFunction hf, CostFunction pf) {
+	public boolean pathFind(int x,int y, int z, HeuristicFunction hf, CostFunction pf) {
 		clear();
 		setCostFunction(pf);
 		setHeuristicFunction(hf);
-		setupPathFind(x,y,z);
-		findPath();
+		if (setupPathFind(x,y,z)) {
+			findPath();
+		}
+		return isFound();
 	}
 	
 	private void findPath() {
@@ -197,6 +224,7 @@ public final class PathFinder {
 				// get direction to check in sequence
 				// based on default direction of heuristic function
 				byte checkDir=Dir.getClosestDir(node.baseDir, i);
+				if (((1<<checkDir)&directionMask)==0) continue;
 				
 				// check the given direction
 				PathNode tn=tryDir(node,checkDir);
@@ -222,12 +250,12 @@ public final class PathFinder {
 		int y=node.y; int ty=y+Dir.DY[dir];
 		int z=node.z; int tz=z+Dir.DZ[dir];
 		
-		float travelled=node.travelled;
 		float cost=getCostFunction().moveCost(x, y, z, tx,ty,tz);
 		costCount++;
 		if (cost<0) return null;
 		
 		PathNode target=map.get(tx, ty, tz);
+		float travelled=node.travelled;
 		
 		if (target==null) {
 			PathNode pn=createPathNode(tx,ty,tz);
@@ -270,10 +298,27 @@ public final class PathFinder {
 		nodeCount++;
 	}
 
-	private void setupPathFind(int x,int y, int z) {
+	/**
+	 * Sets up the initial path seach
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return true if algorithm should continue searching, false if
+	 * path already found (i.e. the starting position meets
+	 * the target criteria)
+	 */
+	private boolean setupPathFind(int x,int y, int z) {
 		PathNode pn=createPathNode(x,y,z);
-		pn.heuristic=getHeuristicFunction().calcHeuristic(x, y, z);
+		
+		float h=getHeuristicFunction().calcHeuristic(x, y, z);
+		pn.heuristic=h;
+		if (h<=0) {
+			found=pn;
+			return false;
+		}
+		
 		addNode(pn);
+		return true;
 	}
 
 

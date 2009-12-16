@@ -326,11 +326,9 @@ public final class Rand {
 		return String.valueOf(cs);
 	}
 	
-	
-	public static <T> T pick(T[] ts) {
-		return ts[Rand.r(ts.length)];
-	}
-	
+	/**
+	 * Shuffles all elements in a given array
+	 */
 	public static <T> void shuffle(T[] ts) {
 		for (int i=0; i<(ts.length-1); i++) {
 			int j=Rand.r(ts.length-i);
@@ -340,10 +338,23 @@ public final class Rand {
 		}
 	}
 	
+	/**
+	 * Picks a random item from a given array
+	 */
+	public static <T> T pick(T[] ts) {
+		return ts[Rand.r(ts.length)];
+	}
+	
+	/**
+	 * Picks a random item from a given list
+	 */
 	public static <T> T pick(List<T> ts) {
 		return ts.get(Rand.r(ts.size()));
 	}
 	
+	/**
+	 * Picks a random item from a given collection
+	 */
 	public static <T> T pick(Collection<T> ts) {
 		int n=ts.size();
 		if (n==0) throw new Error("Empty collection!");

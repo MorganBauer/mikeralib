@@ -15,10 +15,7 @@ import mikera.util.*;
 public final class Vector extends BaseVector {
 	private static final long serialVersionUID = -265007091119573847L;
 
-	public float[] data;
-	
-	public Vector() {
-	}
+	public final float[] data;
 	
 	public Vector(int size) {
 		data=new float[size];
@@ -133,10 +130,8 @@ public final class Vector extends BaseVector {
 		}		
 	}
 	
-	public Vector(float[] adata) {
-		int size=adata.length;
-		data=new float[size];
-		System.arraycopy(adata, 0, data, 0, size);
+	private Vector(float[] adata) {
+		data=adata;
 	}
 	
 	public Vector(Vector3 vector) {
@@ -158,19 +153,10 @@ public final class Vector extends BaseVector {
 	}
 
 	public Vector construct(float[] dataToEmbed) {
-		Vector v=new Vector();
-		v.data=dataToEmbed;
+		Vector v=new Vector(dataToEmbed);
 		return v;
 	}
-	
-	public void resize(int size) {
-		if (size!=data.length) {
-			float[] newData=new float[size];
-			System.arraycopy(data,0,newData,0,Math.min(size,data.length));
-			data=newData;
-		}
-	}
-	
+		
 	public int size() {
 		return data.length;
 	}

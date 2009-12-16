@@ -30,10 +30,11 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	private static final long serialVersionUID = 293989965333996558L;
 	private static final int DEFAULT_DATA_INCREMENT=50;
 	
-	private byte[] data=NullArrays.NULL_BYTES;
+	private byte[] data;
 	private int count=0;
 	
 	public Data() {
+		data=NullArrays.NULL_BYTES;
 	}
 	
 	/**
@@ -174,7 +175,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return appendVarInt(v);
 	}
 	
-	public int appendFullInt(int v) {
+	public int appendFullInt(final int v) {
 		int pos=count;
 		ensureCapacity(pos+4);
 		data[pos+3]=(byte)(v);
@@ -197,6 +198,10 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int appendChar(char v) {
+		return appendFullChar(v);
+	}
+	
+	public int appendFullChar(final char v) {
 		int pos=count;
 		ensureCapacity(pos+2);
 		data[pos+1]=(byte)(v);
@@ -228,7 +233,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return appendVarLong(lv);
 	}
 	
-	public int appendFullLong(long lv) {
+	public int appendFullLong(final long lv) {
 		int sizeResult=0;
 		sizeResult+=appendFullInt((int)(lv>>32));
 		sizeResult+=appendFullInt((int)(lv));
@@ -466,6 +471,10 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfChar(char b) {
+		return 2;
+	}
+	
+	public static int sizeOfFullChar(char b) {
 		return 2;
 	}
 	

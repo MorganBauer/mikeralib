@@ -116,6 +116,11 @@ public final class Octreap<T> extends BaseGrid<T> {
 		head=null;
 	}
 	
+	@Override
+	public void clearContents() {
+		clear();
+	}	
+	
 	@SuppressWarnings("unchecked")
 	public boolean equals(Object b) {
 		if (!(b instanceof Octreap)) return false;

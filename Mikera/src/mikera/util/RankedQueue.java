@@ -7,6 +7,13 @@ import java.util.NoSuchElementException;
 import mikera.annotations.Mutable;
 import mikera.util.emptyobjects.NullArrays;
 
+/**
+ * Priority queue with a double rank for each element
+ * 
+ * @author Mike Anderson
+ *
+ * @param <T>
+ */
 @Mutable
 public final class RankedQueue<T> extends AbstractQueue<T>{
 
@@ -16,7 +23,9 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 	private T[] objects=(T[])NullArrays.NULL_OBJECTS;
 	private double[] ranks=NullArrays.NULL_DOUBLES;
 	
-	
+	/**
+	 * Iterator for RankedQueue
+	 */
 	protected class RankedQueueIterator implements Iterator<T> {
 		int i;
 		

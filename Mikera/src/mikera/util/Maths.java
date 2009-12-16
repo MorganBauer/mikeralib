@@ -180,31 +180,31 @@ public final class Maths {
 	}
 	
 	// branchless version of abs()
-	public static int abs(int a) {
+	public static int abs(final int a) {
 		return (a^(a>>31))-(a>>31);
 	}
 	
 	// another branchless version of abs()
-	public static int abs2(int a) {
+	public static int abs2(final int a) {
 		int mask=(a>>31);
 		return (a^mask)-mask;
 	}
 	
-	public static int abs3(int a) {
+	public static int abs3(final int a) {
 		if (a<0) return -a;
 		return a;
 	}
 	
-	public static float abs(float a) {
+	public static float abs(final float a) {
 		if (a<0) return -a;
 		return a;
 	}
 	
-	public static int min(int a, int b) {
+	public static int min(final int a, final int b) {
 		return (a<b)?a:b;
 	}
 	
-	public static int max(int a, int b) {
+	public static int max(final int a, final int b) {
 		return (a>b)?a:b;
 	}
 	

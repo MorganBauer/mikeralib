@@ -136,6 +136,12 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		data=null;
 	}
 	
+	public void clearContents() {
+		final Object[] dt=data;
+		for (int i=0; i<dt.length; i++) {
+			dt[i]=null;
+		}
+	}	
 	public int dataLength() {
 		return data.length;
 	}

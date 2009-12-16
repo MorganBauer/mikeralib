@@ -20,6 +20,7 @@ import mikera.util.Tools;
 public class TreeGrid<T> extends BaseGrid<T> {
 
 	private static final int DIM_SPLIT_BITS=2;
+	private static final int DIM_SPLIT_MASK=(1<<DIM_SPLIT_BITS)-1;
 	private static final int SIGNIFICANT_BITS=20;
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);
@@ -70,11 +71,31 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private T getLocal(int x, int y, int z) {
+	private T getLocal(final int x, final int y, final int z) {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
-			int li=index(x,y,z,shift);
+			int li;
+			li=index(x,y,z,shift);
+			// for some reason the inline version is much faster!!
+			//li= ((x>>(shift))&3) + ((y>>(shift-2))&12) + ((z>>(shift-4))&48);
+//			switch(shift) {
+//				case 0:
+//					li= ((x)&3) + ((y<<2)&12) + ((z<<4)&48);
+//					break;
+//				case 2:
+//					li= ((x>>2)&3) + (y&12) + ((z<<2)&48);
+//					break;
+//				case 4:
+//					li= ((x>>4)&3) + ((y>>2)&12) + (z&48);
+//					break;
+//				default:
+//					li= ((x>>(shift))&3) + ((y>>(shift-2))&12) + ((z>>(shift-4))&48);
+//					break;
+//			}
+			
+			//if (li!=li1) System.err.println(((x>>(shift))&3)+","+((y>>(shift))&3)+","+((z>>(shift))&3)+"@"+shift+"   "+li+"->"+li1);
+			
 			Object d=head.data[li];
 			if (d==null) return null;
 			if (!(d instanceof TreeGrid<?>)) {
@@ -165,9 +186,14 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		}
 	}
 	
-	
+	@Override
 	public void clear() {
 		Arrays.fill(data, null);
+	}
+	
+	@Override
+	public void clearContents() {
+		clear();
 	}
 	
 	public TreeGrid() {
@@ -227,11 +253,11 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		return (!(d instanceof TreeGrid<?>))&&isSolid((T)data[0]);
 	}
 	
-	private int index(int x, int y, int z, int shift) {
-		int lx=(x>>shift)&3;
-		int ly=(y>>shift)&3;
-		int lz=(z>>shift)&3;
-		int li=lx+(ly<<2)+(lz<<4);
+	private static int index(int x, int y, int z, int shift) {
+		int lx=(x>>shift)&DIM_SPLIT_MASK;
+		int ly=(y>>shift)&DIM_SPLIT_MASK;
+		int lz=(z>>shift)&DIM_SPLIT_MASK;
+		int li=lx+(ly<<DIM_SPLIT_BITS)+(lz<<(2*DIM_SPLIT_BITS));
 		return li;
 	}
 	

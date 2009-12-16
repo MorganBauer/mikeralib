@@ -121,10 +121,10 @@ public class Colours {
 		return (a<<24)|(r<<16)|(g<<8)|b;
 	} 
 	
-	public Color getRGBColor(int argb) {
-		int r=getRed(argb);
-		int g=getGreen(argb);
-		int b=getBlue(argb);
+	public Color getRGBColor(int rgb) {
+		int r=getRed(rgb);
+		int g=getGreen(rgb);
+		int b=getBlue(rgb);
 		return new Color(r,g,b);
 	}
 	

@@ -111,6 +111,13 @@ public final class IntGrid  implements Cloneable {
 		data=null;
 	}
 	
+	public void clearContents() {
+		final int[] dt=data;
+		for (int i=0; i<dt.length; i++) {
+			dt[i]=0;
+		}
+	}
+	
 	public int dataLength() {
 		if (data==null) return 0;
 		return data.length;

@@ -40,12 +40,17 @@ public class TimeTest {
 	}
 	
 	static Random rand=new Random();
+	static TreeGrid<Integer> tg=new TreeGrid<Integer>();
+	static int[] ia=new int[100];
+	
 	private static void setup() {
-		
+		tg.set(1,1,1,2);
 	}
 	
 	private static void a() {
 		//long l=rand.nextLong();
+		tg.get(2,2,2);
+		//ia[20]=5;
 		count++;
 	}
 	
