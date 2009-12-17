@@ -10,6 +10,7 @@ import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
+import mikera.annotations.Mutable;
 import mikera.net.BufferCache;
 import mikera.net.Util;
 import mikera.util.Maths;
@@ -26,6 +27,7 @@ import mikera.util.emptyobjects.NullArrays;
  * @author Mike
  *
  */
+@Mutable
 public final class Data extends AbstractList<Byte> implements List<Byte>, Cloneable, Serializable, Comparable<Data>, Externalizable {
 	private static final long serialVersionUID = 293989965333996558L;
 	private static final int DEFAULT_DATA_INCREMENT=50;
@@ -126,6 +128,10 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public char getChar(int pos) {
+		return getVarChar(pos);
+	}
+	
+	public char getFullChar(int pos) {
 		if ((pos<0)||((pos+1)>=count)) throw new IndexOutOfBoundsException();
 		int res= ((data[pos+1])&(255))
 	      |(((data[pos])&(255))<<8);
@@ -198,7 +204,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int appendChar(char v) {
-		return appendFullChar(v);
+		return appendVarChar(v);
 	}
 	
 	public int appendFullChar(final char v) {
@@ -250,7 +256,21 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return size;
 	}
 	
+	public int appendString(CharSequence cs) {
+		int size=0;
+		int len=cs.length();
+		size+=appendInt(len);
+		for (int i=0; i<len; i++) {
+			size+=appendChar(cs.charAt(i));
+		}
+		return size;
+	}
+	
 	public String getString(int pos) {
+		return new String(getCharArray(pos));	
+	}
+	
+	public char[] getCharArray(int pos) {
 		int len=getInt(pos);
 		pos+=sizeOfInt(len);
 		
@@ -260,9 +280,8 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 			pos+=sizeOfChar(c);
 			cs[i]=c;
 		}
-		return new String(cs);	
+		return cs;	
 	}
-	
 
 	public int append(Data d) {
 		int size=d.size();
@@ -325,16 +344,24 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return count;
 	}
 	
+	public int capacity() {
+		return data.length;
+	}
+	
 	public void clear() {
 		count=0;
 		data=NullArrays.NULL_BYTES;
+	}
+	
+	public void clearContents() {
+		count=0;
 	}
 	
 	byte[] getInternalData() {
 		return data;
 	}
 	
-	public void ensureCapacity(int len) {
+	private void ensureCapacity(int len) {
 		int dlen=data.length;
 		
 		// extend data array if too small
@@ -457,6 +484,14 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		oo.writeInt(count);
 		oo.write(data, 0, count);
 	}
+	
+	/* ****************************************
+	 * sizeOf methods
+	 * 
+	 * Needed to advance position pointer after 
+	 * getting primitive from data
+	 * 
+	 */
 
 	public static int sizeOfBoolean(boolean b) {
 		return 1;
@@ -471,7 +506,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfChar(char b) {
-		return 2;
+		return sizeOfVarChar(b);
 	}
 	
 	public static int sizeOfFullChar(char b) {
@@ -524,6 +559,21 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	 *   lowest seven bits    = 7 bits of encoded integer (little-endian sequencing)
 	 */
 	
+	public int appendVarChar(char c) {
+		int size=sizeOfEncodedVarChar(c);
+		int pos=count;
+		ensureCapacity(pos+size);
+		
+		while ((c&(~0x7F))!=0) {
+			data[pos++]=(byte)( c |0x80);
+			c>>>=7;
+		}		
+		data[pos++]=(byte)( (c&0x7F));
+		
+		count+=size;
+		return size;
+	}
+	
 	public int appendVarInt(final int i) {
 		int enc=Util.zigzagEncodeInt(i);
 		int size=sizeOfEncodedVarInt(enc);
@@ -556,6 +606,19 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return size;
 	}
 	
+	public char getVarChar(int pos) {
+		char enc=0;
+		byte b=data[pos++];
+		int shift=0;
+		while ((b&0x80)!=0) {
+			enc|=((char)(b&0x7F))<<shift;
+			b=data[pos++];
+			shift+=7;
+		}
+		enc|=((int)b)<<shift;
+		return enc;
+	}
+	
 	public int getVarInt(int pos) {
 		int enc=0;
 		byte b=data[pos++];
@@ -582,6 +645,15 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return Util.zigzagDecodeLong(enc);
 	}
 	
+	public static int sizeOfVarChar(char a) {
+		return sizeOfEncodedVarChar(a);
+	}
+	
+	private static int sizeOfEncodedVarChar(char a) {
+	    if ((a & (0xffff <<  7)) == 0) return 1;
+	    if ((a & (0xffff << 14)) == 0) return 2;
+	    return 3;
+	}
 	
 	public static int sizeOfVarInt(int a) {
 		int enc=Util.zigzagEncodeInt(a);

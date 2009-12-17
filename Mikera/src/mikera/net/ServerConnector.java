@@ -28,7 +28,7 @@ public class ServerConnector {
 
 	// private static final int MAX_BACKLOG=5;
 
-	public boolean live = false;
+	protected boolean live = false;
 
 
 	public ServerConnector() {

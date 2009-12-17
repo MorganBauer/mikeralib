@@ -82,7 +82,7 @@ public final class Gradient implements Cloneable, Serializable {
 		for (int i=0; i<s; i++) {
 			col.data[0]=((float)i)/s;
 			vf.calculate(pos, col);
-			data[i]=Colours.fromVector(col);
+			data[i]=Colours.fromVector4(col);
 		}
 	}
 

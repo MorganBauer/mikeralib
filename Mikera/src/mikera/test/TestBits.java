@@ -117,9 +117,9 @@ public class TestBits {
 	
 	@Test public void testBitGrid1() {
 		BitGrid bg=new BitGrid(0,0,0);
-		assertEquals(4,bg.width());
-		assertEquals(4,bg.height());
-		assertEquals(2,bg.depth());
+		assertEquals(BitGrid.XBLOCKSIZE,bg.width());
+		assertEquals(BitGrid.YBLOCKSIZE,bg.height());
+		assertEquals(BitGrid.ZBLOCKSIZE,bg.depth());
 		assertEquals(1,bg.dataLength());
 		
 		bg.set(1,1,1,1);
@@ -266,7 +266,7 @@ public class TestBits {
 	@Test public void testBitGridBitOffsets() {
 		int[] vs=new int[32];
 		
-		for (int i=0; i<32; i++) {
+		for (int i=0; i<BitGrid.BITS_USED; i++) {
 			int x=BitGrid.bitXOffset(i);
 			int y=BitGrid.bitYOffset(i);
 			int z=BitGrid.bitZOffset(i);
@@ -275,7 +275,7 @@ public class TestBits {
 			vs[i]=index;
 		}		
 		
-		for (int i=0; i<32; i++) {
+		for (int i=0; i<BitGrid.BITS_USED; i++) {
 			assertEquals(i,vs[i]);
 		}
 	}

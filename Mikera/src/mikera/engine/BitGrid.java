@@ -18,6 +18,8 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 	private static final int YLOWBITS=2;
 	private static final int ZLOWBITS=1;	
 	
+	public static final int BITS_USED=1<<(XLOWBITS+YLOWBITS+ZLOWBITS);
+	
 	private static final int XLOWMASK=(1<<XLOWBITS)-1;
 	private static final int YLOWMASK=(1<<YLOWBITS)-1;
 	private static final int ZLOWMASK=(1<<ZLOWBITS)-1;	
@@ -310,6 +312,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 	
 	public void set(int x, int y, int z, boolean v) {
 		if (data==null) {
+			if (!v) return;
 			init(x,y,z);
 			setLocal(x-gx,y-gy,z-gz,v);
 		} else {
@@ -317,6 +320,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 			int ry=y-gy;
 			int rz=z-gz;
 			if ((rx<0)||(ry<0)||(rz<0)||(rx>=width())||(ry>=height())||(rz>=depth())) {
+				if (!v) return;
 				growToIncludeLocal(x,y,z,x,y,z);
 				// update (rx,ry,rz) because (gx,gy,gz) may have changed
 				rx=x-gx;
@@ -340,7 +344,8 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 		}
 	}
 	
-	// get index relative to grid origin
+	// get index 
+	// using coordinates relative to grid origin
 	private int dataIndex(int rx, int ry, int rz) {
 		return (rx>>XLOWBITS)+gw*((ry>>YLOWBITS)+gh*(rz>>ZLOWBITS));
 	}
@@ -353,12 +358,8 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 
 	@Override
 	public int countNonNull() {
-		int res=0;
-		int[] dat=data;
-		for (int i=0; i<dat.length; i++) {
-			res+=Integer.bitCount(dat[i]);
-		}
-		return res;
+		// return countSetBits();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 
 	private static final int DIM_SPLIT_BITS=2;
 	private static final int DIM_SPLIT_MASK=(1<<DIM_SPLIT_BITS)-1;
-	private static final int SIGNIFICANT_BITS=20;
+	private static final int SIGNIFICANT_BITS=DIM_SPLIT_BITS*(20/DIM_SPLIT_BITS);
 	private static final int TOP_SHIFT=SIGNIFICANT_BITS-DIM_SPLIT_BITS;
 	private static final int DATA_ARRAY_SIZE=1<<(3*DIM_SPLIT_BITS);
 	private static final int SIGNIFICANT_MASK=(1<<SIGNIFICANT_BITS)-1;
@@ -60,7 +60,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 				TreeGrid<T> tg=(TreeGrid<T>)d;
 				res+=tg.countNonNull(shift-DIM_SPLIT_BITS);
 			} else {
-				res+=1<<(3*shift);
+				res+=1<<(shift+shift+shift);
 			}
 		}
 		return res;
@@ -76,8 +76,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		TreeGrid<T> head=this;
 		while (shift>=0) {
 			int li;
-//			li=index(x,y,z,shift);
 			// for some reason the inline version is much faster!!
+			// li=index(x,y,z,shift);
 			li= ((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
 			
 			//if (li!=li1) System.err.println(((x>>(shift))&3)+","+((y>>(shift))&3)+","+((z>>(shift))&3)+"@"+shift+"   "+li+"->"+li1);
@@ -87,7 +87,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 			if (!(d instanceof TreeGrid<?>)) {
 				return (T)d;
 			}
-			shift-=2;
+			shift-=DIM_SPLIT_BITS;
 			head=(TreeGrid<T>)d;
 		}
 		throw new Error("This shouldn't happen!!");
@@ -116,16 +116,16 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		int li=0;
 		int bsize=1<<shift; // size of sub blocks in this TreeGrid
 		
-		int max= (bsize<<2); // top limit of this whole TreeGrid
+		int max= (bsize<<DIM_SPLIT_BITS); // top limit of this whole TreeGrid
 		
 		for (int lz=0; lz<max; lz+=bsize) {
 			if ((lz>z2)||((lz+bsize)<=z1)) {
-				li+=16;
+				li+=1<<(2*DIM_SPLIT_BITS);
 				continue;
 			}
 			for (int ly=0; ly<max; ly+=bsize) {
 				if ((ly>y2)||((ly+bsize)<=y1)) {
-					li+=4;
+					li+=1<<DIM_SPLIT_BITS;
 					continue;
 				}
 				for (int lx=0; lx<max; lx+=bsize) {
@@ -218,7 +218,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 				d=new TreeGrid<T>((T)d);
 				head.data[li]=d;				
 			}
-			shift-=2;
+			shift-=DIM_SPLIT_BITS;
 			head=(TreeGrid<T>)d;
 		}
 		throw new Error("This shouldn't happen!!");
@@ -269,7 +269,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	
 	@Override
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		setBlock(x1+TOP_OFFSET, 
+		setBlockLocal(x1+TOP_OFFSET, 
 				y1+TOP_OFFSET, 
 				z1+TOP_OFFSET, 
 				x2+TOP_OFFSET, 
@@ -280,7 +280,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Object setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
+	protected Object setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
 		int bmask=3<<shift;
 		int bstep=1<<shift;
 		boolean setData=false;
@@ -315,7 +315,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 							data[li]=d;
 						}
 						TreeGrid<T> tg=(TreeGrid<T>)d;
-						Object nd=tg.setBlock(
+						Object nd=tg.setBlockLocal(
 								Maths.max(lx, x1)-lx,
 								Maths.max(ly, y1)-ly,
 								Maths.max(lz, z1)-lz,
@@ -361,7 +361,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	@SuppressWarnings("unchecked")
 	public void validateLocal(int shift) {	
 		if (shift!=TOP_SHIFT&&isSolid()) throw new Error("Failed to solidify");
-		for (int i=0; i<data.length; i++) {
+		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
 			Object o=data[i];
 			if (o instanceof TreeGrid<?>) {
 				TreeGrid<T> tg=(TreeGrid<T>)o;

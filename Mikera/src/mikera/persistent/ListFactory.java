@@ -35,6 +35,10 @@ public class ListFactory<T> {
 		return SingletonList.create(value);
 	}
 	
+	public static <T> PersistentList<T> create(T a, T b) {
+		return Tuple.create(a,b);
+	}
+	
 	public static <T> PersistentList<T> createFromArray(T[] data) {
 		return createFromArray(data,0,data.length);
 	}

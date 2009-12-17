@@ -14,7 +14,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource; 
 import javax.xml.transform.stream.StreamResult;
 
-public class Tools {
+public final class Tools {
 	
 	public static class HashComparator<T> implements Comparator<T>, Serializable {
 		private static final long serialVersionUID = -568440287836864164L;

@@ -78,7 +78,7 @@ public class TestRand {
 		for (int i=0; i<52; i++) assertTrue(is2[i]==i+1);
 	}
 	
-	@Test public void testXORShoft() {
+	@Test public void testXORShift() {
 		long l=Rand.xorShift64(1L);
 		assertTrue(l!=1);
 		

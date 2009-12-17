@@ -3,6 +3,7 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.engine.*;
+import mikera.image.Colours;
 import mikera.math.Matrix;
 import mikera.math.Vector;
 import mikera.util.*;
@@ -35,4 +36,25 @@ public class TestVector {
 		
 		assertEquals(1.0f,v2.length(),0.0001f);
 	}
+	
+	@Test public void testColours() {
+		Vector v3=new Vector(3);
+		Vector v4=new Vector(4);
+		
+		v4.data[0]=Rand.nextFloat();
+		v4.data[1]=Rand.nextFloat();
+		v4.data[2]=Rand.nextFloat();
+		v4.data[3]=1.0f;
+		
+		v3.data[0]=v4.data[0];
+		v3.data[1]=v4.data[1];
+		v3.data[2]=v4.data[2];
+		
+		assertEquals(v4.toARGBColour(),v3.toRGBColour());
+		
+		int argb=Rand.nextInt();
+		Colours.toFloat4(v4.data, 0, argb);
+		assertEquals(argb,v4.toARGBColour());
+	}
+	
 }

@@ -49,7 +49,7 @@ public final class SingletonSet<T> extends BasePersistentSet<T> {
 
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
-			int pos=0;
+			private int pos=0;
 			public boolean hasNext() {
 				return (pos<1);
 			}

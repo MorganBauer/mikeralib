@@ -58,8 +58,15 @@ public class Colours {
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
+	public static int getRGBClamped(float r, float g, float b) {
+    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE);
+    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE);
+    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
+		return getRGBQuick(ri,gi,bi);
+	}
+	
 	public static int getARGBClamped3(Vector v) {
-		int result=0xFF000000;
+		int result=ALPHA_MASK;
 		float r=v.data[0];
     	result+=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE)<<16;
 		float g=v.data[1];
@@ -96,13 +103,23 @@ public class Colours {
 		col[offset+2]=getBlue(argb)*INVERSE_FLOAT_FACTOR;
 		col[offset+3]=getAlpha(argb)*INVERSE_FLOAT_FACTOR;
 	}
+	
+	
 
 	public static int fromFloat4(float[] col, int p) {
 		return getARGBClamped(col[p],col[p+1],col[p+2],col[p+3]);
 	}
 	
-	public static int fromVector(Vector col) {
+	public static int fromFloat3(float[] col, int p) {
+		return getRGBClamped(col[p],col[p+1],col[p+2]);
+	}
+	
+	public static int fromVector4(Vector col) {
 		return fromFloat4(col.data,0);
+	}
+	
+	public static int fromVector3(Vector col) {
+		return fromFloat3(col.data,0);
 	}
 	
 	public static int getARGB(int r, int g, int b, int a) {
@@ -117,8 +134,20 @@ public class Colours {
 		return (rgb&RGB_MASK)|((alpha&BYTE_MASK)<<24);
 	}
 	
+	public static int getRGB(Vector v3) {
+		return v3.toRGBColour();
+	}
+	
+	public static int getARGB(Vector v4) {
+		return v4.toARGBColour();
+	}
+	
 	static int getARGBQuick(int r, int g, int b, int a) {
 		return (a<<24)|(r<<16)|(g<<8)|b;
+	} 
+	
+	static int getRGBQuick(int r, int g, int b) {
+		return ALPHA_MASK|(r<<16)|(g<<8)|b;
 	} 
 	
 	public Color getRGBColor(int rgb) {

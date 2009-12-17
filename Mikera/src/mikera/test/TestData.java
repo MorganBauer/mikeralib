@@ -7,6 +7,7 @@ import mikera.data.Data;
 import mikera.net.DataOutputStream;
 import mikera.net.Util;
 import mikera.util.*;
+import mikera.util.emptyobjects.NullArrays;
 
 import mikera.net.DataInputStream;
 
@@ -123,6 +124,26 @@ public class TestData {
 		Data d2=Data.create(bs);
 		bs[1]=88; // check that this does not disrupt data copy
 		assertEquals(d2,d);	
+	}
+	
+	@Test public void testData4() {
+		Data d=new Data();
+		
+		// should be fully compressed into bytes
+		d.appendString("Hello Mike");
+		assertEquals(11,d.size());
+		
+		// capacity should equal or exceed size
+		int cap=d.capacity();
+		assertTrue(11<=cap);
+		
+		// should not change capacity
+		d.clearContents();
+		assertEquals(cap,d.capacity());
+		
+		// should zero capacity
+		d.clear();
+		assertEquals(0,d.capacity());
 	}
 	
 	@Test public void testDataStreams() {
@@ -254,6 +275,25 @@ public class TestData {
 			total+=len;
 		}
 		assertEquals(total,d.size());
+
+		
+		for (int i=0; i<10; i++) {
+			char c=Rand.nextChar();
+			int len=d.appendFullChar(c);
+			assertEquals(len,Data.sizeOfFullChar(c));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+
+		
+		for (int i=0; i<10; i++) {
+			char c=Rand.nextChar();
+			int len=d.appendChar(c);
+			assertEquals(len,Data.sizeOfChar(c));		
+			total+=len;
+		}
+		assertEquals(total,d.size());
+
 		
 		for (int i=0; i<10; i++) {
 			String a=Rand.nextString();
@@ -271,13 +311,6 @@ public class TestData {
 		}
 		assertEquals(total,d.size());
 		
-		for (int i=0; i<10; i++) {
-			char c=Rand.nextChar();
-			int len=d.appendChar(c);
-			assertEquals(len,Data.sizeOfChar(c));		
-			total+=len;
-		}
-		assertEquals(total,d.size());
 
 		
 		for (int i=0; i<10; i++) {

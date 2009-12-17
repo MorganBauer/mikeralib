@@ -98,8 +98,17 @@ public final class Vector extends BaseVector {
 		}
 	}
 	
-	public int toIntColour() {
+	public int toRGBColour() {
 		int col=0xFF000000;
+		col|=   0x00FF0000 & (((int)(data[0]*255))<<16);
+		col|=   0x0000FF00 & (((int)(data[1]*255))<<8);
+		col|=   0x000000FF & (((int)(data[2]*255)));		
+		return col;
+	}
+	
+	public int toARGBColour() {
+		// note: vector format is RGBA
+		int col=0xFF000000 & (((int)(data[3]*255))<<24);
 		col|=   0x00FF0000 & (((int)(data[0]*255))<<16);
 		col|=   0x0000FF00 & (((int)(data[1]*255))<<8);
 		col|=   0x000000FF & (((int)(data[2]*255)));		
@@ -152,8 +161,20 @@ public final class Vector extends BaseVector {
 		data[1]=(float)y;
 	}
 
-	public Vector construct(float[] dataToEmbed) {
+	public static Vector construct(float[] dataToEmbed) {
 		Vector v=new Vector(dataToEmbed);
+		return v;
+	}
+	
+	public static Vector create(float[] data) {
+		Vector v=new Vector(data.clone());
+		return v;
+	}
+	
+	public Vector resize(int newSize) {
+		Vector v=new Vector(newSize);
+		int n=Maths.min(data.length, newSize);
+		System.arraycopy(data, 0, v.data, 0, n);
 		return v;
 	}
 		
