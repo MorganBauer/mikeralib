@@ -76,23 +76,9 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		TreeGrid<T> head=this;
 		while (shift>=0) {
 			int li;
-			li=index(x,y,z,shift);
+//			li=index(x,y,z,shift);
 			// for some reason the inline version is much faster!!
-			//li= ((x>>(shift))&3) + ((y>>(shift-2))&12) + ((z>>(shift-4))&48);
-//			switch(shift) {
-//				case 0:
-//					li= ((x)&3) + ((y<<2)&12) + ((z<<4)&48);
-//					break;
-//				case 2:
-//					li= ((x>>2)&3) + (y&12) + ((z<<2)&48);
-//					break;
-//				case 4:
-//					li= ((x>>4)&3) + ((y>>2)&12) + (z&48);
-//					break;
-//				default:
-//					li= ((x>>(shift))&3) + ((y>>(shift-2))&12) + ((z>>(shift-4))&48);
-//					break;
-//			}
+			li= ((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
 			
 			//if (li!=li1) System.err.println(((x>>(shift))&3)+","+((y>>(shift))&3)+","+((z>>(shift))&3)+"@"+shift+"   "+li+"->"+li1);
 			
@@ -215,7 +201,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		int shift=TOP_SHIFT;
 		TreeGrid<T> head=this;
 		while (shift>=0) {
-			int li=index(x,y,z,shift);
+			// int li = index(x,y,z,shift);
+			int li=((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
 			Object d=head.data[li];
 			if ((d==null)&&(shift>0)) {
 				if (value==null) return;

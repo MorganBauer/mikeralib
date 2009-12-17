@@ -65,7 +65,7 @@ public final class Vector extends BaseVector {
 	}
 	
 	public Vector(Vector a) {
-		this(a.data);
+		this(a.data.clone());
 	}
 	
 	public float x() {

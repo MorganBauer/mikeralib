@@ -224,6 +224,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 	@Override
 	public void clearContents() {
 		final int[] dt=data;
+		if (dt==null) return;
 		for (int i=0; i<dt.length; i++) {
 			dt[i]=0;
 		}
