@@ -12,9 +12,9 @@ import mikera.annotations.Immutable;
  * 
  * @author Mike Anderson
  *
- * @param <T>
- * @param <P>
- * @param <R>
+ * @param <T> Actor type
+ * @param <P> Parameter type
+ * @param <R> Result type
  */
 
 @Immutable

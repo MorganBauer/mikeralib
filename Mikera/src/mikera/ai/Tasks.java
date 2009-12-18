@@ -12,6 +12,14 @@ import mikera.persistent.*;
  *
  */
 public class Tasks {
+	@SuppressWarnings("unchecked")
+	private static final Task NULL_TASK = new Task() {
+		@Override
+		public Object run(Object actor, Object param) {
+			return null;
+		}
+	};
+
 	public static <T,P,R> Task<T,P,R>  select(
 			final PersistentList<Task<T,P,R>> ts) 
 	{
@@ -28,6 +36,24 @@ public class Tasks {
 			}
 			
 		};
+	}
+	
+	public static <T,P,R> Task<T,P,R>  prioritise(
+			final PersistentList<Task<T,P,R>> ts) 
+	{
+		return new Task<T,P,R>() {
+
+			@Override
+			public R run(T actor, P param) {
+				// TODO:
+				return null;
+			}
+			
+		};
+	}
+	
+	public static <T,P,R> Task<T,P,R> nullTask() {
+		return NULL_TASK;
 	}
 	
 	public static <T,P,R> Task<T,P,R>  select(
@@ -94,6 +120,7 @@ public class Tasks {
 			}
 		};
 	}
+	
 	
 
 }
