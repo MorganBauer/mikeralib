@@ -38,20 +38,45 @@ public class Tasks {
 		};
 	}
 	
-	public static <T,P,R> Task<T,P,R>  prioritise(
-			final PersistentList<Task<T,P,R>> ts) 
+	public static <T,P,R> Task<T,P,R>  lookup(
+			final PersistentMap<P,Task<T,P,R>> ts) 
 	{
 		return new Task<T,P,R>() {
+			@Override
+			public R run(T actor, P param) {
+				Task<T,P,R> task=ts.get(param);
+				return task.run(actor, param);
+			}
+		};
+	};
+	
+	public static <T,P,R> Task<T,P,R>  prioritise(
+			final PersistentList<PriorityFunction<T,P>> ps,
+			final PersistentList<Task<T,P,R>> ts) 
+	{
+		if (ps.size()!=ts.size()) throw new Error("Wrong size: priorities="+ps.size()+" tasks="+ts.size());
+		return new Task<T,P,R>() {
+			private final int n=ts.size();
 
 			@Override
 			public R run(T actor, P param) {
-				// TODO:
-				return null;
+				Task<T,P,R> bestTask=null;
+				double bestPriority=-Double.MAX_VALUE;
+				for (int i=0; i<n; i++) {
+					double p=ps.get(i).getPriority(actor, param);
+					if (p>bestPriority) {
+						bestTask=ts.get(i);
+						bestPriority=p;
+					}
+				}
+				if (bestTask==null) return null;
+				return bestTask.run(actor, param);
 			}
 			
 		};
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T,P,R> Task<T,P,R> nullTask() {
 		return NULL_TASK;
 	}
@@ -101,20 +126,37 @@ public class Tasks {
 		};
 	}
 	
+	public static <T,P,P2,R> Task<T,P,R> chain(
+			final Task<T,P,P2> t1,
+			final Task<T,P2,R> t2) 
+	{
+		return new Task<T,P,R>() {
+
+			@Override
+			public R run(T actor, P param) {
+				P2 p2=t1.run(actor,param);
+				return t2.run(actor, p2);
+			}
+		};
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static <T,P,R1,R2> Task<T,P,R2> test(
 			final Task<T,P,R1> cond,
-			final Task<T,P,R2> a,
-			final Task<T,P,R2> b) 
+			Task<T,P,R2> ta,
+			Task<T,P,R2> tb) 
 	{
+		// allow for null parameters
+		final Task<T,P,R2> a=(ta==null)?NULL_TASK:ta;
+		final Task<T,P,R2> b=(tb==null)?NULL_TASK:tb;
+		
 		return new Task<T,P,R2>() {
 			@Override
 			public R2 run(T actor, P param) {
 				R1 test=cond.run(actor, param);
 				if (test!=null) {
-					if (a==null) return null;
 					return a.run(actor, param);
 				} else {
-					if (b==null) return null;
 					return b.run(actor, param);
 				}
 			}
