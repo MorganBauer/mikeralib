@@ -26,9 +26,9 @@ public final class PathFinder {
 	
 	// priority queue of nodes to search
 	// sorted by estimated total distance (cost + heuristic)
-	protected RankedQueue<PathNode> nodes=new RankedQueue<PathNode>();
-	protected TreeGrid<PathNode> map=new TreeGrid<PathNode>();
-	protected ArrayList<PathNode> cache=null;
+	protected final RankedQueue<PathNode> nodes=new RankedQueue<PathNode>();
+	protected final TreeGrid<PathNode> map=new TreeGrid<PathNode>();
+	protected final ArrayList<PathNode> cache=new ArrayList<PathNode>();
 	
 	private HeuristicFunction heuristicFunction=null;
 	private CostFunction costFunction=null;
@@ -42,14 +42,8 @@ public final class PathFinder {
 	public int nodeCount=0;
 	public int costCount=0;
 	
-	
-	
 	public PathFinder() {
-		if (CACHE_PATHNODES) {
-			cache=new ArrayList<PathNode>();
-		}
 	}
-	
 
 	public static class PathNode  {
 		public int x;

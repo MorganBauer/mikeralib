@@ -13,7 +13,7 @@ public final class Rand {
 	 * Gets a long random value
 	 * @return Random long value based on static state
 	 */
-	public static long nextLong() {
+	public static final long nextLong() {
 		long a=state;
 		state = xorShift64(a);
 		return a;
