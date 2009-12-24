@@ -252,7 +252,7 @@ public final class PathFinder {
 		float travelled=node.travelled;
 		
 		if (target==null) {
-			PathNode pn=createPathNode(tx,ty,tz);
+			PathNode pn=createPathNode(tx,ty,tz,dir);
 			pn.last=node;
 			float heuristic=getHeuristicFunction().calcHeuristic(tx, ty, tz);
 			pn.heuristic=heuristic;
@@ -302,7 +302,7 @@ public final class PathFinder {
 	 * the target criteria)
 	 */
 	private boolean setupPathFind(int x,int y, int z) {
-		PathNode pn=createPathNode(x,y,z);
+		PathNode pn=createPathNode(x,y,z,getHeuristicFunction().defaultDirection(x, y, z));
 		
 		float h=getHeuristicFunction().calcHeuristic(x, y, z);
 		pn.heuristic=h;
@@ -316,7 +316,7 @@ public final class PathFinder {
 	}
 
 
-	private PathNode createPathNode(int x, int y, int z) {
+	private PathNode createPathNode(int x, int y, int z, byte dir) {
 		PathNode pn;
 		if (CACHE_PATHNODES) {
 			int cs=cache.size();
@@ -328,7 +328,7 @@ public final class PathFinder {
 		} else {
 			pn= new PathNode();
 		}
-		pn.baseDir=heuristicFunction.defaultDirection(x,y,z);
+		pn.baseDir=dir;
 		pn.x=x;
 		pn.y=y;
 		pn.z=z;
