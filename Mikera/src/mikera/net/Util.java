@@ -175,23 +175,6 @@ public class Util {
 		}
 		return new String(readChars);
 	}
-	
-	
-	public static int zigzagEncodeInt(final int n) {
-		return (n << 1) ^ (n >> 31);
-	}
-
-	public static long zigzagEncodeLong(final long n) {
-		return (n << 1) ^ (n >> 63);
-	}
-	  
-	public static int zigzagDecodeInt(final int n) {
-		return (n >>> 1) ^ -(n & 1);
-		}
-
-	public static long zigzagDecodeLong(final long n) {
-		return (n >>> 1) ^ -(n & 1);
-	}
 		
 			
 }

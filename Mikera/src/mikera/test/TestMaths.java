@@ -20,7 +20,7 @@ public class TestMaths {
 		
 		float min=10;
 		float max=-10;
-		for (int i=0; i<1000; i++) {
+		for (int i=0; i<100; i++) {
 			float f=p.noise3(Rand.n(0,10),Rand.n(0,10),Rand.n(0,10));
 			min=Math.min(f,min);
 			max=Math.max(f,max);

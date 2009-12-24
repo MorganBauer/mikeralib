@@ -15,7 +15,7 @@ public class TestGrid {
 		testGrid(new Octreap<Integer>());
 		testGrid(new ArrayGrid<Integer>());
 		testGrid(new TreeGrid<Integer>());
-
+		testGrid(new SparseGrid<Integer>());
 	}
 	
 	public void testGrid(Grid<Integer> g) {

@@ -137,14 +137,22 @@ public class PerformanceTest {
 	static int z=0;
 	
 	public static void a() {
+		TreeGrid<Integer> tg=new TreeGrid<Integer>();
 		for (int i=-500; i<500; i++) {
-			z=Maths.sign2(z);
+			tg.set(Rand.d(100)-50, Rand.d(100)-50, Rand.d(100)-50, i);
+			for (int j=0; j<10; j++) {
+				tg.get(Rand.d(100)-50, Rand.d(100)-50, Rand.d(100)-50);
+			}
 		}
 	}
 	
 	public static void b() {
+		SparseGrid<Integer> tg=new SparseGrid<Integer>();
 		for (int i=-500; i<500; i++) {
-			z=Maths.sign2fast(z);
+			tg.set(Rand.d(100)-50, Rand.d(100)-50, Rand.d(100)-50, i);
+			for (int j=0; j<10; j++) {
+				tg.get(Rand.d(100)-50, Rand.d(100)-50, Rand.d(100)-50);
+			}
 		}
 	}
 }

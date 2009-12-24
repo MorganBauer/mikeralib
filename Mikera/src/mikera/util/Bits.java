@@ -212,4 +212,20 @@ public final class Bits {
 		v &= 0xf;
 		return (0x6996 >> v) & 1;
 	}
+
+	public static long zigzagDecodeLong(final long n) {
+		return (n >>> 1) ^ -(n & 1);
+	}
+
+	public static int zigzagDecodeInt(final int n) {
+	return (n >>> 1) ^ -(n & 1);
+	}
+
+	public static long zigzagEncodeLong(final long n) {
+		return (n << 1) ^ (n >> 63);
+	}
+
+	public static int zigzagEncodeInt(final int n) {
+		return (n << 1) ^ (n >> 31);
+	}
 }

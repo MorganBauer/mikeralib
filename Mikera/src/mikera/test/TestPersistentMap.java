@@ -47,7 +47,7 @@ public class TestPersistentMap {
 		PersistentMap<Integer,String> phm=new PersistentHashMap<Integer,String>();
 
 		HashMap<Integer,String> hm=new HashMap<Integer,String>();
-		for (int i=0; i<100; i++) {
+		for (int i=0; i<10; i++) {
 			int key=Rand.r(100);
 			String value=Rand.nextString();
 			hm.put(key, value);

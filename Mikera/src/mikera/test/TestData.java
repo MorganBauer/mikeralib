@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import mikera.data.ByteArrayCache;
 import mikera.data.Data;
 import mikera.net.DataOutputStream;
-import mikera.net.Util;
 import mikera.util.*;
 import mikera.util.emptyobjects.NullArrays;
 
@@ -235,16 +234,16 @@ public class TestData {
 	@Test public void testZigZag() {
 		for (int i=-200; i<200; i++) {
 			int a=Rand.nextInt();
-			assertEquals(a,Util.zigzagEncodeInt(Util.zigzagDecodeInt(a)));
-			assertEquals(a,Util.zigzagDecodeInt(Util.zigzagEncodeInt(a)));
+			assertEquals(a,Bits.zigzagEncodeInt(Bits.zigzagDecodeInt(a)));
+			assertEquals(a,Bits.zigzagDecodeInt(Bits.zigzagEncodeInt(a)));
 			
 			long b=Rand.nextLong();
-			assertEquals(b,Util.zigzagEncodeLong(Util.zigzagDecodeLong(b)));
-			assertEquals(b,Util.zigzagDecodeLong(Util.zigzagEncodeLong(b)));
+			assertEquals(b,Bits.zigzagEncodeLong(Bits.zigzagDecodeLong(b)));
+			assertEquals(b,Bits.zigzagDecodeLong(Bits.zigzagEncodeLong(b)));
 			
 			// should all be short unsigned integers
-			assertTrue((Util.zigzagEncodeInt(i)&(~0xFFF))==0);
-			assertTrue((Util.zigzagEncodeLong(i)&(~0xFFF))==0);
+			assertTrue((Bits.zigzagEncodeInt(i)&(~0xFFF))==0);
+			assertTrue((Bits.zigzagEncodeLong(i)&(~0xFFF))==0);
 		}
 	}
 	

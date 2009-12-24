@@ -12,7 +12,7 @@ import java.util.List;
 
 import mikera.annotations.Mutable;
 import mikera.net.BufferCache;
-import mikera.net.Util;
+import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;
@@ -575,7 +575,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int appendVarInt(final int i) {
-		int enc=Util.zigzagEncodeInt(i);
+		int enc=Bits.zigzagEncodeInt(i);
 		int size=sizeOfEncodedVarInt(enc);
 		int pos=count;
 		ensureCapacity(pos+size);
@@ -591,7 +591,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public int appendVarLong(final long i) {
-		long enc=Util.zigzagEncodeLong(i);
+		long enc=Bits.zigzagEncodeLong(i);
 		int size=sizeOfEncodedVarLong(enc);
 		int pos=count;
 		ensureCapacity(pos+size);
@@ -629,7 +629,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 			shift+=7;
 		}
 		enc|=((int)b)<<shift;
-		return Util.zigzagDecodeInt(enc);
+		return Bits.zigzagDecodeInt(enc);
 	}
 	
 	public long getVarLong(int pos) {
@@ -642,7 +642,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 			shift+=7;
 		}
 		enc|=((long)b)<<shift;
-		return Util.zigzagDecodeLong(enc);
+		return Bits.zigzagDecodeLong(enc);
 	}
 	
 	public static int sizeOfVarChar(char a) {
@@ -656,7 +656,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfVarInt(int a) {
-		int enc=Util.zigzagEncodeInt(a);
+		int enc=Bits.zigzagEncodeInt(a);
 		return sizeOfEncodedVarInt(enc);
 	}
 	
@@ -669,7 +669,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public static int sizeOfVarLong(long a) {
-		long enc=Util.zigzagEncodeLong(a);
+		long enc=Bits.zigzagEncodeLong(a);
 		return sizeOfEncodedVarLong(enc);
 	}
 	
