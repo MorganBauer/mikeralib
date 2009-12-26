@@ -130,6 +130,14 @@ public class Dir {
 		return d;
 	}
 	
+	public static boolean isValidDir(byte dir) {
+		return ((dir>0)&&(dir<MAX_DIR));
+	}
+	
+	public static boolean isValidDir(int dx, int dy, int dz) {
+		return ((dx>=-1)&&(dx<=1)&&(dy>=-1)&&(dy<=1)&&(dz>=-1)&&(dx<=1));
+	}
+	
 	public static final byte getClosestDir(int dir, int seqIndex) {
 		return CLOSEST_DIRECTIONS[dir*MAX_DIR+seqIndex];
 	}
