@@ -183,6 +183,10 @@ public final class Vector extends BaseVector {
 	}
 	
 	public String toString() {
+		return toString(data);
+	}
+	
+	public static String toString(final float[] data) {
 		StringBuilder result=new StringBuilder("{");
 		int max=data.length;
 		for (int i=0; i<max; i++) {
@@ -350,4 +354,22 @@ public final class Vector extends BaseVector {
 		}
 		return Maths.sqrt(res);
 	}
+
+	public static void set(final float[] dst, final float[] src) {
+		System.arraycopy(src, 0, dst, 0, dst.length);
+	}
+	
+	public static void multiply(final float[] dst, float f) {
+		for (int i=0; i<dst.length; i++) {
+			dst[i]*=f;
+		}
+	}
+	
+	public static void addMultiple(final float[] dst, final float[] src, float f) {
+		for (int i=0; i<dst.length; i++) {
+			dst[i]+=src[i]*f;
+		}
+	}
+
+
 }

@@ -75,6 +75,14 @@ public class Dir {
 		return DISTORDER_DIRECTIONS[i];
 	}
 	
+	public static int manhattanDistance(int dx, int dy, int dz) {
+		return Maths.abs(dx)+Maths.abs(dy)+Maths.abs(dz);
+	}
+	
+	public static int rogueDistance(int dx, int dy, int dz) {
+		return Maths.max(Maths.abs(dx),Maths.abs(dy),Maths.abs(dz));
+	}
+	
 	public static void visitDirections(int dirSet, PointVisitor<Integer> p, int x, int y, int z) {
 		int mask=1;
 		for (int i=0; i<MAX_DIR; i++) {

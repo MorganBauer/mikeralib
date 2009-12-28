@@ -30,6 +30,7 @@ public class SoundEngine {
 	
 	public static Sample sampleFromClip(Clip c) {
 		Sample s=new Sample();
+		s.clip=c;
 		return s;
 		
 	}
@@ -45,7 +46,7 @@ public class SoundEngine {
 	    return sample;
 	}
 	
-	public static Clip loadClip(String url) {
+	private static Clip loadClip(String url) {
 		try {
 			URL soundURL = SoundEngine.class.getResource(url);	
 			if (soundURL==null) throw new Error("File not found: "+url);
@@ -71,7 +72,7 @@ public class SoundEngine {
 		Clip c=loadClip("/mikera/sound/Thud.wav");
 		try {
 			c.start();
-			Thread.sleep(100);
+			Thread.sleep(1000);
 			c.start();
 			Thread.sleep(c.getMicrosecondLength()/1000);
 		} catch (InterruptedException e) {
