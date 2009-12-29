@@ -185,6 +185,10 @@ public abstract class Server {
 		p.connection=c;
 		c.userTag=playerID;
 		
+		Data d=new Data();
+		CommonMessages.addConfirmJoinMessage(d, playerID);
+		c.write(d);
+		
 		logMessage("Player connected: ID="+playerID+" name='"+name+"' pass='"+p.password+"'");
 		
 		onPlayerConnected(p);

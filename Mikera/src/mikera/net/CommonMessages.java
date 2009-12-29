@@ -17,9 +17,9 @@ public class CommonMessages {
 		return Util.readASCIIString(bb);
 	}
 	
-	public static void addConfirmJoinMessage(Data dest) {
+	public static void addConfirmJoinMessage(Data dest, int playerID) {
 		dest.appendByte(CommonMessages.JOIN_GAME);
-
+		dest.appendInt(playerID);
 	}
 	
 }
