@@ -79,6 +79,9 @@ public class TestDirections {
 		assertTrue(pf.isFound());
 		assertEquals(30,pf.foundNode().travelled,0.01f);
 		
+		PathNode dpn=pf.getLastDirect();
+		assertEquals(4,dpn.x);
+		assertEquals(9,dpn.y);
 		
 		ArrayList<PathNode> al=pf.getPathNodes();
 		assertEquals(31,al.size());

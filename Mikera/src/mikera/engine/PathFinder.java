@@ -354,5 +354,32 @@ public final class PathFinder {
 		return costFunction;
 	}
 
+	/**
+	 * Gets the last PathNode that can be reached using direct "roguelike" movement
+	 * 
+	 * @return
+	 */
+	public PathNode getLastDirect() {
+		PathNode last=found;
+		PathNode best=last;
+		PathNode head=last.last;
+	
+		while (head!=null) {
+			
+			if (
+					(Maths.sign(best.x-head.x)!=(last.x-head.x))||
+					(Maths.sign(best.y-head.y)!=(last.y-head.y))||
+					(Maths.sign(best.z-head.z)!=(last.z-head.z))
+			) {
+				best=last;
+			}
+			
+			last=head;
+			head=head.last;
+		}
+		
+		return best;
+	}
+
 
 }
