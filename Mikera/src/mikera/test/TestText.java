@@ -22,6 +22,13 @@ public class TestText {
 		
 		assertEquals("nullus",TextUtils.roman(0));
 	}
+
+	@Test public void testHex() {
+		assertEquals("00000000",TextUtils.toHexString(0));
+		assertEquals("00010000",TextUtils.toHexString(65536));
+		assertEquals("FFFFFFFF",TextUtils.toHexString(-1));
+		assertEquals("00000A00",TextUtils.toHexString(2560));
+	}
 	
 	@Test public void testText() {
 		String st="My text";
