@@ -312,6 +312,11 @@ public final class Vector extends BaseVector {
 		return result;			
 	}	
 	
+	public static float lengthSquared(float dx, float dy) {
+		return dx*dx+dy*dy;
+	}
+
+	
 	public float normalise() {
 		return Vector.normalise(data,0,data.length);
 	}

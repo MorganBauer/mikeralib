@@ -228,4 +228,23 @@ public final class Bits {
 	public static int zigzagEncodeInt(final int n) {
 		return (n << 1) ^ (n >> 31);
 	}
+	
+	public static int nextIntWithSameBitCount(int a) {
+		int lowest = a & -a;
+		int t=a+lowest; 
+		
+		if (t==0) return (a >>> (lowestSetBitIndex(lowest))); // overflow case
+		
+		int changed = (a ^ t); // changed bits from addition, i.e. lost 1s plus one new 1, starting just above lowest
+		int lostOnes= (changed >>> (2+lowestSetBitIndex(lowest))); // lost ones to be added back as least significant bits
+		return lostOnes | t ;
+	}
+	
+	public static String toBinaryString(int a) {
+		StringBuilder sb=new StringBuilder();
+		for (int i=31; i>=0; i--) {
+			sb.append((((a>>i)&1)!=0)?'1':'0');
+		}
+		return sb.toString();
+	}
 }

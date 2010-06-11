@@ -1,5 +1,6 @@
 package mikera.image;
 
+import mikera.math.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -7,6 +8,8 @@ import java.awt.image.*;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 import mikera.util.Rand;
 
@@ -37,8 +40,8 @@ public class ImageUtils {
 	
 	@SuppressWarnings("serial")
 	public static Frame display(final Image image) {
-		Frame f=new Frame("Image popup");
-		Canvas c=new Canvas() {
+		JFrame f=new JFrame("Image popup");
+		JComponent c=new JComponent() {
 			public void paint(Graphics g) {
 				g.drawImage(image,0,0,null);
 			}
@@ -46,19 +49,31 @@ public class ImageUtils {
 		c.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
 		f.add(c);
 		f.setVisible(true);
-		f.setMinimumSize(new Dimension(image.getWidth(null)+10,image.getHeight(null)+30));
+		f.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
 		
 		return f;
 	}
 	
 	public static Frame displayAndExit(Image image) {
-		final Frame f=display(image);
-		f.addWindowListener(new WindowAdapter() {
+		final Frame frame=display(image);
+		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				f.dispose();
+				frame.dispose();
 			}
 		});
-		return f;
+		return frame;
+	}
+	
+	public static Frame displayAndExit(Function<Vector,Vector> f) {
+		BufferedImage image=Generator.createFunctionGradient(512,512,f, Gradient.createRainbowGradient(256));
+		
+		final Frame frame=display(image);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				frame.dispose();
+			}
+		});
+		return frame;
 	}
 
 }

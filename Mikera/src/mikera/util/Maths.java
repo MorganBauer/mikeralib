@@ -266,6 +266,10 @@ public final class Maths {
 		return (a==x)?x:x-1;
 	}
 	
+	public static float frac(float a) {
+		return a-Maths.floor(a);
+	}
+	
 	
 	public static int floor(double a) {
 		if (a>=0) return (int)a;

@@ -877,7 +877,7 @@ public final class Octreap<T> extends BaseGrid<T> {
 	}
 
 	public static int split3i(int a) {
-		// split out the lowest 10 bits to lowest 30 bits
+		// split out the lowest 10 bits to lowest 30 bits, interleaving with zeroes
 		a=(a|(a<<12))&00014000377;
 		a=(a|(a<<8)) &00014170017;
 		a=(a|(a<<4)) &00303030303;
