@@ -19,6 +19,22 @@ public class Arrays {
 		return true;
 	}
 	
+	public static <T extends Comparable<? super T>> boolean isSorted(List<T> a) {
+		int length=a.size();
+		if (length<=1) return true;
+		
+		int i=1;
+		T previous=a.get(0);
+		while (i<length) {
+			T current=a.get(i++);
+			if (previous.compareTo(current)>0) return false;
+			previous=current;
+		}
+		return true;
+	}
+	
+	
+	
 	public static void swap(int[] data, int a, int b) {
 		int t=data[a];
 		data[a]=data[b];
@@ -125,4 +141,18 @@ public class Arrays {
 		mergeInOrder(src,dst,start,middle,middle+1,end);
 	}
 	
+	
+	
+	public static void main(String[] args) {
+		ArrayList<Integer> al=new ArrayList<Integer>();
+		System.out.println(Arrays.isSorted(al));
+		al.add(1);
+		System.out.println(Arrays.isSorted(al));
+		al.add(2);
+		System.out.println(Arrays.isSorted(al));
+		al.add(10);
+		System.out.println(Arrays.isSorted(al));
+		al.add(3);
+		System.out.println(Arrays.isSorted(al));	
+	}
 }
