@@ -17,7 +17,7 @@ public class Hex {
 	public static final int[] HEX_DY={-1, -1, 0 , 1, 1, 0};
 	
 	// Location functions are hex-grid coordinates
-	// Positions are logical float-cordinates with (0,0) at centre of unit-height hex at (0,0)
+	// Positions are logical float-coordinates with (0,0) at centre of unit-height hex at (0,0)
 	// screen values are then simple multiples of logical positions
 	
 	public static int toLocationX(float px, float py) {

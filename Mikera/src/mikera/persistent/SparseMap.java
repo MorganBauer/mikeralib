@@ -106,7 +106,8 @@ public final class SparseMap<T> extends PersistentObject {
 			if (submap==null) return update(si,createInternal(bits-2,ix-(zx<<(bits-2)),iy-(zy<<(bits-2)),value));
 			
 			SparseMap<T> newSubmap=submap.updateNotNullInternal(ix-(zx<<(bits-2)),iy-(zy<<(bits-2)), value);
-			return newSubmap;
+			if (submap==newSubmap) return this;
+			return update(si,newSubmap);
 		}		
 	}
 	
