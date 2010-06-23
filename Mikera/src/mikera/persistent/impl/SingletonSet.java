@@ -21,8 +21,7 @@ public final class SingletonSet<T> extends BasePersistentSet<T> {
 	final T value;
 	
 	
-	@SuppressWarnings("unchecked")
-	public static <T> SingletonSet create(T object) {
+	public static <T> SingletonSet<T> create(T object) {
 		return new SingletonSet<T>(object);
 	}
 	

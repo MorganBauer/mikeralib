@@ -10,8 +10,8 @@ import mikera.util.Tools;
 public final class NullSet<T> extends PersistentSet<T> {
 	private static final long serialVersionUID = -6170277533575154354L;
 	
-	@SuppressWarnings("unchecked")
-	public static NullSet<?> INSTANCE=new NullSet();
+	@SuppressWarnings("rawtypes")
+	public static NullSet<?> INSTANCE=(NullSet<?>)new NullSet();
 	
 	private NullSet() {
 		

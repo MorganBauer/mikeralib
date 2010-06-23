@@ -12,8 +12,8 @@ import mikera.persistent.*;
  *
  */
 public class Tasks {
-	@SuppressWarnings("unchecked")
-	private static final Task NULL_TASK = new Task() {
+	@SuppressWarnings("rawtypes")
+	private static final Task<?,?,?> NULL_TASK = (Task<?,?,?>)new Task() {
 		@Override
 		public Object run(Object actor, Object param) {
 			return null;
@@ -78,7 +78,7 @@ public class Tasks {
 	
 	@SuppressWarnings("unchecked")
 	public static <T,P,R> Task<T,P,R> nullTask() {
-		return NULL_TASK;
+		return (Task<T,P,R>) NULL_TASK;
 	}
 	
 	public static <T,P,R> Task<T,P,R>  select(
@@ -147,8 +147,8 @@ public class Tasks {
 			Task<T,P,R2> tb) 
 	{
 		// allow for null parameters
-		final Task<T,P,R2> a=(ta==null)?NULL_TASK:ta;
-		final Task<T,P,R2> b=(tb==null)?NULL_TASK:tb;
+		final Task<T,P,R2> a=(ta==null)?(Task<T,P,R2>)NULL_TASK:ta;
+		final Task<T,P,R2> b=(tb==null)?(Task<T,P,R2>)NULL_TASK:tb;
 		
 		return new Task<T,P,R2>() {
 			@Override

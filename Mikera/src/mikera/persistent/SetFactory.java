@@ -17,7 +17,6 @@ import mikera.util.emptyobjects.NullSet;
  *
  */
 public class SetFactory {
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> create(T value) {
 		return SingletonSet.create(value);
 	}
@@ -59,7 +58,6 @@ public class SetFactory {
 		return ArraySet.createFromArray(source);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentSet<T> concat(PersistentSet<T> a, T value) {
 		if (a.contains(value)) return a;
 		if (a.size()==0) return SingletonSet.create(value);

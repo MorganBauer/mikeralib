@@ -13,7 +13,7 @@ import mikera.util.emptyobjects.NullMap;
 public class MapFactory {
 	@SuppressWarnings("unchecked")
 	public static <K,V> PersistentMap<K,V> create() {
-		return NullMap.INSTANCE;
+		return (PersistentMap<K,V>)NullMap.INSTANCE;
 	}
 	
 	public static <K,V> PersistentMap<K,V> create(K key, V value) {

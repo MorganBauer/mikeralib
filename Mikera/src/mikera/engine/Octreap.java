@@ -258,8 +258,7 @@ public final class Octreap<T> extends BaseGrid<T> {
     	}
     }
 	
-	@SuppressWarnings("unchecked")
-	public void delete(Octreap t) {
+	public void delete(Octreap<T> t) {
 		NodeVisitor deleter=new NodeVisitor() {
 			public Object visit(ZNode n) {
 				deleteRange(n.z1,n.z2);

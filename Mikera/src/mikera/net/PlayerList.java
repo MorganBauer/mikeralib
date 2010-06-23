@@ -12,7 +12,7 @@ public class PlayerList {
 	public int MAX_PLAYERS=50;
 	
 	@SuppressWarnings("unchecked")
-	private IntMap<Player> playerMap=IntMap.EMPTY;
+	private IntMap<Player> playerMap=(IntMap<Player>) IntMap.EMPTY;
 	
 	private PersistentList<Player> playerList=ListFactory.create();
 	private int next_id=0;

@@ -18,8 +18,7 @@ public final class SingletonList<T> extends BasePersistentList<T> {
 	
 	final T value;
 	
-	@SuppressWarnings("unchecked")
-	public static <T> SingletonList create(T object) {
+	public static <T> SingletonList<T> create(T object) {
 		return new SingletonList<T>(object);
 	}
 	

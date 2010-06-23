@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import mikera.persistent.IntMap.IMEntry;
 import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
@@ -36,34 +37,32 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	
 	private final IMNode<V> root;
 
-	@SuppressWarnings("unchecked")
-	private static final IMNullList EMPTY_NODE_LIST=new IMNullList();
+	@SuppressWarnings("rawtypes")
+	private static final IMNullList<?> EMPTY_NODE_LIST=new IMNullList();
 	
-	@SuppressWarnings("unchecked")
-	public static final IntMap EMPTY=new IntMap();
+	@SuppressWarnings("rawtypes")
+	public static final IntMap<?> EMPTY=new IntMap();
 
 	
 	@SuppressWarnings("unchecked")
 	private IntMap() {
-		this(EMPTY_NODE_LIST);
+		this((IMNode<V>) EMPTY_NODE_LIST);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public IntMap(IMNode<V> newRoot) {
-		if (newRoot==null) newRoot=EMPTY_NODE_LIST;
+		if (newRoot==null) newRoot=(IMNode<V>) EMPTY_NODE_LIST;
 		root=newRoot;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static<V> IntMap<V> create(int key, V value) {
-		return new IntMap(new IMEntry(key,value));
+		return new IntMap<V>(new IMEntry<V>(key,value));
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static<V> IntMap<V> create(Map<Integer,V> values) {
-		IntMap pm=new IntMap();
+		IntMap<V> pm=new IntMap<V>();
 		for (Map.Entry<Integer,V> ent: values.entrySet()) {
-			pm=(IntMap) pm.include(ent.getKey(),ent.getValue());
+			pm=(IntMap<V>) pm.include(ent.getKey(),ent.getValue());
 		}
 		return pm;
 	}
@@ -184,7 +183,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			IMNode<V>[] newdata=new IMNode[DATA_SIZE-1];
 			System.arraycopy(data, 0, newdata, 0, i);
 			System.arraycopy(data, i+1, newdata, i, DATA_SIZE-i-1);
-			return new IMBitMapNode(newdata,shift,0xFFFFFFFF&(~(1<<i)));
+			return new IMBitMapNode<V>(newdata,shift,0xFFFFFFFF&(~(1<<i)));
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -192,7 +191,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			IMNode<V>[] newData=new IMNode[DATA_SIZE];
 			System.arraycopy(data, 0, newData, 0, DATA_SIZE);
 			newData[i]=node;
-			return new IMFullNode(newData,shift);
+			return new IMFullNode<V>(newData,shift);
 		}
 		
 		@Override
@@ -258,7 +257,6 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			return count;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void validate() {
 			int count=0;
@@ -266,7 +264,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 				IMNode<V> n=data[i];
 				count+=n.size();
 				if (n instanceof IMFullNode<?>) {
-					IMFullNode<V> pfn=(IMFullNode)n;
+					IMFullNode<V> pfn=(IMFullNode<V>)n;
 					if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
 				}
 				n.validate();
@@ -355,7 +353,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			IMNode<V>[] newData=new IMNode[data.length-1];
 			System.arraycopy(data, 0, newData, 0, i);
 			System.arraycopy(data, i+1, newData, i, data.length-i-1);
-			return new IMBitMapNode(newData,shift,bitmap&(~(1<<slotFromIndex(i))));
+			return new IMBitMapNode<V>(newData,shift,bitmap&(~(1<<slotFromIndex(i))));
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -363,7 +361,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			IMNode<V>[] newData=new IMNode[data.length];
 			System.arraycopy(data, 0, newData, 0, data.length);
 			newData[i]=node;
-			return new IMBitMapNode(newData,shift,bitmap);
+			return new IMBitMapNode<V>(newData,shift,bitmap);
 		}
 		
 		@Override
@@ -423,15 +421,15 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			System.arraycopy(data, i, newData, i+1, data.length-i);
 			newData[i]=node;
 			if (data.length==31) {
-				return new IMFullNode(newData,shift);
+				return new IMFullNode<V>(newData,shift);
 			} else {
-				return new IMBitMapNode(newData,shift,bitmap|(1<<s));				
+				return new IMBitMapNode<V>(newData,shift,bitmap|(1<<s));				
 			}
 		}
 		
 		
 		@SuppressWarnings("unchecked")
-		protected static <V> IMBitMapNode<V> concat(IMNode a, int ha, IMNode b, int hb, int shift) {
+		protected static <V> IMBitMapNode<V> concat(IMNode<V> a, int ha, IMNode<V> b, int hb, int shift) {
 			IMNode<V>[] nodes;
 			int sa=slotFromHash(ha,shift);
 			int sb=slotFromHash(hb,shift);
@@ -445,7 +443,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 				nodes=new IMNode[1];
 				nodes[0]=concat(a,ha,b,hb,shift+SHIFT_AMOUNT);
 			}
-			IMBitMapNode<V> fn=new IMBitMapNode(nodes,shift,bitmap);
+			IMBitMapNode<V> fn=new IMBitMapNode<V>(nodes,shift,bitmap);
 			return fn;
 		}
 
@@ -463,7 +461,6 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			return count;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void validate() {
 			if (data.length!=Integer.bitCount(bitmap)) throw new Error();
@@ -473,7 +470,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 				IMNode<V> n=data[i];
 				count+=n.size();
 				if (n instanceof IMFullNode<?>) {
-					IMFullNode<V> pfn=(IMFullNode)n;
+					IMFullNode<V> pfn=(IMFullNode<V>)n;
 					if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
 				}
 				n.validate();
@@ -551,7 +548,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	 * @param <K>
 	 * @param <V>
 	 */
-	private static final class IMEntry<V> extends IMNode<V> implements Map.Entry<Integer,V> {
+	public static final class IMEntry<V> extends IMNode<V> implements Map.Entry<Integer,V> {
 		private static final long serialVersionUID = -4668010646096033269L;
 		
 		
@@ -663,11 +660,10 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 			return IntMap.this.size();
 		}
 		
-		@SuppressWarnings("unchecked")
 		public boolean contains(Object o) {
 			if (!(o instanceof Map.Entry<?,?>)) return false;
 			Map.Entry<?,?> ent=(Map.Entry<?,?>)o;
-			IMEntry pe=IntMap.this.getEntry((Integer) ent.getKey());
+			IMEntry<?> pe=IntMap.this.getEntry((Integer) ent.getKey());
 			if (pe==null) return false;
 			return Tools.equalsWithNulls(pe.value, ent.getValue());
 		}
@@ -767,10 +763,9 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return (Map.Entry<Integer,V>)getEntry((Integer)key);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public PersistentSet keySet() {
-		return new KeySetWrapper(entrySet());
+	public PersistentSet<Integer> keySet() {
+		return new KeySetWrapper<Integer, V>(entrySet());
 	}
 
 	@Override
@@ -778,10 +773,9 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return root.size();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentCollection<V> values() {
-		return new ValueCollectionWrapper(entrySet());
+		return new ValueCollectionWrapper<Integer, V>(entrySet());
 	}
 
 	@Override
@@ -810,13 +804,12 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		return pm;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public IntMap<V> include(IntMap<V> values) {
 		// TODO: Consider fast node-level merging implementation
 		IntMap<V> pm=this;
-		PersistentSet<IMEntry<V>> entries=(PersistentSet)values.entrySet();
-		for (IMEntry<V> entry:entries) {
-			pm=pm.include(entry.key(),entry.getValue());
+		PersistentSet<java.util.Map.Entry<Integer, V>> entries=values.entrySet();
+		for (java.util.Map.Entry<Integer, V> entry:entries) {
+			pm=pm.include(entry.getKey(),entry.getValue());
 		}
 		return pm;
 	}

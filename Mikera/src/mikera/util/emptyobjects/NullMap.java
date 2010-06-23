@@ -11,8 +11,8 @@ public final class NullMap<K,V> extends PersistentMap<K, V> {
 	private static final long serialVersionUID = 1717634837542733926L;
 
 	
-	@SuppressWarnings("unchecked")
-	public static final NullMap INSTANCE=new NullMap();
+	@SuppressWarnings({ "rawtypes" })
+	public static final NullMap<?,?> INSTANCE=(NullMap<?,?>)new NullMap();
 	
 	private NullMap() {
 		

@@ -11,7 +11,6 @@ import java.util.*;
 
 public class TestPersistent {
 	
-	@SuppressWarnings("unchecked")
 	@Test public void testListTypes() {	
 		PersistentList<Integer> pl=ListFactory.createFromArray(new Integer[] {1,2,3,4,5});
 		assertEquals(5,pl.size());
@@ -33,7 +32,6 @@ public class TestPersistent {
 		testPersistentCollection(MapFactory.create(1, "Sonia").values());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test public void testSetTypes() {
 		testPersistentSet(SetFactory.createFrom(new String[] {"a","b","c"}));
 		testPersistentSet(NullSet.INSTANCE);

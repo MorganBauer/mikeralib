@@ -9,8 +9,8 @@ import mikera.persistent.impl.SingletonList;
 public final class NullCollection<T> extends PersistentCollection<T> {
 	private static final long serialVersionUID = 2925953822669265599L;
 
-	@SuppressWarnings("unchecked")
-	public static NullCollection<?> INSTANCE=new NullCollection();
+	@SuppressWarnings("rawtypes")
+	public static NullCollection<?> INSTANCE=(NullCollection<?>)new NullCollection();
 	
 	protected NullCollection() {
 		
@@ -97,7 +97,6 @@ public final class NullCollection<T> extends PersistentCollection<T> {
 		return INSTANCE;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentCollection<T> include(T value) {
 		return SingletonList.create(value);

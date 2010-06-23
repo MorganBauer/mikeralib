@@ -9,7 +9,7 @@ import java.util.*;
 public class TestNullObjects {
 	@SuppressWarnings("unchecked")
 	@Test public void test1() {
-		Map<String,Object> nm=NullMap.INSTANCE;
+		Map<String,Object> nm=(Map<String,Object>)NullMap.INSTANCE;
 		
 		assertEquals(null,nm.get("Hello"));
 		

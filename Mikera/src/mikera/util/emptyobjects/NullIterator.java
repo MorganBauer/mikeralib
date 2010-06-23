@@ -8,8 +8,8 @@ import mikera.annotations.Immutable;
 @Immutable
 public final class NullIterator<T> implements ListIterator<T> {
 	
-	@SuppressWarnings("unchecked")
-	public static NullIterator<?> INSTANCE= new NullIterator();
+	@SuppressWarnings({ "rawtypes" })
+	public static NullIterator<?> INSTANCE= (NullIterator<?>)new NullIterator();
 	
 	private NullIterator() {
 		

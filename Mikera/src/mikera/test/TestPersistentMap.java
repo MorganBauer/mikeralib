@@ -27,11 +27,11 @@ public class TestPersistentMap {
 		testMap(pm);
 		testMap(addRandomMaps(pm));
 		
-		IntMap<String> im=IntMap.EMPTY;
+		IntMap<String> im=(IntMap<String>) IntMap.EMPTY;
 		testMap(im);
 		testMap(addRandomMaps(im));
 		
-		PersistentMap<Integer,String> nm=NullMap.INSTANCE;
+		PersistentMap<Integer,String> nm=(PersistentMap<Integer,String>)NullMap.INSTANCE;
 		testMap(nm);
 		testMap(addRandomMaps(nm));
 	}

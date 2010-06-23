@@ -23,8 +23,8 @@ public final class SubList<T> extends BasePersistentList<T>   {
 
 	private static final long serialVersionUID = 3559316900529560364L;
 
-	@SuppressWarnings("unchecked")
-	public static final SubList EMPTY_SUBLIST = new SubList(ListFactory.emptyList(),0,0);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static final SubList<?> EMPTY_SUBLIST = (SubList<?>)new SubList(ListFactory.emptyList(),0,0);
 
 	private final PersistentList<T> data;
 	private final int offset;
@@ -35,7 +35,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 		if ((fromIndex<0)||(toIndex>source.size())) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (newSize==0) return SubList.EMPTY_SUBLIST;
+			if (newSize==0) return (SubList<T>) SubList.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
 		return createLocal(ListFactory.createFromList(source),fromIndex,toIndex);
@@ -46,7 +46,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 		if ((fromIndex<0)||(toIndex>source.size())) throw new IndexOutOfBoundsException();
 		int newSize=toIndex-fromIndex;
 		if (newSize<=0) {
-			if (newSize==0) return SubList.EMPTY_SUBLIST;
+			if (newSize==0) return (SubList<T>) SubList.EMPTY_SUBLIST;
 			throw new IllegalArgumentException();
 		}
 		if (source instanceof SubList<?>) {

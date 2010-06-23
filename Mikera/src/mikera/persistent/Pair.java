@@ -50,10 +50,10 @@ public final class Pair<A,B> extends PersistentObject implements Comparable<Pair
 
 	@SuppressWarnings("unchecked")
 	public int compareTo(Pair<A,B> p) {
-		if (a instanceof Comparable) {
+		if (a instanceof Comparable<?>) {
 			if (a!=null) {
-				Comparable c=(Comparable)a;
-				int v=c.compareTo((Comparable)p.a);
+				Comparable<A> c=(Comparable<A>)a;
+				int v=c.compareTo(p.a);
 				if (v!=0) return v;
 			}	
 		} else {
@@ -62,8 +62,8 @@ public final class Pair<A,B> extends PersistentObject implements Comparable<Pair
 		
 		if (b instanceof Comparable) {
 			if (b!=null) {
-				Comparable c=(Comparable)b;
-				int v=c.compareTo((Comparable)p.b);
+				Comparable<B> c=(Comparable<B>)b;
+				int v=c.compareTo(p.b);
 				if (v!=0) return v;
 			}	
 		}

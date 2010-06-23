@@ -190,9 +190,9 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 			return;
 		}
 		
-		Iterator it=map.entrySet().iterator();
+		Iterator<?> it=map.entrySet().iterator();
 		while (it.hasNext()) {
-			java.util.Map.Entry<K, V> entry=(java.util.Map.Entry<K, V>)it.next();
+			Map.Entry<K, V> entry=(Map.Entry<K, V>)it.next();
 			put(entry.getKey(),entry.getValue());
 		}
 	}

@@ -18,8 +18,7 @@ public class ListFactory<T> {
 	public static final int TUPLE_BUILD_BITS=5;
 	public static final int MAX_TUPLE_BUILD_SIZE=1<<TUPLE_BUILD_BITS;
 	
-	@SuppressWarnings("unchecked")
-	public static PersistentList[] NULL_PERSISTENT_LIST_ARRAY=new PersistentList[0];
+	public static PersistentList<?>[] NULL_PERSISTENT_LIST_ARRAY=new PersistentList[0];
 	
 	public static <T> PersistentList<T> create() {
 		return emptyList();
@@ -30,7 +29,6 @@ public class ListFactory<T> {
 		return (PersistentList<T>) NullList.INSTANCE;
 	}	
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> create(T value) {
 		return SingletonList.create(value);
 	}
@@ -43,7 +41,6 @@ public class ListFactory<T> {
 		return createFromArray(data,0,data.length);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> createFromArray(T[] data,  int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=MAX_TUPLE_BUILD_SIZE) {
@@ -90,7 +87,6 @@ public class ListFactory<T> {
 		return createFromList(source,0,source.size());
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> PersistentList<T> createFromList(List<T> source, int fromIndex, int toIndex) {
 		int maxSize=source.size();
 		if ((fromIndex<0)||(toIndex>maxSize)) throw new IndexOutOfBoundsException();
@@ -102,7 +98,7 @@ public class ListFactory<T> {
 			
 		// use sublist if possible
 		if (source instanceof PersistentList) {
-			if (newSize==maxSize) return (PersistentList)source;
+			if (newSize==maxSize) return (PersistentList<T>)source;
 			return createFromList((PersistentList<T>)source,fromIndex, toIndex);
 		}
 		

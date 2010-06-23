@@ -19,23 +19,23 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	
 	
 	// Empty Tuple for some special cases
-	@SuppressWarnings("unchecked")
-	static final Tuple EMPTY_TUPLE=new Tuple(new Object[0]);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	static final Tuple<?> EMPTY_TUPLE=(Tuple<?>)new Tuple(new Object[0]);
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values) {
 		int n=values.length;
-		if (n==0) return EMPTY_TUPLE;
+		if (n==0) return (Tuple<T>) EMPTY_TUPLE;
 		T[] ndata=(T[]) new Object[n];
 		System.arraycopy(values,0,ndata,0,n);
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T a) {
 		T[] ndata=(T[])new Object[1];
 		ndata[0]=a;
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -43,18 +43,18 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		T[] ndata=(T[])new Object[2];
 		ndata[0]=a;
 		ndata[1]=b;
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
-		if (n<=0) return EMPTY_TUPLE;
+		if (n<=0) return (Tuple<T>) EMPTY_TUPLE;
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values[i+fromIndex];
 		}
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -65,7 +65,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		for (T t : values) {
 			ndata[i++]=t;
 		}
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 
 	public static <T> Tuple<T> createFrom(List<T> values) {
@@ -77,14 +77,14 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	public static <T> Tuple<T> createFrom(List<T> values, int fromIndex, int toIndex) {
 		int n=toIndex-fromIndex;
 		if (n<=0) {
-			if (n==0) return EMPTY_TUPLE;
+			if (n==0) return (Tuple<T>) EMPTY_TUPLE;
 			throw new IllegalArgumentException("Negative range in Tuple.create: ("+fromIndex+","+toIndex+")");
 		}
 		T[] ndata=(T[]) new Object[n];
 		for (int i=0; i<n; i++) {
 			ndata[i]=values.get(i+fromIndex);
 		}
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -99,7 +99,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 			ndata[as+i]=b.get(i);
 		}
 
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 	
 	public int size() {
@@ -118,7 +118,6 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		return this;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> subList(int fromIndex, int toIndex) {
 		if ((fromIndex<0)||(toIndex>size())) throw new IndexOutOfBoundsException();
 		if ((fromIndex==0)&&(toIndex==size())) return this;
@@ -145,7 +144,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 		T[] ndata=(T[]) new Object[ns];
 		System.arraycopy(data, 0, ndata, 0, start);
 		System.arraycopy(data, end, ndata, start, size()-end);
-		return new Tuple(ndata);
+		return new Tuple<T>(ndata);
 	}
 
 }

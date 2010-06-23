@@ -11,8 +11,8 @@ public final class NullList<T> extends PersistentList<T> {
 	
 	private static final long serialVersionUID = -268387358134950528L;
 
-	@SuppressWarnings("unchecked")
-	public static NullList<?> INSTANCE=new NullList();
+	@SuppressWarnings("rawtypes")
+	public static NullList<?> INSTANCE=( NullList<?>)new NullList();
 	
 	private NullList() {
 		
@@ -128,7 +128,6 @@ public final class NullList<T> extends PersistentList<T> {
 		throw new IndexOutOfBoundsException();
 	}
 
-	@SuppressWarnings("unchecked")
 	public PersistentList<T> insert(int index, T value) {
 		if (index!=0) throw new IndexOutOfBoundsException();
 		return SingletonList.create(value);

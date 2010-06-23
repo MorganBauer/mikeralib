@@ -20,8 +20,8 @@ public final class BlockList<T> extends BasePersistentList<T> {
 	private final int offset;
 	private final PersistentList<T>[] blocks;
 	
-	@SuppressWarnings("unchecked")
-	public static final BlockList EMPTY_BLOCKLIST=new BlockList(ListFactory.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static final BlockList<?> EMPTY_BLOCKLIST=new BlockList(ListFactory.NULL_PERSISTENT_LIST_ARRAY,DEFAULT_SHIFT,0,0);
 	
 	public static <T> BlockList<T> create(List<T> list) {
 		return create(list,0,list.size());
@@ -118,7 +118,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
 	
-		return new BlockList(bs,shift,size,0);
+		return new BlockList<T>(bs,shift,size,0);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -138,7 +138,7 @@ public final class BlockList<T> extends BasePersistentList<T> {
 				fromIndex+((numBlocks-1)<<shift), 
 				fromIndex+size);
 	
-		return new BlockList(bs,shift,size,0);
+		return new BlockList<T>(bs,shift,size,0);
 	}
 	
 	private static final int numBlocks(int size, int shift) {

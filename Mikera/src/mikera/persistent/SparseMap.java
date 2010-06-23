@@ -4,8 +4,8 @@ public final class SparseMap<T> extends PersistentObject {
 	final int bits;
 	final Object[] data;
 	
-	@SuppressWarnings("unchecked")
-	private static SparseMap<?> EMPTY=new SparseMap(2, new Object[16]);
+	@SuppressWarnings("rawtypes")
+	private static SparseMap<?> EMPTY=(SparseMap<?>)new SparseMap(2, new Object[16]);
 	
 	private SparseMap(int n, Object[] objects) {
 		bits=n;
@@ -116,18 +116,17 @@ public final class SparseMap<T> extends PersistentObject {
 		return -1-(((1<<bits)-1) & 0x55555554);
 	}
 	
-	@SuppressWarnings("unchecked")
-	private static SparseMap<?> createInternal(int bits, int ix, int iy, Object value) {
+	private static <T> SparseMap<T> createInternal(int bits, int ix, int iy, Object value) {
 		Object[] data=new Object[16];
 		if (bits==2) {
 			data[getIndex(ix,iy)]=value;
-			return new SparseMap(bits,data);
+			return new SparseMap<T>(bits,data);
 		} else {
 			int zx=ix>>(bits-2);
 			int zy=iy>>(bits-2);
 			int si=getIndex(zx,zy);
 			data[si]=createInternal(bits-2,ix-(zx<<(bits-2)),iy-(zy<<(bits-2)),value);
-			return new SparseMap(bits,data);
+			return new SparseMap<T>(bits,data);
 		}
 	}
 

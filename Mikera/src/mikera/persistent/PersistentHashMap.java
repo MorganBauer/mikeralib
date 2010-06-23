@@ -38,30 +38,28 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private final PHMNode<K,V> root;
 	
 
-	@SuppressWarnings("unchecked")
-	private static final PHMNode EMPTY_NODE_LIST=new PHMNullList();
+	@SuppressWarnings({ "rawtypes" })
+	private static final PHMNode<?,?> EMPTY_NODE_LIST=(PHMNode<?,?>)new PHMNullList();
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashMap() {
-		this(EMPTY_NODE_LIST);
+		this((PHMNode<K,V>)EMPTY_NODE_LIST);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashMap(PHMNode<K,V> newRoot) {
-		if (newRoot==null) newRoot=EMPTY_NODE_LIST;
+		if (newRoot==null) newRoot=(PHMNode<K,V>)EMPTY_NODE_LIST;
 		root=newRoot;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static<K,V> PersistentHashMap<K,V> create(K key, V value) {
-		return new PersistentHashMap(new PHMEntry(key,value));
+		return new PersistentHashMap<K,V>(new PHMEntry<K,V>(key,value));
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static<K,V> PersistentHashMap<K,V> create(Map<K,V> values) {
-		PersistentHashMap pm=new PersistentHashMap();
+		PersistentHashMap<K,V> pm=new PersistentHashMap<K,V>();
 		for (Map.Entry<K,V> ent: values.entrySet()) {
-			pm=(PersistentHashMap) pm.include(ent.getKey(),ent.getValue());
+			pm=(PersistentHashMap<K,V>) pm.include(ent.getKey(),ent.getValue());
 		}
 		return pm;
 	}
@@ -189,7 +187,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMNode<K,V>[] newdata=new PHMNode[DATA_SIZE-1];
 			System.arraycopy(data, 0, newdata, 0, i);
 			System.arraycopy(data, i+1, newdata, i, DATA_SIZE-i-1);
-			return new PHMBitMapNode(newdata,shift,0xFFFFFFFF&(~(1<<i)));
+			return new PHMBitMapNode<K,V>(newdata,shift,0xFFFFFFFF&(~(1<<i)));
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -197,7 +195,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMNode<K,V>[] newData=new PHMNode[DATA_SIZE];
 			System.arraycopy(data, 0, newData, 0, DATA_SIZE);
 			newData[i]=node;
-			return new PHMFullNode(newData,shift);
+			return new PHMFullNode<K,V>(newData,shift);
 		}
 		
 		@Override
@@ -268,7 +266,6 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			return count;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void validate() {
 			int count=0;
@@ -276,7 +273,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 				PHMNode<K,V> n=data[i];
 				count+=n.size();
 				if (n instanceof PHMFullNode<?,?>) {
-					PHMFullNode<K,V> pfn=(PHMFullNode)n;
+					PHMFullNode<K,V> pfn=(PHMFullNode<K,V>)n;
 					if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
 				}
 				n.validate();
@@ -365,7 +362,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMNode<K,V>[] newData=new PHMNode[data.length-1];
 			System.arraycopy(data, 0, newData, 0, i);
 			System.arraycopy(data, i+1, newData, i, data.length-i-1);
-			return new PHMBitMapNode(newData,shift,bitmap&(~(1<<slotFromIndex(i))));
+			return new PHMBitMapNode<K,V>(newData,shift,bitmap&(~(1<<slotFromIndex(i))));
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -373,7 +370,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			PHMNode<K,V>[] newData=new PHMNode[data.length];
 			System.arraycopy(data, 0, newData, 0, data.length);
 			newData[i]=node;
-			return new PHMBitMapNode(newData,shift,bitmap);
+			return new PHMBitMapNode<K,V>(newData,shift,bitmap);
 		}
 		
 		@Override
@@ -421,15 +418,15 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			System.arraycopy(data, i, newData, i+1, data.length-i);
 			newData[i]=node;
 			if (data.length==31) {
-				return new PHMFullNode(newData,shift);
+				return new PHMFullNode<K,V>(newData,shift);
 			} else {
-				return new PHMBitMapNode(newData,shift,bitmap|(1<<s));				
+				return new PHMBitMapNode<K,V>(newData,shift,bitmap|(1<<s));				
 			}
 		}
 		
 		
 		@SuppressWarnings("unchecked")
-		protected static <K,V> PHMBitMapNode<K,V> concat(PHMNode a, int ha, PHMNode b, int hb, int shift) {
+		protected static <K,V> PHMBitMapNode<K,V> concat(PHMNode<K,V> a, int ha, PHMNode<K,V> b, int hb, int shift) {
 			PHMNode<K,V>[] nodes;
 			int sa=slotFromHash(ha,shift);
 			int sb=slotFromHash(hb,shift);
@@ -443,7 +440,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 				nodes=new PHMNode[1];
 				nodes[0]=concat(a,ha,b,hb,shift+SHIFT_AMOUNT);
 			}
-			PHMBitMapNode<K,V> fn=new PHMBitMapNode(nodes,shift,bitmap);
+			PHMBitMapNode<K,V> fn=new PHMBitMapNode<K,V>(nodes,shift,bitmap);
 			return fn;
 		}
 
@@ -461,7 +458,6 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			return count;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void validate() {
 			if (data.length!=Integer.bitCount(bitmap)) throw new Error();
@@ -471,7 +467,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 				PHMNode<K,V> n=data[i];
 				count+=n.size();
 				if (n instanceof PHMFullNode<?,?>) {
-					PHMFullNode<K,V> pfn=(PHMFullNode)n;
+					PHMFullNode<K,V> pfn=(PHMFullNode<K,V>)n;
 					if (pfn.shift!=(this.shift+SHIFT_AMOUNT)) throw new Error();
 				}
 				n.validate();
@@ -589,7 +585,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 			} else {
 				ndata[olen]=new PHMEntry<K,V>(key,value);
 			}
-			return new PHMCollisionList(ndata,hash);
+			return new PHMCollisionList<K,V>(ndata,hash);
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -766,7 +762,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		public boolean contains(Object o) {
 			if (!(o instanceof Map.Entry<?,?>)) return false;
 			Map.Entry<?,?> ent=(Map.Entry<?,?>)o;
-			PHMEntry pe=PersistentHashMap.this.getEntry((K)ent.getKey());
+			PHMEntry<K,V> pe=PersistentHashMap.this.getEntry((K)ent.getKey());
 			if (pe==null) return false;
 			return Tools.equalsWithNulls(pe.value, ent.getValue());
 		}
@@ -851,10 +847,9 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		return (Map.Entry<K,V>)getEntry((K)key);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentSet<K> keySet() {
-		return new KeySetWrapper(entrySet());
+		return new KeySetWrapper<K,V>(entrySet());
 	}
 
 	@Override
@@ -862,18 +857,16 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		return root.size();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentCollection<V> values() {
-		return new ValueCollectionWrapper(entrySet());
+		return new ValueCollectionWrapper<K,V>(entrySet());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentHashMap<K, V> include(K key, V value) {
 		PHMNode<K,V> newRoot=root.include(key, value,key.hashCode(),0);
 		if (root==newRoot) return this;
-		return new PersistentHashMap(newRoot);
+		return new PersistentHashMap<K,V>(newRoot);
 	}
 	
 	@Override
@@ -898,12 +891,11 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		return pm;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentMap<K, V> delete(K key) {
 		PHMNode<K,V> newRoot=root.delete(key,key.hashCode());
 		if (root==newRoot) return this;
-		return new PersistentHashMap(newRoot);
+		return new PersistentHashMap<K,V>(newRoot);
 	}
 	
 	@Override

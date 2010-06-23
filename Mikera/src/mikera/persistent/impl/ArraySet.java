@@ -33,7 +33,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 	
 	@SuppressWarnings("unchecked")
 	public static <T> ArraySet<T> createFromSet(PersistentSet<T> source) {
-		if (source instanceof ArraySet<?>) return (ArraySet)source;
+		if (source instanceof ArraySet<?>) return (ArraySet<T>)source;
 		return new ArraySet<T>((T[])source.toArray());
 	}
 	
@@ -103,7 +103,7 @@ public final class ArraySet<T> extends BasePersistentSet<T> {
 			T[] ndata=(T[])new Object[data.length+1];
 			System.arraycopy(data, 0, ndata, 0, data.length);
 			ndata[data.length]=value;
-			return new ArraySet(ndata);
+			return new ArraySet<T>(ndata);
 		} else {
 			return this;
 		}
