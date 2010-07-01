@@ -166,4 +166,57 @@ public final class SparseMap<T> extends PersistentObject {
 			return update(si,newSubmap);
 		}		
 	}
+	
+	public <P> void visit(Visitor<T,P> v, P param) {
+		visit(v,param,0,0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <P> void visit(Visitor<T,P> v, P param, int ox, int oy) {
+		int bb=(1<<(bits-2));
+		ox-=bb;
+		oy-=bb;
+		int i=0;
+		for (int y=0; y<4; y++) {
+			for (int x=0; x<4; x++) {
+				Object d=data[i++];
+				if (d!=null) {
+					if (d instanceof SparseMap) {
+						((SparseMap<T>)d).visit(v, param, ox+x*bb, oy+y*bb);
+					} else {
+						v.call(ox+x*bb, oy+y*bb, (T)d, param);
+					}
+				}
+			}
+		}
+	}
+	
+	public static abstract class Visitor<T,P> {
+		public abstract boolean call(int x, int y, T v, P p);
+	}
+	
+	private static Visitor<Object, StringBuilder> vsb=new Visitor<Object,StringBuilder>() {
+		@Override
+		public boolean call(int x, int y, Object v, StringBuilder p) {
+			p.append('[');
+			p.append(x);
+			p.append(',');
+			p.append(y);
+			p.append("] -> ");
+			p.append(v.toString());
+			p.append("\n");
+			return false;
+		}
+	};
+
+	
+	@SuppressWarnings("unchecked")
+	public String toString() {
+		StringBuilder sb=new StringBuilder();
+		sb.append ("SparseMap contents:\n");
+		
+		visit((Visitor<T,StringBuilder>)vsb,sb);
+		return sb.toString();
+		
+	}
 }

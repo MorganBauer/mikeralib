@@ -24,27 +24,27 @@ public abstract class PersistentCollection<T> extends PersistentObject implement
 	}
 
 	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection");
 	}
 
 	public boolean retainAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection");
 	}
 	
 	public boolean remove(Object o) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use delete(...) instead");
 	}
 
 	public boolean add(T e) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use include(...) instead");
 	}
 
 	public boolean addAll(Collection<? extends T> c) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use includeAll(...) instead");
 	}
 
 	public void clear() {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use an empty instance instead");
 	}
 	
 	public boolean contains(Object o) {

@@ -39,6 +39,8 @@ public class TestSparse {
 		assertEquals(2,(int)sm.get(1, 1));
 		assertEquals(null,sm.get(0, 0));
 		
+		assertEquals("SparseMap contents:\n[1,1] -> 2\n",sm.toString());
+		
 		sm=sm.update(10, 10, 3);
 		assertEquals(2,(int)sm.get(1, 1));
 		assertEquals(null,sm.get(0, 0));

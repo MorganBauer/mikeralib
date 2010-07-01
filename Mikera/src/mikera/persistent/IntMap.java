@@ -48,7 +48,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	private IntMap() {
 		this((IMNode<V>) EMPTY_NODE_LIST);
 	}
-	
+	 
 	@SuppressWarnings("unchecked")
 	public IntMap(IMNode<V> newRoot) {
 		if (newRoot==null) newRoot=(IMNode<V>) EMPTY_NODE_LIST;

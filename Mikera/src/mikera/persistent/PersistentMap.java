@@ -11,7 +11,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	private static final long serialVersionUID = 2304218229796144868L;
 
 	public void clear() {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use an empty instance");
 	}
 
 	public abstract boolean containsKey(Object arg0);
@@ -45,7 +45,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	public abstract PersistentSet<K> keySet();
 
 	public V put(K arg0, V arg1) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use include(...) instead");
 	}
 
 	public void putAll(Map<? extends K, ? extends V> arg0) {
@@ -53,7 +53,7 @@ public abstract class PersistentMap<K,V> extends PersistentObject implements IPe
 	}
 
 	public V remove(Object arg0) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Unsupported on immutable collection: use delete(...) instead");
 	}
 
 	public abstract int size();
