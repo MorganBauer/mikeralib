@@ -1,5 +1,7 @@
 package mikera.persistent;
 
+import java.util.Iterator;
+
 public final class SparseMap<T> extends PersistentObject {
 	final int bits;
 	final Object[] data;
@@ -84,6 +86,7 @@ public final class SparseMap<T> extends PersistentObject {
 			return updateNotNullInternal(ix,iy,value);
 		}
 	}
+
 	
 	private SparseMap<T> extend() {
 		Object[] data = new Object[16];

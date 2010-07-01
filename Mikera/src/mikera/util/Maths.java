@@ -165,6 +165,17 @@ public final class Maths {
 		return r;
 	}
 	
+	/**
+	 * Detects the number of times that boundary is passed when adding increase to base
+	 * @param increase
+	 * @param boundary
+	 * @param base
+	 * @return
+	 */
+	public static long quantize(long increase, long boundary, long base) {
+		return ((base+increase)/boundary)-(base/boundary);
+	}
+	
 	public static float min(float a, float b, float c) {
 		float result=a;
 		if (b<result) result=b;

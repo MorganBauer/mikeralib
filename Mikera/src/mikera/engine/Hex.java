@@ -35,6 +35,33 @@ public class Hex {
 		return (int)Math.floor((4+3*a-b+c)/6);
 	}
 	
+	public static int direction (int dx, int dy) {
+		int a = (dx*2+dy);
+		int b = (dx -dy);
+		int c = (dx +2*dy);
+		if (b>=0) {
+			if (c>=0) {
+				return (b==0)?3:2;
+			} else {
+				if (a>=0) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		} else {
+			if (c<=0) {
+				return 5;
+			} else {
+				if (a<=0) {
+					return 4;
+				} else {
+					return 3;
+				}
+			}
+		}
+	}
+	
 	public static float toPositionX (int lx, int ly) {
 		return lx*RATIO;
 	}
