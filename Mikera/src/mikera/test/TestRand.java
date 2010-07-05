@@ -62,6 +62,10 @@ public class TestRand {
 		assertTrue(5>=Rand.r(6));
 		assertTrue(1>=Rand.r(2));
 
+		assertEquals(5,Rand.round(5.0));
+		assertEquals(-4,Rand.round(-4.0));
+		assertTrue(2<=Rand.round(2.5));
+		assertTrue(-2>=Rand.round(-2.5));
 	}
 	
 	@Test public void testShuffle() {

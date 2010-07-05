@@ -308,6 +308,11 @@ public final class Maths {
 		float factor=(float)Math.pow(10, -dp);
 		return Math.round(f/factor)*factor;
 	}
+	
+	public static int roundUp(double d) {
+		int i=(int) d;
+		return (i==d)?i:(i+1);
+	}
 
 	/**
 	 * Computes a fast approximation to <code>Math.pow(a, b)</code>. Adapted

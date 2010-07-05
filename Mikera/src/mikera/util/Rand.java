@@ -232,6 +232,16 @@ public final class Rand {
 		return ( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR;
 	}
 
+	
+	/**
+	 * Randomly rounds to the nearest integer
+	 */
+	public static final int round(double d) {
+		int i=(int)Math.floor(d);
+		int rem=(nextDouble()<(d-i))?1:0;
+		return i+rem;
+	}
+	
     /**
      *  Returns random number uniformly distributed in inclusive [n1, n2] range.
      *  It is allowed to have to n1 > n2, or n1 < n2, or n1 == n2.
