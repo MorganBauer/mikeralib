@@ -231,6 +231,18 @@ public final class Rand {
 	public static final float nextFloat() {
 		return ( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR;
 	}
+	
+	public static final double u() {
+		return nextDouble();
+	}
+	
+	public static final double u(double a) {
+		return u(0,a);
+	}
+	
+	public static final double u(double a,double b) {
+		return a+nextDouble()*(b-a);
+	}
 
 	
 	/**

@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.engine.SparseGrid;
 import mikera.engine.SparseArray;
+import mikera.math.Bounds4i;
 import mikera.persistent.SparseMap;
 import mikera.util.*;
 
@@ -68,6 +69,19 @@ public class TestSparse {
 			
 		}
 		assertEquals(100,sm.countNotNull());
+	}
+	
+	@Test public void testSparseMapBounds() {
+		Bounds4i b=null;
+		SparseMap<Integer> sm=new SparseMap<Integer>();
+		sm=sm.update(1,5,2);
+		sm=sm.update(1,109,2);
+		b=sm.getNonNullBounds();
+		assertEquals(1,b.xmin);
+		assertEquals(1,b.xmax);
+		assertEquals(5,b.ymin);
+		assertEquals(109,b.ymax);
+
 	}
 
 }

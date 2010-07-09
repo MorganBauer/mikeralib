@@ -74,5 +74,14 @@ public class Draw {
 			}
 		}
 	}
+
+
+	public static void drawOutlineRect(Graphics g, int x, int y, int w, int h) {
+		g.drawLine(x, y, x+w-1, y);
+		g.drawLine(x, y+h-1, x+w-1, y+h-1);
+		
+		g.drawLine(x, y, x, y+h-1);
+		g.drawLine(x+w-1, y, x+w-1, y+h-1);
+	}
 	
 }

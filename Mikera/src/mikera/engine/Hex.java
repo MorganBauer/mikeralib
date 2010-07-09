@@ -35,6 +35,11 @@ public class Hex {
 		return (int)Math.floor((4+3*a-b+c)/6);
 	}
 	
+	public static int direction (int sx, int sy, int tx, int ty) {
+		return direction (tx-sx,ty-sy);
+	}
+
+	
 	public static int direction (int dx, int dy) {
 		int a = (dx*2+dy);
 		int b = (dx -dy);

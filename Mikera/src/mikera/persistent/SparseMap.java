@@ -2,6 +2,9 @@ package mikera.persistent;
 
 import java.util.Iterator;
 
+import mikera.math.Bounds4i;
+import mikera.util.Maths;
+
 public final class SparseMap<T> extends PersistentObject {
 	final int bits;
 	final Object[] data;
@@ -192,6 +195,20 @@ public final class SparseMap<T> extends PersistentObject {
 				}
 			}
 		}
+	}
+	
+	public Bounds4i getNonNullBounds() {
+		Bounds4i bds=new Bounds4i();
+		visit(new Visitor<T,Bounds4i>() {
+			@Override
+			public boolean call(int x, int y, T v, Bounds4i p) {
+				p.xmin=Maths.min(p.xmin, x);
+				p.xmax=Maths.max(p.xmax, x);
+				p.ymin=Maths.min(p.ymin, y);
+				p.ymax=Maths.max(p.ymax, y);	
+				return false;
+			}},bds);
+		return bds;
 	}
 	
 	public static abstract class Visitor<T,P> {
