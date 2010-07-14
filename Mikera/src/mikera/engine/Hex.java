@@ -20,6 +20,13 @@ public class Hex {
 	// Positions are logical float-coordinates with (0,0) at centre of unit-height hex at (0,0)
 	// screen values are then simple multiples of logical positions
 	
+	public static int dx(int dir) {
+		return HEX_DX[Maths.mod(dir, 6)];
+	}
+	public static int dy(int dir) {
+		return HEX_DY[Maths.mod(dir, 6)];
+	}
+	
 	public static int toLocationX(float px, float py) {
 		float b=Maths.floor(py+px/(RATIO*2.0f/3.0f));
 		float c=Maths.floor(py-px/(RATIO*2.0f/3.0f));	

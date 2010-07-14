@@ -208,6 +208,16 @@ public class TextUtils {
 		whiteSpaceStore.put(l,s);
         return s;
 	}
+	
+	public static String whiteSpace2(int l) {
+		if (l==0) return "";
+		String half=whiteSpace2(l/2);
+		if ((l&1)!=0) {
+			return half+" "+half;
+		} else {
+			return half+half;
+		}
+	}
 
 	public static String leftPad(String s, int l) {
 		if (s==null) s="";

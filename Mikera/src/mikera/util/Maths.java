@@ -317,6 +317,15 @@ public final class Maths {
 		int i=(int) d;
 		return (i==d)?i:(i+1);
 	}
+	
+	public static int roundUp(Number d) {
+		return roundUp(d.doubleValue());
+	}
+	
+	public static int roundUp(float d) {
+		int i=(int) d;
+		return (i==d)?i:(i+1);
+	}
 
 	/**
 	 * Computes a fast approximation to <code>Math.pow(a, b)</code>. Adapted

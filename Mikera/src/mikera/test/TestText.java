@@ -8,9 +8,13 @@ import mikera.util.*;
 public class TestText {
 	@Test public void testWhiteSpace() {
 		assertEquals("   ",TextUtils.whiteSpace(3));
+		assertEquals("   ",TextUtils.whiteSpace2(3));
 		
 		int n=Rand.d(10,10);
 		assertEquals(n,TextUtils.whiteSpace(n).length());
+		
+		int n2=Rand.d(10,10);
+		assertEquals(n2,TextUtils.whiteSpace2(n2).length());
 	}
 	
 	@Test public void testRoman() {

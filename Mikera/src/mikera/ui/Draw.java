@@ -1,6 +1,8 @@
 package mikera.ui;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 
 import mikera.util.Maths;
@@ -75,7 +77,17 @@ public class Draw {
 		}
 	}
 
-
+	public static void drawCentredText(Graphics g, String s, int x, int y) {
+		FontMetrics fm=g.getFontMetrics();
+		int width=fm.stringWidth(s);
+		int ascent=fm.getAscent();
+		int descent=fm.getDescent();
+		int height=ascent+descent;
+		
+		
+		g.drawString(s,x-width/2,y-height/2+ascent);
+	}
+	
 	public static void drawOutlineRect(Graphics g, int x, int y, int w, int h) {
 		g.drawLine(x, y, x+w-1, y);
 		g.drawLine(x, y+h-1, x+w-1, y+h-1);

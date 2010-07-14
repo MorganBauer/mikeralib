@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import mikera.math.Bounds4i;
 import mikera.util.Maths;
+import mikera.util.Tools;
 
 public final class SparseMap<T> extends PersistentObject {
 	final int bits;
@@ -238,5 +239,17 @@ public final class SparseMap<T> extends PersistentObject {
 		visit((Visitor<T,StringBuilder>)vsb,sb);
 		return sb.toString();
 		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public boolean equals(Object o) {
+		if (o==this) return true;
+		if (!(o instanceof SparseMap)) return false;
+		SparseMap sm=(SparseMap)o;
+		for (int i=0; i<16; i++) {
+			if (!Tools.equalsWithNulls(data[i], sm.data[i])) return false;
+		}
+		
+		return true;
 	}
 }
