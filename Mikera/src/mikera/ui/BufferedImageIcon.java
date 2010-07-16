@@ -40,11 +40,11 @@ public final class BufferedImageIcon implements Icon {
 	}
 
 	public int getIconWidth() {
-		return w;
+		return dw;
 	}
 
 	public int getIconHeight() {
-		return h;
+		return dh;
 	}
 
 }
