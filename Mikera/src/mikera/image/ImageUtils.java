@@ -15,8 +15,9 @@ import mikera.util.Rand;
 
 
 public class ImageUtils {
+
 	public static BufferedImage getImage(String filename) {
-		URL imageURL = ImageUtils.class.getResource(filename);
+		URL imageURL = Thread.currentThread().getContextClassLoader().getResource(filename);
 		if (imageURL != null) {
 			return getImage(imageURL);
 		}
