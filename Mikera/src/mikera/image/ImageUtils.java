@@ -12,12 +12,13 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import mikera.util.Rand;
+import mikera.util.Resource;
 
 
 public class ImageUtils {
 
 	public static BufferedImage getImage(String filename) {
-		URL imageURL = Thread.currentThread().getContextClassLoader().getResource(filename);
+		URL imageURL = Resource.getResource(filename);
 		if (imageURL != null) {
 			return getImage(imageURL);
 		}
