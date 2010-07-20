@@ -13,8 +13,15 @@ import mikera.util.Maths;
 public class Hex {
 	private static final float RATIO=0.866025404f;
 	
-	public static final int[] HEX_DX={0,1,1,0,-1,-1};
-	public static final int[] HEX_DY={-1, -1, 0 , 1, 1, 0};
+	public static final int NW=0;
+	public static final int N=1;
+	public static final int NE=2;
+	public static final int SE=3;
+	public static final int S=4;
+	public static final int SW=5;
+	
+	public static final int[] HEX_DX={-1,0,1,1,0,-1};
+	public static final int[] HEX_DY={0,-1, -1, 0 , 1, 1};
 	
 	// Location functions are hex-grid coordinates
 	// Positions are logical float-coordinates with (0,0) at centre of unit-height hex at (0,0)
@@ -53,22 +60,28 @@ public class Hex {
 		int c = (dx +2*dy);
 		if (b>=0) {
 			if (c>=0) {
-				return (b==0)?3:2;
+				// South or south east
+				return (b==0)?S:SE;
 			} else {
 				if (a>=0) {
-					return 1;
+					// North east
+					return NE;
 				} else {
-					return 0;
+					// North
+					return N;
 				}
 			}
 		} else {
 			if (c<=0) {
-				return 5;
+				// North west
+				return NW;
 			} else {
 				if (a<=0) {
-					return 4;
+					// South West
+					return SW;
 				} else {
-					return 3;
+					// South
+					return S;
 				}
 			}
 		}

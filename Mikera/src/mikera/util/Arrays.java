@@ -83,12 +83,6 @@ public class Arrays {
 		}
 	}
 
-	public static <T> void swap(T[] a, int x, int y) {
-		T t=a[x];
-		a[x]=a[y];
-		a[y]=t;
-	}
-
 	public static <T> void swap(List<T> a, int x, int y) {
 		T t=a.get(x);
 		a.set(x,a.get(y));
@@ -100,6 +94,13 @@ public class Arrays {
 		a.set(x,a.get(y));
 		a.set(y,t);
 	}
+	
+	public static <T> void swap(T[] a, int x, int y) {
+		T t=a[x];
+		a[x]=a[y];
+		a[y]=t;
+	}
+
 
 	public static <T extends Comparable<? super T>> void mergeInOrder(T[] src, T[] dst, int p1, int p2, int p3, int p4) {
 		if (src[p2].compareTo(src[p3])<=0) return; // already sorted!
@@ -141,7 +142,18 @@ public class Arrays {
 		mergeInOrder(src,dst,start,middle,middle+1,end);
 	}
 	
+	private static ThreadLocal<Comparable<?>[]> mergeSortTemp=new ThreadLocal<Comparable<?>[]>();
 	
+	@SuppressWarnings("unchecked")
+	public static <T extends Comparable<? super T>> void mergeSort(T[] src) {
+		int length=src.length;
+		Comparable<?>[] temp=mergeSortTemp.get();
+		if ((temp==null)||(temp.length<length)) {
+			temp=new Comparable[length*3/2];
+			mergeSortTemp.set(temp);
+		}
+		mergeSort(src,(T[])temp,0,length-1);
+	}
 	
 	public static void main(String[] args) {
 		ArrayList<Integer> al=new ArrayList<Integer>();

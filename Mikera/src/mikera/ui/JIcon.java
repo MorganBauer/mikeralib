@@ -4,9 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class JIcon extends JPanel {
+public class JIcon extends JComponent {
 	private Icon icon=null;
 	
 	public JIcon() {

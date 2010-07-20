@@ -16,6 +16,20 @@ public class TestTools {
 		Arrays.mergeSort(a, b, 0, 99);
 		
 		assertTrue(Arrays.isSorted(a, 0, 99));
+		
+		Arrays.mergeSort(a);
+		assertTrue(Arrays.isSorted(a, 0, 99));
+	}
+	
+	@Test public void testSortEmpty() {
+		Integer[] a=new Integer[0];
+		Integer[] b=new Integer[0];
+				
+		Arrays.mergeSort(a, b, 0, 0);
+		
+		assertTrue(Arrays.isSorted(a, 0, 0));
+		
+		Arrays.mergeSort(a);
 	}
 	
 	@Test public void testCompares() {
