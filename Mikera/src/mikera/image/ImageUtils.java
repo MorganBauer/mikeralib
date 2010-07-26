@@ -17,6 +17,12 @@ import mikera.util.Resource;
 
 public class ImageUtils {
 
+	/*
+		Standard way to load images:
+		myClass.getClass().getClassLoader().getResourceAsStream("resources/somefile.png")
+		Note: class must be in jar file to get resources from same jar
+	 */
+	
 	public static BufferedImage getImage(String filename) {
 		URL imageURL = Resource.getResource(filename);
 		if (imageURL != null) {

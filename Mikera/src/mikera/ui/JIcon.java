@@ -2,6 +2,7 @@ package mikera.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -14,13 +15,19 @@ public class JIcon extends JComponent {
 		
 	}
 	
+	public JIcon (BufferedImage b) {
+		this (new BufferedImageIcon(b));
+	}
+	
 	public JIcon(Icon icon) {
 		this.setIcon(icon);
 	}
 	
 	
 	@Override public void paintComponent(Graphics g) {
-		getIcon().paintIcon(this, g, 0, 0);	
+		int x=(getWidth()-icon.getIconWidth())/2;
+		int y=(getHeight()-icon.getIconHeight())/2;
+		getIcon().paintIcon(this, g, x, y);	
 	}
 
 	/**

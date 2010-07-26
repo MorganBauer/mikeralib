@@ -14,6 +14,10 @@ public final class BufferedImageIcon implements Icon {
 	private final int h;
 	private final int dw;
 	private final int dh;
+
+	public BufferedImageIcon(BufferedImage b) {
+		this(b,0,0,b.getWidth(),b.getHeight());
+	}
 	
 	public BufferedImageIcon(BufferedImage b,int sx, int sy, int sw, int sh) {
 		image=b;

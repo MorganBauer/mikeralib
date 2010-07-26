@@ -63,12 +63,17 @@ public class TestSparse {
 		assertEquals(0,sm.countNotNull());
 		for (int y=-5; y<5; y++) {
 			for (int x=-5; x<5; x++) {
-				sm=sm.update(x, y, x*y);
-				
-			}			
-			
+				sm=sm.update(x, y, x*y);				
+			}					
 		}
 		assertEquals(100,sm.countNotNull());
+		
+		for (int y=-50; y<50; y++) {
+			for (int x=-50; x<50; x++) {
+				sm=sm.update(x+Rand.d(6), y+Rand.d(6), x*y);				
+				sm=sm.update(x+Rand.d(6), y+Rand.d(6), null);				
+			}					
+		}
 	}
 	
 	@Test public void testSparseMapBounds() {
