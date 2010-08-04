@@ -80,7 +80,7 @@ public class PerformanceTest {
 	static PersistentMap<Integer,String> pm;
 	private static void setup() {
 		hm=new HashMap<Integer,String>();
-		pm=new PersistentHashMap<Integer,String>();
+		pm=PersistentHashMap.create();
 	}
 	
 	public static void a1() {
@@ -105,7 +105,7 @@ public class PerformanceTest {
 	}
 	
 	public static void b1() {
-		pm=new PersistentHashMap<Integer,String>();
+		pm=PersistentHashMap.create();
 		for (int i=0; i<100; i++) {
 			int key=Rand.r(100);
 			String value=Rand.nextString();

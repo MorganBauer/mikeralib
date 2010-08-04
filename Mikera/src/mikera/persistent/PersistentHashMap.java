@@ -36,10 +36,13 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private static final int DATA_SIZE=1<<SHIFT_AMOUNT;
 	
 	private final PHMNode<K,V> root;
-	
 
 	@SuppressWarnings({ "rawtypes" })
 	private static final PHMNode<?,?> EMPTY_NODE_LIST=(PHMNode<?,?>)new PHMNullList();
+
+	@SuppressWarnings("rawtypes")
+	public static final PersistentHashMap<?,?> EMPTY=new PersistentHashMap();
+	
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashMap() {
@@ -52,12 +55,18 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 		root=newRoot;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static<K,V> PersistentHashMap<K,V> create() {
+		return (PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
+	}
+	
 	public static<K,V> PersistentHashMap<K,V> create(K key, V value) {
 		return new PersistentHashMap<K,V>(new PHMEntry<K,V>(key,value));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static<K,V> PersistentHashMap<K,V> create(Map<K,V> values) {
-		PersistentHashMap<K,V> pm=new PersistentHashMap<K,V>();
+		PersistentHashMap<K,V> pm=(PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
 		for (Map.Entry<K,V> ent: values.entrySet()) {
 			pm=(PersistentHashMap<K,V>) pm.include(ent.getKey(),ent.getValue());
 		}

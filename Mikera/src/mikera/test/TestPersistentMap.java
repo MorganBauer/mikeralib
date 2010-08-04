@@ -23,7 +23,7 @@ public class TestPersistentMap {
 	
 	@SuppressWarnings("unchecked")
 	@Test public void testMaps() {
-		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> pm=PersistentHashMap.create();
 		testMap(pm);
 		testMap(addRandomMaps(pm));
 		
@@ -44,7 +44,7 @@ public class TestPersistentMap {
 	}
 
 	@Test public void testConvert() {
-		PersistentMap<Integer,String> phm=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> phm=PersistentHashMap.create();
 
 		HashMap<Integer,String> hm=new HashMap<Integer,String>();
 		for (int i=0; i<10; i++) {
@@ -79,11 +79,11 @@ public class TestPersistentMap {
 	}
 	
 	@Test public void testMerge() {
-		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=pm.include(1, "Hello");
 		pm=pm.include(2, "World");
 		
-		PersistentMap<Integer,String> pm2=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> pm2=PersistentHashMap.create();
 		pm2=pm2.include(2, "My");
 		pm2=pm2.include(3, "Good");
 		pm2=pm2.include(4, "Friend");
@@ -104,7 +104,7 @@ public class TestPersistentMap {
 	}
 	
 	@Test public void testChanges() {
-		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=pm.include(1, "Hello");
 		pm=pm.include(2, "World");
 		
@@ -135,6 +135,7 @@ public class TestPersistentMap {
 		pm.validate();
 		testIterator(pm);
 		testRandomAdds(pm);
+		testNullAdds(pm);
 		CommonTests.testCommonData(pm);
 	}
 	
@@ -157,6 +158,13 @@ public class TestPersistentMap {
 		assertEquals(size,pm.values().size());	
 	}
 	
+	public void testNullAdds(PersistentMap<Integer,String> pm) {
+		pm=pm.include(2,null);	
+		assertTrue(pm.containsKey(2));
+		assertEquals(null,pm.get(2));	
+	}
+
+	
 	public PersistentMap<Integer,String> addRandomStuff(PersistentMap<Integer,String> pm, int n , int maxIndex ) {
 		for (int i=0; i<n; i++) {
 			pm=pm.include(Rand.r(maxIndex),Rand.nextString());
@@ -165,7 +173,7 @@ public class TestPersistentMap {
 	}
 	
 	@Test public void testManyChanges() {
-		PersistentMap<Integer,String> pm=new PersistentHashMap<Integer,String>();
+		PersistentMap<Integer,String> pm=PersistentHashMap.create();
 		pm=addRandomStuff(pm,1000,40);
 		assertEquals(40,pm.size());
 		testMap(pm);

@@ -2,10 +2,12 @@ package mikera.util;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.charset.Charset;
 
 import mikera.engine.PathFinder.PathNode;
 import mikera.persistent.IntMap;
 import mikera.persistent.MapFactory;
+import mikera.persistent.PersistentHashMap;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -141,6 +143,102 @@ public final class Tools {
 		} catch (Throwable t) {
 			throw new Error(t);
 		}
+	}
+
+	public static void writeStringToFile(File file, String s) {
+		writeStringToFile(file, s, Charset.defaultCharset());
+	}	
+	
+	public static void writeStringToFile(File file, String s, Charset cs) {
+		try {
+			OutputStream stream=null;
+			try {
+				stream = new FileOutputStream(file);
+				writeStringToStream(stream, s, cs);
+			} finally {
+				stream.close();
+			}
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+	}
+
+	public static void writeStringToStream(OutputStream stream, String s) {
+		writeStringToStream(stream,s,Charset.defaultCharset());
+	}
+	
+	public static void writeStringToStream(OutputStream stream, String s, Charset cs) {
+		try {
+			Writer writer=null;
+			try {
+				writer=new BufferedWriter(new OutputStreamWriter(stream,cs));
+				writer.write(s);
+			} finally {
+				if (writer!=null) writer.close();
+			}
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+	}
+	
+	public static String readStringFromFile(File file) {
+		return readStringFromFile(file,Charset.defaultCharset());
+	}
+	
+	public static String readStringFromFile(File file, Charset cs) {
+		try {
+		    InputStream stream=null;		    
+			try {
+				stream=new FileInputStream(file);
+		        return readStringFromStream(stream,cs);
+			} finally {
+				if (stream!=null) stream.close();
+			}
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+	}
+
+	public static String readStringFromStream(InputStream stream) {
+		return readStringFromStream(stream,Charset.defaultCharset());
+	}
+	
+	public static String readStringFromStream(InputStream stream, Charset cs) {
+		try {
+		    Reader reader=null;
+			try {
+		        reader = new BufferedReader(new InputStreamReader(stream, cs));
+		        StringBuilder builder = new StringBuilder();
+		        char[] buffer = new char[4096];
+		        int readBytes;
+		        while ((readBytes = reader.read(buffer, 0, buffer.length)) > 0) {
+		            builder.append(buffer, 0, readBytes);
+		        }
+		        return builder.toString();
+		    } finally {
+		        if (reader!=null) reader.close();
+		    }   
+		} catch (Throwable t) {
+			throw new Error(t);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <K,V> Map<K,V> mapDifference(Map<K,V> a, Map<K,V> b) {
+		if (a==b) return (Map<K, V>) PersistentHashMap.EMPTY;
+		
+		PersistentHashMap<K,V> phm=(PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
+		for (K key: a.keySet()) {
+			V av=a.get(key);
+			V bv=b.get(key);
+			if (!equalsWithNulls(av,bv)) phm=phm.include(key, av);
+		}
+		
+		for (K key: b.keySet()) {
+			if ((!a.containsKey(key)) && (b.get(key)!=null)) phm=phm.include(key, null);
+		}
+
+		return phm;
 	}
 
 	public static <K,V> boolean equalsMap(Map<K,V> a, Map<K,V> b) {

@@ -1,5 +1,11 @@
 package mikera.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.util.*;
@@ -30,6 +36,45 @@ public class TestTools {
 		assertTrue(Arrays.isSorted(a, 0, 0));
 		
 		Arrays.mergeSort(a);
+	}
+	
+	@Test public void testStringReadingAndWriting() {
+		Charset cs=Charset.defaultCharset();
+		String s1="Hello\r\nWorld\nThere\r  \n\r ";  
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		Tools.writeStringToStream(out, s1, cs);
+		String s2=Tools.readStringFromStream(new ByteArrayInputStream(out.toByteArray()),cs);
+		assertEquals(s1,s2);
+	}
+	
+	@Test public void testMapDifference() {
+		HashMap<String,String> a=new HashMap<String,String>();
+		HashMap<String,String> b=new HashMap<String,String>();
+		
+		a.put("1","a");
+		a.put("2",null);
+		a.put("3","new");
+		a.put("4","added");
+
+		b.put("1","a");
+		b.put("2","b");
+		b.put("3","old");
+		b.put("5","deleted");
+				
+		Map<String,String> d=Tools.mapDifference(a, b);
+		
+		assertEquals(null,d.get("1"));
+		assertTrue(!d.containsKey("1"));
+		
+		assertEquals(null,d.get("2"));
+		assertTrue(d.containsKey("2"));
+
+		assertEquals("new",d.get("3"));
+		
+		assertEquals("added",d.get("4"));
+		
+		assertEquals(null,d.get("5"));
+		assertTrue(d.containsKey("5"));
 	}
 	
 	@Test public void testCompares() {
