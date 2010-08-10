@@ -7,6 +7,7 @@ import java.util.*;
 import javax.sound.sampled.*;
 
 import mikera.image.ImageUtils;
+import mikera.util.Resource;
 
 public class SoundEngine {
 
@@ -48,7 +49,7 @@ public class SoundEngine {
 	
 	private static Clip loadClip(String url) {
 		try {
-			URL soundURL = SoundEngine.class.getResource(url);	
+			URL soundURL = Resource.getResource(url);	
 			if (soundURL==null) throw new Error("File not found: "+url);
 			AudioInputStream stream = AudioSystem.getAudioInputStream(soundURL);
 			
@@ -69,7 +70,7 @@ public class SoundEngine {
 	}
 	
 	public static void main(String[] args) {
-		Clip c=loadClip("/mikera/sound/Thud.wav");
+		Clip c=loadClip("mikera/sound/Thud.wav");
 		try {
 			c.start();
 			Thread.sleep(1000);

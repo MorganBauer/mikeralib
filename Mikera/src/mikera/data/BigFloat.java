@@ -1,8 +1,10 @@
 package mikera.data;
 
 import mikera.annotations.Immutable;
+import mikera.annotations.Mutable;
 import mikera.util.Maths;
 
+@Mutable
 @Immutable
 public final class BigFloat extends Number {
 	private static final long serialVersionUID = 8944436596909296283L;

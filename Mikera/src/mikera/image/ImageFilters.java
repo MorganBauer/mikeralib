@@ -11,7 +11,7 @@ import mikera.util.Maths;
 
 public class ImageFilters {
 
-	static class TransparencyFilter extends RGBImageFilter {
+	public static class TransparencyFilter extends RGBImageFilter {
 	    private int factor=256; // 0 = transparent, 255= fully opaque
 	    
 	    public TransparencyFilter(int alpha) {
@@ -31,13 +31,13 @@ public class ImageFilters {
 	    }
 	}
 
-	static class GreyFilter extends RGBImageFilter {
+	public static class GreyFilter extends RGBImageFilter {
 		public int filterRGB(int x, int y, int argb) {
 	    	return Colours.toGreyScale(argb);
 	    }
 	}
 	
-	static class RGBtoHSBFilter extends RGBImageFilter {
+	public static class RGBtoHSBFilter extends RGBImageFilter {
 		private float[] hsbvals=new float[4];
 		public int filterRGB(int x, int y, int argb) {
 	    	int r=Colours.getRed(argb);
@@ -52,7 +52,7 @@ public class ImageFilters {
 	    }
 	}
 	
-	static class HSBtoRGBFilter extends RGBImageFilter {
+	public static class HSBtoRGBFilter extends RGBImageFilter {
 		public int filterRGB(int x, int y, int argb) {
 	    	float hu=Colours.getRed(argb)/255.0f;
 	    	float st=Colours.getGreen(argb)/255.0f;
@@ -64,7 +64,7 @@ public class ImageFilters {
 	}
 	
 	
-	static BufferedImageOp blurOperation = new ConvolveOp(
+	public static BufferedImageOp blurOperation = new ConvolveOp(
 			new Kernel(3, 3,
 			        new float[] {
 			            1/9f, 1/9f, 1/9f,
@@ -91,7 +91,7 @@ public class ImageFilters {
 		}
 	}
 
-	static class MultiplyFilter extends RGBImageFilter {
+	public static class MultiplyFilter extends RGBImageFilter {
 		public float r_factor=1.0f;
 		public float g_factor=1.0f;
 		public float b_factor=1.0f;
