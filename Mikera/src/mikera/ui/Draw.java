@@ -15,8 +15,6 @@ public class Draw {
 		int iw=image.getWidth();
 		int scw=iw-2*bs;
 		int sch=ih-2*bs;
-		int dcw=w-2*bs;
-		int dch=h-2*bs;
 		
 		int dx0=x;
 		int dx1=x+bs;
