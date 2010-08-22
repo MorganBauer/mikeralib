@@ -1,5 +1,6 @@
 package mikera.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,50 @@ public class Arrays {
 		return true;
 	}
 	
+	public static <T> T[] insertElement(T[] array, T value, int i) {
+		int count=array.length;
+		@SuppressWarnings("unchecked")
+		T[] newarray=(T[]) Array.newInstance(array.getClass().getComponentType(), count+1);
+		
+		System.arraycopy(array, 0, newarray, 0, i);
+		newarray[i]=value;
+		System.arraycopy(array, i, newarray, i+1, count-i);
+
+		return newarray;
+	}
 	
+
+	public static float[] insertElement(float[] array, float value, int i) {
+		int count=array.length;
+		float[] newarray=new float[count+1];
+		
+		System.arraycopy(array, 0, newarray, 0, i);
+		newarray[i]=value;
+		System.arraycopy(array, i, newarray, i+1, count-i);
+
+		return newarray;
+	}
+	
+	public static <T> T[] deleteElement(T[] array, int i) {
+		int count=array.length;
+		@SuppressWarnings("unchecked")
+		T[] newarray=(T[]) Array.newInstance(array.getClass().getComponentType(), count-1);
+		
+		System.arraycopy(array, 0, newarray, 0, i);
+		System.arraycopy(array, i+1, newarray, i, count-i-1);
+
+		return newarray;
+	}
+	
+	public static float[] deleteElement(float[] array, int i) {
+		int count=array.length;
+		float[] newarray=new float[count-1];;
+		
+		System.arraycopy(array, 0, newarray, 0, i);
+		System.arraycopy(array, i+1, newarray, i, count-i-1);
+
+		return newarray;
+	}
 	
 	public static void swap(int[] data, int a, int b) {
 		int t=data[a];
@@ -167,4 +211,5 @@ public class Arrays {
 		al.add(3);
 		System.out.println(Arrays.isSorted(al));	
 	}
+
 }

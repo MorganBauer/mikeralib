@@ -251,6 +251,13 @@ public final class Maths {
 		return result;
 	}
 	
+	public static float sigmoid (float a) {
+		double ea=Math.exp(-a);
+		float df=(float)(ea/(1.0f+ea));
+		if (Float.isNaN(df)) return (a>0)?1:0;
+		return df;
+	}
+	
 	public static float sin(double a) {
 		a = a % Maths.TWO_PI;
 		return (float)Math.sin(a);

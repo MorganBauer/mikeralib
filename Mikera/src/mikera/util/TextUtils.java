@@ -221,7 +221,9 @@ public class TextUtils {
 
 	public static String leftPad(String s, int l) {
 		if (s==null) s="";
-		return whiteSpace(l-s.length())+s;
+		int spaces=l-s.length();
+		if (spaces<0) throw new Error("String ["+s+"] too large to pad to length "+l);
+		return whiteSpace(spaces)+s;
 	}
 	
 	public static String leftPad(int v, int l) {
@@ -230,7 +232,9 @@ public class TextUtils {
 	
 	public static String rightPad(String s, int l) {
 		if (s==null) s="";
-		return s+whiteSpace(l-s.length());
+		int spaces=l-s.length();
+		if (spaces<0) throw new Error("String ["+s+"] too large to pad to length "+l);
+		return s+whiteSpace(spaces);
 	}
 	
 	// returns a+whitespace+b with total length len

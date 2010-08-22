@@ -98,7 +98,7 @@ public final class Rand {
 	 * @return
 	 */
 	public static boolean chance(double d) {
-		return Rand.nextDouble()<=d;
+		return Rand.nextDouble()<d;
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public final class Rand {
 	 * @return
 	 */
 	public static boolean chance(float d) {
-		return Rand.nextFloat()<=d;
+		return Rand.nextFloat()<d;
 	}
 
 	
@@ -125,6 +125,11 @@ public final class Rand {
 			return poLarge(x);
 		}
 		return poMedium(x);
+	}
+	
+	// sigmoid probability
+	public static float sig(float x) {
+		return (Rand.chance(Maths.sigmoid(x))?1:0);
 	}
 
 	private static int poMedium(double x) {
