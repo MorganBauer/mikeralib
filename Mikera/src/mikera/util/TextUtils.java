@@ -481,10 +481,24 @@ public class TextUtils {
 		}
     }
 
-    private static DecimalFormat df=new DecimalFormat("#,#00.00");
+    private static final DecimalFormat df=new DecimalFormat("#,#00.00");
     
 	public static String decimalFormat(double number) {
 		return df.format(number);
+	}
+	
+    private static final DecimalFormat ff=new DecimalFormat(" 0000.00000;-0000.00000");
+    
+	public static String fixedFormat(double number) {
+		return ff.format(number);
+	}
+	
+    private static final DecimalFormat percentformat=new DecimalFormat("##0.00%");
+
+	public static String percentage(double fc, double vnc) {
+		double pc=fc/vnc;
+		
+		return percentformat.format(pc);
 	}
 
 

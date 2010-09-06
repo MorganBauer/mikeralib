@@ -1,13 +1,24 @@
 package mikera.ui;
 
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
 import java.awt.font.LineMetrics;
+import java.awt.font.TextLayout;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 
 import mikera.util.Maths;
 
 public class Draw {
+
+
+	public static final Font MONO_FONT=new Font(Font.MONOSPACED,Font.PLAIN,14);
 
 
 	public static void drawImageWithBorder(Graphics g,int x , int y, int w, int h,BufferedImage image, int bs, boolean drawCentre) {
@@ -93,5 +104,40 @@ public class Draw {
 		g.drawLine(x, y, x, y+h-1);
 		g.drawLine(x+w-1, y, x+w-1, y+h-1);
 	}
+
+	public static final AttributedString getAttributedString(String s) {
+		return new AttributedString(s);
+	}
 	
+	public static AttributedCharacterIterator getAttributedIterator(String string) {
+		return getAttributedString(string).getIterator();
+	}
+	
+	public static AttributedCharacterIterator getAttributedIterator(AttributedString attributedString) {
+		return attributedString.getIterator();
+	}
+
+	
+	public static void drawText(Graphics g, int x, int y, int w, int h, String string) {
+		String[] strings=string.split("\n");
+		
+		Point2D.Float p = new Point2D.Float(x,y);
+		Graphics2D g2 = (Graphics2D)g;
+		FontRenderContext fontRenderContext = g2.getFontRenderContext();
+		
+		for (String s: strings) {
+			AttributedString aString=getAttributedString(s);
+			AttributedCharacterIterator charIterator=aString.getIterator();
+			
+			LineBreakMeasurer measurer = new LineBreakMeasurer(charIterator, fontRenderContext);
+			while (measurer.getPosition() < s.length()) {
+			
+			    TextLayout layout = measurer.nextLayout(w);
+			    p.y += layout.getAscent();
+		
+			    layout.draw(g2, p.x , p.y);
+			    p.y += layout.getDescent() + layout.getLeading();
+			}
+		}
+	}
 }

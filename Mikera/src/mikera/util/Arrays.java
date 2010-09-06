@@ -212,4 +212,12 @@ public class Arrays {
 		System.out.println(Arrays.isSorted(al));	
 	}
 
+	public static <T> T[] resize(T[] array, int newsize) {
+		int len=array.length;
+		@SuppressWarnings("unchecked")
+		T[] newarray=(T[]) Array.newInstance(array.getClass().getComponentType(), newsize);
+		System.arraycopy(array, 0, newarray, 0, Maths.min(newsize,len));
+		return newarray;
+	}
+
 }

@@ -128,7 +128,7 @@ public final class Rand {
 	}
 	
 	// sigmoid probability
-	public static float sig(float x) {
+	public static int sig(float x) {
 		return (Rand.chance(Maths.sigmoid(x))?1:0);
 	}
 
@@ -218,6 +218,13 @@ public final class Rand {
 		if (s<0) throw new IllegalArgumentException();
 		long result=((nextLong()>>>32)*s)>>32;
 		return (int) result;
+	}
+	
+	/**
+	 * Return a random number between 0 and max (exclusive, not including i
+	 */
+	public static final int otherIndex(int i, int max) {
+		return (Rand.r(max-1)+i)%max;
 	}
 
 	

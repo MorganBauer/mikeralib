@@ -2,6 +2,9 @@ package mikera.math;
 
 import java.io.Serializable;
 
+import mikera.annotations.Mutable;
+
+@Mutable
 public final class Point2i implements Comparable<Point2i>, Serializable {
 
 	public int x, y;

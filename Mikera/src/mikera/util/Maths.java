@@ -65,24 +65,11 @@ public final class Maths {
 		return v;
 	}
 	
-	public static int clamp(int value, int min, int max) {
-		if (value<min) return min;
-		if (value>max) return max;
-		return value;
-	}
-	
-	public static float clamp(float value, float min, float max) {
-		if (value<min) return min;
-		if (value>max) return max;
-		return value;
-	}
-	
-	public static double clamp(double value, double min, double max) {
-		if (value<min) return min;
-		if (value>max) return max;
-		return value;
-	}
-	
+	/**
+	 * Return the middle value of 3 numbers
+	 * 
+	 * Can use faster "bound" method if first and last parameters are in order
+	 */
 	public static int middle(int a, int b, int c) {
 		if (a<b) {
 			if (b<c) {
@@ -97,6 +84,11 @@ public final class Maths {
 		}
 	}
 	
+	/**
+	 * Return the middle value of 3 numbers
+	 * 
+	 * Can use faster "bound" method if first and last parameters are in order
+	 */
 	public static float middle(float a, float b, float c) {
 		if (a<b) {
 			if (b<c) {
@@ -253,9 +245,14 @@ public final class Maths {
 	
 	public static float sigmoid (float a) {
 		double ea=Math.exp(-a);
-		float df=(float)(ea/(1.0f+ea));
+		float df=(float)(1/(1.0f+ea));
 		if (Float.isNaN(df)) return (a>0)?1:0;
 		return df;
+	}
+	
+	public static float sigmoidDerivative (float a) {
+		float sa=sigmoid(a);
+		return sa*(1-sa);
 	}
 	
 	public static float sin(double a) {
@@ -395,7 +392,7 @@ public final class Maths {
 	        return 0;
 	    if (x >= b)
 	        return 1;
-	    float t = clamp((x - a) / (b - a), 0.0f, 1.0f);
+	    float t = bound(0.0f, (x - a) / (b - a), 1.0f);
 	    return t * t * (3 - 2 * t);
 	}
 	
@@ -405,5 +402,23 @@ public final class Maths {
 	
 	public static final float smoothFactor(float t) {
 	    return t * t * (3 - 2 * t);		
+	}
+
+	public static final float bound(float min, float v, float max) {
+		if (v<min) return min;
+		if (v>max) return max;
+		return v;
+	}
+	
+	public static final double bound(double min, double v, double max) {
+		if (v<min) return min;
+		if (v>max) return max;
+		return v;
+	}
+	
+	public static final int bound(int min, int v, int max) {
+		if (v<min) return min;
+		if (v>max) return max;
+		return v;
 	}
 }

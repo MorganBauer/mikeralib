@@ -90,10 +90,10 @@ public class Colours {
 	}
 	
 	public static int getARGBClamped(int r, int g, int b, int a) {
-    	int ri=Maths.clamp(r, 0, MAX_BYTE);
-    	int gi=Maths.clamp(g, 0, MAX_BYTE);
-    	int bi=Maths.clamp(b, 0, MAX_BYTE);
-    	int ai=Maths.clamp(a, 0, MAX_BYTE);
+    	int ri=Maths.bound(0, r, MAX_BYTE);
+    	int gi=Maths.bound(0, g, MAX_BYTE);
+    	int bi=Maths.bound(0, b, MAX_BYTE);
+    	int ai=Maths.bound(0, a, MAX_BYTE);
 		return getARGBQuick(ri,gi,bi,ai);
 	}
 	
@@ -157,11 +157,15 @@ public class Colours {
 		return new Color(r,g,b);
 	}
 	
-	public Color getColor(int argb) {
+	public static Color getColor(int argb) {
 		int r=getRed(argb);
 		int g=getGreen(argb);
 		int b=getBlue(argb);
 		int a=getAlpha(argb);
 		return new Color(r,g,b,a);
+	}
+
+	public static Color getColor(int r, int g, int b) {
+		return new Color(r,g,b);
 	}
 }

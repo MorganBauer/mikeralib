@@ -117,7 +117,7 @@ public class VF {
 			public void calculate(Vector input, Vector output) {
 				f.calculate(input, output);
 				for (int i=0; i<outputDimensions; i++) {
-					output.data[i]=Maths.clamp(input.data[i], min, max);
+					output.data[i]=Maths.bound(min, input.data[i], max);
 				}
 			}
 		};

@@ -15,7 +15,7 @@ public class ImageFilters {
 	    private int factor=256; // 0 = transparent, 255= fully opaque
 	    
 	    public TransparencyFilter(int alpha) {
-	    	factor=Maths.clamp((alpha*256)/255, 0, 256);
+	    	factor=Maths.bound(0,(alpha*256)/255, 256);
 	    }
 	    
 	    public TransparencyFilter(double alpha) {
