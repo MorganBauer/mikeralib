@@ -9,13 +9,9 @@ import mikera.util.*;
  *
  */
 public final class Matrix extends VectorFunction {
-	public float[] data;
+	public final float[] data;
 	private int rows=0;
 	private int columns=0;
-	
-	public Matrix() {
-		
-	}
 	
 	public Matrix(int r, int c) {
 		data=new float[r*c];
@@ -23,23 +19,21 @@ public final class Matrix extends VectorFunction {
 		columns=c;
 	}
 	
+	private Matrix(float[] data, int r, int c) {
+		this.data=data;
+		rows=r;
+		columns=c;
+	}
+	
 
 	
 	public Matrix(Matrix a) {
-		this(a.data);
+		this(a.data.clone(),a.rows,a.columns);
 	}
 	
-	public Matrix(float[] adata) {
-		int size=adata.length;
-		data=new float[size];
-		System.arraycopy(adata, 0, data, 0, size);
-	}
-	
-	public Matrix construct(float[] dataToEmbed, int r, int c) {
-		Matrix v=new Matrix();
-		v.data=dataToEmbed;
-		v.rows=r;
-		v.columns=c;
+	public static Matrix construct(float[] dataToEmbed, int r, int c) {
+		if (dataToEmbed.length!=(r*c)) throw new Error("Array size "+dataToEmbed.length+" not vale, expected "+r+"x"+c);
+		Matrix v=new Matrix(dataToEmbed,r,c);
 		return v;
 	}
 	

@@ -220,4 +220,8 @@ public class Arrays {
 		return newarray;
 	}
 
+	public static void zeroFill(float[] array) {
+		java.util.Arrays.fill(array, 0);
+	}
+
 }

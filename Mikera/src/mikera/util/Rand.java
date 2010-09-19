@@ -374,6 +374,28 @@ public final class Rand {
 	}
 	
 	/**
+	 * Chooses a set of distinct integers from a range 0 to maxValue-1
+	 */
+	public static void chooseIntegers(int[] dest, int destOffset, int n, int maxValue) {
+		if (n>maxValue) throw new Error("Cannot choose "+n+" items from a set of "+maxValue);
+		
+		int found=0;
+		for (int i=0; i<maxValue; i++) {
+			if (found<n) {
+				// fill up array
+				dest[destOffset+found]=i;
+				found++;
+			} else {
+				// replace with appropriate probability to ensure fair distribution
+				int ni=Rand.r(i+1);
+				if (ni<n) {
+					dest[destOffset+ni]=i;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Picks a random item from a given array
 	 */
 	public static <T> T pick(T[] ts) {
@@ -398,5 +420,23 @@ public final class Rand {
 			if (p--==0) return t;
 		}
 		throw new Error("Shouldn't get here!");
+	}
+
+	public static void fillUniform(float[] d, int start, int length) {
+		for (int i=0; i<length; i++) {
+			d[start+i]=Rand.nextFloat();
+		}
+	}
+	
+	public static void fillBinary(float[] d, int start, int length) {
+		for (int i=0; i<length; i++) {
+			d[start+i]=Rand.r(2);
+		}
+	}
+
+	public static void fillGaussian(float[] d, int start, int length, float u, float sd) {
+		for (int i=0; i<length; i++) {
+			d[start+i]=(float) Rand.n(u,sd);
+		}
 	}
 }

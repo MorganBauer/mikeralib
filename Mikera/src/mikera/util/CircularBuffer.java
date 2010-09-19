@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @param <V> Type of object contained in buffer
  */
-public class CircularBuffer<V> extends AbstractQueue<V> {
+public final class CircularBuffer<V> extends AbstractQueue<V> {
 	// ArrayList size is always less than or equal to maxSize
 	// ArrayList size equal to maxSize if buffer is full, or if there is any wraparound
 	private int maxSize;
@@ -37,7 +37,7 @@ public class CircularBuffer<V> extends AbstractQueue<V> {
 		return maxSize;
 	}
 	
-	public int size() {
+	public final int size() {
 		return getCount();
 	}
 	
@@ -325,5 +325,9 @@ public class CircularBuffer<V> extends AbstractQueue<V> {
 	private V getLocal(int n) {
 		int i=positionIndex(n);
 		return values.get(i);		
+	}
+
+	public boolean isFull() {
+		return (count==maxSize);
 	}
 }

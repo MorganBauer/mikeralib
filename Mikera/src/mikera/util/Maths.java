@@ -250,6 +250,13 @@ public final class Maths {
 		return df;
 	}
 	
+	public static float inverseSigmoid (float a) {
+		if (a>=1) return 800;
+		if (a<=0) return -800;
+		double ea=a/(1.0-a);
+		return (float)Math.log(ea);
+	}
+	
 	public static float sigmoidDerivative (float a) {
 		float sa=sigmoid(a);
 		return sa*(1-sa);

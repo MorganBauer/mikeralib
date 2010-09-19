@@ -68,6 +68,17 @@ public class TestRand {
 		assertTrue(-2>=Rand.round(-2.5));
 	}
 	
+	@Test public void testChoose() {
+		int[] ints=new int[10];
+		
+		Rand.chooseIntegers(ints, 0, 10, 10);
+		
+		java.util.Arrays.sort(ints);
+		
+		assertEquals(0,ints[0]);
+		assertEquals(9,ints[9]);
+	}
+	
 	@Test public void testShuffle() {
 		Integer[] is=new Integer[52];
 		for (int i=0; i<52; i++) is[i]=i+1;
