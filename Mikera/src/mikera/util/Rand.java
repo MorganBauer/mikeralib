@@ -2,6 +2,8 @@ package mikera.util;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public final class Rand {
 	/**
@@ -221,7 +223,7 @@ public final class Rand {
 	}
 	
 	/**
-	 * Return a random number between 0 and max (exclusive, not including i
+	 * Return a random index between 0 and max (exclusive) not equal to i
 	 */
 	public static final int otherIndex(int i, int max) {
 		return (Rand.r(max-1)+i)%max;
@@ -375,10 +377,33 @@ public final class Rand {
 	
 	/**
 	 * Chooses a set of distinct integers from a range 0 to maxValue-1
+	 * 
+	 * Resulting integers are sorted
 	 */
 	public static void chooseIntegers(int[] dest, int destOffset, int n, int maxValue) {
 		if (n>maxValue) throw new Error("Cannot choose "+n+" items from a set of "+maxValue);
+	
+		if (maxValue>(4*n)) {
+			chooseIntegersBySampling(dest,destOffset,n,maxValue);
+			return;
+		}
 		
+		chooseIntegersByExclusion(dest,destOffset,n,maxValue);
+
+	}
+	
+	private static void chooseIntegersByExclusion(int[] dest, int destOffset, int n, int maxValue) {	
+		while (n>0) {
+			if ((n==maxValue)||Rand.r(maxValue)<n) {
+				dest[destOffset+n-1]=maxValue-1;				
+				n--;
+			} 
+			maxValue--;
+		}
+	}
+		
+	@SuppressWarnings("unused")
+	private static void chooseIntegersByReservoirSampling(int[] dest, int destOffset, int n, int maxValue) {	
 		int found=0;
 		for (int i=0; i<maxValue; i++) {
 			if (found<n) {
@@ -392,6 +417,19 @@ public final class Rand {
 					dest[destOffset+ni]=i;
 				}
 			}
+		}
+	}
+	
+	private static void chooseIntegersBySampling(int[] dest, int destOffset, int n, int maxValue) {
+		SortedSet<Integer> s=new TreeSet<Integer>();
+		
+		while (s.size()<n) {
+			int v=Rand.r(maxValue);
+			s.add(v);
+		}
+		
+		for (Integer i: s) {
+			dest[destOffset++]=i;
 		}
 	}
 	

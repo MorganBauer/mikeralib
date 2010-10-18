@@ -224,4 +224,29 @@ public class Arrays {
 		java.util.Arrays.fill(array, 0);
 	}
 
+	public static void add(float[] src, float[] dest) {
+		for (int i=0; i<src.length; i++) {
+			dest[i]+=src[i];
+		}
+	}
+	
+	public static void add(float[] src, float[] dest, float factor) {
+		for (int i=0; i<src.length; i++) {
+			dest[i]+=src[i]*factor;
+		}
+	}
+	
+	public static void multiply(float[] array, float factor) {
+		for (int i=0; i<array.length; i++) {
+			array[i]*=factor;
+		}
+	}
+
+	public static void add(float[] array, float value) {
+		for (int i=0; i<array.length; i++) {
+			array[i]+=value;
+		}
+	}
+
+
 }
