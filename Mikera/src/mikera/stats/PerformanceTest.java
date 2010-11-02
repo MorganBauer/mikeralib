@@ -7,6 +7,7 @@ import mikera.engine.*;
 import mikera.persistent.*;
 import mikera.util.*;
 
+@SuppressWarnings("unused")
 public class PerformanceTest {
 
 	public static final int PRERUNS=10;

@@ -58,6 +58,7 @@ public class ImageUtils {
 		f.add(c);
 		f.setVisible(true);
 		f.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
+		f.pack();
 		
 		return f;
 	}
@@ -82,6 +83,12 @@ public class ImageUtils {
 			}
 		});
 		return frame;
+	}
+	
+	public static void mian (String[] args) {
+		BufferedImage img = Generator.createChecker(256, 256, 4, 0xFFFF0000, 0xFF000000);
+		display(img);
+		
 	}
 
 }

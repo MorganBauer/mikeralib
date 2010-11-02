@@ -6,6 +6,13 @@ import mikera.persistent.PersistentList;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullList;
 
+/**
+ * Persistent list that implements a repeating single value
+ * 
+ * @author Mike
+ *
+ * @param <T>
+ */
 public class RepeatList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = -4991558599811750311L;
 

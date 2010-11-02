@@ -13,7 +13,17 @@ import mikera.util.Maths;
 import mikera.util.Rand;
 
 public class Generator {
-	 
+	public static BufferedImage createFromArray(float[] arr, int offset, int w, int h) {
+		BufferedImage bi=newImage(w,h);
+		for (int y=0; y<h ; y++) {
+			for (int x=0; x<w; x++) {
+				bi.setRGB(x, y, Colours.grayScale(arr[offset++]));
+			}		
+		}
+		return bi;
+	}
+	
+	
 	public static BufferedImage createTiledImage(BufferedImage bi, int tw, int th) {
 		int h=bi.getHeight();
 		int w=bi.getWidth();

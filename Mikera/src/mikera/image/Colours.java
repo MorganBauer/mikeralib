@@ -106,12 +106,12 @@ public class Colours {
 	
 	
 
-	public static int fromFloat4(float[] col, int p) {
-		return getARGBClamped(col[p],col[p+1],col[p+2],col[p+3]);
+	public static int fromFloat4(float[] col, int offset) {
+		return getARGBClamped(col[offset],col[offset+1],col[offset+2],col[offset+3]);
 	}
 	
-	public static int fromFloat3(float[] col, int p) {
-		return getRGBClamped(col[p],col[p+1],col[p+2]);
+	public static int fromFloat3(float[] col, int offset) {
+		return getRGBClamped(col[offset],col[offset+1],col[offset+2]);
 	}
 	
 	public static int fromVector4(Vector col) {
@@ -167,5 +167,13 @@ public class Colours {
 
 	public static Color getColor(int r, int g, int b) {
 		return new Color(r,g,b);
+	}
+
+	public static int grayScale(float f) {
+		return 0xFF000000|(0x10101*floatToByte(f));
+	}
+
+	private static int floatToByte(float f) {
+		return Maths.bound(0, (int)(f*255),255);
 	}
 }

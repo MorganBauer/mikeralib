@@ -410,6 +410,7 @@ public final class Maths {
 	public static final float smoothFactor(float t) {
 	    return t * t * (3 - 2 * t);		
 	}
+	
 
 	public static final float bound(float min, float v, float max) {
 		if (v<min) return min;
@@ -428,4 +429,5 @@ public final class Maths {
 		if (v>max) return max;
 		return v;
 	}
+	
 }

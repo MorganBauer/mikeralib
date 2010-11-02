@@ -184,6 +184,7 @@ public final class Tools {
 	public static String readStringFromFile(File file) {
 		return readStringFromFile(file,Charset.defaultCharset());
 	}
+
 	
 	public static String readStringFromFile(File file, Charset cs) {
 		try {
@@ -201,6 +202,27 @@ public final class Tools {
 
 	public static String readStringFromStream(InputStream stream) {
 		return readStringFromStream(stream,Charset.defaultCharset());
+	}
+	
+	public static ArrayList<String> readStringLinesFromStream(InputStream stream) {
+		ArrayList<String> al=new ArrayList<String>();
+		BufferedReader reader=null;
+		try {
+			try {
+				reader = new BufferedReader(new InputStreamReader(stream, Charset.defaultCharset()));
+				String s;
+				while ((s=reader.readLine())!=null) {
+					al.add(s);
+				}
+			} finally {
+		        if (reader!=null) reader.close();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	    }  
+		
+		return al;
 	}
 	
 	public static String readStringFromStream(InputStream stream, Charset cs) {

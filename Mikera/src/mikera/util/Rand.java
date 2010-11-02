@@ -206,6 +206,10 @@ public final class Rand {
 		return (byte)(nextLong()>>32);
 	}
 	
+	public static boolean nextBoolean() {
+		return (nextLong()&65536)!=0;
+	}
+	
 	public static final char nextLetter() {
 		return (char)Rand.range('a','z');
 	}
@@ -477,4 +481,6 @@ public final class Rand {
 			d[start+i]=(float) Rand.n(u,sd);
 		}
 	}
+
+
 }

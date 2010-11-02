@@ -15,7 +15,7 @@ import mikera.util.emptyobjects.NullList;
 public final class Tuple<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = -3717695950215145009L;
 
-	private final T[] data;
+	public final T[] data;
 	
 	
 	// Empty Tuple for some special cases
