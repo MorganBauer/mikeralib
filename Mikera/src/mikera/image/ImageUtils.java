@@ -55,9 +55,9 @@ public class ImageUtils {
 			}
 		};
 		c.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
+		f.setMinimumSize(new Dimension(image.getWidth(null)+50,image.getHeight(null)+50));
 		f.add(c);
 		f.setVisible(true);
-		f.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
 		f.pack();
 		
 		return f;
@@ -85,7 +85,7 @@ public class ImageUtils {
 		return frame;
 	}
 	
-	public static void mian (String[] args) {
+	public static void main (String[] args) {
 		BufferedImage img = Generator.createChecker(256, 256, 4, 0xFFFF0000, 0xFF000000);
 		display(img);
 		

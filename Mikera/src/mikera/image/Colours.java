@@ -169,8 +169,12 @@ public class Colours {
 		return new Color(r,g,b);
 	}
 
-	public static int grayScale(float f) {
+	public static int toGreyScale(float f) {
 		return 0xFF000000|(0x10101*floatToByte(f));
+	}
+	
+	public static int toGreen(float f) {
+		return 0xFF000000|(0x000100*floatToByte(f));
 	}
 
 	private static int floatToByte(float f) {

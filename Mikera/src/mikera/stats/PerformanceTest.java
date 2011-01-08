@@ -105,6 +105,14 @@ public class PerformanceTest {
 		}
 	}
 	
+	public static int addMillion() {
+		int result=0;
+		for (int i=0; i<1000000; i++) {
+			result+=i;
+		}
+		return result;
+	}
+	
 	public static void b1() {
 		pm=PersistentHashMap.create();
 		for (int i=0; i<100; i++) {
@@ -128,6 +136,7 @@ public class PerformanceTest {
 	
 	public static void a2() {
 		Bits.countSetBits(0xCAFEBABE);
+		
 	}
 	
 	public static void b2() {
@@ -139,10 +148,18 @@ public class PerformanceTest {
 	static Random random=new Random();
 	
 	public static void a() {
-		float a=Rand.nextLong();
+		int result=0;
+		for (int i=0; i<1000000; i++) {
+			result+=i;
+		}
+		z=result;
 	}
 	
 	public static void b() {
-		float a=random.nextLong();
+		//System.gc();
+		for (int i=0; i<100; i++) {
+			float[] fs=new float[100000];
+		}
 	}
+	
 }

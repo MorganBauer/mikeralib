@@ -482,5 +482,11 @@ public final class Rand {
 		}
 	}
 
+	public static void binarySample(float[] temp, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
+			temp[i]=(Rand.nextFloat()<temp[i]) ? 1f : 0f;
+		}
+	}
+
 
 }

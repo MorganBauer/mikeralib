@@ -250,6 +250,13 @@ public final class Maths {
 		return df;
 	}
 	
+	public static float tanh (float a) {
+		double ex=Math.exp(2*a);
+		float df=(float)((ex-1)/(ex+1));
+		if (Float.isNaN(df)) return (a>0)?1:-1;
+		return df;
+	}
+	
 	public static float inverseSigmoid (float a) {
 		if (a>=1) return 800;
 		if (a<=0) return -800;
@@ -260,6 +267,11 @@ public final class Maths {
 	public static float sigmoidDerivative (float a) {
 		float sa=sigmoid(a);
 		return sa*(1-sa);
+	}
+	
+	public static float tanhDerivative (float a) {
+		float sa=tanh(a);
+		return 1-sa*sa;
 	}
 	
 	public static float sin(double a) {

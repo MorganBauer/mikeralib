@@ -17,7 +17,7 @@ public class Generator {
 		BufferedImage bi=newImage(w,h);
 		for (int y=0; y<h ; y++) {
 			for (int x=0; x<w; x++) {
-				bi.setRGB(x, y, Colours.grayScale(arr[offset++]));
+				bi.setRGB(x, y, Colours.toGreyScale(arr[offset++]));
 			}		
 		}
 		return bi;
