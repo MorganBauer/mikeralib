@@ -148,17 +148,16 @@ public class PerformanceTest {
 	static Random random=new Random();
 	
 	public static void a() {
-		int result=0;
-		for (int i=0; i<1000000; i++) {
-			result+=i;
+		float[] fs=new float[1000];
+		for (int i=0; i<100; i++) {
+			java.util.Arrays.fill(fs,0);
 		}
-		z=result;
 	}
 	
 	public static void b() {
 		//System.gc();
 		for (int i=0; i<100; i++) {
-			float[] fs=new float[100000];
+			float[] fs=new float[1000];
 		}
 	}
 	

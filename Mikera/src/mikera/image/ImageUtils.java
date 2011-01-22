@@ -60,6 +60,8 @@ public class ImageUtils {
 		f.setVisible(true);
 		f.pack();
 		
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
 		return f;
 	}
 	

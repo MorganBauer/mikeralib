@@ -236,6 +236,14 @@ public class Arrays {
 		}
 	}
 	
+	public static void add(float[] src, float[] dest, int destOffset, float factor) {
+		for (int i=0; i<src.length; i++) {
+			dest[i+destOffset]+=src[i]*factor;
+		}
+	}
+		
+
+	
 	public static void multiply(float[] array, float factor) {
 		for (int i=0; i<array.length; i++) {
 			array[i]*=factor;
@@ -246,6 +254,79 @@ public class Arrays {
 		for (int i=0; i<array.length; i++) {
 			array[i]+=value;
 		}
+	}
+
+	public static boolean checkRange(float[] array, double min, double max) {
+		for (int i=0; i<array.length; i++) {
+			float v=array[i];
+			if ((v<min)||(v>max)) return false;
+		}
+		return true;
+	}
+
+	public static void applySigmoid(float[] data) {
+		applySigmoid(data,data.length);
+	}
+	
+	public static void applySigmoid(float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.sigmoid(data[i]);
+		}
+	}
+	
+	public static void applyTanh(float[] data) {
+		applyTanh(data,data.length);
+	}
+	
+	public static void applyTanh(float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.tanh(data[i]);
+		}
+	}
+	
+	public static void applyStochasticSigmoid(float[] data) {
+		applyStochasticSigmoid(data,data.length);	
+	}
+
+
+	public static void applyStochasticSigmoid(float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			float v=data[i];
+			if (v<=-30f) {
+				data[i]=0.0f;
+			} else if (v>=30f) {
+				data[i]=1.0f;
+			} else {
+				data[i]=Rand.nextFloat()<Maths.sigmoid(v)?1:0;
+			}
+		}	
+	}
+	
+	public static void applyStochasticBinary(float[] data) {
+		applyStochasticBinary(data,data.length);
+	}
+
+	public static void applyStochasticBinary(float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			float v=data[i];
+			if (v<=0.0f) {
+				data[i]=0.0f;
+			} else if (v>=1.0f) {
+				data[i]=1.0f;
+			} else {
+				data[i]=Rand.nextFloat()<v?1:0;
+			}
+		}
+		
+	}
+
+	public static double squaredError(float[] output, float[] result) {
+		double err=0;
+		for (int i=0; i<output.length; i++) {
+			double d=output[i]-result[i];
+			err+=d*d;
+		}
+		return err;
 	}
 
 
