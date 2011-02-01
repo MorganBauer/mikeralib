@@ -7,6 +7,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+
 import javax.imageio.*;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -61,6 +63,37 @@ public class ImageUtils {
 		f.pack();
 		
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		return f;
+	}
+	
+	private static final HashMap<String,JFrame> imageFrames=new HashMap<String,JFrame>();
+	private static final HashMap<String,Image> images=new HashMap<String,Image>();
+	
+	@SuppressWarnings("serial")
+	public static Frame display(final String s, Image image) {
+		images.put(s,image);
+		JFrame f=imageFrames.get(s);
+		
+		if (f==null) {
+			f=new JFrame(s);
+			imageFrames.put(s,f);
+			JComponent c=new JComponent() {
+				public void paint(Graphics g) {
+					g.drawImage(images.get(s),0,0,null);
+				}
+			};
+			c.setMinimumSize(new Dimension(image.getWidth(null),image.getHeight(null)));
+			f.setMinimumSize(new Dimension(image.getWidth(null)+50,image.getHeight(null)+50));
+			f.add(c);
+			f.setVisible(true);
+			f.pack();
+			
+			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		} else {
+			f.setVisible(true);
+			f.repaint();
+		}
 		
 		return f;
 	}

@@ -236,9 +236,9 @@ public class Arrays {
 		}
 	}
 	
-	public static void add(float[] src, float[] dest, int destOffset, float factor) {
-		for (int i=0; i<src.length; i++) {
-			dest[i+destOffset]+=src[i]*factor;
+	public static void add(float[] src, int srcOffset, float[] dest, int destOffset, int length, float factor) {
+		for (int i=0; i<length; i++) {
+			dest[i+destOffset]+=src[i+srcOffset]*factor;
 		}
 	}
 		
@@ -317,7 +317,6 @@ public class Arrays {
 				data[i]=Rand.nextFloat()<v?1:0;
 			}
 		}
-		
 	}
 
 	public static double squaredError(float[] output, float[] result) {
@@ -327,6 +326,34 @@ public class Arrays {
 			err+=d*d;
 		}
 		return err;
+	}
+
+	public static void bitsToFloatArray(long val, float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=((val&1)==0)?0.0f:1.0f;
+			val = val>>1;
+		}
+	}
+	
+	/**
+	 * Converts an integer to a float array encoding of the integer class number,
+	 * i.e. 0 for all values other then the class number, 1 for the correct class
+	 * 
+	 * @param val
+	 * @param data
+	 * @param length
+	 */
+	public static void intToClassArray(int classValue, float[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=(classValue==i)?0.0f:1.0f;
+		}
+	}
+
+	public static boolean contains(int[] array, int value) {
+		for (int i=0; i<array.length; i++) {
+			if (array[i]==value) return true;
+		}
+		return false;
 	}
 
 

@@ -35,6 +35,10 @@ public final class Tools {
 		}
 	}
 	
+	public static void debugBreak(Object o) {
+		o.toString();
+	}
+	
 	public static int compareWithNulls(Object a, Object b) {
 		if (a==b) {
 			return 0;
