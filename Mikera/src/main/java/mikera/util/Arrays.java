@@ -274,6 +274,12 @@ public class Arrays {
 		}
 	}
 	
+	public static void applySigmoid(float[] data, int length, float gain) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.sigmoid(data[i]*gain);
+		}
+	}
+	
 	public static void applyTanh(float[] data) {
 		applyTanh(data,data.length);
 	}
@@ -354,6 +360,17 @@ public class Arrays {
 			if (array[i]==value) return true;
 		}
 		return false;
+	}
+
+	public static void shuffle(int[] is) {
+		for (int i=is.length-1; i>=1; i--) {
+			int j=Rand.r(i+1);
+			if (i!=j) {
+				int t=is[i];		
+				is[i]=is[j];
+				is[j]=t;
+			}
+		}
 	}
 
 
