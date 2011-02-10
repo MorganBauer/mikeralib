@@ -1,5 +1,6 @@
 package mikera.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -16,6 +17,16 @@ public class Tools {
 
 	public static JFrame showComponent(Component c) {
 		JFrame f=new JFrame("View Component");
+		f.getContentPane().add(c);
+		f.pack();
+		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		return f;
+	}	
+	
+	public static JFrame showFillingComponent(Component c) {
+		JFrame f=new JFrame("View Component");
+		f.getContentPane().setLayout(new BorderLayout());
 		f.getContentPane().add(c);
 		f.pack();
 		f.setVisible(true);

@@ -148,17 +148,19 @@ public class PerformanceTest {
 	static Random random=new Random();
 	
 	public static void a() {
-		float[] fs=new float[1000];
-		for (int i=0; i<100; i++) {
-			java.util.Arrays.fill(fs,0);
-		}
-	}
+        long count = 0;
+        for (int i = 0; i < 1000000; i++) {
+            Integer o = Integer.parseInt("99");
+            count += o.hashCode();
+        }
+	}	
 	
 	public static void b() {
-		//System.gc();
-		for (int i=0; i<100; i++) {
-			float[] fs=new float[1000];
-		}
+        long count = 0;
+        for (int i = 0; i < 1000000; i++) {
+            int o = Integer.parseInt("99");
+            count += o;
+        }
 	}
 	
 }
