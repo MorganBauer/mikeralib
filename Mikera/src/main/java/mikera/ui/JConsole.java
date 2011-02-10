@@ -20,6 +20,12 @@ import javax.swing.*;
 
 import mikera.util.Maths;
 
+/**
+ * Class implementing a Swing-based text console
+ * 
+ * @author Mike
+ *
+ */
 public class JConsole extends JComponent {
 	private static final Color DEFAULT_FOREGROUND=Color.LIGHT_GRAY;
 	private static final Color DEFAULT_BACKGROUND=Color.BLACK;
@@ -223,6 +229,17 @@ public class JConsole extends JComponent {
 		setBackground(backGround);
 		write(string);
 	}
+	
+	public void fillArea(char c, Color fg, Color bg, int x, int y, int w, int h) {
+		for (int q=Maths.max(0,y); q<Maths.min(y+h, rows); q++) {
+			for (int p=Maths.max(0,x); p<Maths.min(x+w, columns); p++) {
+				int offset=p+q*columns;
+				text[offset]=c;
+				foreground[offset]=fg;
+				background[offset]=bg;
+			}
+		}
+	}
 
 	public void write(String string) {
 		int pos=curPosition;
@@ -240,6 +257,8 @@ public class JConsole extends JComponent {
     	jc.write("Hello World\n",Color.GREEN,Color.BLACK);
     	//System.out.println("Normal output");
     	jc.captureStdOut();
+    	jc.fillArea(' ', Color.WHITE, new Color(100,70,30), 20, 20, 3, 3);
+    	
     	System.out.println("Hello StdOut");
     	Tools.showFillingComponent(jc);
     	
