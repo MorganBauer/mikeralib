@@ -1,15 +1,10 @@
 package mikera.persistent.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.*;
 
-import mikera.persistent.ListFactory;
-import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
 import mikera.util.Maths;
 import mikera.util.Tools;
-import mikera.util.emptyobjects.NullList;
 
 @SuppressWarnings("serial")
 public abstract class BasePersistentList<T> extends PersistentList<T> {

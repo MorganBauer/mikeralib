@@ -1,6 +1,5 @@
 package mikera.net;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 import mikera.data.Data;

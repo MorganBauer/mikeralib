@@ -1,6 +1,5 @@
 package mikera.net;
 
-import java.io.IOException;
 import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;

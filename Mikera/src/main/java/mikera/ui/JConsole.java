@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-import mikera.util.Maths;
 
 /**
  * Class implementing a Swing-based text console
@@ -27,6 +25,8 @@ import mikera.util.Maths;
  *
  */
 public class JConsole extends JComponent {
+	private static final long serialVersionUID = 3571518591759968333L;
+	
 	private static final Color DEFAULT_FOREGROUND=Color.LIGHT_GRAY;
 	private static final Color DEFAULT_BACKGROUND=Color.BLACK;
 	private static final Font DEFAULT_FONT=new Font(Font.MONOSPACED, Font.PLAIN, 20);
@@ -102,10 +102,10 @@ public class JConsole extends JComponent {
         int y1=(int)(r.getMinY()/fontWidth);
         int y2=(int)(r.getMaxY()/fontWidth)+1;
         
-        for(int j = Maths.max(0,y1); j < Maths.min(y2,rows); j++) {
+        for(int j = Math.max(0,y1); j < Math.min(y2,rows); j++) {
     		int offset=j*columns;
-    		int start=Maths.max(x1, 0);
-    		int end=Maths.min(x2,columns);
+    		int start=Math.max(x1, 0);
+    		int end=Math.min(x2,columns);
         	while (start<end) {
         		Color nfg=foreground[offset+start];
         		Color nbg=background[offset+start];
@@ -231,8 +231,8 @@ public class JConsole extends JComponent {
 	}
 	
 	public void fillArea(char c, Color fg, Color bg, int x, int y, int w, int h) {
-		for (int q=Maths.max(0,y); q<Maths.min(y+h, rows); q++) {
-			for (int p=Maths.max(0,x); p<Maths.min(x+w, columns); p++) {
+		for (int q=Math.max(0,y); q<Math.min(y+h, rows); q++) {
+			for (int p=Math.max(0,x); p<Math.min(x+w, columns); p++) {
 				int offset=p+q*columns;
 				text[offset]=c;
 				foreground[offset]=fg;

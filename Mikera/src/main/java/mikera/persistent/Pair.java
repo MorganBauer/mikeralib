@@ -1,6 +1,5 @@
 package mikera.persistent;
 
-import java.io.Serializable;
 
 import mikera.annotations.Immutable;
 import mikera.util.Bits;

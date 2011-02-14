@@ -61,6 +61,6 @@ public class TestRayCaster {
 		}
 		
 		assertEquals(D*D*D,tg.countNonNull());
-		assertEquals(D*D*D,is[0]);
+		assertEquals((long)D*D*D,is[0]);
 	}
 }

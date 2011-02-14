@@ -1,8 +1,6 @@
 package mikera.util;
 
-import java.io.Serializable;
 
-import mikera.annotations.Immutable;
 import mikera.annotations.Mutable;
 import mikera.util.Bits;
 
@@ -13,7 +11,7 @@ import mikera.util.Bits;
  * @param <B>
  */
 @Mutable
-public final class MutablePair<A,B> implements Comparable<MutablePair<A,B>> {
+public final class MutablePair<A,B> implements Cloneable, Comparable<MutablePair<A,B>> {
 	private static final long serialVersionUID = -7930545169533958038L;
 	public A a;
 	public B b;

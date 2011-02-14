@@ -1,12 +1,7 @@
 package mikera.image;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.*;
-import java.io.IOException;
-import java.net.URL;
-import javax.imageio.*;
-import mikera.engine.*;
 import mikera.math.*;
 
 import mikera.util.Maths;

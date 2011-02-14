@@ -3,10 +3,6 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.persistent.*;
-import mikera.persistent.impl.CompositeList;
-import mikera.persistent.impl.RepeatList;
-import mikera.persistent.impl.SingletonList;
-import mikera.persistent.impl.Tuple;
 import mikera.util.*;
 import mikera.util.emptyobjects.*;
 

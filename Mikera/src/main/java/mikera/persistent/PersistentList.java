@@ -1,6 +1,5 @@
 package mikera.persistent;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.ListIterator;
 
 import mikera.persistent.impl.*;
 import mikera.util.Tools;
-import mikera.util.emptyobjects.NullList;
 
 public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {
 	private static final long serialVersionUID = -7221238938265002290L;

@@ -3,7 +3,6 @@ package mikera.test;
 import org.junit.*;
 import static org.junit.Assert.*;
 import mikera.util.*;
-import java.util.*;
 
 public class TestRankedQueue {
 	

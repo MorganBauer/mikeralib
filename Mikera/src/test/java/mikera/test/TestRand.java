@@ -4,7 +4,6 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 import mikera.util.*;
-import mikera.engine.*;
 
 public class TestRand {
 	@Test public void testD() {

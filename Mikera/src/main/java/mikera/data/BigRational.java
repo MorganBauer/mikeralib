@@ -49,12 +49,18 @@ public class BigRational extends Number implements Comparable<BigRational> {
 			denom=denom.negate();
 		}
 		BigInteger gcd=gcd(num.abs(),denom.abs());
-		num=num.divide(gcd);
-		denom=denom.divide(gcd);
+		if (gcd.compareTo(BigInteger.ONE)>0) {
+			num=num.divide(gcd);
+			denom=denom.divide(gcd);
+		}
 		numerator=num;
 		denominator=denom;
 	}
 	
+	public BigRational(long a) {
+		this(BigInteger.valueOf(a),BigInteger.ONE);
+	}
+
 	public BigRational multiply(BigRational b) {
 		return create(numerator.multiply(b.numerator), denominator.multiply(b.denominator)); 
 	}
@@ -123,6 +129,14 @@ public class BigRational extends Number implements Comparable<BigRational> {
 				this.numerator.multiply(b.denominator).add(b.numerator.multiply(this.denominator)),
 				this.denominator.multiply(b.denominator)
 		);
+	}
+	
+	@Override public boolean equals(Object o) {
+		if (o instanceof BigRational) {
+			BigRational b=(BigRational)o;
+			return this.numerator.equals(b.numerator)&&this.denominator.equals(b.denominator);
+		}
+		return false;
 	}
 
 	public int compareTo(BigRational b) {

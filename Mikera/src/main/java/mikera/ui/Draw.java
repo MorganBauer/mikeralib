@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
-import java.awt.font.LineMetrics;
 import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;

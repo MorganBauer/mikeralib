@@ -1,12 +1,10 @@
 package mikera.sound;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 import javax.sound.sampled.*;
 
-import mikera.image.ImageUtils;
 import mikera.util.Resource;
 
 public class SoundEngine {
