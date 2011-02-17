@@ -1,16 +1,17 @@
 package mikera.util.emptyobjects;
 
 import java.io.ObjectStreamException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
-import mikera.persistent.*;
+import mikera.persistent.PersistentCollection;
 import mikera.persistent.impl.SingletonList;
 
 public final class NullCollection<T> extends PersistentCollection<T> {
 	private static final long serialVersionUID = 2925953822669265599L;
 
 	@SuppressWarnings("rawtypes")
-	public static NullCollection<?> INSTANCE=(NullCollection<?>)new NullCollection();
+	public static NullCollection<?> INSTANCE=new NullCollection();
 	
 	protected NullCollection() {
 		

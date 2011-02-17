@@ -1,20 +1,22 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.ai.*;
+import static org.junit.Assert.assertTrue;
+import mikera.ai.Task;
+import mikera.ai.Tasks;
 import mikera.engine.Dir;
 import mikera.engine.TreeGrid;
+
+import org.junit.Test;
 
 public class TestTask {
 	protected final TreeGrid<Integer> map=new TreeGrid<Integer>();
 	
-	protected class State {
+	protected static class State {
 		byte dir=Dir.N;		
 		boolean halted=false;
 	}
 	
-	protected class Actor {
+	protected static class Actor {
 		int x=0;
 		int y=0;
 		int z=0;

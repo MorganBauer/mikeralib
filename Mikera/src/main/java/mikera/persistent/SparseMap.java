@@ -1,17 +1,17 @@
 package mikera.persistent;
 
-import java.util.Iterator;
-
 import mikera.math.Bounds4i;
 import mikera.util.Maths;
 import mikera.util.Tools;
 
 public final class SparseMap<T> extends PersistentObject {
+	private static final long serialVersionUID = -6716139803365267248L;
+
 	final int bits;
 	final Object[] data;
 	
 	@SuppressWarnings("rawtypes")
-	private static SparseMap<?> EMPTY=(SparseMap<?>)new SparseMap(2, new Object[16]);
+	private static SparseMap<?> EMPTY=new SparseMap(2, new Object[16]);
 	
 	private SparseMap(int n, Object[] objects) {
 		bits=n;
@@ -239,6 +239,11 @@ public final class SparseMap<T> extends PersistentObject {
 		visit((Visitor<T,StringBuilder>)vsb,sb);
 		return sb.toString();
 		
+	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 	
 	@SuppressWarnings("rawtypes")

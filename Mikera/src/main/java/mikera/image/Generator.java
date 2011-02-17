@@ -1,9 +1,16 @@
 package mikera.image;
 
-import java.awt.*;
-import java.awt.image.*;
-import mikera.math.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
+import mikera.math.Function;
+import mikera.math.Functions;
+import mikera.math.PerlinNoise;
+import mikera.math.PerlinScalar;
+import mikera.math.VF;
+import mikera.math.Vector;
+import mikera.math.VectorFunction;
 import mikera.util.Maths;
 import mikera.util.Rand;
 
@@ -172,8 +179,8 @@ public class Generator {
 			for (int x=0; x<w; x++) {
 				float cx=Maths.sin(x/20.f+10*Maths.sin(y/33.0f));
 				float cy=Maths.sin(y/30.f+15*Maths.sin(x/22.0f));
-				cx=Maths.sin(cy+Maths.sin((float)(cx+x/23.0f)));
-				cy=Maths.sin(cx+Maths.sin((float)(cy-y/13.0f)));
+				cx=Maths.sin(cy+Maths.sin((cx+x/23.0f)));
+				cy=Maths.sin(cx+Maths.sin((cy-y/13.0f)));
 
 				int a=(int)(128+127*Maths.sin(cx)*Maths.cos(cy));
 				b.setRGB(x, y, 0xFF000000+0x010101*a);

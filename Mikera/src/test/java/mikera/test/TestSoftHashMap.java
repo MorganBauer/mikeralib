@@ -1,8 +1,11 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import mikera.util.HashCache;
+import mikera.util.SoftHashMap;
+
+import org.junit.Test;
 
 public class TestSoftHashMap {
 	@Test public void test1() {

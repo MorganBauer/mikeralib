@@ -42,6 +42,7 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 		}
 
 		public T next() {
+			if (i>=size) throw new NoSuchElementException();
 			return getObjectAtIndex(i++);
 		}
 
@@ -200,7 +201,7 @@ public final class RankedQueue<T> extends AbstractQueue<T>{
 		int cc=size-ch; // number of child elements to consider
 		while (cc>0) {
 			// advance if needed to point at lowest ranked child
-			if ((cc>1)&(ranks[ch]>ranks[ch+1])) ch++;
+			if ((cc>1)&&(ranks[ch]>ranks[ch+1])) ch++;
 			
 			// check if we are correctly ranked at position i
 			if (tr<ranks[ch]) break;

@@ -12,8 +12,6 @@
 
 package mikera.math;
 
-import java.util.Random;
-
 import mikera.util.Maths;
 import mikera.util.Rand;
 
@@ -86,7 +84,7 @@ public class PerlinNoise
         while(--i > 0)
         {
             k = p_imp[i];
-            j = (int)(Rand.r(DEFAULT_SAMPLE_SIZE));
+            j = (Rand.r(DEFAULT_SAMPLE_SIZE));
             p_imp[i] = p_imp[j];
             p_imp[j] = k;
         }
@@ -597,7 +595,7 @@ public class PerlinNoise
         while(--i > 0)
         {
             k = p[i];
-            j = (int)(Rand.r(B));
+            j = (Rand.r(B));
             p[i] = p[j];
             p[j] = k;
         }

@@ -1,10 +1,9 @@
 package mikera.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import mikera.engine.Hex;
 
 import org.junit.Test;
-
-import mikera.engine.*;
 
 public class TestHex {
 	@Test public void testRoundUp() {

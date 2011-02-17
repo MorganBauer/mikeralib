@@ -1,7 +1,8 @@
 package mikera.persistent;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 import mikera.annotations.Immutable;
 import mikera.persistent.impl.FilteredIterator;

@@ -3,7 +3,6 @@ package mikera.persistent;
 import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import mikera.persistent.impl.BasePersistentSet;
@@ -34,7 +33,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	
 
 	@SuppressWarnings("rawtypes")
-	private static final PHSNode<?> EMPTY_NODE_LIST=(PHSNode<?>)new PHSNullList();
+	private static final PHSNode<?> EMPTY_NODE_LIST=new PHSNullList();
 	
 	@SuppressWarnings("unchecked")
 	public PersistentHashSet() {
@@ -51,7 +50,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 		PersistentHashSet<T> pm=new PersistentHashSet<T>();
 		if (values==null) return pm;
 		for (T ent: values) {
-			pm=(PersistentHashSet<T>) pm.include(ent);
+			pm=pm.include(ent);
 		}
 		return pm;
 	}
@@ -59,7 +58,7 @@ public final class PersistentHashSet<T> extends BasePersistentSet<T> {
 	public static<T> PersistentHashSet<T> createFromIterator(Iterator<T> values) {
 		PersistentHashSet<T> pm=new PersistentHashSet<T>();
 		while(values.hasNext()) {
-			pm=(PersistentHashSet<T>) pm.include(values.next());
+			pm=pm.include(values.next());
 		}
 		return pm;
 	}

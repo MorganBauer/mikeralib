@@ -25,7 +25,7 @@ public class MapFactory {
 	}
 	
 	public static <V> PersistentMap<Integer,V> create(int key, V value) {
-		return (PersistentMap<Integer, V>) IntMap.create(key, value);
+		return IntMap.create(key, value);
 	}
 	
 

@@ -1,18 +1,19 @@
 package mikera.util.emptyobjects;
 
 import java.io.ObjectStreamException;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
-import mikera.persistent.*;
+import mikera.persistent.PersistentCollection;
+import mikera.persistent.PersistentHashMap;
+import mikera.persistent.PersistentMap;
+import mikera.persistent.PersistentSet;
 
 public final class NullMap<K,V> extends PersistentMap<K, V> {
 	private static final long serialVersionUID = 1717634837542733926L;
 
 	
 	@SuppressWarnings({ "rawtypes" })
-	public static final NullMap<?,?> INSTANCE=(NullMap<?,?>)new NullMap();
+	public static final NullMap<?,?> INSTANCE=new NullMap();
 	
 	private NullMap() {
 		

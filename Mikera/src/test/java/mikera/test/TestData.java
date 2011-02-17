@@ -1,21 +1,23 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.data.ByteArrayCache;
-import mikera.data.Data;
-import mikera.net.DataOutputStream;
-import mikera.util.*;
-import mikera.util.emptyobjects.NullArrays;
-
-import mikera.net.DataInputStream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
-import java.util.*;
+
+import mikera.data.ByteArrayCache;
+import mikera.data.Data;
+import mikera.net.DataInputStream;
+import mikera.net.DataOutputStream;
+import mikera.util.Bits;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestData {
 	@Test public void testData1() {

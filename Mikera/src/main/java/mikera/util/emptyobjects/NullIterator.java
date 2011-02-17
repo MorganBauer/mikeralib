@@ -1,7 +1,8 @@
 package mikera.util.emptyobjects;
 
 import java.io.ObjectStreamException;
-import java.util.*;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 import mikera.annotations.Immutable;
 
@@ -9,7 +10,7 @@ import mikera.annotations.Immutable;
 public final class NullIterator<T> implements ListIterator<T> {
 	
 	@SuppressWarnings({ "rawtypes" })
-	public static NullIterator<?> INSTANCE= (NullIterator<?>)new NullIterator();
+	public static NullIterator<?> INSTANCE= new NullIterator();
 	
 	private NullIterator() {
 		

@@ -1,10 +1,15 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Map;
+
 import mikera.data.DataType;
-import mikera.util.emptyobjects.*;
-import java.util.*;
+import mikera.util.emptyobjects.NullArrays;
+import mikera.util.emptyobjects.NullMap;
+
+import org.junit.Test;
 
 public class TestNullObjects {
 	@SuppressWarnings("unchecked")

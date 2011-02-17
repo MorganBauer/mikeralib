@@ -9,13 +9,13 @@ public class FluidSystem {
 	}
 	
 	public static class FluidNode {
-		int flowDirs=0;
-		int flowX=0;
-		int flowY=0;
-		int flowZ=0;
-		int type=0;
-		int volume=0;
-		int topPressure=0;
+		public int flowDirs=0;
+		public int flowX=0;
+		public int flowY=0;
+		public int flowZ=0;
+		public int type=0;
+		public int volume=0;
+		public int topPressure=0;
  	}
 	
 	public void fluidStep() {

@@ -316,7 +316,7 @@ public final class Maths {
 	}
 
 	public static int square(byte b) {
-		return b*(int)b;
+		return b*b;
 	}
 	
 	public static int square(int a) {

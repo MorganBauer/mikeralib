@@ -1,11 +1,15 @@
 package mikera.persistent;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import mikera.persistent.impl.BlockList;
 import mikera.persistent.impl.CompositeList;
 import mikera.persistent.impl.SingletonList;
 import mikera.persistent.impl.Tuple;
 import mikera.util.emptyobjects.NullList;
-import java.util.*;
 
 /**
  * Factory class for persistent list types
@@ -52,7 +56,7 @@ public class ListFactory<T> {
 			}	
 			
 			// note this covers negative length case
-			return (PersistentList<T>) Tuple.create(data,fromIndex,toIndex);
+			return Tuple.create(data,fromIndex,toIndex);
 		}	
 		
 		// otherwise create a block list

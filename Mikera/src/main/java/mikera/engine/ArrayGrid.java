@@ -2,9 +2,7 @@ package mikera.engine;
 
 import java.util.Arrays;
 
-import mikera.util.Bits;
 import mikera.util.Maths;
-import mikera.util.emptyobjects.NullArrays;
 /**
  * Class for storing flexible 3D int arrays
  * Stores arrays of ints

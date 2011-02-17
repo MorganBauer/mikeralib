@@ -2,10 +2,8 @@ package mikera.persistent;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import mikera.persistent.impl.FilteredIterator;
-import mikera.persistent.impl.SingletonList;
 import mikera.util.Tools;
 
 public abstract class PersistentSet<T> extends PersistentCollection<T> implements IPersistentSet<T> {

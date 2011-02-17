@@ -1,9 +1,14 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import mikera.persistent.Text;
-import mikera.util.*;
+import mikera.util.Rand;
+import mikera.util.TextUtils;
+
+import org.junit.Test;
 
 public class TestText {
 	@Test public void testWhiteSpace() {

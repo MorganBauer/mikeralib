@@ -1,20 +1,36 @@
 package mikera.util;
-import java.util.*;
-import java.io.*;
-import java.lang.reflect.Array;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
-import mikera.engine.PathFinder.PathNode;
-import mikera.persistent.IntMap;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import mikera.persistent.MapFactory;
 import mikera.persistent.PersistentHashMap;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*; 
-import javax.xml.transform.dom.DOMSource; 
-import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 
 public final class Tools {
 	
@@ -254,14 +270,16 @@ public final class Tools {
 		if (a==b) return (Map<K, V>) PersistentHashMap.EMPTY;
 		
 		PersistentHashMap<K,V> phm=(PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
-		for (K key: a.keySet()) {
-			V av=a.get(key);
+		for (Map.Entry<K, V> entry: a.entrySet()) {
+			K key=entry.getKey();
+			V av=entry.getValue();
 			V bv=b.get(key);
 			if (!equalsWithNulls(av,bv)) phm=phm.include(key, av);
 		}
 		
-		for (K key: b.keySet()) {
-			if ((!a.containsKey(key)) && (b.get(key)!=null)) phm=phm.include(key, null);
+		for (Map.Entry<K, V> entry: b.entrySet()) {
+			K key=entry.getKey();
+			if ((!a.containsKey(key)) && (entry.getValue()!=null)) phm=phm.include(key, null);
 		}
 
 		return phm;

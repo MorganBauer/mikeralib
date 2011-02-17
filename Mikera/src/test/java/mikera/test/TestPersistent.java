@@ -1,13 +1,34 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.persistent.*;
-import mikera.persistent.impl.*;
-import mikera.util.*;
-import mikera.util.emptyobjects.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.*;
+import java.util.ArrayList;
+
+import mikera.persistent.IntSet;
+import mikera.persistent.ListFactory;
+import mikera.persistent.MapFactory;
+import mikera.persistent.PersistentCollection;
+import mikera.persistent.PersistentHashSet;
+import mikera.persistent.PersistentList;
+import mikera.persistent.PersistentSet;
+import mikera.persistent.SetFactory;
+import mikera.persistent.impl.BlockList;
+import mikera.persistent.impl.CompositeList;
+import mikera.persistent.impl.RepeatList;
+import mikera.persistent.impl.SingletonList;
+import mikera.persistent.impl.SingletonSet;
+import mikera.persistent.impl.SubList;
+import mikera.persistent.impl.Tuple;
+import mikera.util.Rand;
+import mikera.util.Tools;
+import mikera.util.emptyobjects.NullCollection;
+import mikera.util.emptyobjects.NullList;
+import mikera.util.emptyobjects.NullSet;
+
+import org.junit.Test;
 
 public class TestPersistent {
 	
@@ -399,8 +420,8 @@ public class TestPersistent {
 		PersistentList<Integer> tl=(Tuple.create(new Integer[] {1,2,3,4,5}));
 		PersistentList<Integer> ol=(Tuple.create(new Integer[] {1,3,5}));
 		PersistentList<Integer> pl=tl;
-		pl=(PersistentList<Integer>) pl.delete(2);
-		pl=(PersistentList<Integer>) pl.delete(4);
+		pl=pl.delete(2);
+		pl=pl.delete(4);
 		assertEquals(ol,pl);
 		assertEquals(ol,tl.deleteAt(1).deleteAt(2));
 	}

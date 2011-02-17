@@ -1,6 +1,6 @@
 package mikera.net;
 
-import java.io.*;
+import java.io.InputStream;
 
 import mikera.data.Data;
 import mikera.util.Maths;

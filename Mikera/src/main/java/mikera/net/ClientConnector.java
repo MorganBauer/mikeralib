@@ -1,9 +1,14 @@
 package mikera.net;
 
-import java.net.*;
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.ClosedSelectorException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
 public class ClientConnector {
 	Selector selector;
@@ -80,7 +85,7 @@ public class ClientConnector {
 	
 	private void handleKeys(Set<SelectionKey> keys) {
 		for (Iterator<SelectionKey> i = keys.iterator(); i.hasNext();) {
-			SelectionKey key = (SelectionKey) i.next();
+			SelectionKey key = i.next();
 			i.remove();
 			
 			// System.err.println(key.readyOps());

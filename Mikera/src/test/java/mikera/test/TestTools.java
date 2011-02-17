@@ -1,14 +1,19 @@
 package mikera.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
+import mikera.util.Arrays;
+import mikera.util.Rand;
+import mikera.util.Tools;
+
+import org.junit.Test;
 
 public class TestTools {
 	@Test public void testSort() {

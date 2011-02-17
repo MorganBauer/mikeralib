@@ -17,7 +17,7 @@ public final class ByteArrayCache {
 	// position 2=length 2-3
 	// ...
 	@SuppressWarnings("unchecked")
-	private static ArrayList<byte[]>[] cache=(ArrayList<byte[]>[])new ArrayList[32];
+	private static ArrayList<byte[]>[] cache=new ArrayList[32];
 	
 	private static final int CACHE_COUNT=10;
 	

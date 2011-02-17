@@ -21,7 +21,7 @@ public abstract class Server {
 	
 	private ServerConnector serverConnector;
 	
-	boolean running=false;
+	private boolean running=false;
 	
 	//private Thread serverThread;
 	//private int load_avg=0;
@@ -204,5 +204,9 @@ public abstract class Server {
 			return;
 		}
 		p.queueIncomingMessage(data);
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 }

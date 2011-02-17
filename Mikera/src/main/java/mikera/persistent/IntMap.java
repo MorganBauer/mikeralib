@@ -1,13 +1,9 @@
 package mikera.persistent;
 
 import java.io.ObjectStreamException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-import mikera.persistent.IntMap.IMEntry;
-import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
 import mikera.util.Bits;
@@ -62,7 +58,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	public static<V> IntMap<V> create(Map<Integer,V> values) {
 		IntMap<V> pm=new IntMap<V>();
 		for (Map.Entry<Integer,V> ent: values.entrySet()) {
-			pm=(IntMap<V>) pm.include(ent.getKey(),ent.getValue());
+			pm=pm.include(ent.getKey(),ent.getValue());
 		}
 		return pm;
 	}
@@ -669,7 +665,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 		}
 
 		public Iterator<Map.Entry<Integer,V>> iterator() {
-			return new IMEntrySetIterator<V>((IntMap<V>) IntMap.this);
+			return new IMEntrySetIterator<V>(IntMap.this);
 		}
 
 		public PersistentSet<Map.Entry<Integer,V>> include(
@@ -760,7 +756,7 @@ public final class IntMap<V> extends PersistentMap<Integer,V> {
 	}
 	
 	public java.util.Map.Entry<Integer,V> getMapEntry(Object key) {
-		return (Map.Entry<Integer,V>)getEntry((Integer)key);
+		return getEntry((Integer)key);
 	}
 
 	@Override

@@ -1,18 +1,22 @@
 package mikera.image;
 
-import mikera.math.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import mikera.math.Function;
+import mikera.math.Vector;
 import mikera.util.Rand;
 import mikera.util.Resource;
 

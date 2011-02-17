@@ -1,8 +1,9 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import mikera.data.BigRational;
+
+import org.junit.Test;
 
 public class TestBigRational {
 	@Test public void testBR() {

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import mikera.persistent.impl.*;
+import mikera.persistent.impl.SubList;
 import mikera.util.Tools;
 
 public abstract class PersistentList<T> extends PersistentCollection<T> implements IPersistentList<T> {

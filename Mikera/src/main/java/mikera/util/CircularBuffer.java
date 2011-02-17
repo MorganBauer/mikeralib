@@ -1,6 +1,9 @@
 package mikera.util;
 
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Circular Buffer implementation

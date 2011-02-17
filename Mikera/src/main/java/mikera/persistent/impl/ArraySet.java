@@ -1,14 +1,11 @@
 package mikera.persistent.impl;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentSet;
-import mikera.persistent.Text;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullSet;
 

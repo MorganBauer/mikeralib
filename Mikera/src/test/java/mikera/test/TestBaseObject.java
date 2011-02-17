@@ -1,11 +1,9 @@
 package mikera.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import mikera.engine.BaseObject;
 
-import static org.junit.Assert.*;
-import mikera.util.*;
-import mikera.engine.*;
-import java.util.*;
+import org.junit.Test;
 
 public class TestBaseObject {
 	@Test public void testBaseObject() {

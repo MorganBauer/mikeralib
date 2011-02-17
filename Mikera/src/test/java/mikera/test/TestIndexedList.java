@@ -1,9 +1,13 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
+
+import mikera.util.IndexedList;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestIndexedList {
 	

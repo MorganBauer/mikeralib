@@ -1,7 +1,7 @@
 package mikera.net;
 
-import java.io.*;
-import java.nio.*;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public class ByteBufferOutputStream extends OutputStream {
 	protected ByteBuffer buffer;

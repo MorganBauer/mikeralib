@@ -1,13 +1,15 @@
 package mikera.stats;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
-import mikera.data.ByteArrayCache;
-import mikera.engine.*;
-import mikera.persistent.*;
-import mikera.util.*;
+import mikera.persistent.PersistentHashMap;
+import mikera.persistent.PersistentMap;
+import mikera.util.Bits;
+import mikera.util.Rand;
+import mikera.util.TextUtils;
 
-@SuppressWarnings("unused")
 public class PerformanceTest {
 
 	public static final int PRERUNS=10;

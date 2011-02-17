@@ -1,9 +1,16 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Iterator;
+import java.util.TreeMap;
+
+import mikera.util.CircularBuffer;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestCircularBuffer {
 	

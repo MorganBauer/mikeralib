@@ -3,7 +3,6 @@ package mikera.engine;
 import java.util.Arrays;
 
 import mikera.annotations.Mutable;
-import mikera.util.Bits;
 import mikera.util.Maths;
 /**
  * Class for storing flexible 3D int arrays

@@ -4,9 +4,6 @@ import java.util.List;
 
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
-import mikera.util.TODOException;
-import mikera.util.emptyobjects.NullArrays;
-import mikera.util.emptyobjects.NullList;
 
 public final class BlockList<T> extends BasePersistentList<T> {
 	private static final long serialVersionUID = 7210896608719053578L;

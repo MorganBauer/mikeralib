@@ -1,7 +1,6 @@
 package mikera.sound;
 
-import javax.sound.sampled.*;
-import javax.sound.sampled.Control.Type;
+import javax.sound.sampled.Clip;
 
 public class Sample {
 

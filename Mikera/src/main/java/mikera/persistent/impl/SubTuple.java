@@ -1,15 +1,7 @@
 package mikera.persistent.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import mikera.persistent.*;
-import mikera.persistent.impl.*;
-import mikera.util.emptyobjects.NullList;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
 
 /**
  * Implements a persistent list that is a subset of an existing tuple

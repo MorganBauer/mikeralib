@@ -1,8 +1,11 @@
 package mikera.net;
 
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+import java.util.LinkedList;
 
 import mikera.data.Data;
 

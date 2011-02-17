@@ -121,10 +121,10 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	
 	public int getFullInt(int pos) {
 		if ((pos<0)||((pos+3)>=count)) throw new IndexOutOfBoundsException();
-		return ((int)data[pos+3]&255)
-	      |(((int)data[pos+2]&255)<<8)		
-	      |(((int)data[pos+1]&255)<<16)		
-	      |(((int)data[pos]&255)<<24);		
+		return (data[pos+3]&255)
+	      |((data[pos+2]&255)<<8)		
+	      |((data[pos+1]&255)<<16)		
+	      |((data[pos]&255)<<24);		
 	}
 	
 	public char getChar(int pos) {
@@ -154,7 +154,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 	}
 	
 	public long getFullLong(int pos) {
-		long lv=((long)getFullInt(pos+4))&0xFFFFFFFFl;
+		long lv=(getFullInt(pos+4))&0xFFFFFFFFl;
 		lv^=((long)getFullInt(pos))<<32;
 		return lv;
 	}
@@ -615,7 +615,7 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 			b=data[pos++];
 			shift+=7;
 		}
-		enc|=((int)b)<<shift;
+		enc|=(b)<<shift;
 		return enc;
 	}
 	
@@ -624,11 +624,11 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		byte b=data[pos++];
 		int shift=0;
 		while ((b&0x80)!=0) {
-			enc|=((int)(b&0x7F))<<shift;
+			enc|=((b&0x7F))<<shift;
 			b=data[pos++];
 			shift+=7;
 		}
-		enc|=((int)b)<<shift;
+		enc|=(b)<<shift;
 		return Bits.zigzagDecodeInt(enc);
 	}
 	

@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 public class JIcon extends JComponent {
+	private static final long serialVersionUID = -8838960602578976244L;
 	private Icon icon=null;
 	
 	public JIcon() {

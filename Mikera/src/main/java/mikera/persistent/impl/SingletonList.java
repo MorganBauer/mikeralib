@@ -2,8 +2,6 @@ package mikera.persistent.impl;
 
 import mikera.persistent.ListFactory;
 import mikera.persistent.PersistentList;
-import mikera.persistent.PersistentSet;
-import mikera.util.emptyobjects.NullList;
 
 /**
  * Singleton list instance

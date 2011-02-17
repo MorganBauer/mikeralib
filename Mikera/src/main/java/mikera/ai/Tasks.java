@@ -1,6 +1,8 @@
 package mikera.ai;
 
-import mikera.persistent.*;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
+import mikera.persistent.PersistentMap;
 
 /**
  * Generic generator functions for tasks
@@ -13,7 +15,7 @@ import mikera.persistent.*;
  */
 public class Tasks {
 	@SuppressWarnings("rawtypes")
-	private static final Task<?,?,?> NULL_TASK = (Task<?,?,?>)new Task() {
+	private static final Task<?,?,?> NULL_TASK = new Task() {
 		@Override
 		public Object run(Object actor, Object param) {
 			return null;

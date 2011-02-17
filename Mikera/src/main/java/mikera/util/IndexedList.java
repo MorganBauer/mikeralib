@@ -1,5 +1,10 @@
 package mikera.util;
-import java.util.*;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import mikera.annotations.Mutable;
 import mikera.persistent.impl.ArraySet;
@@ -80,7 +85,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	public V get(Object key) {
 		int i=findIndex((K)key);
 		if (i<0) return null;
-		return (V)values[i];
+		return values[i];
 	}
 	
 	/**
@@ -163,7 +168,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 			i=(max+min)>>>1;
 			int c=compare(key,keys[i]);
 			if (c==0) {
-				V old=(V)values[i];
+				V old=values[i];
 				values[i]=value;
 				return old;
 			}
@@ -198,8 +203,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 	}
 	
 	public void setToClone(IndexedList<K,V> list) {
-		keys=(K[]) list.keys.clone();
-		values=(V[]) list.values.clone();
+		keys=list.keys.clone();
+		values=list.values.clone();
 		count=list.count;
 	}
 	
@@ -225,8 +230,8 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		K b=null;
 		
 		while (true) {
-			if ((a==null)&&(ia<ca)) a=(K)keys[ia];
-			if ((b==null)&&(ib<cb)) b=(K)list.keys[ib];
+			if ((a==null)&&(ia<ca)) a=keys[ia];
+			if ((b==null)&&(ib<cb)) b=list.keys[ib];
 			int r=0; // 1=use a, 2=use b, 3=merge
 			
 			if (a==null) {
@@ -279,7 +284,7 @@ public class IndexedList<K extends Comparable<K>,V> implements Map<K,V> {
 		int i=findIndex((K)key);
 		if (i<0) return null;
 		
-		V value=(V)values[i];
+		V value=values[i];
 		if (i+1<count) {
 			copyEntries(i+1,i,count-(i+i));
 		}

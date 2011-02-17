@@ -1,9 +1,7 @@
 package mikera.math;
 
-import java.io.Serializable;
-
 import mikera.annotations.Mutable;
-import mikera.util.*;
+import mikera.util.Maths;
 
 /**
  * Multi-dimension vector class

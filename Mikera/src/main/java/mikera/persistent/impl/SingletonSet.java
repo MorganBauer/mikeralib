@@ -3,9 +3,9 @@ package mikera.persistent.impl;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import mikera.persistent.*;
+import mikera.persistent.PersistentSet;
+import mikera.persistent.SetFactory;
 import mikera.util.Tools;
-import mikera.util.emptyobjects.NullList;
 
 /**
  * Singleton set instance

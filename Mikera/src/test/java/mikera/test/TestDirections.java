@@ -1,12 +1,17 @@
 package mikera.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
-import mikera.engine.*;
+import mikera.engine.Dir;
+import mikera.engine.Octreap;
+import mikera.engine.PathFinder;
 import mikera.engine.PathFinder.PathNode;
+import mikera.engine.TreeGrid;
+
+import org.junit.Test;
 
 public class TestDirections {
 	@Test public void testDirArrays() {

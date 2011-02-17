@@ -2,9 +2,7 @@ package mikera.engine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
-import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.Tools;
 

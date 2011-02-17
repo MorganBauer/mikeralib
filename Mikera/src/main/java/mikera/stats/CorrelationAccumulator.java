@@ -72,8 +72,20 @@ public final class CorrelationAccumulator implements Comparable<CorrelationAccum
 		return (float)value;	
 	}
 	
+	@Override
+	public int hashCode() {
+		return (int)Double.doubleToLongBits(this.corr());
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof CorrelationAccumulator)) return false;
+		
+		return ((CorrelationAccumulator)o).corr()==this.corr();
+	}
+	
 	public int compareTo(CorrelationAccumulator b) {
-		CorrelationAccumulator bcc=(CorrelationAccumulator)b;
+		CorrelationAccumulator bcc=b;
 		
 		float ac=corr();
 		float bc=bcc.corr();

@@ -1,10 +1,13 @@
 package mikera.util.emptyobjects;
 
 import java.io.ObjectStreamException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
-import mikera.persistent.*;
-import mikera.persistent.impl.CompositeList;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
 import mikera.persistent.impl.SingletonList;
 
 public final class NullList<T> extends PersistentList<T> {
@@ -12,7 +15,7 @@ public final class NullList<T> extends PersistentList<T> {
 	private static final long serialVersionUID = -268387358134950528L;
 
 	@SuppressWarnings("rawtypes")
-	public static NullList<?> INSTANCE=( NullList<?>)new NullList();
+	public static NullList<?> INSTANCE=new NullList();
 	
 	private NullList() {
 		

@@ -1,9 +1,9 @@
 package mikera.stats;
 
-import java.util.*;
-import mikera.engine.*;
-import mikera.persistent.*;
-import mikera.util.*;
+import java.util.Random;
+
+import mikera.engine.TreeGrid;
+import mikera.util.TextUtils;
 
 /**
  * Testing class to test a specific function

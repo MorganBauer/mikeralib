@@ -1,15 +1,10 @@
 package mikera.persistent.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import mikera.persistent.*;
-import mikera.persistent.impl.*;
-import mikera.util.emptyobjects.NullList;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
 
 
 public final class Tuple<T> extends BasePersistentList<T> {
@@ -20,7 +15,7 @@ public final class Tuple<T> extends BasePersistentList<T> {
 	
 	// Empty Tuple for some special cases
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	static final Tuple<?> EMPTY_TUPLE=(Tuple<?>)new Tuple(new Object[0]);
+	static final Tuple<?> EMPTY_TUPLE=new Tuple(new Object[0]);
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Tuple<T> create(T[] values) {

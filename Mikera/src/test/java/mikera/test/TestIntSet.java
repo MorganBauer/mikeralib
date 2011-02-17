@@ -1,9 +1,12 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import mikera.persistent.IntSet;
-import mikera.util.*;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestIntSet {
 	@Test public void test1() {

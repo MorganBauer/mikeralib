@@ -1,9 +1,15 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
-import mikera.engine.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import mikera.engine.BitGrid;
+import mikera.engine.BlockVisitor;
+import mikera.engine.PointVisitor;
+import mikera.engine.TreeGrid;
+import mikera.util.Bits;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestBits {
 	@Test public void testRoundUp() {

@@ -1,7 +1,8 @@
 package mikera.engine;
 
+import java.util.Iterator;
+
 import mikera.util.Rand;
-import java.util.*;
 
 /**
  * Data structure for 3D grid implemented as Treap
@@ -871,7 +872,7 @@ public final class Octreap<T> extends BaseGrid<T> {
 	 * @return
 	 */
 	public static long split3(int a) {
-		return 	(long)split3i(a&LOWBITS)
+		return 	split3i(a&LOWBITS)
   	     | (((long)split3i((a&HIGHBITS)>>10))<<30);
 	}
 

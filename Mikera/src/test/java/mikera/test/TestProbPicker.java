@@ -1,8 +1,10 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import mikera.util.ProbabilityPicker;
+
+import org.junit.Test;
 
 public class TestProbPicker {
 	@Test public void testOrders() {

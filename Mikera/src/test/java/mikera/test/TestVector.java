@@ -1,12 +1,12 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.engine.*;
+import static org.junit.Assert.assertEquals;
 import mikera.image.Colours;
 import mikera.math.Matrix;
 import mikera.math.Vector;
-import mikera.util.*;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestVector {
 	@Test public void testInit() {

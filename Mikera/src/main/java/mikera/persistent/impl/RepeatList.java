@@ -1,10 +1,8 @@
 package mikera.persistent.impl;
 
 import mikera.persistent.ListFactory;
-import mikera.persistent.PersistentCollection;
 import mikera.persistent.PersistentList;
 import mikera.util.Tools;
-import mikera.util.emptyobjects.NullList;
 
 /**
  * Persistent list that implements a repeating single value

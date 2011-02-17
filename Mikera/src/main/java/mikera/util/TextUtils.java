@@ -1,9 +1,11 @@
 
 package mikera.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.StringTokenizer;
 
 /** 
 * Class containing utility functions for text manipulations

@@ -1,17 +1,17 @@
 package mikera.util.emptyobjects;
 
 import java.io.ObjectStreamException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
-import mikera.persistent.*;
-import mikera.persistent.impl.FilteredIterator;
-import mikera.util.Tools;
+import mikera.persistent.PersistentSet;
+import mikera.persistent.SetFactory;
 
 public final class NullSet<T> extends PersistentSet<T> {
 	private static final long serialVersionUID = -6170277533575154354L;
 	
 	@SuppressWarnings("rawtypes")
-	public static NullSet<?> INSTANCE=(NullSet<?>)new NullSet();
+	public static NullSet<?> INSTANCE=new NullSet();
 	
 	private NullSet() {
 		

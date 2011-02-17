@@ -1,7 +1,6 @@
 package mikera.engine;
 
 import mikera.annotations.Mutable;
-import mikera.util.Bits;
 import mikera.util.Maths;
 /**
  * Class for storing flexible 3D bit arrays

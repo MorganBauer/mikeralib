@@ -15,7 +15,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
 
 /**

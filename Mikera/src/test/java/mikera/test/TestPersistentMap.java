@@ -1,12 +1,24 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.persistent.*;
-import mikera.util.*;
-import mikera.util.emptyobjects.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import mikera.persistent.IntMap;
+import mikera.persistent.ListFactory;
+import mikera.persistent.MapFactory;
+import mikera.persistent.PersistentHashMap;
+import mikera.persistent.PersistentList;
+import mikera.persistent.PersistentMap;
+import mikera.persistent.PersistentSet;
+import mikera.persistent.SetFactory;
+import mikera.util.Rand;
+import mikera.util.Tools;
+import mikera.util.emptyobjects.NullMap;
+
+import org.junit.Test;
 
 public class TestPersistentMap {
 	@Test public void testBitMapFunctions() {

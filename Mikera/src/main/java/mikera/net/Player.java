@@ -3,11 +3,7 @@
  */
 package mikera.net;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 import mikera.data.Data;
 

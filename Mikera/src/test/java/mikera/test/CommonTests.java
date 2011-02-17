@@ -1,18 +1,24 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import java.io.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import mikera.data.Data;
-import mikera.math.*;
-import mikera.net.*;
+import mikera.math.Point3i;
+import mikera.math.Vector;
 import mikera.net.DataInputStream;
 import mikera.net.DataOutputStream;
-import mikera.persistent.*;
+import mikera.persistent.IntSet;
+import mikera.persistent.Pair;
+import mikera.persistent.Text;
 import mikera.persistent.impl.RepeatList;
 import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class CommonTests {
 	

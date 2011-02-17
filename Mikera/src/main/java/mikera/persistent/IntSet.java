@@ -1,15 +1,15 @@
 package mikera.persistent;
 
+import java.io.ObjectStreamException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import mikera.annotations.Immutable;
 import mikera.persistent.impl.BasePersistentSet;
-import mikera.persistent.impl.FilteredIterator;
 import mikera.util.Arrays;
-import mikera.util.Tools;
-
-import java.io.ObjectStreamException;
-import java.util.*;
-
 import mikera.util.HashCache;
+import mikera.util.Tools;
 
 /**
  * Immutable small set of integers, stored as a sorted array
@@ -72,7 +72,7 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	}
 	
 	public int[] toIntArray() {
-		return (int[])data.clone();
+		return data.clone();
 	}
 	
 	public int findIndex(int v) {

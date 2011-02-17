@@ -1,13 +1,10 @@
 package mikera.persistent;
 
 import java.io.ObjectStreamException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import mikera.annotations.Immutable;
-import mikera.persistent.impl.BasePersistentSet;
 import mikera.persistent.impl.KeySetWrapper;
 import mikera.persistent.impl.ValueCollectionWrapper;
 import mikera.util.Bits;
@@ -38,7 +35,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	private final PHMNode<K,V> root;
 
 	@SuppressWarnings({ "rawtypes" })
-	private static final PHMNode<?,?> EMPTY_NODE_LIST=(PHMNode<?,?>)new PHMNullList();
+	private static final PHMNode<?,?> EMPTY_NODE_LIST=new PHMNullList();
 
 	@SuppressWarnings("rawtypes")
 	public static final PersistentHashMap<?,?> EMPTY=new PersistentHashMap();
@@ -68,7 +65,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	public static<K,V> PersistentHashMap<K,V> create(Map<K,V> values) {
 		PersistentHashMap<K,V> pm=(PersistentHashMap<K, V>) PersistentHashMap.EMPTY;
 		for (Map.Entry<K,V> ent: values.entrySet()) {
-			pm=(PersistentHashMap<K,V>) pm.include(ent.getKey(),ent.getValue());
+			pm=pm.include(ent.getKey(),ent.getValue());
 		}
 		return pm;
 	}
@@ -853,7 +850,7 @@ public final class PersistentHashMap<K,V> extends PersistentMap<K,V> {
 	
 	@SuppressWarnings("unchecked")
 	public Map.Entry<K,V> getMapEntry(Object key) {
-		return (Map.Entry<K,V>)getEntry((K)key);
+		return getEntry((K)key);
 	}
 
 	@Override

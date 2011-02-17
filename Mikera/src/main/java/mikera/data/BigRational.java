@@ -131,7 +131,13 @@ public class BigRational extends Number implements Comparable<BigRational> {
 		);
 	}
 	
-	@Override public boolean equals(Object o) {
+	@Override 
+	public int hashCode() {
+		return numerator.hashCode()^denominator.hashCode();
+	}
+	
+	@Override 
+	public boolean equals(Object o) {
 		if (o instanceof BigRational) {
 			BigRational b=(BigRational)o;
 			return this.numerator.equals(b.numerator)&&this.denominator.equals(b.denominator);

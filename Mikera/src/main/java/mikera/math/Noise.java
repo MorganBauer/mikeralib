@@ -1,6 +1,7 @@
 package mikera.math;
 
-import mikera.util.*;
+import mikera.util.Maths;
+import mikera.util.Rand;
 
 /**
  * Mike Anderson's implementation of value based noise

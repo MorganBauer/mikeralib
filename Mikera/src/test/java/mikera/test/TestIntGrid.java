@@ -1,9 +1,10 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
-import mikera.engine.*;
+import static org.junit.Assert.assertEquals;
+import mikera.engine.ArrayGrid;
+import mikera.engine.IntGrid;
+
+import org.junit.Test;
 
 public class TestIntGrid {
 	@Test public void test1() {

@@ -1,12 +1,13 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.engine.SparseGrid;
+import static org.junit.Assert.assertEquals;
 import mikera.engine.SparseArray;
+import mikera.engine.SparseGrid;
 import mikera.math.Bounds4i;
 import mikera.persistent.SparseMap;
-import mikera.util.*;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestSparse {
 	@Test public void testSparseArray() {

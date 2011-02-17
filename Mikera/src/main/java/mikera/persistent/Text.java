@@ -1,14 +1,12 @@
 package mikera.persistent;
 
 import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.Iterator;
 
 import mikera.annotations.Immutable;
 import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.TextUtils;
-import mikera.util.TextUtils.SourceSubSequence;
 import mikera.util.emptyobjects.NullArrays;
 
 /**
@@ -233,7 +231,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 	public static int calculateHash(int initialHash,char[] data) {
 		int result=0;
 		for (int i=0; i<data.length; i++) {
-			result=Bits.rollLeft(result, 7) ^ ((int)data[i]);
+			result=Bits.rollLeft(result, 7) ^ (data[i]);
 		}
 		return result+data.length;
 	}
@@ -352,7 +350,7 @@ public final class Text extends PersistentObject implements CharSequence, Compar
 		}
 		int size=Maths.min(length(), cs.length());
 		for (int i=0; i<size; i++) {
-			int c=(int)(charAt(i)-cs.charAt(i));
+			int c=(charAt(i)-cs.charAt(i));
 			if (c!=0) return c;
 		}
 		return Maths.sign(length()-cs.length());

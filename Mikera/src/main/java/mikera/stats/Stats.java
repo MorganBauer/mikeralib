@@ -1,6 +1,6 @@
 package mikera.stats;
 
-import java.util.*;
+import java.util.HashMap;
 
 public class Stats {
 	private static final HashMap<String,Double> stats=new HashMap<String,Double>();

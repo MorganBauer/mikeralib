@@ -2,7 +2,6 @@ package mikera.persistent.impl;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import mikera.persistent.PersistentSet;
 import mikera.persistent.SetFactory;

@@ -1,13 +1,16 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.engine.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashSet;
+
+import mikera.engine.RayCaster;
 import mikera.engine.RayCaster.CastFunction;
-import mikera.math.*;
+import mikera.engine.TreeGrid;
+import mikera.math.Point3i;
 import mikera.util.Maths;
 
-import java.util.*;
+import org.junit.Test;
 
 public class TestRayCaster {
 	@Test public void testPoints() {
@@ -60,7 +63,7 @@ public class TestRayCaster {
 			}		
 		}
 		
-		assertEquals(D*D*D,tg.countNonNull());
+		assertEquals((long)D*D*D,tg.countNonNull());
 		assertEquals((long)D*D*D,is[0]);
 	}
 }

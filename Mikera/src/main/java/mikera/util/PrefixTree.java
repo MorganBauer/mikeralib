@@ -1,6 +1,7 @@
 package mikera.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PrefixTree<K,V> {
 	private K head;

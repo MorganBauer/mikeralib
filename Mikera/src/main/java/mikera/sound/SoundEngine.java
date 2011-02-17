@@ -1,9 +1,13 @@
 package mikera.sound;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 
 import mikera.util.Resource;
 

@@ -1,7 +1,6 @@
 package mikera.net;
 
-import java.util.*;
-import java.nio.*;
+import java.util.List;
 
 import mikera.persistent.IntMap;
 import mikera.persistent.ListFactory;

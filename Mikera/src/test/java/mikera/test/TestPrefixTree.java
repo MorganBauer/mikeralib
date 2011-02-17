@@ -1,8 +1,9 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.util.*;
+import static org.junit.Assert.assertEquals;
+import mikera.util.PrefixTree;
+
+import org.junit.Test;
 
 public class TestPrefixTree {
 	@Test public void testPT() {

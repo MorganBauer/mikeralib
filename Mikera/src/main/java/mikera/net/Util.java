@@ -1,7 +1,6 @@
 package mikera.net;
 
-import java.nio.*;
-import java.nio.charset.*;
+import java.nio.ByteBuffer;
 
 import mikera.data.Data;
 

@@ -2,7 +2,6 @@ package mikera.util;
 
 
 import mikera.annotations.Mutable;
-import mikera.util.Bits;
 
 /**
  * Immutable pair class

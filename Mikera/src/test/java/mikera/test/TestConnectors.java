@@ -1,11 +1,21 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.net.*;
-import mikera.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+
+import mikera.net.BufferCache;
+import mikera.net.ByteBufferOutputStream;
+import mikera.net.ClientConnector;
+import mikera.net.Connection;
+import mikera.net.MessageHandler;
+import mikera.net.ServerConnector;
+import mikera.net.Util;
+import mikera.util.Bits;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestConnectors {
 	private class Receiver implements MessageHandler {

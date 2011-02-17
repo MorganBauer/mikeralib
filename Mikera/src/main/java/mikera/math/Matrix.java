@@ -1,6 +1,5 @@
 package mikera.math;
 
-import mikera.util.*;
 
 /**
  * Multi-dimension Matrix

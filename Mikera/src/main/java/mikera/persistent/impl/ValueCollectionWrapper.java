@@ -2,9 +2,10 @@ package mikera.persistent.impl;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-import mikera.persistent.*;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentCollection;
+import mikera.persistent.PersistentSet;
 
 public final class ValueCollectionWrapper<K,V> extends PersistentCollection<V> {
 	private static final long serialVersionUID = 5958713253782492446L;

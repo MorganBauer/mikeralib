@@ -1,12 +1,13 @@
 package mikera.test;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-import mikera.math.*;
-import mikera.util.*;
+import static org.junit.Assert.assertEquals;
 import mikera.data.BigFloat;
 import mikera.data.BigRational;
-import mikera.engine.*;
+import mikera.math.PerlinNoise;
+import mikera.util.Maths;
+import mikera.util.Rand;
+
+import org.junit.Test;
 
 public class TestMaths {
 	@Test public void testClamp() {

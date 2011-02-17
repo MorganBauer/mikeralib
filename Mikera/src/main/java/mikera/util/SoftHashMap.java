@@ -1,7 +1,11 @@
 package mikera.util;
 
-import java.util.*;
-import java.lang.ref.*;
+import java.lang.ref.SoftReference;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Hash map using soft references, ideal for caching values that can be re-used at a later date.

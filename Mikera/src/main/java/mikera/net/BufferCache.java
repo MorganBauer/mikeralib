@@ -1,7 +1,8 @@
 package mikera.net;
 
-import java.util.*;
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Cache to enable recycling of NIO ByteBuffers

@@ -1,6 +1,6 @@
 package mikera.persistent.impl;
 
-import java.util.*;
+import java.util.Collection;
 
 import mikera.persistent.PersistentList;
 import mikera.util.Maths;
@@ -13,9 +13,8 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 		throw new UnsupportedOperationException();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public boolean contains(Object o) {
-		return indexOf((T)o)>=0;
+		return indexOf(o)>=0;
 	}
 
 
@@ -72,7 +71,7 @@ public abstract class BasePersistentList<T> extends PersistentList<T> {
 	public PersistentList<T> deleteAll(Collection<T> values) {
 		PersistentList<T> pl=this;
 		for (T t : values) { 
-			pl=(PersistentList<T>) pl.delete(t);
+			pl=pl.delete(t);
 		}
 		return pl;
 	}

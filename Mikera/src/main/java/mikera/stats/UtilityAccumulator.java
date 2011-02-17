@@ -45,12 +45,20 @@ public final class UtilityAccumulator implements Comparable<UtilityAccumulator>,
 	public double sd() {
 		return Math.sqrt(var());
 	}
+	
+	@Override public int hashCode() {
+		return (int)Double.doubleToLongBits(this.mean());
+	}
+	
+	@Override public boolean equals(Object b) {
+		if (!(b instanceof UtilityAccumulator) ) return false;
+		
+		return ((UtilityAccumulator)b).mean()==this.mean();
+	}
 
 	public int compareTo(UtilityAccumulator b) {
-		UtilityAccumulator bcc=(UtilityAccumulator)b;
-		
 		double am=mean();
-		double bm=bcc.mean();
+		double bm=b.mean();
 		if (am<bm) return -1;
 		if (am>bm) return 1;
 		return 0;

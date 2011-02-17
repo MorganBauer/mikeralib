@@ -6,6 +6,7 @@ import mikera.annotations.Mutable;
 
 @Mutable
 public final class Point2i implements Comparable<Point2i>, Serializable {
+	private static final long serialVersionUID = -7212240628840421412L;
 
 	public int x, y;
 

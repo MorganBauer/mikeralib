@@ -6,7 +6,6 @@ import java.util.Set;
 
 import mikera.persistent.impl.ArraySet;
 import mikera.persistent.impl.SingletonSet;
-import mikera.util.TODOException;
 import mikera.util.Tools;
 import mikera.util.emptyobjects.NullSet;
 

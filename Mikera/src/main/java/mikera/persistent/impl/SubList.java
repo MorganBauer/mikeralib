@@ -1,15 +1,9 @@
 package mikera.persistent.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import mikera.persistent.*;
-import mikera.persistent.impl.*;
-import mikera.util.emptyobjects.NullList;
+import mikera.persistent.ListFactory;
+import mikera.persistent.PersistentList;
 
 /**
  * Implements a persistent list that is a subset of an existing tuple
@@ -24,7 +18,7 @@ public final class SubList<T> extends BasePersistentList<T>   {
 	private static final long serialVersionUID = 3559316900529560364L;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static final SubList<?> EMPTY_SUBLIST = (SubList<?>)new SubList(ListFactory.emptyList(),0,0);
+	public static final SubList<?> EMPTY_SUBLIST = new SubList(ListFactory.emptyList(),0,0);
 
 	private final PersistentList<T> data;
 	private final int offset;

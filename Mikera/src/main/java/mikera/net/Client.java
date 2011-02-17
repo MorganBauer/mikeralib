@@ -1,9 +1,9 @@
 package mikera.net;
 
-import mikera.data.Data;
-import mikera.net.*;
-import java.nio.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import mikera.data.Data;
 
 public class Client {
 	protected ClientConnector clientConnector=new ClientConnector();

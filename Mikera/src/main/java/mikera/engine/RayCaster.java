@@ -1,11 +1,7 @@
 package mikera.engine;
 
-import mikera.math.*;
-import mikera.util.Bits;
 import mikera.util.Maths;
 import mikera.util.Rand;
-
-import java.util.*;
 
 /**
  * Approximate fast ray casting for 3d grids
