@@ -25,6 +25,16 @@ public class Generator {
 		return bi;
 	}
 	
+	public static BufferedImage createFromArray(double[] arr, int offset, int w, int h) {
+		BufferedImage bi=newImage(w,h);
+		for (int y=0; y<h ; y++) {
+			for (int x=0; x<w; x++) {
+				bi.setRGB(x, y, Colours.toGreyScale(arr[offset++]));
+			}		
+		}
+		return bi;
+	}
+	
 	
 	public static BufferedImage createTiledImage(BufferedImage bi, int tw, int th) {
 		int h=bi.getHeight();

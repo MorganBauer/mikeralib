@@ -250,11 +250,34 @@ public final class Maths {
 		return df;
 	}
 	
+	public static double sigmoid (double a) {
+		double ea=Math.exp(-a);
+		double df=(1/(1.0f+ea));
+		if (Double.isNaN(df)) return (a>0)?1:0;
+		return df;
+	}
+	
 	public static float tanh (float a) {
 		double ex=Math.exp(2*a);
 		float df=(float)((ex-1)/(ex+1));
 		if (Float.isNaN(df)) return (a>0)?1:-1;
 		return df;
+	}
+	
+	public static double tanh (double a) {
+		double ex=Math.exp(2*a);
+		double df=((ex-1)/(ex+1));
+		if (Double.isNaN(df)) return (a>0)?1:-1;
+		return df;
+	}
+	
+	public static double tanhSigmoid(double a) {
+		return 1.7159*tanh((2.0/3.0)*a);
+	}
+	
+	public static double tanhSigmoidDerivative(double a) {
+		double ta=tanh((2.0/3.0)*a);
+		return (1.7159*(2.0/3.0))*(ta*(1-ta));
 	}
 	
 	public static float inverseSigmoid (float a) {

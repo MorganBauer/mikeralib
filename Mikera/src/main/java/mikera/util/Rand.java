@@ -481,6 +481,12 @@ public final class Rand {
 			d[start+i]=(float) Rand.n(u,sd);
 		}
 	}
+	
+	public static void fillGaussian(double[] d, int start, int length, double u, double sd) {
+		for (int i=0; i<length; i++) {
+			d[start+i]=Rand.n(u,sd);
+		}
+	}
 
 	public static void binarySample(float[] temp, int offset, int length) {
 		for (int i=offset; i<(offset+length); i++) {

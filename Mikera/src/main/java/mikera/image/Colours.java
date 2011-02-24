@@ -36,6 +36,7 @@ public class Colours {
     	int lum=getLuminance(argb);
     	return (argb&ALPHA_MASK)|(0x010101*lum);
 	}
+
 	
 	public static int getLuminance(int argb) {
     	int lum=(77*((argb>>16)&255)+150*((argb>>8)&255)+29*((argb)&255))>>8;
@@ -59,6 +60,13 @@ public class Colours {
 	}
 	
 	public static int getRGBClamped(float r, float g, float b) {
+    	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE);
+    	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE);
+    	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
+		return getRGBQuick(ri,gi,bi);
+	}
+	
+	public static int getRGBClamped(double r, double g, double b) {
     	int ri=Maths.clampToInteger(r*MAX_BYTE, 0, MAX_BYTE);
     	int gi=Maths.clampToInteger(g*MAX_BYTE, 0, MAX_BYTE);
     	int bi=Maths.clampToInteger(b*MAX_BYTE, 0, MAX_BYTE);
@@ -108,6 +116,10 @@ public class Colours {
 
 	public static int fromFloat4(float[] col, int offset) {
 		return getARGBClamped(col[offset],col[offset+1],col[offset+2],col[offset+3]);
+	}
+	
+	public static int fromDouble3(double[] col, int offset) {
+		return getRGBClamped(col[offset],col[offset+1],col[offset+2]);
 	}
 	
 	public static int fromFloat3(float[] col, int offset) {
@@ -173,6 +185,10 @@ public class Colours {
 		return 0xFF000000|(0x10101*floatToByte(f));
 	}
 	
+	public static int toGreyScale(double d) {
+		return 0xFF000000|(0x10101*doubleToByte(d));
+	}
+	
 	public static int toGreen(float f) {
 		return 0xFF000000|(0x000100*floatToByte(f));
 	}
@@ -180,4 +196,10 @@ public class Colours {
 	private static int floatToByte(float f) {
 		return Maths.bound(0, (int)(f*255),255);
 	}
+	
+	private static int doubleToByte(double d) {
+		return Maths.bound(0, (int)(d*255),255);
+	}
+
+
 }

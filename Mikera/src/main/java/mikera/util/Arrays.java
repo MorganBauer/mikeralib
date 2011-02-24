@@ -126,6 +126,16 @@ public class Arrays {
 			a[start+i]=Rand.nextFloat();
 		}
 	}
+	
+	public static void fillRandom(double[] a) {
+		fillRandom(a,0,a.length);
+	}
+	
+	public static void fillRandom(double[] a, int start, int length) {
+		for (int i=0; i<length; i++) {
+			a[start+i]=Rand.nextDouble();
+		}
+	}
 
 	public static <T> void swap(List<T> a, int x, int y) {
 		T t=a.get(x);
@@ -223,8 +233,18 @@ public class Arrays {
 	public static void zeroFill(float[] array) {
 		java.util.Arrays.fill(array, 0);
 	}
+	
+	public static void zeroFill(double[] array) {
+		java.util.Arrays.fill(array, 0);
+	}
 
 	public static void add(float[] src, float[] dest) {
+		for (int i=0; i<src.length; i++) {
+			dest[i]+=src[i];
+		}
+	}
+	
+	public static void add(double[] src, double[] dest) {
 		for (int i=0; i<src.length; i++) {
 			dest[i]+=src[i];
 		}
@@ -236,13 +256,23 @@ public class Arrays {
 		}
 	}
 	
+	public static void add(double[] src, double[] dest, double factor) {
+		for (int i=0; i<src.length; i++) {
+			dest[i]+=src[i]*factor;
+		}
+	}
+	
 	public static void add(float[] src, int srcOffset, float[] dest, int destOffset, int length, float factor) {
 		for (int i=0; i<length; i++) {
 			dest[i+destOffset]+=src[i+srcOffset]*factor;
 		}
 	}
-		
-
+	
+	public static void add(double[] src, int srcOffset, double[] dest, int destOffset, int length, double factor) {
+		for (int i=0; i<length; i++) {
+			dest[i+destOffset]+=src[i+srcOffset]*factor;
+		}
+	}
 	
 	public static void multiply(float[] array, float factor) {
 		for (int i=0; i<array.length; i++) {
@@ -263,8 +293,20 @@ public class Arrays {
 		}
 		return true;
 	}
+	
+	public static boolean checkRange(double[] array, double min, double max) {
+		for (int i=0; i<array.length; i++) {
+			double v=array[i];
+			if ((v<min)||(v>max)) return false;
+		}
+		return true;
+	}
 
 	public static void applySigmoid(float[] data) {
+		applySigmoid(data,data.length);
+	}
+	
+	public static void applySigmoid(double[] data) {
 		applySigmoid(data,data.length);
 	}
 	
@@ -274,7 +316,19 @@ public class Arrays {
 		}
 	}
 	
+	public static void applySigmoid(double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.sigmoid(data[i]);
+		}
+	}
+	
 	public static void applySigmoid(float[] data, int length, float gain) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.sigmoid(data[i]*gain);
+		}
+	}
+	
+	public static void applySigmoid(double[] data, int length, double gain) {
 		for (int i=0; i<length; i++) {
 			data[i]=Maths.sigmoid(data[i]*gain);
 		}
@@ -287,6 +341,26 @@ public class Arrays {
 	public static void applyTanh(float[] data, int length) {
 		for (int i=0; i<length; i++) {
 			data[i]=Maths.tanh(data[i]);
+		}
+	}
+	
+	public static void applyTanh(double[] data) {
+		applyTanh(data,data.length);
+	}
+	
+	public static void applyTanh(double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.tanh(data[i]);
+		}
+	}
+	
+	public static void applyTanhSigmoid(double[] data) {
+		applyTanhSigmoid(data,data.length);
+	}
+	
+	public static void applyTanhSigmoid(double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=Maths.tanhSigmoid(data[i]);
 		}
 	}
 	
@@ -308,6 +382,19 @@ public class Arrays {
 		}	
 	}
 	
+	public static void applyStochasticSigmoid(double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			double v=data[i];
+			if (v<=-30f) {
+				data[i]=0.0;
+			} else if (v>=30) {
+				data[i]=1.0;
+			} else {
+				data[i]=Rand.nextDouble()<Maths.sigmoid(v)?1:0;
+			}
+		}	
+	}
+	
 	public static void applyStochasticBinary(float[] data) {
 		applyStochasticBinary(data,data.length);
 	}
@@ -324,8 +411,34 @@ public class Arrays {
 			}
 		}
 	}
+	
+	public static void applyStochasticBinary(double[] data) {
+		applyStochasticBinary(data,data.length);
+	}
+
+	public static void applyStochasticBinary(double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			double v=data[i];
+			if (v<=0.0f) {
+				data[i]=0.0;
+			} else if (v>=1.0) {
+				data[i]=1.0;
+			} else {
+				data[i]=Rand.nextDouble()<v?1:0;
+			}
+		}
+	}
 
 	public static double squaredError(float[] output, float[] result) {
+		double err=0;
+		for (int i=0; i<output.length; i++) {
+			double d=output[i]-result[i];
+			err+=d*d;
+		}
+		return err;
+	}
+	
+	public static double squaredError(double[] output, double[] result) {
 		double err=0;
 		for (int i=0; i<output.length; i++) {
 			double d=output[i]-result[i];
@@ -337,6 +450,13 @@ public class Arrays {
 	public static void bitsToFloatArray(long val, float[] data, int length) {
 		for (int i=0; i<length; i++) {
 			data[i]=((val&1)==0)?0.0f:1.0f;
+			val = val>>1;
+		}
+	}
+	
+	public static void bitsToDoubleArray(long val, double[] data, int length) {
+		for (int i=0; i<length; i++) {
+			data[i]=((val&1)==0)?0.0:1.0;
 			val = val>>1;
 		}
 	}
