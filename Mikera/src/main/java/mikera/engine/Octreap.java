@@ -95,9 +95,10 @@ public final class Octreap<T> extends BaseGrid<T> {
 	
 	public ZNode head;
 	
-	public void set(int x, int y, int z, T value) {
+	public Octreap<T> set(int x, int y, int z, T value) {
 		long zz=calculateZ(x,y,z);
 		setRange(zz,zz,value);
+		return this;
 	}
 	
 	public Octreap() {
@@ -108,18 +109,20 @@ public final class Octreap<T> extends BaseGrid<T> {
 		set(o);
 	}
 	
-	public void set(Grid<T> o) {
-		clear();
-		paste(o);
-	}
-	
-	public void clear() {
-		head=null;
+	@Override
+	public Octreap<T> set(Grid<T> o) {
+		return (Octreap<T>) clear().paste(o);
 	}
 	
 	@Override
-	public void clearContents() {
-		clear();
+	public Octreap<T> clear() {
+		head=null;
+		return this;
+	}
+	
+	@Override
+	public Octreap<T> clearContents() {
+		return clear();
 	}	
 	
 	@SuppressWarnings("unchecked")
@@ -362,11 +365,13 @@ public final class Octreap<T> extends BaseGrid<T> {
 		visitNodes(node.right,nf);
 	}
 	
-	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
+	@Override
+	public Octreap<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
 		if (x1>(x2)) {int temp=x1; x1=x2; x2=temp;}
 		if (y1>(y2)) {int temp=y1; y1=y2; y2=temp;}
 		if (z1>(z2)) {int temp=z1; z1=z2; z2=temp;}
 		setBlockLocal(x1,y1,z1,x2,y2,z2,value);
+		return this;
 	}
 	
 	private void setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value) {

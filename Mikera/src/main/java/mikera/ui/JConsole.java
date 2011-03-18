@@ -29,20 +29,21 @@ public class JConsole extends JComponent {
 	
 	private static final Color DEFAULT_FOREGROUND=Color.LIGHT_GRAY;
 	private static final Color DEFAULT_BACKGROUND=Color.BLACK;
-	private static final Font DEFAULT_FONT=new Font(Font.MONOSPACED, Font.PLAIN, 20);
+	private static final Font DEFAULT_FONT=new Font("Courier New", Font.PLAIN, 20);
 	
 	private int size;
 	private int rows;
 	private int columns;
 	private Color[] background;
 	private Color[] foreground;
+	private Font[] font;
 	private char[] text;
 	private int fontWidth;
 	private int fontHeight;
 	private int fontYOffset;
-	private Font font;
 	
 	private int curPosition=0;
+	private Font currentFont=DEFAULT_FONT;
 	private Color curForeground=DEFAULT_FOREGROUND;
 	private Color curBackground=DEFAULT_BACKGROUND;
 
@@ -52,6 +53,10 @@ public class JConsole extends JComponent {
 	
 	public  void setRows(int rows) {
 		init(columns,rows);
+	}
+	
+	public void setFont(Font f) {
+		currentFont=f;
 	}
 
 	public int getRows() {
@@ -74,12 +79,14 @@ public class JConsole extends JComponent {
 		text=new char[size];
 		background=new Color[size];
 		foreground=new Color[size];
+		font=new Font[size];
 		Arrays.fill(background,DEFAULT_BACKGROUND);
 		Arrays.fill(foreground,DEFAULT_FOREGROUND);
+		Arrays.fill(font,DEFAULT_FONT);
 		
-		font=DEFAULT_FONT;
-		FontRenderContext fontRenderContext=new FontRenderContext(font.getTransform(),false,false);
-	    Rectangle2D charBounds = font.getStringBounds("X", fontRenderContext);
+		currentFont=DEFAULT_FONT;
+		FontRenderContext fontRenderContext=new FontRenderContext(DEFAULT_FONT.getTransform(),false,false);
+	    Rectangle2D charBounds = DEFAULT_FONT.getStringBounds("X", fontRenderContext);
 	    fontWidth=(int)charBounds.getWidth();
 	    fontHeight=(int)charBounds.getHeight();
 	    fontYOffset=-(int)charBounds.getMinY();
@@ -92,7 +99,6 @@ public class JConsole extends JComponent {
         Graphics2D g = (Graphics2D) graphics;
         Rectangle r=g.getClipBounds();
         
-        g.setFont(font);
         //AffineTransform textTransform=new AffineTransform();
         //textTransform.scale(fontWidth, fontHeight);
         //g.setTransform(textTransform);
@@ -109,13 +115,20 @@ public class JConsole extends JComponent {
         	while (start<end) {
         		Color nfg=foreground[offset+start];
         		Color nbg=background[offset+start];
+        		Font nf=font[offset+start];
         		
         		// detect run
         		int i=start+1;
-        		while ((i<end)&&(nfg==foreground[offset+i])&&(nbg==background[offset+i])) {
+        		while ((i<end)
+        				&&(nfg==foreground[offset+i])
+        				&&(nbg==background[offset+i])
+        				&&(nf==font[offset+i])) {
         			i++;
         		}
-        		
+
+        		// set font
+                g.setFont(nf);
+
      			// draw background
     			g.setBackground(nbg);
     			g.clearRect(fontWidth*start, j*fontHeight, fontWidth*(i-start), fontHeight);
@@ -218,6 +231,7 @@ public class JConsole extends JComponent {
 				text[pos]=c;
 				foreground[pos]=curForeground;
 				background[pos]=curBackground;
+				font[pos]=currentFont;
 				pos++;
 		}
 		if (pos>=size) pos=0;		

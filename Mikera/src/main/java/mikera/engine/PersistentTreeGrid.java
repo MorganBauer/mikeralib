@@ -15,7 +15,7 @@ import mikera.util.Tools;
  *
  * @param <T>
  */
-public class TreeGrid<T> extends BaseGrid<T> {
+public class PersistentTreeGrid<T> extends BaseGrid<T> {
 
 	private static final int DIM_SPLIT_BITS=2;
 	private static final int DIM_SPLIT_MASK=(1<<DIM_SPLIT_BITS)-1;
@@ -39,8 +39,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
 			Object d=data[i];
 			if (d==null) continue;
-			if (d instanceof TreeGrid<?>) {
-				TreeGrid<T> tg=(TreeGrid<T>)d;
+			if (d instanceof PersistentTreeGrid<?>) {
+				PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 				res+=tg.countNodes();
 			}
 		}
@@ -53,9 +53,9 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
 			Object d=data[i];
 			if (d==null) continue;
-			if (d instanceof TreeGrid<?>) {
+			if (d instanceof PersistentTreeGrid<?>) {
 				if (shift<=0) throw new Error("TreeGrid element where shift="+shift);
-				TreeGrid<T> tg=(TreeGrid<T>)d;
+				PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 				res+=tg.countNonNull(shift-DIM_SPLIT_BITS);
 			} else {
 				res+=1<<(shift+shift+shift);
@@ -71,7 +71,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	@SuppressWarnings("unchecked")
 	private T getLocal(final int x, final int y, final int z) {
 		int shift=TOP_SHIFT;
-		TreeGrid<T> head=this;
+		PersistentTreeGrid<T> head=this;
 		while (shift>=0) {
 			int li;
 			// for some reason the inline version is much faster!!
@@ -82,11 +82,11 @@ public class TreeGrid<T> extends BaseGrid<T> {
 			
 			Object d=head.data[li];
 			if (d==null) return null;
-			if (!(d instanceof TreeGrid<?>)) {
+			if (!(d instanceof PersistentTreeGrid<?>)) {
 				return (T)d;
 			}
 			shift-=DIM_SPLIT_BITS;
-			head=(TreeGrid<T>)d;
+			head=(PersistentTreeGrid<T>)d;
 		}
 		throw new Error("This shouldn't happen!!");
 	}
@@ -135,8 +135,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 					// start of inner loop
 					Object d=data[li++];
 					if (d==null) continue;
-					if (d instanceof TreeGrid<?>) {
-						TreeGrid<T> tg=(TreeGrid<T>)d;
+					if (d instanceof PersistentTreeGrid<?>) {
+						PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 						tg.visitBlocksLocal(
 								bf, 
 								cx+lx, 
@@ -171,55 +171,55 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	@Override
-	public TreeGrid<T> clear() {
+	public PersistentTreeGrid<T> clear() {
 		Arrays.fill(data, null);
 		return this;
 	}
 	
 	@Override
-	public TreeGrid<T> clearContents() {
+	public PersistentTreeGrid<T> clearContents() {
 		clear();
 		return this;
 	}
 	
-	public TreeGrid() {
+	public PersistentTreeGrid() {
 		
 	}
 	
-	public TreeGrid(T defaultvalue) {
+	public PersistentTreeGrid(T defaultvalue) {
 		for (int i=0; i<data.length; i++) {
 			data[i]=defaultvalue;
 		}
 	}
 
-	public TreeGrid<T> set(int x, int y, int z, T value) {
+	public PersistentTreeGrid<T> set(int x, int y, int z, T value) {
 		return setLocal(x+TOP_OFFSET,y+TOP_OFFSET,z+TOP_OFFSET,value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private TreeGrid<T> setLocal(int x, int y, int z, T value) {
+	private PersistentTreeGrid<T> setLocal(int x, int y, int z, T value) {
 		int shift=TOP_SHIFT;
-		TreeGrid<T> head=this;
+		PersistentTreeGrid<T> head=this;
 		while (shift>=0) {
 			// int li = index(x,y,z,shift);
 			int li=((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
 			Object d=head.data[li];
 			if ((d==null)&&(shift>0)) {
 				if (value==null) return this;
-				d=new TreeGrid<T>();
+				d=new PersistentTreeGrid<T>();
 				head.data[li]=d;
 			}
 			if (shift==0) {
 				head.data[li]=value;
 				if (head.isSolid(value)) solidify(x,y,z,TOP_SHIFT);
 				return this;
-			} else if (!(d instanceof TreeGrid<?>)) {
+			} else if (!(d instanceof PersistentTreeGrid<?>)) {
 				if (d.equals(value)) return this;
-				d=new TreeGrid<T>((T)d);
+				d=new PersistentTreeGrid<T>((T)d);
 				head.data[li]=d;				
 			}
 			shift-=DIM_SPLIT_BITS;
-			head=(TreeGrid<T>)d;
+			head=(PersistentTreeGrid<T>)d;
 		}
 		throw new Error("This shouldn't happen!!");
 	}
@@ -237,7 +237,7 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	@SuppressWarnings("unchecked")
 	private boolean isSolid() {
 		Object d=data[0];
-		return (!(d instanceof TreeGrid<?>))&&isSolid((T)data[0]);
+		return (!(d instanceof PersistentTreeGrid<?>))&&isSolid((T)data[0]);
 	}
 	
 	private static int index(int x, int y, int z, int shift) {
@@ -253,8 +253,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		int li=index(x,y,z,shift);
 		Object d=data[li];
 
-		if (d instanceof TreeGrid<?>) {
-			TreeGrid<T> g=(TreeGrid<T>)d;
+		if (d instanceof PersistentTreeGrid<?>) {
+			PersistentTreeGrid<T> g=(PersistentTreeGrid<T>)d;
 			Object r=g.solidify(x,y,z,shift-DIM_SPLIT_BITS);
 			if (r==g) return this;
 			data[li]=r;
@@ -268,8 +268,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 	}
 	
 	@Override
-	public TreeGrid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		setBlockLocal(x1+TOP_OFFSET, 
+	public PersistentTreeGrid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
+		return setBlockLocal(x1+TOP_OFFSET, 
 				y1+TOP_OFFSET, 
 				z1+TOP_OFFSET, 
 				x2+TOP_OFFSET, 
@@ -277,11 +277,11 @@ public class TreeGrid<T> extends BaseGrid<T> {
 				z2+TOP_OFFSET, 
 				value,
 				TOP_SHIFT);
-		return this;
 	}
 
+	// TODO: make persistent update
 	@SuppressWarnings("unchecked")
-	protected Object setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
+	protected PersistentTreeGrid<T> setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
 		int bmask=3<<shift;
 		int bstep=1<<shift;
 		boolean setData=false;
@@ -309,13 +309,13 @@ public class TreeGrid<T> extends BaseGrid<T> {
 						setData=true;
 					} else {
 						if (d==null) {
-							d=new TreeGrid<T>();
+							d=new PersistentTreeGrid<T>();
 							data[li]=d;
-						} else if (!(d instanceof TreeGrid<?>)) {
-							d=new TreeGrid<T>((T)d);
+						} else if (!(d instanceof PersistentTreeGrid<?>)) {
+							d=new PersistentTreeGrid<T>((T)d);
 							data[li]=d;
 						}
-						TreeGrid<T> tg=(TreeGrid<T>)d;
+						PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 						Object nd=tg.setBlockLocal(
 								Maths.max(lx, x1)-lx,
 								Maths.max(ly, y1)-ly,
@@ -333,7 +333,6 @@ public class TreeGrid<T> extends BaseGrid<T> {
 				}
 			}
 		}
-		if (setData&&isSolid()) return data[0];
 		return this;
 	}
 
@@ -364,8 +363,8 @@ public class TreeGrid<T> extends BaseGrid<T> {
 		if (shift!=TOP_SHIFT&&isSolid()) throw new Error("Failed to solidify");
 		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
 			Object o=data[i];
-			if (o instanceof TreeGrid<?>) {
-				TreeGrid<T> tg=(TreeGrid<T>)o;
+			if (o instanceof PersistentTreeGrid<?>) {
+				PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)o;
 				tg.validateLocal(shift-DIM_SPLIT_BITS);
 			}
 		}

@@ -106,15 +106,17 @@ public final class IntGrid  implements Cloneable {
 		return nbg;
 	}
 	
-	public void clear() {
+	public IntGrid clear() {
 		data=null;
+		return this;
 	}
 	
-	public void clearContents() {
+	public IntGrid clearContents() {
 		final int[] dt=data;
 		for (int i=0; i<dt.length; i++) {
 			dt[i]=0;
 		}
+		return this;
 	}
 	
 	public int dataLength() {
@@ -130,16 +132,17 @@ public final class IntGrid  implements Cloneable {
 		gw=1; gh=1; gd=1;
 	}
 	
-	public void growToInclude(int x, int y, int z) {
-		if (data==null) {init(x,y,z); return;}
+	public IntGrid growToInclude(int x, int y, int z) {
+		if (data==null) {init(x,y,z); return this;}
 		
 		// check if array needs resizing
-		if ((x<gx)||(y<gy)||(z<gz)) { growToIncludeLocal(x,y,z); return; }
+		if ((x<gx)||(y<gy)||(z<gz)) { growToIncludeLocal(x,y,z); return this; }
 		
 		// ok providing we don't need
-		if (x>=(gx+width())) {growToIncludeLocal(x,y,z); return; }
-		if (y>=(gy+height())) {growToIncludeLocal(x,y,z); return; }
-		if (z>=(gz+depth())) {growToIncludeLocal(x,y,z); return; }	
+		if (x>=(gx+width())) {growToIncludeLocal(x,y,z); return this; }
+		if (y>=(gy+height())) {growToIncludeLocal(x,y,z); return this; }
+		if (z>=(gz+depth())) {growToIncludeLocal(x,y,z); return this; }	
+		return this;
 	}
 	
 	private void growToIncludeLocal(int x, int y, int z) {	
@@ -175,11 +178,11 @@ public final class IntGrid  implements Cloneable {
 		gd=ngd;
 	}
 	
-	public void set(int x, int y, int z, Integer v) {
-		set(x,y,z,v.intValue());
+	public IntGrid set(int x, int y, int z, Integer v) {
+		return set(x,y,z,v.intValue());
 	}
 
-	public void set(int x, int y, int z, int v) {
+	public IntGrid set(int x, int y, int z, int v) {
 		if (data==null) {
 			init(x,y,z);
 			x-=gx; y-=gy; z-=gz;
@@ -190,9 +193,10 @@ public final class IntGrid  implements Cloneable {
 			z-=gz; if (z>=depth()) growToIncludeLocal(x+gx,y+gy,z+gz);		
 		}
 		setLocalRelative(x,y,z,v);
+		return this;
 	}
 	
-	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {
+	public IntGrid setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {
 		growToInclude(x1,y1,z1);
 		growToInclude(x2,y2,z2);
 		int w=x2-x1+1;
@@ -206,6 +210,7 @@ public final class IntGrid  implements Cloneable {
 			}
 			di+=gw*(gh-h);
 		}		
+		return this;
 	}
 	
 	/**

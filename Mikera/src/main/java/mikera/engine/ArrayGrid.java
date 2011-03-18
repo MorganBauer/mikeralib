@@ -130,15 +130,19 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		return nbg;
 	}
 	
-	public void clear() {
+	@Override
+	public ArrayGrid<T> clear() {
 		data=null;
+		return this;
 	}
 	
-	public void clearContents() {
+	@Override
+	public ArrayGrid<T> clearContents() {
 		final Object[] dt=data;
 		for (int i=0; i<dt.length; i++) {
 			dt[i]=null;
 		}
+		return this;
 	}	
 	public int dataLength() {
 		return data.length;
@@ -197,7 +201,7 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		gd=ngd;
 	}
 	
-	public void set(int x, int y, int z, T v) {
+	public ArrayGrid<T> set(int x, int y, int z, T v) {
 		if (data==null) {
 			init(x,y,z);
 			x-=gx; y-=gy; z-=gz;
@@ -210,6 +214,7 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		if (!inRange(x+gx,y+gy,z+gz)) throw new Error("Range error: "+(x+gx)+","+(y+gy)+","+(z+gz));
 		
 		setLocalRelative(x,y,z,v);
+		return this;
 	}
 	
 	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {

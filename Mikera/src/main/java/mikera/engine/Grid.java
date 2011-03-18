@@ -6,7 +6,7 @@ import mikera.annotations.Mutable;
 public abstract class Grid<T> {
 	// core get/set functions
 	
-	public abstract void set(int x, int y, int z, T value);
+	public abstract Grid<T> set(int x, int y, int z, T value);
 	
 	public abstract T get(int x, int y, int z);
 	
@@ -28,17 +28,17 @@ public abstract class Grid<T> {
 
 	// bulk change operations
 	
-	public abstract void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
+	public abstract Grid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value);
 
-	public abstract void clear();
+	public abstract Grid<T> clear();
 
-	public abstract void clearContents();
+	public abstract Grid<T> clearContents();
 
-	public abstract void paste(Grid<T> t);
+	public abstract Grid<T> paste(Grid<T> t);
 	
-	public abstract void paste(Grid<T> t, final int dx, final int dy, final int dz);
+	public abstract Grid<T> paste(Grid<T> t, final int dx, final int dy, final int dz);
 	
-	public abstract void set(Grid<T> o);
+	public abstract Grid<T> set(Grid<T> o);
 	
 	
 	

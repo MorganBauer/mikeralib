@@ -11,14 +11,15 @@ public class SparseGrid<T> extends BaseGrid<T> {
 	}
 	
 	@Override
-	public void clear() {
+	public SparseGrid<T> clear() {
 		data=new SparseArray<T>();
-
+		return this;
 	}
 
 	@Override
-	public void clearContents() {
+	public SparseGrid<T> clearContents() {
 		data.clear();
+		return this;
 	}
 
 	@Override
@@ -37,12 +38,13 @@ public class SparseGrid<T> extends BaseGrid<T> {
 	}
 
 	@Override
-	public void set(int x, int y, int z, T value) {
+	public SparseGrid<T> set(int x, int y, int z, T value) {
 		long zz=calculateIndex(x, y, z);
 		while (!inRange(zz)) {
 			data=data.grow();
 		}
 		data.set(zz, value);
+		return this;
 	}
 	
 	private boolean inRange(long zz) {

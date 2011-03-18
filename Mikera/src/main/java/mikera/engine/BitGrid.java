@@ -215,20 +215,23 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 		return nbg;
 	}
 	
-	public void clear() {
+	@Override
+	public BitGrid clear() {
 		data=null;
 		gw=0;
 		gh=0;
 		gd=0;
+		return this;
 	}
 	
 	@Override
-	public void clearContents() {
+	public BitGrid clearContents() {
 		final int[] dt=data;
-		if (dt==null) return;
+		if (dt==null) return this;
 		for (int i=0; i<dt.length; i++) {
 			dt[i]=0;
 		}
+		return this;
 	}
 	
 	public int dataLength() {
@@ -309,9 +312,9 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 		set(x,y,z,v!=0);
 	}
 	
-	public void set(int x, int y, int z, boolean v) {
+	public BitGrid set(int x, int y, int z, boolean v) {
 		if (data==null) {
-			if (!v) return;
+			if (!v) return this;
 			init(x,y,z);
 			setLocal(x-gx,y-gy,z-gz,v);
 		} else {
@@ -319,7 +322,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 			int ry=y-gy;
 			int rz=z-gz;
 			if ((rx<0)||(ry<0)||(rz<0)||(rx>=width())||(ry>=height())||(rz>=depth())) {
-				if (!v) return;
+				if (!v) return this;
 				growToIncludeLocal(x,y,z,x,y,z);
 				// update (rx,ry,rz) because (gx,gy,gz) may have changed
 				rx=x-gx;
@@ -328,6 +331,7 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 			}
 			setLocal(rx,ry,rz,v);
 		}
+		return this;
 	}
 	
 	// set BitGrid cell using coordinates relative to (gx,gy,gz);
@@ -362,8 +366,8 @@ public final class BitGrid extends BaseGrid<Boolean> implements Cloneable {
 	}
 
 	@Override
-	public void set(int x, int y, int z, Boolean value) {
-		set(x,y,z,value.booleanValue());
+	public BitGrid set(int x, int y, int z, Boolean value) {
+		return set(x,y,z,value.booleanValue());
 	}
 
 	@Override
