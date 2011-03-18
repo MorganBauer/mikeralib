@@ -136,6 +136,14 @@ public class Arrays {
 			a[start+i]=Rand.nextDouble();
 		}
 	}
+	
+	public static void mergeCopy(double[] src, int srcOffset, double[] dest, int destOffset, int length,double proportion) {
+		double keep=1.0-proportion;
+		for (int i=0; i<length; i++) {
+			double d=dest[destOffset+i]*keep+src[srcOffset+i]*proportion;
+			dest[destOffset+i]=d;
+		}
+	}
 
 	public static <T> void swap(List<T> a, int x, int y) {
 		T t=a.get(x);
@@ -303,74 +311,74 @@ public class Arrays {
 	}
 
 	public static void applySigmoid(float[] data) {
-		applySigmoid(data,data.length);
+		applySigmoid(data,0,data.length);
 	}
 	
 	public static void applySigmoid(double[] data) {
-		applySigmoid(data,data.length);
+		applySigmoid(data,0,data.length);
 	}
 	
-	public static void applySigmoid(float[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applySigmoid(float[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.sigmoid(data[i]);
 		}
 	}
 	
-	public static void applySigmoid(double[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applySigmoid(double[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.sigmoid(data[i]);
 		}
 	}
 	
-	public static void applySigmoid(float[] data, int length, float gain) {
-		for (int i=0; i<length; i++) {
+	public static void applySigmoid(float[] data, int offset, int length, float gain) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.sigmoid(data[i]*gain);
 		}
 	}
 	
-	public static void applySigmoid(double[] data, int length, double gain) {
-		for (int i=0; i<length; i++) {
+	public static void applySigmoid(double[] data, int offset, int length, double gain) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.sigmoid(data[i]*gain);
 		}
 	}
 	
 	public static void applyTanh(float[] data) {
-		applyTanh(data,data.length);
+		applyTanh(data,0,data.length);
 	}
 	
-	public static void applyTanh(float[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyTanh(float[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.tanh(data[i]);
 		}
 	}
 	
 	public static void applyTanh(double[] data) {
-		applyTanh(data,data.length);
+		applyTanh(data,0,data.length);
 	}
 	
-	public static void applyTanh(double[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyTanh(double[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.tanh(data[i]);
 		}
 	}
 	
 	public static void applyTanhSigmoid(double[] data) {
-		applyTanhSigmoid(data,data.length);
+		applyTanhSigmoid(data,0,data.length);
 	}
 	
-	public static void applyTanhSigmoid(double[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyTanhSigmoid(double[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			data[i]=Maths.tanhSigmoid(data[i]);
 		}
 	}
 	
 	public static void applyStochasticSigmoid(float[] data) {
-		applyStochasticSigmoid(data,data.length);	
+		applyStochasticSigmoid(data,0,data.length);	
 	}
 
 
-	public static void applyStochasticSigmoid(float[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyStochasticSigmoid(float[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			float v=data[i];
 			if (v<=-30f) {
 				data[i]=0.0f;
@@ -382,8 +390,8 @@ public class Arrays {
 		}	
 	}
 	
-	public static void applyStochasticSigmoid(double[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyStochasticSigmoid(double[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			double v=data[i];
 			if (v<=-30f) {
 				data[i]=0.0;
@@ -396,11 +404,11 @@ public class Arrays {
 	}
 	
 	public static void applyStochasticBinary(float[] data) {
-		applyStochasticBinary(data,data.length);
+		applyStochasticBinary(data,0,data.length);
 	}
 
-	public static void applyStochasticBinary(float[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyStochasticBinary(float[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			float v=data[i];
 			if (v<=0.0f) {
 				data[i]=0.0f;
@@ -413,11 +421,11 @@ public class Arrays {
 	}
 	
 	public static void applyStochasticBinary(double[] data) {
-		applyStochasticBinary(data,data.length);
+		applyStochasticBinary(data,0,data.length);
 	}
 
-	public static void applyStochasticBinary(double[] data, int length) {
-		for (int i=0; i<length; i++) {
+	public static void applyStochasticBinary(double[] data, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
 			double v=data[i];
 			if (v<=0.0f) {
 				data[i]=0.0;
@@ -491,6 +499,25 @@ public class Arrays {
 				is[j]=t;
 			}
 		}
+	}
+
+	public static void addConstant(int[] arr, int value) {
+		for (int i=0; i<arr.length ; i++) {
+			arr[i]+=value;
+		}
+		
+	}
+
+	public static void copy(double[] src, double[] dest) {
+		System.arraycopy(src, 0,dest,0,src.length);
+	}
+
+	public static <T> T[] subArray(T[] array, int start, int end) {
+		int len=end-start;
+		@SuppressWarnings("unchecked")
+		T[] newarray=(T[]) Array.newInstance(array.getClass().getComponentType(), len);
+		System.arraycopy(array, start, newarray, 0, len);
+		return newarray;
 	}
 
 

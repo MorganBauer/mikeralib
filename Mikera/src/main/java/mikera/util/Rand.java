@@ -384,16 +384,25 @@ public final class Rand {
 	 * 
 	 * Resulting integers are sorted
 	 */
-	public static void chooseIntegers(int[] dest, int destOffset, int n, int maxValue) {
-		if (n>maxValue) throw new Error("Cannot choose "+n+" items from a set of "+maxValue);
+	public static void chooseIntegers(int[] dest, int destOffset, int length, int maxValue) {
+		if (length>maxValue) throw new Error("Cannot choose "+length+" items from a set of "+maxValue);
 	
-		if (maxValue>(4*n)) {
-			chooseIntegersBySampling(dest,destOffset,n,maxValue);
+		if (maxValue>(4*length)) {
+			chooseIntegersBySampling(dest,destOffset,length,maxValue);
 			return;
 		}
 		
-		chooseIntegersByExclusion(dest,destOffset,n,maxValue);
+		chooseIntegersByExclusion(dest,destOffset,length,maxValue);
 
+	}
+	
+	/**
+	 * Creates a set of n random integers from a range of 0 to maxValue-1
+	 */
+	public static void randIntegers(int[] dest, int destOffset, int length, int maxValue) {
+		for (int i=destOffset; i<(destOffset+length); i++) {
+			dest[i]=Rand.r(maxValue);
+		}
 	}
 	
 	private static void chooseIntegersByExclusion(int[] dest, int destOffset, int n, int maxValue) {	
@@ -493,6 +502,8 @@ public final class Rand {
 			temp[i]=(Rand.nextFloat()<temp[i]) ? 1f : 0f;
 		}
 	}
+
+
 
 
 }
