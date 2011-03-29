@@ -201,6 +201,14 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		gd=ngd;
 	}
 	
+	public ArrayGrid<T> paste(Grid<T> t) {
+		return paste(t,0,0,0);
+	}
+	
+	public ArrayGrid<T> paste(Grid<T> t, final int dx, final int dy, final int dz) {
+		return (ArrayGrid<T>) super.paste(t,dx,dy,dz);
+	}
+	
 	public ArrayGrid<T> set(int x, int y, int z, T v) {
 		if (data==null) {
 			init(x,y,z);
@@ -217,7 +225,12 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 		return this;
 	}
 	
-	public void setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {
+	@Override
+	public ArrayGrid<T>  setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T v) {
+		return (ArrayGrid<T>)super.setBlock(x1,y1,z1,x2,y2,z2,v);
+	}	
+	
+	public ArrayGrid<T>  setBlock(int x1, int y1, int z1, int x2, int y2, int z2, int v) {
 		growToInclude(x1,y1,z1);
 		growToInclude(x2,y2,z2);
 		int w=x2-x1+1;
@@ -231,6 +244,7 @@ public class ArrayGrid<T> extends BaseGrid<T> {
 			}
 			di+=gw*(gh-h);
 		}		
+		return this;
 	}
 	
 	/**

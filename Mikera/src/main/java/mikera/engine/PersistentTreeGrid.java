@@ -26,8 +26,11 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 	private static final int TOP_OFFSET=(1<<(SIGNIFICANT_BITS-1));
 	private static final int TOP_MAX=SIGNIFICANT_MASK;
 	
+	@SuppressWarnings("rawtypes")
+	public static final PersistentTreeGrid EMPTY=new PersistentTreeGrid();
+	
 	// each cell contains either object of type T or a sub-grid
-	private final Object[] data=new Object[DATA_ARRAY_SIZE];
+	private final Object[] data;
 	
 	public int countNonNull() {
 		return countNonNull(TOP_SHIFT);
@@ -58,7 +61,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 				PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 				res+=tg.countNonNull(shift-DIM_SPLIT_BITS);
 			} else {
-				res+=1<<(shift+shift+shift);
+				res+=1<<(3*shift);
 			}
 		}
 		return res;
@@ -170,77 +173,119 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentTreeGrid<T> clear() {
-		Arrays.fill(data, null);
-		return this;
+		return EMPTY;
 	}
 	
 	@Override
 	public PersistentTreeGrid<T> clearContents() {
-		clear();
-		return this;
+		return clear();
 	}
 	
 	public PersistentTreeGrid() {
-		
+		 data=new Object[DATA_ARRAY_SIZE];
 	}
 	
 	public PersistentTreeGrid(T defaultvalue) {
+		data=new Object[DATA_ARRAY_SIZE];
 		for (int i=0; i<data.length; i++) {
 			data[i]=defaultvalue;
 		}
 	}
+	
+	private PersistentTreeGrid(Object[] arrayToUse) {
+		data=arrayToUse;
+	}
 
-	public PersistentTreeGrid<T> set(int x, int y, int z, T value) {
-		return setLocal(x+TOP_OFFSET,y+TOP_OFFSET,z+TOP_OFFSET,value);
-	}
-	
 	@SuppressWarnings("unchecked")
-	private PersistentTreeGrid<T> setLocal(int x, int y, int z, T value) {
-		int shift=TOP_SHIFT;
-		PersistentTreeGrid<T> head=this;
-		while (shift>=0) {
-			// int li = index(x,y,z,shift);
-			int li=((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
-			Object d=head.data[li];
-			if ((d==null)&&(shift>0)) {
-				if (value==null) return this;
-				d=new PersistentTreeGrid<T>();
-				head.data[li]=d;
-			}
-			if (shift==0) {
-				head.data[li]=value;
-				if (head.isSolid(value)) solidify(x,y,z,TOP_SHIFT);
-				return this;
-			} else if (!(d instanceof PersistentTreeGrid<?>)) {
-				if (d.equals(value)) return this;
-				d=new PersistentTreeGrid<T>((T)d);
-				head.data[li]=d;				
-			}
-			shift-=DIM_SPLIT_BITS;
-			head=(PersistentTreeGrid<T>)d;
-		}
-		throw new Error("This shouldn't happen!!");
+	public PersistentTreeGrid<T> set(int x, int y, int z, T value) {
+		return (PersistentTreeGrid<T>) setLocal(x+TOP_OFFSET,y+TOP_OFFSET,z+TOP_OFFSET,value,TOP_SHIFT);
 	}
 	
-	private boolean isSolid(T value) {
-		for (int i=0; i<DATA_ARRAY_SIZE; i++) {
-			Object d=data[i];
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Object setLocal(int x, int y, int z, T value, int shift) {
+		
+		// int li = index(x,y,z,shift);
+		int li=((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
+		Object d=data[li];
+		if (Tools.equalsWithNulls(value, d)) return this;
+		
+		if ((d==null)&&(shift>0)) {
+			// create child array with single non-null value
+			Object[] arr=setArray(data.clone(), li,createLocal(x,y,z,value,null,shift-DIM_SPLIT_BITS));
+			return new PersistentTreeGrid(arr);
+		}
+		
+		if (shift==0) {
+			if (isSolid(data,value,li)) return value;
+			Object[] arr=setArray(data.clone(), li,value);
+			return new PersistentTreeGrid(arr);
+		} else if (!(d instanceof PersistentTreeGrid<?>)) {
+			if (d.equals(value)) return this;
+			PersistentTreeGrid<T> sub=createLocal(x,y,z,value,(T)d,shift-DIM_SPLIT_BITS);
+			Object[] arr=setArray(data.clone(), li,sub);
+			return new PersistentTreeGrid(arr);
+		}
+		PersistentTreeGrid<T> sg=(PersistentTreeGrid<T>)d;
+		Object sub=sg.setLocal(x,y,z,value,shift-DIM_SPLIT_BITS);
+		if (sub==sg) return this;
+		
+		if ((shift<TOP_SHIFT)&&isSolid(data,sub,li)) {
+			return sub;
+		}
+		
+		Object[] arr=setArray(data.clone(), li,sub);
+		return new PersistentTreeGrid(arr);		
+	}
+	
+	private static <T> PersistentTreeGrid<T> createLocal(int x, int y, int z, T value, T fill, int shift) {
+		Object[] newData=new Object[DATA_ARRAY_SIZE];
+		if (fill!=null) Arrays.fill(newData, fill);
+		
+		int li=((x>>shift)&DIM_SPLIT_MASK) + (((y>>shift)&DIM_SPLIT_MASK)<<DIM_SPLIT_BITS) + (((z>>shift)&DIM_SPLIT_MASK)<<(DIM_SPLIT_BITS*2));
+		if (shift==0) {
+			newData[li]=value;
+		} else {
+			newData[li]=createLocal(x,y,z,value,fill,shift-DIM_SPLIT_BITS);
+		}
+		return new PersistentTreeGrid<T> (newData);		
+	}	
+	
+	private static final Object[] setArray(Object[] arr, int pos, Object value) {
+		if (arr==null) {
+			arr=new Object[DATA_ARRAY_SIZE];
+		}
+		arr[pos]=value;
+		return arr;
+	}
+	
+	private static <T> boolean isSolid(Object[] arr,T value, int pos) {
+		for (int i=0; i<pos; i++) {
+			Object d=arr[i];
 			if (!(Tools.equalsWithNulls(value,d))) {
 				return false;
 			}
 		}
+		
+		for (int i=pos+1; i<DATA_ARRAY_SIZE; i++) {
+			Object d=arr[i];
+			if (!(Tools.equalsWithNulls(value,d))) {
+				return false;
+			}
+		}
+		
 		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
 	private boolean isSolid() {
 		Object d=data[0];
-		return (!(d instanceof PersistentTreeGrid<?>))&&isSolid((T)data[0]);
+		return (!(d instanceof PersistentTreeGrid<?>))&&isSolid(data,(T)d,0);
 	}
 	
-	private static int index(int x, int y, int z, int shift) {
+	private static final int index(int x, int y, int z, int shift) {
 		int lx=(x>>shift)&DIM_SPLIT_MASK;
 		int ly=(y>>shift)&DIM_SPLIT_MASK;
 		int lz=(z>>shift)&DIM_SPLIT_MASK;
@@ -248,28 +293,10 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		return li;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private Object solidify(int x, int y, int z, int shift) {
-		int li=index(x,y,z,shift);
-		Object d=data[li];
-
-		if (d instanceof PersistentTreeGrid<?>) {
-			PersistentTreeGrid<T> g=(PersistentTreeGrid<T>)d;
-			Object r=g.solidify(x,y,z,shift-DIM_SPLIT_BITS);
-			if (r==g) return this;
-			data[li]=r;
-			d=r;
-		} 
-		
-		if (isSolid((T)d)) {
-			return d;
-		}
-		return this;
-	}
-	
 	@Override
 	public PersistentTreeGrid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
-		return setBlockLocal(x1+TOP_OFFSET, 
+		return (PersistentTreeGrid<T>) setBlockLocal(
+				x1+TOP_OFFSET, 
 				y1+TOP_OFFSET, 
 				z1+TOP_OFFSET, 
 				x2+TOP_OFFSET, 
@@ -281,10 +308,9 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 
 	// TODO: make persistent update
 	@SuppressWarnings("unchecked")
-	protected PersistentTreeGrid<T> setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
+	protected Object setBlockLocal(int x1, int y1, int z1, int x2, int y2, int z2, T value, int shift) {
 		int bmask=3<<shift;
 		int bstep=1<<shift;
-		boolean setData=false;
 		
 		// get coordinates of sub block containing point 1
 		// note masking to keep correct sign
@@ -292,6 +318,8 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		int by1=((y1)&(bmask));
 		int bz1=((z1)&(bmask));
 	
+		Object[] newData=null;
+		
 		// loop over sub blocks (lx,ly,lz)-(ux,uy,uz)
 		for (int lz=bz1; lz<=z2; lz+=bstep) {
 			for (int ly=by1; ly<=y2; ly+=bstep) {
@@ -305,35 +333,60 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 					int uz=lz+bstep-1;
 					if ((shift<=0)||((z1<=lz)&&(z2>=uz)&&(y1<=ly)&&(y2>=uy)&&(x1<=lx)&&(x2>=ux))) {
 						// set entire sub block
-						data[li]=value;
-						setData=true;
+						newData=setArray((newData==null)?data.clone():newData,li,value);
 					} else {
 						if (d==null) {
-							d=new PersistentTreeGrid<T>();
-							data[li]=d;
+							if (value==null) continue;
+							PersistentTreeGrid<T> subGrid=(PersistentTreeGrid<T>)
+								EMPTY.setBlockLocal(
+										Maths.max(lx, x1)-lx,
+										Maths.max(ly, y1)-ly,
+										Maths.max(lz, z1)-lz,
+										Maths.min(x2, ux)-lx,
+										Maths.min(y2, uy)-ly,
+										Maths.min(z2, uz)-lz,
+										value, 
+										shift-DIM_SPLIT_BITS);
+							newData=setArray((newData==null)?data.clone():newData,li,subGrid);
 						} else if (!(d instanceof PersistentTreeGrid<?>)) {
-							d=new PersistentTreeGrid<T>((T)d);
-							data[li]=d;
-						}
-						PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
-						Object nd=tg.setBlockLocal(
-								Maths.max(lx, x1)-lx,
-								Maths.max(ly, y1)-ly,
-								Maths.max(lz, z1)-lz,
-								Maths.min(x2, ux)-lx,
-								Maths.min(y2, uy)-ly,
-								Maths.min(z2, uz)-lz,
-								value,
-								shift-DIM_SPLIT_BITS);
-						if (nd!=d) {
-							setData=true;
-							data[li]=nd;
+							if (d.equals(value)) continue;
+							PersistentTreeGrid<T> subGrid=(PersistentTreeGrid<T>)
+								new PersistentTreeGrid<T>((T)d).setBlockLocal(
+										Maths.max(lx, x1)-lx,
+										Maths.max(ly, y1)-ly,
+										Maths.max(lz, z1)-lz,
+										Maths.min(x2, ux)-lx,
+										Maths.min(y2, uy)-ly,
+										Maths.min(z2, uz)-lz,
+										value, 
+										shift-DIM_SPLIT_BITS);
+							newData=setArray((newData==null)?data.clone():newData,li,subGrid);
+						} else {
+							PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
+							Object nd=tg.setBlockLocal(
+									Maths.max(lx, x1)-lx,
+									Maths.max(ly, y1)-ly,
+									Maths.max(lz, z1)-lz,
+									Maths.min(x2, ux)-lx,
+									Maths.min(y2, uy)-ly,
+									Maths.min(z2, uz)-lz,
+									value,
+									shift-DIM_SPLIT_BITS);
+							if (nd!=d) {
+								newData=setArray((newData==null)?data.clone():newData,li,nd);
+							}
 						}
 					}
 				}
 			}
 		}
-		return this;
+		if (newData==null) return this;
+		
+		if ((shift<TOP_SHIFT)&&isSolid(newData,newData[0],0)) {
+			return newData[0];
+		}
+		
+		return new PersistentTreeGrid<T>(newData);
 	}
 
 	public ArrayList<T> getObjectList(int x1, int y1, int z1, int x2, int y2, int z2) {

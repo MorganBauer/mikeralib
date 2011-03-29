@@ -18,13 +18,13 @@ public abstract class Grid<T> {
 	
 	// visitor functions
 	
-	public abstract void visitPoints(PointVisitor<T> bf);
+	public abstract void visitPoints(PointVisitor<T> pointVisitor);
 
-	public abstract void visitBlocks(BlockVisitor<T> bf);
+	public abstract void visitBlocks(BlockVisitor<T> blockVisitor);
 
-	public abstract void visitPoints(PointVisitor<T> bf, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
+	public abstract void visitPoints(PointVisitor<T> pointVisitor, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
 
-	public abstract void visitBlocks(BlockVisitor<T> bf, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
+	public abstract void visitBlocks(BlockVisitor<T> blockVisitor, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax);
 
 	// bulk change operations
 	
@@ -34,11 +34,11 @@ public abstract class Grid<T> {
 
 	public abstract Grid<T> clearContents();
 
-	public abstract Grid<T> paste(Grid<T> t);
+	public abstract Grid<T> paste(Grid<T> src);
 	
-	public abstract Grid<T> paste(Grid<T> t, final int dx, final int dy, final int dz);
+	public abstract Grid<T> paste(Grid<T> src, final int dx, final int dy, final int dz);
 	
-	public abstract Grid<T> set(Grid<T> o);
+	public abstract Grid<T> set(Grid<T> src);
 	
 	
 	

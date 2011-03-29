@@ -6,6 +6,7 @@ import mikera.engine.ArrayGrid;
 import mikera.engine.BlockVisitor;
 import mikera.engine.Grid;
 import mikera.engine.Octreap;
+import mikera.engine.PersistentTreeGrid;
 import mikera.engine.SparseGrid;
 import mikera.engine.TreeGrid;
 import mikera.util.Rand;
@@ -18,6 +19,7 @@ public class TestGrid {
 		testGrid(new ArrayGrid<Integer>());
 		testGrid(new TreeGrid<Integer>());
 		testGrid(new SparseGrid<Integer>());
+		testGrid(new PersistentTreeGrid<Integer>());
 	}
 	
 	public void testGrid(Grid<Integer> g) {
@@ -39,45 +41,46 @@ public class TestGrid {
 	}
 	
 	public void testSet(Grid<Integer> g) {
-		g.set(10,10,10, 1);
+		g=g.set(10,10,10, 1);
 		assertEquals(1,g.countNonNull());
-		g.set(-1,-1,-1, 1);
+		g=g.set(-1,-1,-1, 1);
 		assertEquals(2,g.countNonNull());
 
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(1,(int)g.get(-1, -1, -1));
 
-		g.clear();
+		g=g.clear();
 		assertEquals(null,g.get(0, 0, 0));
+		assertEquals(null,g.get(10, 10, 10));
 	}
 	
 	public void testSetBlock(Grid<Integer> g) {
-		g.setBlock(0,0,0,0,0,1,1);
+		g=g.setBlock(0,0,0,0,0,1,1);
 		assertEquals(2,g.countNonNull());
 
-		g.setBlock(0,0,0,1,1,1,1);
+		g=g.setBlock(0,0,0,1,1,1,1);
 		assertEquals(8,g.countNonNull());
 
-		g.setBlock(0,0,0,10,10,10,1);
+		g=g.setBlock(0,0,0,10,10,10,1);
 		assertEquals(1331,g.countNonNull());
 		
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(null,g.get(-1, -1, -1));
 		assertEquals(1,(int)g.get(Rand.r(11), Rand.r(11), Rand.r(11)));
 		
-		g.setBlock(-5,-5,-5,5,5,5,2);
+		g=g.setBlock(-5,-5,-5,5,5,5,2);
 		assertEquals(1,(int)g.get(10, 10, 10));
 		assertEquals(2,(int)g.get(0, 0, 0));
 		assertEquals(2,(int)g.get(-1, -1, -1));
 		assertEquals(null,g.get(-6, -6, -6));
 
-		g.setBlock(-2,-2,-2,2,2,2,null);
+		g=g.setBlock(-2,-2,-2,2,2,2,null);
 		assertEquals(2,(int)g.get(-3, -3, -3));
 		assertEquals(null,g.get(-1, -1, -1));
 		assertEquals(2,(int)g.get(3, 2, 2));
 			
 		g.validate();
-		g.clear();
+		g=g.clear();
 	}
 	
 	public void testAllNull(Grid<Integer> g) {
@@ -89,11 +92,11 @@ public class TestGrid {
 	
 	public void testPaste(Grid<Integer> g) {
 		ArrayGrid<Integer> ag=new ArrayGrid<Integer>();
-		ag.setBlock(0, 0, 0, 5,5, 5, 1);
+		ag=ag.setBlock(0, 0, 0, 5,5, 5, 1);
 		assertEquals(216,ag.dataLength());
 		
-		g.paste(ag);	
-		g.paste(ag,-2,-2,-2);
+		g=g.paste(ag);	
+		g=g.paste(ag,-2,-2,-2);
 		
 		assertNull(g.get(-3, -3, 3));
 		assertEquals(1,(int)g.get(-2, -2, -2));
@@ -101,8 +104,8 @@ public class TestGrid {
 		assertNull(g.get(6, 6, 6));
 		assertEquals(216+216-64,g.countNonNull());
 		
-		ag.clear();
-		ag.paste(g);
+		ag=ag.clear();
+		ag=ag.paste(g);
 		assertEquals(512,ag.dataLength());
 		assertNull(ag.get(-3, -3, 3));
 		assertEquals(1,(int)ag.get(-2, -2, -2));
@@ -111,12 +114,13 @@ public class TestGrid {
 		assertEquals(216+216-64,ag.countNonNull());
 
 		g.validate();
-		g.clear();
+		g=g.clear();
 	}
 	
 	public void testVisitBlock(Grid<Integer> g) {
 		BCounter bc=new BCounter();	
-		g.setBlock(-5,-5,-5,4,4,4,1);
+		g=g.setBlock(-5,-5,-5,4,4,4,1);
+		
 		g.visitBlocks(bc);
 		assertEquals(1000,bc.size);
 		
@@ -132,7 +136,7 @@ public class TestGrid {
 		g.visitBlocks(bc,-1,-1,-1,1,1,1);
 		assertEquals(27,bc.size);
 		
-		g.clear();
+		g=g.clear();
 	}
 	
 	private static class BCounter extends BlockVisitor<Integer>  {

@@ -4,12 +4,12 @@ import mikera.util.Maths;
 
 public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 	
-	public BaseGrid<T> set(Grid<T> o) {		
-		return (BaseGrid<T>) clear().paste(o);
+	public BaseGrid<T> set(Grid<T> src) {		
+		return (BaseGrid<T>) clear().paste(src);
 	}
 	
-	public BaseGrid<T> paste(Grid<T> t) {
-		return paste(t,0,0,0);
+	public BaseGrid<T> paste(Grid<T> src) {
+		return paste(src,0,0,0);
 	}
 	
 	public int countNodes() {
@@ -95,17 +95,19 @@ public abstract class BaseGrid<T> extends Grid<T> implements Cloneable {
 		visitBlocks(changer);
 	}
 
-	public BaseGrid<T> paste(Grid<T> t, final int dx, final int dy, final int dz) {
+	@SuppressWarnings("unchecked")
+	public BaseGrid<T> paste(Grid<T> src, final int dx, final int dy, final int dz) {
+		final Object[] tmp=new Object[] {this};
 		BlockVisitor<T> paster=new BlockVisitor<T>() {
 			public Object visit(int x1, int y1, int z1, int x2, int y2, int z2,
 					T value) {
-				setBlock(x1+dx,y1+dy,z1+dz,
+				tmp[0]=((BaseGrid<T>)tmp[0]).setBlock(x1+dx,y1+dy,z1+dz,
 						x2+dx, y2+dy, z2+dz, value);
 				return null;
 			}
 		};
-		t.visitBlocks(paster);
-		return this;
+		src.visitBlocks(paster);
+		return (BaseGrid<T>)tmp[0];
 	}
 	
 	public BaseGrid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
