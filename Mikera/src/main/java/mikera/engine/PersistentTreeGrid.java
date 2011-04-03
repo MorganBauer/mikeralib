@@ -214,18 +214,18 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		
 		if ((d==null)&&(shift>0)) {
 			// create child array with single non-null value
-			Object[] arr=setArray(data.clone(), li,createLocal(x,y,z,value,null,shift-DIM_SPLIT_BITS));
+			Object[] arr=setOrCreateArray(data.clone(), li,createLocal(x,y,z,value,null,shift-DIM_SPLIT_BITS));
 			return new PersistentTreeGrid(arr);
 		}
 		
 		if (shift==0) {
 			if (isSolid(data,value,li)) return value;
-			Object[] arr=setArray(data.clone(), li,value);
+			Object[] arr=setOrCreateArray(data.clone(), li,value);
 			return new PersistentTreeGrid(arr);
 		} else if (!(d instanceof PersistentTreeGrid<?>)) {
 			if (d.equals(value)) return this;
 			PersistentTreeGrid<T> sub=createLocal(x,y,z,value,(T)d,shift-DIM_SPLIT_BITS);
-			Object[] arr=setArray(data.clone(), li,sub);
+			Object[] arr=setOrCreateArray(data.clone(), li,sub);
 			return new PersistentTreeGrid(arr);
 		}
 		PersistentTreeGrid<T> sg=(PersistentTreeGrid<T>)d;
@@ -236,7 +236,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 			return sub;
 		}
 		
-		Object[] arr=setArray(data.clone(), li,sub);
+		Object[] arr=setOrCreateArray(data.clone(), li,sub);
 		return new PersistentTreeGrid(arr);		
 	}
 	
@@ -253,7 +253,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		return new PersistentTreeGrid<T> (newData);		
 	}	
 	
-	private static final Object[] setArray(Object[] arr, int pos, Object value) {
+	private static final Object[] setOrCreateArray(Object[] arr, int pos, Object value) {
 		if (arr==null) {
 			arr=new Object[DATA_ARRAY_SIZE];
 		}
@@ -333,7 +333,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 					int uz=lz+bstep-1;
 					if ((shift<=0)||((z1<=lz)&&(z2>=uz)&&(y1<=ly)&&(y2>=uy)&&(x1<=lx)&&(x2>=ux))) {
 						// set entire sub block
-						newData=setArray((newData==null)?data.clone():newData,li,value);
+						newData=setOrCreateArray((newData==null)?data.clone():newData,li,value);
 					} else {
 						if (d==null) {
 							if (value==null) continue;
@@ -347,7 +347,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 										Maths.min(z2, uz)-lz,
 										value, 
 										shift-DIM_SPLIT_BITS);
-							newData=setArray((newData==null)?data.clone():newData,li,subGrid);
+							newData=setOrCreateArray((newData==null)?data.clone():newData,li,subGrid);
 						} else if (!(d instanceof PersistentTreeGrid<?>)) {
 							if (d.equals(value)) continue;
 							PersistentTreeGrid<T> subGrid=(PersistentTreeGrid<T>)
@@ -360,7 +360,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 										Maths.min(z2, uz)-lz,
 										value, 
 										shift-DIM_SPLIT_BITS);
-							newData=setArray((newData==null)?data.clone():newData,li,subGrid);
+							newData=setOrCreateArray((newData==null)?data.clone():newData,li,subGrid);
 						} else {
 							PersistentTreeGrid<T> tg=(PersistentTreeGrid<T>)d;
 							Object nd=tg.setBlockLocal(
@@ -373,7 +373,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 									value,
 									shift-DIM_SPLIT_BITS);
 							if (nd!=d) {
-								newData=setArray((newData==null)?data.clone():newData,li,nd);
+								newData=setOrCreateArray((newData==null)?data.clone():newData,li,nd);
 							}
 						}
 					}

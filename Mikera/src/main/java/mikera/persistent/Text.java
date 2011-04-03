@@ -10,7 +10,9 @@ import mikera.util.TextUtils;
 import mikera.util.emptyobjects.NullArrays;
 
 /**
- * Immutable char sequence implementation based on a tree with pre-computed hashcodes
+ * Immutable char sequence implementation based on a tree 
+ * 
+ * Each node contains count and pre-computed hashcode
  * 
  * Initially creates packed blocks, i.e. all blocks full except from final block, although this is not
  * guaranteed to be maintained (especially with concatenation / substring operations)

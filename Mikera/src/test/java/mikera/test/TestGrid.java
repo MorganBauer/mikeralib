@@ -80,7 +80,7 @@ public class TestGrid {
 		assertEquals(2,(int)g.get(3, 2, 2));
 			
 		g.validate();
-		g=g.clear();
+		g.clear();
 	}
 	
 	public void testAllNull(Grid<Integer> g) {
@@ -114,7 +114,7 @@ public class TestGrid {
 		assertEquals(216+216-64,ag.countNonNull());
 
 		g.validate();
-		g=g.clear();
+		g.clear();
 	}
 	
 	public void testVisitBlock(Grid<Integer> g) {
@@ -136,7 +136,7 @@ public class TestGrid {
 		g.visitBlocks(bc,-1,-1,-1,1,1,1);
 		assertEquals(27,bc.size);
 		
-		g=g.clear();
+		g.clear();
 	}
 	
 	private static class BCounter extends BlockVisitor<Integer>  {

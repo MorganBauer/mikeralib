@@ -55,14 +55,17 @@ public final class Tools {
 		o.toString();
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static int compareWithNulls(Object a, Object b) {
 		if (a==b) {
 			return 0;
 		}
-		throw new Error("Objects not comparable unless they implement the Comparable interface!");
+		if ((a==null)) return -1;
+		if ((b==null)) return 1;
+		return ((Comparable)a).compareTo(b);
 	}
 	
-	public static boolean equalsWithNulls(Object a, Object b) {
+	public static final boolean equalsWithNulls(Object a, Object b) {
 		if (a==b) return true;
 		if ((a==null)||(b==null)) return false;
 		return a.equals(b);
