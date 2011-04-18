@@ -83,6 +83,7 @@ public class JConsole extends JComponent {
 		Arrays.fill(background,DEFAULT_BACKGROUND);
 		Arrays.fill(foreground,DEFAULT_FOREGROUND);
 		Arrays.fill(font,DEFAULT_FONT);
+		Arrays.fill(text,' ');
 		
 		currentFont=DEFAULT_FONT;
 		FontRenderContext fontRenderContext=new FontRenderContext(DEFAULT_FONT.getTransform(),false,false);
