@@ -111,6 +111,40 @@ public final class Rand {
 	public static boolean chance(float d) {
 		return Rand.nextFloat()<d;
 	}
+	
+	/**
+	 *  sum of best r from n s-sided dice
+	 * @param r
+	 * @param n
+	 * @param s
+	 * @return
+	 */
+	public static int best(int r, int n, int s) {
+		if ((n <= 0) || (r < 0) || (r > n) || (s < 0))
+			return 0;
+
+		int[] rolls = new int[n];
+		for (int i = 0; i < n; i++)
+			rolls[i] = d(s);
+
+		boolean found;
+		do {
+			found = false;
+			for (int x = 0; x < n - 1; x++) {
+				if (rolls[x] < rolls[x + 1]) {
+					int t = rolls[x];
+					rolls[x] = rolls[x + 1];
+					rolls[x + 1] = t;
+					found = true;
+				}
+			}
+		} while (found);
+
+		int sum = 0;
+		for (int i = 0; i < r; i++)
+			sum += rolls[i];
+		return sum;
+	}
 
 	
 	/**
@@ -155,6 +189,22 @@ public final class Rand {
 
 	public static int po(int numerator, int denominator) {
 		return po(((double) numerator) / denominator);
+	}
+	
+
+
+	/**
+	 *  calculates the sum of (number) s-sided dice
+	 * @param number
+	 * @param sides
+	 * @return
+	 */
+	public static int d(int number, int sides) {
+		int total = 0;
+		for (int i = 0; i < number; i++) {
+			total += d(sides);
+		}
+		return total;
 	}
 
 	/*
@@ -323,14 +373,6 @@ public final class Rand {
 
 	public static final int d100() {
 		return d(100);
-	}
-	
-	public static int d(int number, int sides) {
-		int total = 0;
-		for (int i = 0; i < number; i++) {
-			total += d(sides);
-		}
-		return total;
 	}
 	
 	/**

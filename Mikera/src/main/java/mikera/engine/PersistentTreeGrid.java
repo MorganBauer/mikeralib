@@ -293,6 +293,7 @@ public class PersistentTreeGrid<T> extends BaseGrid<T> {
 		return li;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public PersistentTreeGrid<T> setBlock(int x1, int y1, int z1, int x2, int y2, int z2, T value) {
 		return (PersistentTreeGrid<T>) setBlockLocal(
