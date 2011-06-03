@@ -7,6 +7,7 @@ import java.util.Random;
 import mikera.persistent.PersistentHashMap;
 import mikera.persistent.PersistentMap;
 import mikera.util.Bits;
+import mikera.util.Maths;
 import mikera.util.Rand;
 import mikera.util.TextUtils;
 
@@ -151,17 +152,15 @@ public class PerformanceTest {
 	
 	public static void a() {
         long count = 0;
-        for (int i = 0; i < 1000000; i++) {
-            Integer o = Integer.parseInt("99");
-            count += o.hashCode();
+        for (long i = 0; i < 10000000; i++) {
+            count += Maths.abs(i);
         }
-	}	
+    }	
 	
 	public static void b() {
         long count = 0;
-        for (int i = 0; i < 1000000; i++) {
-            int o = Integer.parseInt("99");
-            count += o;
+        for (long i = 0; i < 10000000; i++) {
+            count += i;
         }
 	}
 	

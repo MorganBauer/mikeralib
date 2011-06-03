@@ -246,17 +246,24 @@ public class Arrays {
 		java.util.Arrays.fill(array, 0);
 	}
 
-	public static void add(float[] src, float[] dest) {
+	public static void add(float[] dest, float[] src) {
 		for (int i=0; i<src.length; i++) {
 			dest[i]+=src[i];
 		}
 	}
 	
-	public static void add(double[] src, double[] dest) {
+	public static void add(double[] dest, double[] src) {
 		for (int i=0; i<src.length; i++) {
 			dest[i]+=src[i];
 		}
 	}
+	
+	public static void sub(double[] dest, double[] src, int length) {
+		for (int i=0; i<length; i++) {
+			dest[i]-=src[i];
+		}
+	}
+
 	
 	public static void add(float[] src, float[] dest, float factor) {
 		for (int i=0; i<src.length; i++) {
@@ -267,6 +274,12 @@ public class Arrays {
 	public static void add(double[] src, double[] dest, double factor) {
 		for (int i=0; i<src.length; i++) {
 			dest[i]+=src[i]*factor;
+		}
+	}
+	
+	public static void addWeighted(double[] src, double srcFactor, double[] dest, double destFactor) {
+		for (int i=0; i<src.length; i++) {
+			dest[i]= dest[i]*destFactor + src[i]*srcFactor;
 		}
 	}
 	
@@ -284,6 +297,12 @@ public class Arrays {
 	
 	public static void multiply(float[] array, float factor) {
 		for (int i=0; i<array.length; i++) {
+			array[i]*=factor;
+		}
+	}
+	
+	public static void multiply(double[] array, int length, double factor) {
+		for (int i=0; i<length; i++) {
 			array[i]*=factor;
 		}
 	}
@@ -362,13 +381,9 @@ public class Arrays {
 		}
 	}
 	
-	public static void applyTanhSigmoid(double[] data) {
-		applyTanhSigmoid(data,0,data.length);
-	}
-	
-	public static void applyTanhSigmoid(double[] data, int offset, int length) {
+	public static void applyTanhScaled(double[] data, int offset, int length) {
 		for (int i=offset; i<(offset+length); i++) {
-			data[i]=Maths.tanhSigmoid(data[i]);
+			data[i]=Maths.tanhScaled(data[i]);
 		}
 	}
 	

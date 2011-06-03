@@ -309,8 +309,8 @@ public final class Rand {
 		return u(0,a);
 	}
 	
-	public static final double u(double a,double b) {
-		return a+nextDouble()*(b-a);
+	public static final double u(double min,double max) {
+		return min+nextDouble()*(max-min);
 	}
 
 	

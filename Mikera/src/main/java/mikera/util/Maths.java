@@ -271,11 +271,11 @@ public final class Maths {
 		return df;
 	}
 	
-	public static double tanhSigmoid(double a) {
+	public static double tanhScaled(double a) {
 		return 1.7159*tanh((2.0/3.0)*a);
 	}
 	
-	public static double tanhSigmoidDerivative(double a) {
+	public static double tanhScaledDerivative(double a) {
 		double ta=tanh((2.0/3.0)*a);
 		return (1.7159*(2.0/3.0))*(ta*(1-ta));
 	}
