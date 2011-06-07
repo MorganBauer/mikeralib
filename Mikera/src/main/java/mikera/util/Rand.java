@@ -33,6 +33,11 @@ public final class Rand {
 		return a;
 	}
 	
+	/**
+	 * XORShift algorithm - credit to George Marsaglia!
+	 * @param a Initial state
+	 * @return new state
+	 */
 	public static final int xorShift32(int a) {
 		a ^= (a << 13);
 		a ^= (a >>> 17);
@@ -163,7 +168,11 @@ public final class Rand {
 		return poMedium(x);
 	}
 	
-	// sigmoid probability
+	/**
+	 *  logistic sigmoid  probability
+	 * @param x
+	 * @return
+	 */
 	public static int sig(float x) {
 		return (Rand.chance(Maths.sigmoid(x))?1:0);
 	}
@@ -206,12 +215,46 @@ public final class Rand {
 		}
 		return total;
 	}
-
-	/*
-	 *  Exponential distribution
-	 *  Continuous distribution
-	 */
 	
+	public static double factorial(int n) {
+		if (n<2) return 1;
+		double result=1;
+		for (int i=2; i<=n; i++) {
+			result*=i;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the probability of up to r sucesses in n trials 
+	 * 
+	 * @param r
+	 * @param n
+	 * @param p
+	 * @return
+	 */
+	public static double cumulativeBinomialChance(int r, int n, double p) {
+		double prob=0;
+		for (int i=0; i<=r; i++) {
+			prob+=binomialChance(i,n,p);
+		}
+		return prob;
+	}
+	
+	public static double combinations(int r, int n) {
+		return factorial(n)/(factorial(r)*factorial(n-r));
+	}
+	
+	public static double binomialChance(int r, int n, double p) {
+		return combinations(r,n)*Math.pow(p,r)*Math.pow((1-p), n-r);
+	}
+
+	/**
+	 * Returns a random sample from an exponential distribution
+	 * 
+	 * @param mean
+	 * @return
+	 */
 	public static double exp(double mean) {
 		return -Math.log(Rand.nextDouble())*mean;
 	}

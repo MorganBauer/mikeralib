@@ -82,16 +82,41 @@ public class TestBits {
 		assertEquals(2,Bits.lowestSetBit(6));
 	}
 	
+	@Test public void testLowestSetBits() {
+		assertEquals(0,Bits.lowestSetBit(0));
+		assertEquals(4,Bits.lowestSetBit(12));
+		assertEquals(Integer.MIN_VALUE,Bits.lowestSetBit(Integer.MIN_VALUE));
+		assertEquals(1,Bits.lowestSetBit(Integer.MAX_VALUE));
+		
+		assertEquals(32,Bits.lowestSetBitIndex(0));
+		assertEquals(0,Bits.lowestSetBitIndex(1));
+		assertEquals(2,Bits.lowestSetBitIndex(4));
+		assertEquals(31,Bits.lowestSetBitIndex(Integer.MIN_VALUE));
+	}
+
 	@Test public void testHighestSetBit() {
 		assertEquals(0,Bits.highestSetBit(0));
 		assertEquals(0x1000,Bits.highestSetBit(0x1FFF));
 		assertEquals(0x80000000,Bits.highestSetBit(0x80000000));
 	}
 	
+	@Test public void testHighestSetBits() {
+		assertEquals(0,Bits.highestSetBit(0));
+		assertEquals(8,Bits.highestSetBit(12));
+		assertEquals(Integer.MIN_VALUE,Bits.highestSetBit(Integer.MIN_VALUE));
+		assertEquals(Integer.MIN_VALUE,Bits.highestSetBit(-1));
+		
+		assertEquals(-1,Bits.highestSetBitIndex(0));
+		assertEquals(0,Bits.highestSetBitIndex(1));
+		assertEquals(2,Bits.highestSetBitIndex(4));
+		assertEquals(31,Bits.highestSetBitIndex(Integer.MIN_VALUE));
+	}
+
 	@Test public void testGetNthSetBit() {
 		assertEquals(1,Bits.getNthSetBit(0xFF, 1));
 		assertEquals(0x80,Bits.getNthSetBit(0xFF, 8));
 		assertEquals(0,Bits.getNthSetBit(0xFF, 32));
+		assertEquals(0,Bits.getNthSetBit(0xFF, 9));
 		assertEquals(0x80000000,Bits.getNthSetBit(0xFFFFFFFF, 32));
 		assertEquals(0,Bits.getNthSetBit(0xFFFFFFFF, 33));
 	}
@@ -117,10 +142,25 @@ public class TestBits {
 		long xl=Rand.nextLong();
 		assertEquals(xl,Bits.reverseBits(Bits.reverseBits(xl)));
 	}
+	
+	@Test public void testParity() {
+		assertEquals(0,Bits.parity(0));
+		assertEquals(1,Bits.parity(Integer.MAX_VALUE));
+		assertEquals(0,Bits.parity(0x0000F000));
+		assertEquals(1,Bits.parity(0x0100F000));
+	}
+	
+	@Test public void testRoll() {
+		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,20));
+		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,52));
+		assertEquals(0xFFF0000F,Bits.rollLeft(0xFFF0000F,0));
+		
+		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,12));
+		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,44));
+		assertEquals(0xFFF0000F,Bits.rollRight(0xFFF0000F,0));
+	
+	}
 
-	
-	
-	
 	@Test public void testBitGrid1() {
 		BitGrid bg=new BitGrid(0,0,0);
 		assertEquals(BitGrid.XBLOCKSIZE,bg.width());
@@ -304,17 +344,6 @@ public class TestBits {
 
 	}
 	
-	@Test public void testRoll() {
-		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,20));
-		assertEquals(0xFFF0000F,Bits.rollLeft(0x0000FFFF,52));
-		assertEquals(0xFFF0000F,Bits.rollLeft(0xFFF0000F,0));
-		
-		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,12));
-		assertEquals(0xFFF0000F,Bits.rollRight(0x0000FFFF,44));
-		assertEquals(0xFFF0000F,Bits.rollRight(0xFFF0000F,0));
-
-	}
-	
 	@Test public void testBitGridVisitors() {
 		BitGrid bg=new BitGrid(0,0,0);
 		
@@ -328,5 +357,19 @@ public class TestBits {
 		assertTrue(2<pv.tcount);
 		
 
+	}
+	
+	@Test public void testBinaryString() {
+		assertEquals("00000000000000001111111100000000",Bits.toBinaryString(0xFF00));
+		assertEquals("11111111111111111111111111111111",Bits.toBinaryString(-1));
+		assertEquals("00000000000000000000000000000000",Bits.toBinaryString(0));
+	}
+	
+	@Test public void testNextIntWithSameBitCount() {
+		assertEquals(2,Bits.nextIntWithSameBitCount(1));
+		assertEquals(0,Bits.nextIntWithSameBitCount(0));
+		assertEquals(9,Bits.nextIntWithSameBitCount(6));
+		assertEquals(1,Bits.nextIntWithSameBitCount(Integer.MIN_VALUE));
+		assertEquals(0xBFFFFFFF,Bits.nextIntWithSameBitCount(Integer.MAX_VALUE));
 	}
 }

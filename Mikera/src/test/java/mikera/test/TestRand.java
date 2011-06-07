@@ -95,6 +95,18 @@ public class TestRand {
 		for (int i=0; i<52; i++) assertTrue(is2[i]==i+1);
 	}
 	
+	@Test public void testFactorial() {
+		assertEquals(1,Rand.factorial(0),0.00001);
+		assertEquals(1,Rand.factorial(1),0.00001);
+		assertEquals(120,Rand.factorial(5),0.00001);
+	}
+
+	@Test public void testBinonial() {
+		assertEquals(0.01,Rand.binomialChance(2, 2, 0.1),0.00001);
+		assertEquals(0.5,Rand.binomialChance(1, 2, 0.5),0.00001);
+		assertEquals(1,Rand.cumulativeBinomialChance(10, 10, 0.7),0.00001);
+	}
+	
 	@Test public void testXORShift() {
 		long l=Rand.xorShift64(1L);
 		assertTrue(l!=1);

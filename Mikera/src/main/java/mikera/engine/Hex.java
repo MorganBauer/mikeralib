@@ -13,7 +13,10 @@ import mikera.util.Maths;
  *
  */
 public class Hex {
-	private static final float RATIO=0.866025404f;
+	/**
+	 *  ratio of height/width of hexagon = 0.8660254037844386
+	 */
+	private static final float RATIO=(float)(Maths.sqrt(3)*0.5);
 	
 	public static final int NW=0;
 	public static final int N=1;
@@ -22,8 +25,8 @@ public class Hex {
 	public static final int S=4;
 	public static final int SW=5;
 	
-	public static final int[] HEX_DX={-1,0,1,1,0,-1};
-	public static final int[] HEX_DY={0,-1, -1, 0 , 1, 1};
+	public static final int[] HEX_DX={-1,  0,  1, 1,  0, -1};
+	public static final int[] HEX_DY={ 0, -1, -1, 0 , 1,  1};
 	
 	// Location functions are hex-grid coordinates
 	// Positions are logical float-coordinates with (0,0) at centre of unit-height hex at (0,0)
