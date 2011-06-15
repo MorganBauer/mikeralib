@@ -47,15 +47,32 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		data=new byte[length];
 	}
 	
+	/**
+	 * Construct a block of data that is an exact copy of another Data object
+	 * 
+	 * @param d
+	 */
 	public Data(Data d) {
 		this(d.size());
 		d.copyTo(0, this, 0, d.size());
 	}
 	
+	/**
+	 * Create a Data object using the ocntents of the specified ByteBuffer
+	 * 
+	 * @param bb
+	 */
 	public Data(ByteBuffer bb) {
 		appendByteBuffer(bb);
 	}
 	
+	/**
+	 * Create a Data object using the specified byte array as internal storage.
+	 * 
+	 * Does *not* create a copy.
+	 * 
+	 * @param bytes
+	 */
 	private Data(byte[] bytes) {
 		data=bytes;
 		count=bytes.length;
@@ -77,6 +94,9 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		}
 	}
 	
+	/**
+	 * Returns an iterator for the Bytes in this Data object.
+	 */
 	public Iterator<Byte> iterator() {
 		return new DataIterator();
 	}
@@ -101,6 +121,15 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return nd;
 	}
 	
+	/**
+	 * Creates a Data object using the specified byte array as internal storage.
+	 * 
+	 * Does *not* make a defensive copy of the byte array. However a copy may be
+	 * taken at a later moment.
+	 * 
+	 * @param bytes
+	 * @return
+	 */
 	public static Data wrap(byte[] bytes) {
 		return new Data(bytes);
 	}
@@ -115,6 +144,12 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return data[pos]!=0;
 	}
 	
+	/**
+	 * Reads an integer encoded at the specified position in the data.
+	 * 
+	 * @param pos
+	 * @return
+	 */
 	public int getInt(int pos) {
 		return getVarInt(pos);		
 	}
@@ -416,6 +451,10 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return result;
 	}
 	
+	/**
+	 * Clones the Data object, including a full copy of internal data.
+	 * 
+	 */
 	@Override
 	public Data clone() {
 		Data nd=new Data(count);
@@ -451,6 +490,12 @@ public final class Data extends AbstractList<Byte> implements List<Byte>, Clonea
 		return 0;
 	}
 	
+	/**
+	 * Converts the data to a Hex string representation.
+	 * 
+	 * Representation includes some whitespace for easy printing.
+	 * 
+	 */
 	public String toString() {
 		StringBuilder sb=new StringBuilder();
 		

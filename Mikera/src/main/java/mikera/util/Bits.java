@@ -106,6 +106,14 @@ public final class Bits {
 		return countTrailingZeros(al);
 	}
 	
+	/**
+	 * Count the number of trailing (low-order) zero bits in an int
+	 * 
+	 * Returns 32 if entire integer is zero.
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static int countTrailingZeros(int a) {
 		int r=0;
 		if ((a&0xFFFF)==0) {r+=16; a>>>=16;}
@@ -123,14 +131,22 @@ public final class Bits {
 		return countLeadingZeros(ah);
 	}
 	
+	/**
+	 * Count the number of leading (high order) zeros in an int
+	 * 
+	 * returns 32 if entire int is zero
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static int countLeadingZeros(int a) {
+		if (a==0) return 32;
 		int r=0;
 		if ((a&0xFFFF0000)==0) {r+=16;} else {a>>>=16;}
 		if ((a&0xFF00)==0) {r+=8;} else {a>>>=8;}
 		if ((a&0xF0)==0) {r+=4;} else {a>>>=4;}
 		if ((a&0xC)==0) {r+=2;} else {a>>>=2;}
 		if ((a&0x2)==0) {r+=1;} else {a>>>=1;}
-		if ((a&0x1)==0) {r+=1;}
 		return r;
 	}
 	
@@ -178,6 +194,14 @@ public final class Bits {
 		return a&(~fillBitsRight(a>>>1));
 	}
 	
+	/**
+	 * Gets the index of the highest set bit in a given int
+	 * 
+	 * returns -1 if no bit set
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static int highestSetBitIndex(int a) {
 		return 31-countLeadingZeros(a);
 	}
@@ -214,6 +238,12 @@ public final class Bits {
 		return Bits.countTrailingZeros(a);
 	}
 	
+	/**
+	 * Reverses the bits of an int value
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static int reverseBits(int a) {
 		a = ((a >>> 1)  & 0x55555555) | ((a << 1)  & 0xAAAAAAAA);
 		a = ((a >>> 2)  & 0x33333333) | ((a << 2)  & 0xCCCCCCCC);
@@ -223,6 +253,12 @@ public final class Bits {
 		return a;
 	}
 	
+	/**
+	 * Reverses the bits of a long value
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static long reverseBits(long a) {	
 		return (((0xFFFFFFFFL&reverseBits((int)a)))<<32)^(0xFFFFFFFFL&reverseBits((int)(a>>>32)));
 	}

@@ -97,6 +97,11 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return -1;
 	}
 
+	/**
+	 * Creates an empty IntSet
+	 * 
+	 * @return
+	 */
 	public static IntSet create() {
 		return EMPTY_INTSET;
 	}
@@ -113,6 +118,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return create(data,0,data.length);
 	}
 	
+	/**
+	 * Creates an IntSet from a Set of integers
+	 * 
+	 * @param data
+	 * @return
+	 */
 	public static IntSet create(Set<Integer> data) {
 		int[] idata=new int[data.size()];
 		int i=0;
@@ -249,6 +260,18 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createLocal(ndata);		
 	}
 	
+	/**
+	 * Creates an IntSet from a subset of an int array.
+	 * 
+	 * Sorts and removes duplicates as needed.
+	 * 
+	 * Creates a copy of the input array.
+	 * 
+	 * @param data
+	 * @param offset
+	 * @param size
+	 * @return
+	 */
 	private static IntSet create(int[] data, int offset, int size) {
 		if (size==0) return EMPTY_INTSET;
 		int[] ndata=new int[size];
@@ -258,11 +281,24 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createLocal(ndata);
 	}
 		
-	// creates using a given local int array
+	/**
+	 * Creates an IntSet using a given local int array.
+	 * 
+	 * Assumes the array is already sorted, immutable and deduplicated
+	 * 
+	 * @param sortedData
+	 * @return
+	 */
 	private static IntSet createLocal(int[] sortedData) {
 		return intern(new IntSet(sortedData));
 	}
 	
+	/**
+	 * Interns the given IntSet in a static fixed-size cache.
+	 * 
+	 * @param is
+	 * @return
+	 */
 	public static IntSet intern(IntSet is) {
 		is=cache.cache(is);
 		return is;
@@ -337,6 +373,11 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return size()==0;
 	}
 
+	/**
+	 * Returns an iterator over all Integers in the IntSet.
+	 * 
+	 * Note that this needs to box each integer.
+	 */
 	public Iterator<Integer> iterator() {
 		return new Iterator<Integer>() {
 			int pos=0;
@@ -416,10 +457,6 @@ public final class IntSet extends BasePersistentSet<Integer> {
 	public IntSet intersection(IntSet values) {
 		return createIntersection(this,values);
 	}
-
-
-
-
 
 	private Object readResolve() throws ObjectStreamException {
 		// needed for deserialisation to the correct static instance
