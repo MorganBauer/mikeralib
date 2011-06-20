@@ -178,6 +178,14 @@ public final class Bits {
 		return (a & (-a));
 	}
 	
+	/**
+	 * Gets the index of the lowest set bit
+	 * 
+	 * Returns 32 if no bits set
+	 * 
+	 * @param a
+	 * @return
+	 */
 	public static int lowestSetBitIndex(int a) {
 		return countTrailingZeros(a);
 	}

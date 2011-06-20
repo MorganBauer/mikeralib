@@ -22,7 +22,10 @@ public final class Rand {
 	}
 	
 	/**
-	 * XORShift algorithm - credit to George Marsaglia!
+	 * XORShift algorithm - very fast psuedo-random number generator 
+	 * 
+	 * Credit to George Marsaglia!
+	 * 
 	 * @param a Initial state
 	 * @return new state
 	 */

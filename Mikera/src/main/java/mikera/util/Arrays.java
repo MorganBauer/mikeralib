@@ -85,6 +85,16 @@ public class Arrays {
 		data[b]=t;
 	}
 	
+	/**
+	 * Removes duplicate values from a sorted array of ints
+	 * 
+	 * Returns an array containing the deduplicated values
+	 * 
+	 * Destroys the original array whenever duplicates are found
+	 * 
+	 * @param sortedData
+	 * @return
+	 */
 	public static int[] deduplicate(int[] sortedData) {
 		int di=0;
 		int si=1;

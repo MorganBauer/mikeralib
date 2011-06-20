@@ -106,7 +106,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return EMPTY_INTSET;
 	}
 
-	
+	/**
+	 * Creates an IntSet with a single int value
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public static IntSet create(int value) {
 		int hc=Tools.hashCode(value);
 		IntSet is=cache.getCachedValueForHashCode(hc);
@@ -114,6 +119,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return createLocal(new int[] {value});
 	}
 
+	/**
+	 * Creates an IntSet using a copy of an int array
+	 * 
+	 * @param data
+	 * @return
+	 */
 	public static IntSet create(int[] data) {
 		return create(data,0,data.length);
 	}
@@ -304,6 +315,9 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return is;
 	}
 
+	/**
+	 * Calculates the hashcode of an IntSet
+	 */
 	public int hashCode() {
 		return hash;
 	}
@@ -324,12 +338,12 @@ public final class IntSet extends BasePersistentSet<Integer> {
 		return this;
 	}
 	
-	public boolean equals(IntSet is) {
-		if (is==this) return true;
+	public boolean equals(IntSet intset) {
+		if (intset==this) return true;
 		int size=size();
-		if (is.size()!=size) return false;
+		if (intset.size()!=size) return false;
 		for (int i=0; i<size; i++) {
-			if (data[i]!=is.data[i]) return false;
+			if (data[i]!=intset.data[i]) return false;
 		}
 		return true;
 	}
