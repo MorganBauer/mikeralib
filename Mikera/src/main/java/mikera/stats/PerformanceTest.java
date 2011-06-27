@@ -150,17 +150,20 @@ public class PerformanceTest {
 	static int z=0;
 	static Random random=new Random();
 	
+	static volatile String sa = "gyu";
+	static volatile String sb = sa;
+	
 	public static void a() {
         long count = 0;
         for (long i = 0; i < 10000000; i++) {
-            count += Maths.abs(i);
+            if (sa==sb) count++;
         }
     }	
 	
 	public static void b() {
         long count = 0;
         for (long i = 0; i < 10000000; i++) {
-            count += i;
+            if (sa.equals(sb)) count++;
         }
 	}
 	
