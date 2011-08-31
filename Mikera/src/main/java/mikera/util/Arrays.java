@@ -154,6 +154,74 @@ public class Arrays {
 			dest[destOffset+i]=d;
 		}
 	}
+	
+	public static void mergeLinear(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			double dv=dst[i];
+			double sv=src[i];			
+			dst[i]=( sv*srcProportion) + (dv*dstProportion);	
+		}
+	}
+	
+	public static void mergeRandomly(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			if (Rand.chance(srcProportion)) dst[i]=src[i];	
+		}
+	}
+	
+	public static void mergeInterleave(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<(int)(length*srcProportion); i++) {
+			dst[i]=src[i];	
+		}
+	}
+	
+	public static void mergeTanhSourceCertainty(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			if (Rand.chance(srcProportion)) {
+				double dv=dst[i];
+				double sv=src[i];			
+				double sourceCertainty=sv*sv;
+				dst[i]=sourceCertainty*sv+(1-sourceCertainty)*dv;
+			}
+		}
+	}
+	
+	public static void mergeTanhCertainty(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			if (Rand.chance(srcProportion)) {
+				double dv=dst[i];
+				double sv=src[i];			
+				double sourceCertainty=sv*sv*srcProportion;
+				double destCertainty=sv*sv*dstProportion;
+				dst[i]=(sourceCertainty*sv+destCertainty*dv)/(sourceCertainty+destCertainty);
+			}
+		}
+	}
+	
+	public static void mergeProbabilities(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			double dv=dst[i];
+			double sv=src[i];			
+			
+			double result= Math.sqrt(dv*sv) / ( Math.sqrt( dv*sv ) + Math.sqrt((1-dv)*(1-sv)) );
+			dst[i]=result;	
+		}
+	}
+	
+	public static void mergeGeometric(double[] src, double[] dst, int length, double srcProportion, double dstProportion) {
+		for (int i=0; i<length; i++) {
+			double dv=dst[i];
+			double sv=src[i];
+						
+			if (dstProportion<=0.0) {
+				dst[i]=Math.pow(sv,srcProportion);
+			} else if (srcProportion<=0.0){
+				dst[i]=Math.pow(dv,dstProportion);
+			} else {
+				dst[i]=Math.pow(sv,srcProportion)*Math.pow(dv,dstProportion);
+			}		
+		}
+	}
 
 	public static <T> void swap(List<T> a, int x, int y) {
 		T t=a.get(x);
@@ -288,7 +356,11 @@ public class Arrays {
 	}
 	
 	public static void addWeighted(double[] src, double srcFactor, double[] dest, double destFactor) {
-		for (int i=0; i<src.length; i++) {
+		addWeighted(src,srcFactor,dest,destFactor,Maths.min(src.length, dest.length));
+	}
+	
+	public static void addWeighted(double[] src, double srcFactor, double[] dest, double destFactor, int length) {
+		for (int i=0; i<length; i++) {
 			dest[i]= dest[i]*destFactor + src[i]*srcFactor;
 		}
 	}
@@ -544,6 +616,22 @@ public class Arrays {
 		System.arraycopy(array, start, newarray, 0, len);
 		return newarray;
 	}
+
+	public static void scaleToAverage(double[] data, int offset, int length,double targetAverage) {
+		double sum=0.0;
+		for (int i=offset; i<(length+offset); i++) {
+			sum+=data[i];
+		}
+		
+		if (sum!=0) {
+			double factor=targetAverage*(length/sum);
+			for (int i=offset; i<(length+offset); i++) {
+				data[i]*=factor;
+			}
+		}
+	}
+
+
 
 
 }
