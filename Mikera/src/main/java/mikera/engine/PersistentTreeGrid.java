@@ -7,7 +7,7 @@ import mikera.util.Maths;
 import mikera.util.Tools;
 
 /**
- * Grid implemented as a hierarchy of 4*4*4 grids
+ * Persistent data structure implementation of Grid implemented as a hierarchy of 4*4*4 grids
  * 
  * Top level is offset to centre at (0,0,0)
  * 
