@@ -1,5 +1,6 @@
 package mikera.persistent;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.BitSet;
 
@@ -11,8 +12,9 @@ import mikera.data.Data;
  * @author Mike
  *
  */
-public final class BitString {
-	
+public final class BitString implements Cloneable, Serializable{
+	private static final long serialVersionUID = -4384823563702555173L;
+
 	/**
 	 * Zero-padded byte array containing bit data
 	 */
@@ -28,8 +30,13 @@ public final class BitString {
 	}
 	
 	public BitString(byte[] bytes) {
-		length=bytes.length*3;
+		length=bytes.length<<3;
 		data=bytes.clone();
+	}
+	
+	public BitString(Data data) {
+		length=data.size()<<3;
+		this.data=data.toNewByteArray();
 	}
 	
 	private BitString(int bitLength) {
@@ -63,6 +70,13 @@ public final class BitString {
 		return data[byteIndex];
 	}
 
+	/**
+	 * Construct a BitString from a standard java.util.BitSet
+	 * 
+	 * Note that the length of the BitString is determined by the highest set bit in the BitSet.
+	 * 
+	 * @param bitset
+	 */
 	public BitString(BitSet bitset) {
 		this(bitset.length());
 		for (int i=0; i<length; i++) {
@@ -70,6 +84,15 @@ public final class BitString {
 		}
 	}
 	
+	/**
+	 * Construct a cloned BitString using structural sharing
+	 * @param bitString
+	 */
+	public BitString(BitString bitString) {
+		length=bitString.length;
+		data=bitString.data;
+	}
+
 	public int length() {
 		return length;
 	}
@@ -84,6 +107,10 @@ public final class BitString {
 	
 	public Data toData() {
 		return Data.wrap(toByteArray());
+	}
+	
+	public BitString clone() {
+		return new BitString(this);
 	}
 	
 	public BitSet toBitSet() {
