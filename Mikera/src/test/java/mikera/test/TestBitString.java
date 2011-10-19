@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 import org.junit.Test;
-import mikera.persistent.BitString;
+
+import mikera.data.BitString;
 import mikera.util.Rand;
 
 public class TestBitString {
@@ -34,7 +35,7 @@ public class TestBitString {
 				assertEquals(bs.get(j),b.get(j));
 			}
 			
-			
+			b.validate();
 		}
 	}
 	

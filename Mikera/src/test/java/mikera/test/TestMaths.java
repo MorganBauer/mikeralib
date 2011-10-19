@@ -1,7 +1,7 @@
 package mikera.test;
 
 import static org.junit.Assert.assertEquals;
-import mikera.data.BigFloat;
+import mikera.data.BigDouble;
 import mikera.data.BigRational;
 import mikera.math.PerlinNoise;
 import mikera.util.Maths;
@@ -152,14 +152,14 @@ public class TestMaths {
 	}
 	
 	@Test public void testBigFloat() {
-		BigFloat bf=new BigFloat(2.0);
+		BigDouble bf=new BigDouble(2.0);
 		bf=bf.multiply(2);
 		bf=bf.subtract(1.5);
 		bf=bf.add(0.5);
 		bf=bf.divide(3);
 		assertEquals(1,bf.doubleValue(),0.000001);
 		
-		bf=BigFloat.exp(9);
+		bf=BigDouble.exp(9);
 		bf=bf.multiply(bf);
 		assertEquals(18,bf.log(),0.000001);
 	}

@@ -101,12 +101,19 @@ public class TestRand {
 		assertEquals(120,Rand.factorial(5),0.00001);
 	}
 
+	@Test public void testCombinations() {
+		assertEquals(10,Rand.combinations(2, 5),0.00001);
+		assertEquals(10,Rand.combinations(3, 5),0.00001);
+	}
+	
+	
 	@Test public void testBinonial() {
 		assertEquals(0.01,Rand.binomialChance(2, 2, 0.1),0.00001);
 		assertEquals(0.5,Rand.binomialChance(1, 2, 0.5),0.00001);
 		assertEquals(1,Rand.cumulativeBinomialChance(10, 10, 0.7),0.00001);
 	}
 	
+
 	@Test public void testXORShift() {
 		long l=Rand.xorShift64(1L);
 		assertTrue(l!=1);

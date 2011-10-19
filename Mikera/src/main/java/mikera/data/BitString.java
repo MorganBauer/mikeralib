@@ -1,10 +1,9 @@
-package mikera.persistent;
+package mikera.data;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import mikera.data.Data;
 
 /**
  * Immutable bit string
@@ -29,6 +28,13 @@ public final class BitString implements Cloneable, Serializable{
 		this(0);
 	}
 	
+	/**
+	 * Construct a bitstring from a byte array.
+	 * 
+	 * Creates an internal defensive copt of the bytes.
+	 * 
+	 * @param bytes
+	 */
 	public BitString(byte[] bytes) {
 		length=bytes.length<<3;
 		data=bytes.clone();
@@ -140,5 +146,11 @@ public final class BitString implements Cloneable, Serializable{
 	
 	public String toString() {
 		return Arrays.toString(data);
+	}
+	
+	public void validate() {
+		if (data.length!=bytesNeeded(length)) throw new Error("Unexpected data length");
+		int padBits=(8 * data.length)-length;
+		if (((0xFF&data[data.length-1])>>>(8-padBits))!=0) throw new Error("Non-zero padding!");
 	}
 }

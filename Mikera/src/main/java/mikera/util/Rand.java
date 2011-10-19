@@ -195,7 +195,7 @@ public final class Rand {
 	
 	private static int poLarge(double x) {
 		// normal approximation to poisson
-		// strictly needed for x>=746 (=> Math.exp(-x)==0)
+		// strictly necessary for x>=746 (=> Math.exp(-x)==0)
 		return (int)(0.5+n(x,Math.sqrt(x)));
 	}
 
@@ -206,7 +206,7 @@ public final class Rand {
 
 
 	/**
-	 *  calculates the sum of (number) s-sided dice
+	 *  calculates the sum of (number) x (sides)-sided dice
 	 * @param number
 	 * @param sides
 	 * @return
@@ -223,6 +223,16 @@ public final class Rand {
 		if (n<2) return 1;
 		double result=1;
 		for (int i=2; i<=n; i++) {
+			result*=i;
+		}
+		return result;
+	}
+	
+	public static double factorialRatio(int n, int r) {
+		if (n<2) return 1;
+		if (n<r) return 1.0/factorialRatio(r,n);
+		double result=1;
+		for (int i=r+1; i<=n; i++) {
 			result*=i;
 		}
 		return result;
@@ -245,7 +255,8 @@ public final class Rand {
 	}
 	
 	public static double combinations(int r, int n) {
-		return factorial(n)/(factorial(r)*factorial(n-r));
+		if (r>(n-r)) return combinations(n-r,n);
+		return factorialRatio(n,n-r)/factorial(r);
 	}
 	
 	public static double binomialChance(int r, int n, double p) {

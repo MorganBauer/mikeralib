@@ -372,6 +372,15 @@ public final class Maths {
 		int i=(int) d;
 		return (i==d)?i:(i+1);
 	}
+	
+	/**
+	 * Soft maximum function
+	 */
+	public static double softMaximum(double x, double y) {
+		double max=Math.max(x, y);
+		double min=Math.min(x, y);
+		return max+Math.log(1.0+Math.exp(max-min));
+	}
 
 	/**
 	 * Computes a fast approximation to <code>Math.pow(a, b)</code>. Adapted

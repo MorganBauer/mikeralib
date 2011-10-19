@@ -1,19 +1,87 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>mikera</groupId>
-  <artifactId>Mikera</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  
-  <name>Mike's Java Library</name>
-  
-  
-  <packaging>jar</packaging>
-  <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.8.2</version>
-  	</dependency>
-  </dependencies>
-  
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.mikera</groupId>
+	<artifactId>mikera</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>Mike's Java Library</name>
+
+	<url>http://code.google.com/p/mikeralib/</url>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<developers>
+		<developer>
+			<id>mikera</id>
+			<name>Mike Anderson</name>
+			<email>mike.r.anderson@gmail.com</email>
+			<organization>N/A</organization>
+			<organizationUrl>N/A</organizationUrl>
+			<roles>
+				<role>Lead developer</role>
+			</roles>
+			<timezone>0</timezone>
+			<url>http://mikera.net</url>
+		</developer>
+	</developers>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<licenses>
+		<license>
+			<name>GPL</name>
+			<url>http://www.gnu.org/licenses/gpl.txt</url>
+			<distribution>repo</distribution>
+			<comments>GPL</comments>
+		</license>
+	</licenses>
+
+	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<url>http://mikeralib.googlecode.com/svn/trunk/Mikera</url>
+		<connection>scm:svn:http://mikeralib.googlecode.com/svn/trunk/Mikera</connection>
+		<developerConnection>scm:svn:https://mikeralib.googlecode.com/svn/trunk/Mikera</developerConnection>
+	</scm>
+	<description>General purpose utilities for Java licensed under the GPL by Mike Anderson</description>
 </project>

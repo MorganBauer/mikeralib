@@ -6,21 +6,21 @@ import mikera.util.Maths;
 
 @Mutable
 @Immutable
-public final class BigFloat extends Number {
+public final class BigDouble extends Number {
 	private static final long serialVersionUID = 8944436596909296283L;
 
 	final double factor;
 	final double exponent;
 	
-	public BigFloat(double d) {
+	public BigDouble(double d) {
 		this(d,0);
 	}
 	
-	public BigFloat(Number d) {
+	public BigDouble(Number d) {
 		this(d.doubleValue(),0);
 	}
 	
-	private BigFloat(double d, double exp) {
+	private BigDouble(double d, double exp) {
 		double af=Math.abs(d);
 		if ((af!=0)&&((af<0.001)||(af>=10000))) {
 			// normalise
@@ -32,50 +32,50 @@ public final class BigFloat extends Number {
 		exponent=exp;
 	}
 	
-	public BigFloat multiply(BigFloat bf) {
-		return new BigFloat(factor*bf.factor,exponent+bf.exponent);
+	public BigDouble multiply(BigDouble bf) {
+		return new BigDouble(factor*bf.factor,exponent+bf.exponent);
 	}
 	
-	public BigFloat multiply(double d) {
-		return new BigFloat(factor*d,exponent);
+	public BigDouble multiply(double d) {
+		return new BigDouble(factor*d,exponent);
 	}
 	
-	public BigFloat divide(double d) {
-		return new BigFloat(factor/d,exponent);
+	public BigDouble divide(double d) {
+		return new BigDouble(factor/d,exponent);
 	}
 	
-	public BigFloat divide(BigFloat bf) {
-		return new BigFloat(factor/bf.factor,exponent-bf.exponent);
+	public BigDouble divide(BigDouble bf) {
+		return new BigDouble(factor/bf.factor,exponent-bf.exponent);
 	}
 	
-	public BigFloat add(double d) {
+	public BigDouble add(double d) {
 		return add(d,0);
 	}
 	
-	public BigFloat add(BigFloat bf) {
+	public BigDouble add(BigDouble bf) {
 		return add(bf.factor,bf.exponent);
 	}
 	
-	public BigFloat subtract(double d) {
+	public BigDouble subtract(double d) {
 		return add(-d,0);
 	}
 	
-	public BigFloat subtract(BigFloat bf) {
+	public BigDouble subtract(BigDouble bf) {
 		return add(-bf.factor,bf.exponent);
 	}
 	
-	private BigFloat add(double d, double e) {
+	private BigDouble add(double d, double e) {
 		if (e<exponent) {
 			d=d*(Math.exp(e-exponent))+factor;
 			e=exponent;
 		} else {
 			d=d+factor*Math.exp(exponent-e);
 		}
-		return new BigFloat(d,e);
+		return new BigDouble(d,e);
 	}
 	
-	public static BigFloat exp(Number n) {
-		return new BigFloat(1,n.doubleValue());
+	public static BigDouble exp(Number n) {
+		return new BigDouble(1,n.doubleValue());
 	}
 	
 	public double log() {
