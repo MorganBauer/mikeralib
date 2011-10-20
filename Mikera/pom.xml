@@ -5,7 +5,10 @@
 	<artifactId>mikera</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
-	<name>Mike's Java Library</name>
+	<name>mikera.jar - Mike's Java Library</name>
+
+	<description>General purpose utilities for Java licensed under the GPL by Mike Anderson</description>
+
 
 	<url>http://code.google.com/p/mikeralib/</url>
 
@@ -56,6 +59,20 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> 
 		</plugins>
 	</build>
 
@@ -83,5 +100,12 @@
 		<connection>scm:svn:http://mikeralib.googlecode.com/svn/trunk/Mikera</connection>
 		<developerConnection>scm:svn:https://mikeralib.googlecode.com/svn/trunk/Mikera</developerConnection>
 	</scm>
-	<description>General purpose utilities for Java licensed under the GPL by Mike Anderson</description>
+
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>
