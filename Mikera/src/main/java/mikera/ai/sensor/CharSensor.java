@@ -18,9 +18,8 @@ public final class CharSensor extends AbstractSensor {
 	
 	public static final void sense8BitChar(int c, double[] dest, int offset) {
 		for (int i=0; i<8; i++) {
-			dest[i+offset]=-1+(2*(c&1));
+			dest[i+offset]=c&1;
 			c>>=1;
 		}		
 	}
-
 }
