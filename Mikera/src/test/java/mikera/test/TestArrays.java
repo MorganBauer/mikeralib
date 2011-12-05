@@ -16,7 +16,7 @@ import mikera.util.Tools;
 import org.junit.Test;
 
 public class TestArrays {
-	@Test public void testMarge() {
+	@Test public void testMerge() {
 		double[] a=new double[100];
 		double[] b=new double[100];
 		
@@ -30,6 +30,17 @@ public class TestArrays {
 		assertEquals(7,b[0],0.0001);
 		assertEquals(3,b[1],0.0001);
 		assertEquals(100,b[10],0.0001);
+	}
+	
+	@Test public void testMergeLinear() {
+		double[] ds=new double[10];
+		double[] es=new double[10];
+		
+		ds[0]=10;
+		es[0]=2;
+		
+		Arrays.mergeLinear(ds, es, 10, 0.25, 0.75);
+		assertEquals(4.0,es[0],0.0001);
 	}
 
 }

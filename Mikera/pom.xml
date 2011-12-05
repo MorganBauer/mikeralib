@@ -94,14 +94,6 @@
 	</licenses>
 
 	<packaging>jar</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.9</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 
 	<scm>
 		<url>http://mikeralib.googlecode.com/svn/trunk/Mikera</url>
@@ -116,4 +108,11 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+		</dependency>
+	</dependencies>
 </project>
