@@ -383,6 +383,12 @@ public class Arrays {
 		}
 	}
 	
+	public static void multiply(double[] array, double factor) {
+		for (int i=0; i<array.length; i++) {
+			array[i]*=factor;
+		}
+	}
+	
 	public static void multiply(double[] array, int length, double factor) {
 		for (int i=0; i<length; i++) {
 			array[i]*=factor;

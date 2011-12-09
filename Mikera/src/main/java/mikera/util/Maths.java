@@ -16,6 +16,7 @@ public final class Maths {
 	public static final float TWO_PI=2.0f*PI;
 	public static final float HALF_PI=0.5f*PI;
 	public static final float QUARTER_PI=0.25f*PI;
+	private static final double EPSILON = 0.00001;
 	
 	public static float sqrt(float a) {
 		return (float)Math.sqrt(a);
@@ -472,6 +473,10 @@ public final class Maths {
 		if (v<min) return min;
 		if (v>max) return max;
 		return v;
+	}
+
+	public static boolean notNearZero(double d) {
+		return (d<-EPSILON)||(d>EPSILON);
 	}
 	
 }
