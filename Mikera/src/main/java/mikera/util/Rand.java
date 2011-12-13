@@ -603,6 +603,17 @@ public final class Rand {
 	}
 
 
-
+	public static int indexFromWeights(double[] probabilities) {
+		double total=0;
+		for (int i=0; i<probabilities.length; i++) {
+			total+=probabilities[i];
+		}
+		double position=total*Rand.nextDouble();
+		for (int i=0; i<probabilities.length; i++) {
+			position-=probabilities[i];
+			if (position<=0) return i;
+		}
+		throw new Error("Funny probabilities array!");
+	}
 
 }

@@ -118,6 +118,12 @@ public class Arrays {
 		}
 	}
 	
+	public static void boundToRange(double[] data, double min, double max) {
+		for (int i=0; i<data.length; i++) {
+			data[i]=Maths.bound(min, data[i], max);
+		}
+	}
+	
 	public static float squareDistance(float[] a, float[] b) {
 		float eSquared=0;
 		for (int i=0; (i<a.length); i++) {
