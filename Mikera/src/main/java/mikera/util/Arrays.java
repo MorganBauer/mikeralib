@@ -642,8 +642,17 @@ public class Arrays {
 			}
 		}
 	}
-
-
-
-
+	
+	public static double[] calcAverage(double[][] arrays) {
+		int len=arrays[0].length;
+		double[] result=new double[len];
+		for (double [] ds : arrays) {
+			Arrays.add(result, ds);
+		}
+		double factor=1.0/arrays.length;
+		for (int i=0; i<len; i++) {
+			result[i]*=factor;
+		}
+		return result;
+	}
 }

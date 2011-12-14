@@ -42,5 +42,11 @@ public class TestArrays {
 		Arrays.mergeLinear(ds, es, 10, 0.25, 0.75);
 		assertEquals(4.0,es[0],0.0001);
 	}
+	
+	@Test public void testAverage() {
+		double[][] ds = {{0,0,0,1}, {0,0,1,0}, {1,1,0,0}, {1,1,1,1}};
+		
+		assertTrue(java.util.Arrays.equals(new double[] {0.5,0.5,0.5,0.5}, Arrays.calcAverage(ds)));
+	}
 
 }
