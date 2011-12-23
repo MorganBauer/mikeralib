@@ -14,6 +14,7 @@ public final class Maths {
 	public static final float E=(float)Math.exp(1);
 	public static final float PI=(float)Math.PI;
 	public static final float TWO_PI=2.0f*PI;
+	public static final float TAU=TWO_PI;
 	public static final float HALF_PI=0.5f*PI;
 	public static final float QUARTER_PI=0.25f*PI;
 	private static final double EPSILON = 0.00001;
