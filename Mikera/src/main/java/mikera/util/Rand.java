@@ -199,14 +199,20 @@ public final class Rand {
 		return (int)(0.5+n(x,Math.sqrt(x)));
 	}
 
+	/**
+	 * Draw a sample from the possion distribution with parameter = numerator / denominator
+	 * 
+	 * @param numerator
+	 * @param denominator
+	 * @return
+	 */
 	public static int po(int numerator, int denominator) {
 		return po(((double) numerator) / denominator);
 	}
 	
-
-
 	/**
-	 *  calculates the sum of (number) x (sides)-sided dice
+	 * Calculates the sum of (number) x (sides)-sided dice
+	 * 
 	 * @param number
 	 * @param sides
 	 * @return
@@ -219,6 +225,7 @@ public final class Rand {
 		return total;
 	}
 	
+	
 	public static double factorial(int n) {
 		if (n<2) return 1;
 		double result=1;
@@ -228,6 +235,15 @@ public final class Rand {
 		return result;
 	}
 	
+	/**
+	 * Calculates n!/r!
+	 * 
+	 * Avoids the overhead of calculating the terms which cancel out
+	 * 
+	 * @param n
+	 * @param r
+	 * @return
+	 */
 	public static double factorialRatio(int n, int r) {
 		if (n<2) return 1;
 		if (n<r) return 1.0/factorialRatio(r,n);
@@ -239,7 +255,7 @@ public final class Rand {
 	}
 
 	/**
-	 * Returns the probability of up to r sucesses in n trials 
+	 * Returns the probability of up to r successes in n trials, each with probability of success p
 	 * 
 	 * @param r
 	 * @param n
@@ -273,8 +289,9 @@ public final class Rand {
 		return -Math.log(Rand.nextDouble())*mean;
 	}
 	
-	/*
-	 *  Geometric distribution
+	/**
+	 *  Returns a sample from a Geometric distribution
+	 *  
 	 *  Discrete distribution with decay rate p
 	 *  Mean = (1-p) / p
 	 *  Probability mass function for each integer output k = p.(1-p)^k
@@ -288,15 +305,26 @@ public final class Rand {
 	 * Generators for standard Java types
 	 */
 	
+	/**
+	 * Sample a random signed 32-bit integer
+	 * @return
+	 */
 	public static final int nextInt() {
 		return (int)(nextLong()>>32);
 	}
 	
+	/**
+	 * Sample a random signed short value
+	 * @return
+	 */
 	public static final short nextShort() {
 		return (short)(nextLong()>>32);
 	}
 	
-	
+	/**
+	 * Sample a random char
+	 * @return
+	 */
 	public static final char nextChar() {
 		return (char)(nextLong()>>32);
 	}
@@ -309,14 +337,27 @@ public final class Rand {
 		return new String(cs);
 	}
 	
+	/**
+	 * Sample a random (signed) byte
+	 * @return
+	 */
 	public static final byte nextByte() {
 		return (byte)(nextLong()>>32);
 	}
 	
+	/**
+	 * Sample a random boolean value with 50% chance
+	 * 
+	 * @return
+	 */
 	public static boolean nextBoolean() {
 		return (nextLong()&65536)!=0;
 	}
 	
+	/**
+	 * Sample a random lowercase letter
+	 * @return
+	 */
 	public static final char nextLetter() {
 		return (char)Rand.range('a','z');
 	}
@@ -345,7 +386,7 @@ public final class Rand {
 	private static final float FLOAT_SCALE_FACTOR=(float)(1.0/Math.pow(2,63));
 
 	/**
-	 * Returns standard double in range 0..1
+	 * Returns standard double in range [0..1)
 	 * 
 	 * @return
 	 */
@@ -353,19 +394,37 @@ public final class Rand {
 		return ( nextLong()>>>1 ) * DOUBLE_SCALE_FACTOR;
 	}
 	
+	/**
+	 * Sample a random float in range [0..1)
+	 * @return
+	 */
 	public static final float nextFloat() {
 		return ( nextLong()>>>1 ) * FLOAT_SCALE_FACTOR;
 	}
 
-	
+	/**
+	 * Sample a random uniform double in range [0..1)
+	 * @return
+	 */
 	public static final double u() {
 		return nextDouble();
 	}
 	
-	public static final double u(double a) {
-		return u(0,a);
+	/**
+	 * Sample a random uniform double in range [0..max)
+	 * @param max
+	 * @return
+	 */
+	public static final double u(double max) {
+		return u(0,max);
 	}
 	
+	/**
+	 * Sample a random uniform double in the range [min..max)
+	 * @param min
+	 * @param max
+	 * @return
+	 */
 	public static final double u(double min,double max) {
 		return min+nextDouble()*(max-min);
 	}
@@ -467,7 +526,7 @@ public final class Rand {
 	}
 	
 	/**
-	 * Shuffles all elements in a given array
+	 * Randomly shuffles all elements in a given array
 	 */
 	public static <T> void shuffle(T[] ts) {
 		for (int i=0; i<(ts.length-1); i++) {
@@ -602,6 +661,11 @@ public final class Rand {
 		}
 	}
 
+	public static void binarySample(double[] temp, int offset, int length) {
+		for (int i=offset; i<(offset+length); i++) {
+			temp[i]=(Rand.nextDouble()<temp[i]) ? 1f : 0f;
+		}
+	}
 
 	public static int indexFromWeights(double[] probabilities) {
 		double total=0;

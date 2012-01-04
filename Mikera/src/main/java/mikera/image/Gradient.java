@@ -11,6 +11,12 @@ import mikera.math.Vector;
 import mikera.math.VectorFunction;
 import mikera.util.Maths;
 
+/**
+ * Represents an arbitrary sized gradient of RGBA colours
+ * 
+ * @author Mike
+ *
+ */
 @Mutable
 public final class Gradient implements Cloneable, Serializable {
 	private static final long serialVersionUID = -1324286985827948661L;
@@ -49,6 +55,13 @@ public final class Gradient implements Cloneable, Serializable {
 	
 	public int get(int i) {
 		return data[i];
+	}
+	
+	public int getScaled(double pos) {
+		int length=data.length;
+		int p=(int)Math.floor(pos*length);
+		int bounded=Maths.middle(0, p, length-1);
+		return data[bounded];
 	}
 	
 	public static Gradient createInvertedMonoGradient() {
