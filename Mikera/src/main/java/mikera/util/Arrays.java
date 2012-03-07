@@ -371,13 +371,13 @@ public class Arrays {
 		}
 	}
 	
-	public static void add(float[] src, int srcOffset, float[] dest, int destOffset, int length, float factor) {
+	public static void addMultiple(float[] src, int srcOffset, float[] dest, int destOffset, int length, float factor) {
 		for (int i=0; i<length; i++) {
 			dest[i+destOffset]+=src[i+srcOffset]*factor;
 		}
 	}
 	
-	public static void add(double[] src, int srcOffset, double[] dest, int destOffset, int length, double factor) {
+	public static void addMultiple(double[] src, int srcOffset, double[] dest, int destOffset, int length, double factor) {
 		for (int i=0; i<length; i++) {
 			dest[i+destOffset]+=src[i+srcOffset]*factor;
 		}
@@ -495,6 +495,20 @@ public class Arrays {
 				data[i]=1.0f;
 			} else {
 				data[i]=Rand.nextFloat()<Maths.sigmoid(v)?1:0;
+			}
+		}	
+	}
+	
+	public static void applyStochasticSigmoid(double[] data, int offset,
+			int length, double gain) {
+		for (int i=offset; i<(offset+length); i++) {
+			double v=data[i]*gain;
+			if (v<=-30f) {
+				data[i]=0.0f;
+			} else if (v>=30f) {
+				data[i]=1.0f;
+			} else {
+				data[i]=Rand.nextDouble()<Maths.sigmoid(v)?1:0;
 			}
 		}	
 	}
@@ -655,4 +669,6 @@ public class Arrays {
 		}
 		return result;
 	}
+
+
 }
