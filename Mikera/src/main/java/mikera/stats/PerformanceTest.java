@@ -108,10 +108,12 @@ public class PerformanceTest {
 		}
 	}
 	
+	static int one=1;
+
 	public static int addMillion() {
 		int result=0;
 		for (int i=0; i<1000000; i++) {
-			result+=i;
+			result+=one;
 		}
 		return result;
 	}
@@ -160,11 +162,10 @@ public class PerformanceTest {
         }
     }	
 	
+
+	
 	public static void b() {
-        long count = 0;
-        for (long i = 0; i < 10000000; i++) {
-            if (sa.equals(sb)) count++;
-        }
+        int count =addMillion();
 	}
 	
 }
