@@ -82,7 +82,9 @@ public class Colours {
 	 * @return
 	 */
 	public static int getLuminance(int argb) {
-    	int lum=(77*((argb>>16)&255)+150*((argb>>8)&255)+29*((argb)&255))>>8;
+    	int lum= (   77  * ((argb>>16)&255) 
+    		       + 150 * ((argb>>8)&255) 
+    		       + 29  * ((argb)&255))>>8;
     	return lum;
 	}
 	

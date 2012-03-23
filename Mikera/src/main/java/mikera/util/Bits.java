@@ -1,5 +1,11 @@
 package mikera.util;
 
+/**
+ * Class containing static bitwise utility functions
+ * 
+ * @author Mike
+ *
+ */
 public final class Bits {
 	
 	/**

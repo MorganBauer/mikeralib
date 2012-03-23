@@ -23,6 +23,10 @@ public final class Maths {
 		return (float)Math.sqrt(a);
 	}
 	
+	public static double sqrt(double a) {
+		return Math.sqrt(a);
+	}
+	
 	public static float fastInverseSqrt(float x) {
 	    float xhalf = 0.5f*x;
 	    int i = Float.floatToRawIntBits(x);
@@ -106,7 +110,7 @@ public final class Maths {
 	}
 	
 	public static int sign(double a) {
-		if (a==0.0f) return 0;
+		if (a==0.0) return 0;
 		return (a>0)?1:-1;
 	}
 	
@@ -170,6 +174,20 @@ public final class Maths {
 		return ((base+increase)/boundary)-(base/boundary);
 	}
 	
+	public static double min(double a, double b, double c) {
+		double result=a;
+		if (b<result) result=b;
+		if (c<result) result=c;
+		return result;
+	}
+	
+	public static double max(double a, double b, double c) {
+		double result=a;
+		if (b>result) result=b;
+		if (c>result) result=c;
+		return result;
+	}
+	
 	public static float min(float a, float b, float c) {
 		float result=a;
 		if (b<result) result=b;
@@ -183,6 +201,23 @@ public final class Maths {
 		if (c>result) result=c;
 		return result;
 	}
+	
+	public static final float min(float a, float b, float c, float d) {
+	    float result=a;
+		if (result > b) result = b;
+	    if (result > c) result = c;
+	    if (result > d) result = d;
+	    return result;
+	}
+
+	public static final float max(float a, float b, float c, float d) {
+		float result=a;
+		if (result < b) result = b;
+	    if (result < c) result = c;
+	    if (result < d) result = d;
+	    return result;
+	}
+
 	
 	// branchless version of abs()
 	public static int abs(final int a) {
@@ -404,41 +439,6 @@ public final class Maths {
 	    return Float.intBitsToFloat((int) ((b + 127 - y) * (1 << 23)));
 	}
 
-	public static final double min(double a, double b, double c) {
-	    if (a > b)
-	        a = b;
-	    if (a > c)
-	        a = c;
-	    return a;
-	}
-
-	public static final float min(float a, float b, float c, float d) {
-	    if (a > b)
-	        a = b;
-	    if (a > c)
-	        a = c;
-	    if (a > d)
-	        a = d;
-	    return a;
-	}
-
-	public static final double max(double a, double b, double c) {
-	    if (a < b)
-	        a = b;
-	    if (a < c)
-	        a = c;
-	    return a;
-	}
-
-	public static final float max(float a, float b, float c, float d) {
-	    if (a < b)
-	        a = b;
-	    if (a < c)
-	        a = c;
-	    if (a < d)
-	        a = d;
-	    return a;
-	}
 
 	public static final float smoothStep(float a, float b, float x) {
 	    if (x <= a)

@@ -154,23 +154,6 @@ public final class Rand {
 		return sum;
 	}
 
-	
-	/**
-	 *  Poisson distribution
-	 * @param x
-	 * @return
-	 */
-	public static int po(double x) {
-		if (x<=0) {
-			if (x<0) throw new IllegalArgumentException();
-			return 0;
-		}
-		if (x>400) {
-			return poLarge(x);
-		}
-		return poMedium(x);
-	}
-	
 	/**
 	 *  logistic sigmoid  probability
 	 * @param x
@@ -179,24 +162,40 @@ public final class Rand {
 	public static int sig(float x) {
 		return (Rand.chance(Maths.sigmoid(x))?1:0);
 	}
+	
+	/**
+	 *  Poisson distribution
+	 * @param mean The mean of the poisson distrubution to sample from
+	 * @return
+	 */
+	public static int po(double mean) {
+		if (mean<=0) {
+			if (mean<0) throw new IllegalArgumentException();
+			return 0;
+		}
+		if (mean>400) {
+			return poLarge(mean);
+		}
+		return poMedium(mean);
+	}
 
-	private static int poMedium(double x) {
+	private static int poMedium(double mean) {
 		int r = 0;
 		double a = nextDouble();
-		double p = Math.exp(-x);
+		double p = Math.exp(-mean);
 
 		while (a > p) {
 			r++;
 			a = a - p;
-			p = p * x / r;
+			p = p * mean / r;
 		}
 		return r;
 	}
 	
-	private static int poLarge(double x) {
+	private static int poLarge(double mean) {
 		// normal approximation to poisson
 		// strictly necessary for x>=746 (=> Math.exp(-x)==0)
-		return (int)(0.5+n(x,Math.sqrt(x)));
+		return (int)(0.5+n(mean,Math.sqrt(mean)));
 	}
 
 	/**
@@ -653,6 +652,16 @@ public final class Rand {
 		for (int i=0; i<length; i++) {
 			d[start+i]=Rand.n(u,sd);
 		}
+	}
+	
+	public static void fillBinary(double[] data, int start, int  length, double mean) {
+		for (int i=0; i<length; i++) {
+			data[start+i]=Rand.binary(mean);
+		}
+	}
+
+	public static double binary(double mean) {
+		return Rand.nextDouble()<mean?1:0;
 	}
 
 	public static void binarySample(float[] temp, int offset, int length) {

@@ -102,14 +102,18 @@ public class Hex {
 	
 	/**
 	 *  Hex distance calculation
+	 *  
+	 *  Assumes positive x and y axes are 60 degrees apart
 	 */
 	public static int distance(int x1, int y1, int x2, int y2) {
 		int dx=x2-x1;
 		int dy=y2-y1;
 		
 		if (dx*dy>0) {
-			return Maths.abs(dx+dy);
+			// dx and dy have same sign (i.e. within 60 degrees between same-signed x and y axes)
+			return Maths.abs(dx)+Maths.abs(dy);
 		} else {
+			// dx and dy have opposite signs (i.e. in 120 degrees between opposite signed x and y axes)
 			return Maths.max(Maths.abs(dx),Maths.abs(dy));
 		}
 	}
