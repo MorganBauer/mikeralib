@@ -6,7 +6,7 @@ import java.net.URL;
 /**
  * Utility functions for resource loading
  * 
- * Resources should be in the jar of the main class, and named as "resources/something.res"
+ * Resources should be in the jar of the main class, and named as "/resources/something.res"
  * 
  * @author Mike
  *
