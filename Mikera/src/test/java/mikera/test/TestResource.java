@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TestResource {
 
 	@Test
-	public void test() {
+	public void testStringResource() {
 		String s = Resource.getResourceAsString("test-resource/test.txt");
 	    assertEquals("hello",s);
 	}
